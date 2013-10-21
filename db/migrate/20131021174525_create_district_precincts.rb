@@ -3,8 +3,8 @@ class CreateDistrictPrecincts < ActiveRecord::Migration
     create_table :district_precincts do |t|
       t.integer :district_id
       t.integer :precinct_id
-      t.boolean :has_protocol
-      t.boolean :is_validated
+      t.boolean :has_protocol, :default => false
+      t.boolean :is_validated, :default => false
 
       t.timestamps
     end

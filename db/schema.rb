@@ -57,8 +57,8 @@ ActiveRecord::Schema.define(:version => 20131021174525) do
   create_table "district_precincts", :force => true do |t|
     t.integer  "district_id"
     t.integer  "precinct_id"
-    t.boolean  "has_protocol"
-    t.boolean  "is_validated"
+    t.boolean  "has_protocol", :default => false
+    t.boolean  "is_validated", :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -16,6 +16,10 @@ BootstrapStarter::Application.routes.draw do
     resources :crowd_data
 
 
+    # json data
+		match '/json/missing_protocols', :to => 'json#missing_protocols', :as => :json_missing_protocols, :via => :get, :defaults => {:format => 'json'}
+    
+
 		root :to => 'root#index'
 	  match "*path", :to => redirect("/#{I18n.default_locale}") # handles /en/fake/path/whatever
 	end
