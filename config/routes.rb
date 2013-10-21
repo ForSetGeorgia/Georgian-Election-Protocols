@@ -1,4 +1,5 @@
 BootstrapStarter::Application.routes.draw do
+
 	#--------------------------------
 	# all resources should be within the scope block below
 	#--------------------------------
@@ -10,6 +11,9 @@ BootstrapStarter::Application.routes.draw do
 		namespace :admin do
 			resources :users
 		end
+
+
+    resources :crowd_data
 
 
 		root :to => 'root#index'

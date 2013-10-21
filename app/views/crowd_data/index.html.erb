@@ -1,0 +1,87 @@
+<h1>Listing crowd_data</h1>
+
+<table>
+  <tr>
+    <th>District</th>
+    <th>Precinct</th>
+    <th>Possible voters</th>
+    <th>Special voters</th>
+    <th>Votes by 1200</th>
+    <th>Votes by 1700</th>
+    <th>Ballots signed for</th>
+    <th>Ballots available</th>
+    <th>Invalid ballots submitted</th>
+    <th>Party 1</th>
+    <th>Party 2</th>
+    <th>Party 3</th>
+    <th>Party 4</th>
+    <th>Party 5</th>
+    <th>Party 6</th>
+    <th>Party 7</th>
+    <th>Party 8</th>
+    <th>Party 9</th>
+    <th>Party 10</th>
+    <th>Party 11</th>
+    <th>Party 12</th>
+    <th>Party 13</th>
+    <th>Party 14</th>
+    <th>Party 15</th>
+    <th>Party 16</th>
+    <th>Party 17</th>
+    <th>Party 18</th>
+    <th>Party 19</th>
+    <th>Party 20</th>
+    <th>Party 21</th>
+    <th>Party 22</th>
+    <th>Party 41</th>
+    <th>User</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @crowd_data.each do |crowd_datum| %>
+  <tr>
+    <td><%= crowd_datum.district_id %></td>
+    <td><%= crowd_datum.precinct_id %></td>
+    <td><%= crowd_datum.possible_voters %></td>
+    <td><%= crowd_datum.special_voters %></td>
+    <td><%= crowd_datum.votes_by_1200 %></td>
+    <td><%= crowd_datum.votes_by_1700 %></td>
+    <td><%= crowd_datum.ballots_signed_for %></td>
+    <td><%= crowd_datum.ballots_available %></td>
+    <td><%= crowd_datum.invalid_ballots_submitted %></td>
+    <td><%= crowd_datum.party_1 %></td>
+    <td><%= crowd_datum.party_2 %></td>
+    <td><%= crowd_datum.party_3 %></td>
+    <td><%= crowd_datum.party_4 %></td>
+    <td><%= crowd_datum.party_5 %></td>
+    <td><%= crowd_datum.party_6 %></td>
+    <td><%= crowd_datum.party_7 %></td>
+    <td><%= crowd_datum.party_8 %></td>
+    <td><%= crowd_datum.party_9 %></td>
+    <td><%= crowd_datum.party_10 %></td>
+    <td><%= crowd_datum.party_11 %></td>
+    <td><%= crowd_datum.party_12 %></td>
+    <td><%= crowd_datum.party_13 %></td>
+    <td><%= crowd_datum.party_14 %></td>
+    <td><%= crowd_datum.party_15 %></td>
+    <td><%= crowd_datum.party_16 %></td>
+    <td><%= crowd_datum.party_17 %></td>
+    <td><%= crowd_datum.party_18 %></td>
+    <td><%= crowd_datum.party_19 %></td>
+    <td><%= crowd_datum.party_20 %></td>
+    <td><%= crowd_datum.party_21 %></td>
+    <td><%= crowd_datum.party_22 %></td>
+    <td><%= crowd_datum.party_41 %></td>
+    <td><%= crowd_datum.user_id %></td>
+    <td><%= link_to 'Show', crowd_datum %></td>
+    <td><%= link_to 'Edit', edit_crowd_datum_path(crowd_datum) %></td>
+    <td><%= link_to 'Destroy', crowd_datum, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Crowd datum', new_crowd_datum_path %>
