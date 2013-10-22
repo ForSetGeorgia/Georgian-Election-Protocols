@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131022090426) do
+ActiveRecord::Schema.define(:version => 20131022125759) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "district_id"
@@ -49,9 +49,11 @@ ActiveRecord::Schema.define(:version => 20131022090426) do
     t.integer  "party_41"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_valid"
   end
 
   add_index "crowd_data", ["district_id", "precinct_id"], :name => "idx_location"
+  add_index "crowd_data", ["is_valid"], :name => "index_crowd_data_on_is_valid"
   add_index "crowd_data", ["user_id"], :name => "index_crowd_data_on_user_id"
 
   create_table "district_precincts", :force => true do |t|

@@ -1,7 +1,5 @@
 class DistrictPrecinct < ActiveRecord::Base
 
-
-
   # creates array of districts/precincts that are missing protocols
   #format: [ {district_id => x, precincts => [ {id => x, found => false }, ...  ] }, .... ]
   def self.missing_protocols
