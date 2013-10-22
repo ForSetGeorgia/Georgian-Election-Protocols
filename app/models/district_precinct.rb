@@ -6,7 +6,7 @@ class DistrictPrecinct < ActiveRecord::Base
   #format: [ {district_id => x, precincts => [ {id => x, found => false }, ...  ] }, .... ]
   def self.missing_protocols
     records = []
-    x = where(:has_protocol => false).order("district_id, precinct_id").limit(200)
+    x = where(:has_protocol => false).order("district_id, precinct_id")
     
     if x.present?
       district_ids = x.map{|x| x.district_id}.uniq
