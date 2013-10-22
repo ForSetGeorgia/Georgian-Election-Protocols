@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  region: MyString
+  district_id: 1
+  district_name: MyString
+
+two:
+  region: MyString
+  district_id: 1
+  district_name: MyString

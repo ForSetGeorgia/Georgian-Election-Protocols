@@ -5,6 +5,9 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }], '#{now}', '#{now}')"
 #   Mayor.create(name: 'Emanuel', city: cities.first, '#{now}', '#{now}')"
+CONN = ActiveRecord::Base.connection
+
+
 
 DistrictPrecinct.delete_all
 
@@ -3717,6 +3720,113 @@ records << "(87, 54, '#{now}', '#{now}')"
 records << "(87, 55, '#{now}', '#{now}')"
 
 sql = "insert into district_precincts (`district_id`, `precinct_id`, `created_at`, `updated_at`) values #{records.join(', ')}"
-CONN = ActiveRecord::Base.connection
 CONN.execute sql
+
+
+
+
+#########################################################
+#########################################################
+#########################################################
+RegionDistrictName.delete_all
+
+records = []
+now = Time.now
+records << "('Tbilisi', '1', 'Mtatsminda', '#{now}', '#{now}')"
+records << "('Tbilisi', '2', 'Vake', '#{now}', '#{now}')"
+records << "('Tbilisi', '3', 'Saburtalo', '#{now}', '#{now}')"
+records << "('Tbilisi', '4', 'Krtsanisi', '#{now}', '#{now}')"
+records << "('Tbilisi', '5', 'Isani', '#{now}', '#{now}')"
+records << "('Tbilisi', '6', 'Samgori', '#{now}', '#{now}')"
+records << "('Tbilisi', '7', 'Chugureti', '#{now}', '#{now}')"
+records << "('Tbilisi', '8', 'Didube', '#{now}', '#{now}')"
+records << "('Tbilisi', '9', 'Nadzaladevi', '#{now}', '#{now}')"
+records << "('Tbilisi', '10', 'Gldani', '#{now}', '#{now}')"
+records << "('Kakheti', '11', 'Sagarejo', '#{now}', '#{now}')"
+records << "('Kakheti', '12', 'Gurjaani', '#{now}', '#{now}')"
+records << "('Kakheti', '13', 'Signagi', '#{now}', '#{now}')"
+records << "('Kakheti', '14', 'Dedoplistskaro', '#{now}', '#{now}')"
+records << "('Kakheti', '15', 'Lagodekhi', '#{now}', '#{now}')"
+records << "('Kakheti', '16', 'Kvareli', '#{now}', '#{now}')"
+records << "('Kakheti', '17', 'Telavi', '#{now}', '#{now}')"
+records << "('Kakheti', '18', 'Akhmeta', '#{now}', '#{now}')"
+records << "('Mtskheta-Mtianeti', '19', 'Tianeti', '#{now}', '#{now}')"
+records << "('Kvemo Kartli', '20', 'Rustavi', '#{now}', '#{now}')"
+records << "('Kvemo Kartli', '21', 'Gardabani', '#{now}', '#{now}')"
+records << "('Kvemo Kartli', '22', 'Marneuli', '#{now}', '#{now}')"
+records << "('Kvemo Kartli', '23', 'Bolnisi', '#{now}', '#{now}')"
+records << "('Kvemo Kartli', '24', 'Dmanisi', '#{now}', '#{now}')"
+records << "('Kvemo Kartli', '25', 'Tsalka', '#{now}', '#{now}')"
+records << "('Kvemo Kartli', '26', 'Tetritskaro', '#{now}', '#{now}')"
+records << "('Mtskheta-Mtianeti', '27', 'Mtskheta', '#{now}', '#{now}')"
+records << "('Mtskheta-Mtianeti', '28', 'Dusheti', '#{now}', '#{now}')"
+records << "('Mtskheta-Mtianeti', '29', 'Kazbegi', '#{now}', '#{now}')"
+records << "('Shida Kartli', '30', 'Kaspi', '#{now}', '#{now}')"
+records << "('Mtskheta-Mtianeti', '31', 'Akhalgori', '#{now}', '#{now}')"
+records << "('Shida Kartli', '32', 'Gori', '#{now}', '#{now}')"
+records << "('Shida Kartli', '33', 'Kareli', '#{now}', '#{now}')"
+records << "('Shida Kartli', '35', 'Khashuri', '#{now}', '#{now}')"
+records << "('Samtskhe-Javakheti', '36', 'Borjomi', '#{now}', '#{now}')"
+records << "('Samtskhe-Javakheti', '37', 'Akhaltsikhe', '#{now}', '#{now}')"
+records << "('Samtskhe-Javakheti', '38', 'Adigeni', '#{now}', '#{now}')"
+records << "('Samtskhe-Javakheti', '39', 'Aspindza', '#{now}', '#{now}')"
+records << "('Samtskhe-Javakheti', '40', 'Akhalkalaki', '#{now}', '#{now}')"
+records << "('Samtskhe-Javakheti', '41', 'Ninotsminda', '#{now}', '#{now}')"
+records << "('Racha-Lechkhumi and Kvemo Svaneti', '43', 'Oni', '#{now}', '#{now}')"
+records << "('Racha-Lechkhumi and Kvemo Svaneti', '44', 'Ambrolauri', '#{now}', '#{now}')"
+records << "('Racha-Lechkhumi and Kvemo Svaneti', '45', 'Tsageri', '#{now}', '#{now}')"
+records << "('Racha-Lechkhumi and Kvemo Svaneti', '46', 'Lentekhi', '#{now}', '#{now}')"
+records << "('Samegrelo-Zemo Svaneti', '47', 'Mestia', '#{now}', '#{now}')"
+records << "('Imereti', '48', 'Kharagauli', '#{now}', '#{now}')"
+records << "('Imereti', '49', 'Terjola', '#{now}', '#{now}')"
+records << "('Imereti', '50', 'Sachkhere', '#{now}', '#{now}')"
+records << "('Imereti', '51', 'Zestaponi', '#{now}', '#{now}')"
+records << "('Imereti', '52', 'Bagdati', '#{now}', '#{now}')"
+records << "('Imereti', '53', 'Vani', '#{now}', '#{now}')"
+records << "('Imereti', '54', 'Samtredia', '#{now}', '#{now}')"
+records << "('Imereti', '55', 'Khoni', '#{now}', '#{now}')"
+records << "('Imereti', '56', 'Chiatura', '#{now}', '#{now}')"
+records << "('Imereti', '57', 'Tkibuli', '#{now}', '#{now}')"
+records << "('Imereti', '58', 'Tskaltubo', '#{now}', '#{now}')"
+records << "('Imereti', '59', 'Kutaisi', '#{now}', '#{now}')"
+records << "('Guria', '60', 'Ozurgeti', '#{now}', '#{now}')"
+records << "('Guria', '61', 'Lanchkhuti', '#{now}', '#{now}')"
+records << "('Guria', '62', 'Chokhatauri', '#{now}', '#{now}')"
+records << "('Samegrelo-Zemo Svaneti', '63', 'Abasha', '#{now}', '#{now}')"
+records << "('Samegrelo-Zemo Svaneti', '64', 'Senaki', '#{now}', '#{now}')"
+records << "('Samegrelo-Zemo Svaneti', '65', 'Martvili', '#{now}', '#{now}')"
+records << "('Samegrelo-Zemo Svaneti', '66', 'Khobi', '#{now}', '#{now}')"
+records << "('Samegrelo-Zemo Svaneti', '67', 'Zugdidi', '#{now}', '#{now}')"
+records << "('Samegrelo-Zemo Svaneti', '68', 'Tsalenjikha', '#{now}', '#{now}')"
+records << "('Samegrelo-Zemo Svaneti', '69', 'Chkhorotsku', '#{now}', '#{now}')"
+records << "('Samegrelo-Zemo Svaneti', '70', 'Poti', '#{now}', '#{now}')"
+records << "('Adjara', '79', 'Batumi', '#{now}', '#{now}')"
+records << "('Adjara', '80', 'Keda', '#{now}', '#{now}')"
+records << "('Adjara', '81', 'Kobuleti', '#{now}', '#{now}')"
+records << "('Adjara', '82', 'Shuakhevi', '#{now}', '#{now}')"
+records << "('Adjara', '83', 'Khelvachauri', '#{now}', '#{now}')"
+records << "('Adjara', '84', 'Khulo', '#{now}', '#{now}')"
+records << "('Shida Kartli', '85', 'Liakhvi', '#{now}', '#{now}')"
+records << "('', '86', '', '#{now}', '#{now}')"
+records << "('Overseas', '87', 'Overseas', '#{now}', '#{now}')"
+records << "('Tbilisi', '999', 'Tbilisi', '#{now}', '#{now}')"
+
+
+sql = "insert into region_district_names (`region`, `district_id`, `district_name`, `created_at`, `updated_at`) values #{records.join(', ')}"
+CONN.execute sql
+
+
+#########################################################
+#########################################################
+#########################################################
+sql = "delete from president2013s_precinct_count"
+CONN.execute sql
+
+sql = "insert into president2013s_precinct_count (`region`, `district_id`, `num_precincts`) "
+sql << "select rd.region, rd.district_id, count(*) "
+sql << "from region_district_names as rd inner join district_precincts as dp on rd.district_id = dp.district_id "
+sql << "group by rd.region, rd.district_id order by rd.district_id "
+CONN.execute sql
+
+
 
