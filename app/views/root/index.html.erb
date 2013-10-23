@@ -1,1 +1,35 @@
-Hi!
+
+
+<h2><%= t('.overall_stats.header') %></h2>
+<% if @overall_stats.present? %>
+  <ul>
+    <li>
+      <strong><%= t('overall_stats.districts')%>:</strong>
+      <%= @overall_stats[:districts] %>
+    </li>
+    <li>
+      <strong><%= t('overall_stats.precincts')%>:</strong>
+      <%= @overall_stats[:precincts] %>
+    </li>
+    <li>
+      <strong><%= t('overall_stats.protocols_missing')%>:</strong>
+      <%= @overall_stats[:protocols_missing][:number] %>
+      (<%= @overall_stats[:protocols_missing][:percent] %>)
+    </li>
+    <li>
+      <strong><%= t('overall_stats.protocols_found')%>:</strong>
+      <%= @overall_stats[:protocols_found][:number] %>
+      (<%= @overall_stats[:protocols_found][:percent] %>)
+    </li>
+    <li>
+      <strong><%= t('overall_stats.protocols_not_entered')%>:</strong>
+      <%= @overall_stats[:protocols_not_entered][:number] %>
+      (<%= @overall_stats[:protocols_not_entered][:percent] %>)
+    </li>
+    <li>
+      <strong><%= t('overall_stats.protocols_validated')%>:</strong>
+      <%= @overall_stats[:protocols_validated][:number] %>
+      (<%= @overall_stats[:protocols_validated][:percent] %>)
+    </li>
+  </ul>
+<% end %>

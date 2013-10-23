@@ -51,7 +51,7 @@ en:
       confirm: Are you sure?
       new: New
     common:
-      app_name: Bootstrap Starter Project
+      app_name: 2013 Presidential Protocols
       added_on: "Added on: %{date}" 
     msgs:
       does_not_exist: You tried to access a page that does not exist.
@@ -90,3 +90,14 @@ en:
         title: New User
       show:
         title: User Details
+  root:
+    index:
+      overall_stats:
+        header: Overall Statistics
+        districts: Districts
+        precincts: Precincts
+        protocols_missing: Protocols Missing
+        protocols_found: Protocols Found
+        protocols_not_entered: Protocols Not Entered
+        protocols_validated: Protocols Validated
+       

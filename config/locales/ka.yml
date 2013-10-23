@@ -51,7 +51,7 @@ ka:
       confirm: დარწმუნებული ხართ?
       new: ახალი
     common:
-      app_name: Bootstrap Starter Project
+      app_name: 2013 Presidential Protocols
       added_on: "დამატებულია: %{date}" 
     msgs:
       does_not_exist: თქვენ ცდილობთ იხილოთ გვერდი, რომელიც არ არსებობს.
@@ -91,3 +91,14 @@ ka:
         title: ახალი მომხმარებელი
       show:
         title: მომხმარებლის დეტალები
+  root:
+    index:
+      overall_stats:
+        header: Overall Statistics
+        districts: Districts
+        precincts: Precincts
+        protocols_missing: Protocols Missing
+        protocols_found: Protocols Found
+        protocols_not_entered: Protocols Not Entered
+        protocols_validated: Protocols Validated
+        
