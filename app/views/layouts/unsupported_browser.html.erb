@@ -25,9 +25,9 @@
 
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
-        <div class="container">
+        <div class="container-fluid">
           <%= link_to(t('app.common.app_name'), root_path(:locale => I18n.locale),:class=>"brand")%>
-          <div class="container nav-collapse">
+          <div class="container-fluid nav-collapse">
             <ul class="nav pull-right">
   						<% I18n.available_locales.each do |locale| %>
   							<% if locale != I18n.locale %>

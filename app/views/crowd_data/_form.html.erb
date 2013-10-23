@@ -1,41 +1,62 @@
-<%= semantic_form_for @crowd_datum do |f| %>
-  <%= f.inputs do %>
-    <%= f.input :district_id %>
-    <%= f.input :precinct_id %>
-    <%= f.input :possible_voters %>
-    <%= f.input :special_voters %>
-    <%= f.input :votes_by_1200 %>
-    <%= f.input :votes_by_1700 %>
-    <%= f.input :ballots_signed_for %>
-    <%= f.input :ballots_available %>
-    <%= f.input :invalid_ballots_submitted %>
-    <%= f.input :party_1 %>
-    <%= f.input :party_2 %>
-    <%= f.input :party_3 %>
-    <%= f.input :party_4 %>
-    <%= f.input :party_5 %>
-    <%= f.input :party_6 %>
-    <%= f.input :party_7 %>
-    <%= f.input :party_8 %>
-    <%= f.input :party_9 %>
-    <%= f.input :party_10 %>
-    <%= f.input :party_11 %>
-    <%= f.input :party_12 %>
-    <%= f.input :party_13 %>
-    <%= f.input :party_14 %>
-    <%= f.input :party_15 %>
-    <%= f.input :party_16 %>
-    <%= f.input :party_17 %>
-    <%= f.input :party_18 %>
-    <%= f.input :party_19 %>
-    <%= f.input :party_20 %>
-    <%= f.input :party_21 %>
-    <%= f.input :party_22 %>
-    <%= f.input :party_41 %>
-    <%= f.input :user_id %>
-  <% end %>
+<div id="protocol-form-container">
 
-  <%= f.actions do %>
-    <%= f.action :submit, :as => :input %>
-  <% end %>
+  <%= image_tag 'pec_protocol.jpg', :id => 'protocolimg' %>
+
+  <%= semantic_form_for @crowd_datum do |f| %>
+    <%= f.inputs do %>
+      <%= f.input :district_id, :as => :hidden %>
+      <%= f.input :precinct_id, :as => :hidden %>
+
+      <div class="m m1">
+        <%= f.input :possible_voters, :as => :string %>
+      </div>
+
+      <div class="m m2">
+        <%= f.input :special_voters, :as => :string %>
+      </div>
+
+      <div class="inline clearfix">
+        <div class="m m3">
+          <%= f.input :votes_by_1200, :as => :string %>
+        </div>
+        <div class="m m4">
+          <%= f.input :votes_by_1700, :as => :string %>
+        </div>
+      </div>
+
+
+      <%= f.input :ballots_signed_for, :as => :string %>
+      <%= f.input :ballots_available, :as => :string %>
+      <%= f.input :invalid_ballots_submitted, :as => :string %>
+      <%= f.input :party_1, :as => :string %>
+      <%= f.input :party_2, :as => :string %>
+      <%= f.input :party_3, :as => :string %>
+      <%= f.input :party_4, :as => :string %>
+      <%= f.input :party_5, :as => :string %>
+      <%= f.input :party_6, :as => :string %>
+      <%= f.input :party_7, :as => :string %>
+      <%= f.input :party_8, :as => :string %>
+      <%= f.input :party_9, :as => :string %>
+      <%= f.input :party_10, :as => :string %>
+      <%= f.input :party_11, :as => :string %>
+      <%= f.input :party_12, :as => :string %>
+      <%= f.input :party_13, :as => :string %>
+      <%= f.input :party_14, :as => :string %>
+      <%= f.input :party_15, :as => :string %>
+      <%= f.input :party_16, :as => :string %>
+      <%= f.input :party_17, :as => :string %>
+      <%= f.input :party_18, :as => :string %>
+      <%= f.input :party_19, :as => :string %>
+      <%= f.input :party_20, :as => :string %>
+      <%= f.input :party_21, :as => :string %>
+      <%= f.input :party_22, :as => :string %>
+      <%= f.input :party_41, :as => :string %>
+      <%= f.input :user_id, :as => :hidden %>
+    <% end %>
+
+    <%= f.actions do %>
+      <%= f.action :submit, :as => :input %>
+    <% end %>
 <% end %>
+
+</div>
