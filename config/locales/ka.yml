@@ -109,4 +109,8 @@ ka:
         pending: Records Waiting for Match
         valid: Records with Valid Match
         invalid: Records with Invalid Match
+    training:
+      data_mismatch: გაწითლებული ველები არ ემთხვევა სწორ მონაცემებს
+      success: თქვენ ყველა ველი სწორად შეავსეთ. მოცემულია შემდეგი ოქმი
+      completed: თქვენ წარმატებით დაასრულეთ მოსამზადებელი ეტაპი
         

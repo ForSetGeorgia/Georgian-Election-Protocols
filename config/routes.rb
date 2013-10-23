@@ -19,7 +19,10 @@ BootstrapStarter::Application.routes.draw do
     # json data
 		match '/json/missing_protocols', :to => 'json#missing_protocols', :as => :json_missing_protocols, :via => :get, :defaults => {:format => 'json'}
 		match '/json/mark_found_protocols', :to => 'json#mark_found_protocols', :as => :json_mark_found_protocols, :via => [:get,:post], :defaults => {:format => 'json'}
-    
+
+
+		match '/training', :to => 'root#training', :as => :training, :via => [:get, :post]
+
 
 		root :to => 'root#index'
 	  match "*path", :to => redirect("/#{I18n.default_locale}") # handles /en/fake/path/whatever

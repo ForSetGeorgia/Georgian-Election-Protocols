@@ -108,5 +108,9 @@ en:
         pending: Records Waiting for Match
         valid: Records with Valid Match
         invalid: Records with Invalid Match
+    training:
+      data_mismatch: Red fields don't match the correct data
+      success: Success, data entered by you was correct. Showing next protocol
+      completed: You have successfully completed the training
               
       

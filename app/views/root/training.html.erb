@@ -1,0 +1,55 @@
+<div id="protocol-form-container">
+
+  <%= image_tag '/training/' + @next_protocol.to_s + '.jpg', :id => 'protocolimg' %>
+
+  <form action="" method="post" class="training">
+    <% [
+        [1, :possible_voters],
+        [2, :special_voters],
+        ['12:00', :votes_by_1200],
+        ['17:00', :votes_by_1700],
+        [4, :ballots_signed_for],
+        [5, :ballots_available],
+        [1, :party_1],
+        [4, :party_4],
+        [5, :party_5],
+        [9, :party_9],
+        [10, :party_10],
+        [17, :party_17],
+        [19, :party_19],
+        [23, :party_23],
+        [24, :party_24],
+        [26, :party_26],
+        [30, :party_30],
+        [35, :party_35],
+        [36, :party_36],
+        [38, :party_38],
+        [40, :party_40],
+        [41, :party_41],
+        [6, :invalid_ballots_submitted]
+       ].each_with_index do |f, i| %>
+
+      <% if i == 2 %>
+        <div class="inline clearfix">
+      <% elsif i == 4 %>
+        </div>
+      <% end %>
+
+      <div class="m m<%= (i + 1).to_s %><%= if (!@errors.nil? && @errors.include?(f[1].to_s)); ' error'; end; %>">
+        <div class="string control-group optional stringish">
+          <label class="control-label" for="protocol_<%= f[1] %>"><%= f[0] %></label>
+          <div class="controls">
+            <input id="protocol_<%= f[1] %>" maxlength="4" name="protocol[<%= f[1] %>]" type="text" value="<%= if (!params['protocol'].nil?); params['protocol'][f[1]]; end %>" />
+          </div>
+        </div>
+      </div>
+
+    <% end %>
+
+    <input type="hidden" name="protocol_number" value="<%= @next_protocol %>" />
+    <input type="submit" value="Submit" />
+
+  </form>
+
+
+</div>
