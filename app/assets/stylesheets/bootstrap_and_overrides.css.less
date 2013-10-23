@@ -44,7 +44,7 @@ html, body {
 	margin: 0 auto -155px;
 }
 
-#wrapper > .container-fluid {
+#wrapper > .container, #wrapper > .container-fluid {
 	padding-top: 60px;
 	padding-bottom: 60px;
 	overflow: auto;
@@ -56,7 +56,7 @@ html, body {
   body {
   	margin-top: 0;
   }
-  #wrapper > .container-fluid {
+  #wrapper > .container, #wrapper > .container-fluid {
   	padding: 1em;
   }
 	.navbar-fixed-top  {
@@ -64,9 +64,9 @@ html, body {
 	}
 }
 
-.container-fluid > ul.nav  {
+.container > ul.nav, .container-fluid > ul.nav {
 	line-height: 20px;
 }
-.navbar-fixed-top .navbar-inner .container-fluid .brand {
+.navbar-fixed-top .navbar-inner .container .brand, .navbar-fixed-top .navbar-inner .container-fluid .brand {
   font-size: 19px;
 }

@@ -52,12 +52,13 @@
         display: block;
         float: left;
       }
+      @h: 22px;
       label {
         .box-sizing();
-        width: 200px;
+        width: 80px;
         text-align: center;
-        line-height: 27px;
-        height: 27px;
+        line-height: @h;
+        height: @h;
         padding: 0px 0px 0px 10px;
         margin: 0px;
         border-bottom: 1px solid #ccc;
@@ -66,19 +67,46 @@
         width: 120px;
         .box-sizing();
         .border-radius(0px);
-        height: 27px;
+        height: @h;
         margin: 0px;
       }
     }
     &.m1 {
-      margin-top: 85px;
-      input {
-      }
+      margin-top: 90px;
+    }
+    &.m2 {
+      margin-top: 5px;
+    }
+    &.m3, &.m4 {
+      margin-top: 18px;
+    }
+    &.m5 {
+      margin-top: 6px;
+    }
+    &.m6 {
+      margin-top: 6px;
+    }
+    &.m7 {
+      margin-top: 4px;
+    }
+    &.m11, &.m17, &.m19, &.m21, &.m22, &.m23 {
+      margin-top: .5px;
+    }
+    &.m30 {
+      margin-top: 10px;
     }
   }
   .inline {
     .m {
       float: left;
+    }
+  }
+  .actions {
+    padding-left: 60px;
+    list-style: none;
+    margin-top: 20px;
+    input {
+      padding: 3px 7px;
     }
   }
 }
