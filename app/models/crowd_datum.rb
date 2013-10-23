@@ -1,24 +1,70 @@
 class CrowdDatum < ActiveRecord::Base
 
+  #######################
+  # flag descriptions
+  #######################
+  # is_valid
+  # - by default is null which means that it has not been matched and validated against a matching district/precinct
+  # - 0 = it was matched and validation failed
+  # - 1 = it was matched and validated
+  
+  # is_extra
+  # - 0 = default value
+  # - 1 = when matched and validated, the district/precinct was already validated so this record is extra
+  #######################
+
+
+  #######################
+  #######################
+
+  validates :district_id, :precinct_id, :possible_voters, :special_voters, 
+    :votes_by_1200, :votes_by_1700, :ballots_signed_for, :ballots_available, 
+    :invalid_ballots_submitted, :presence => true
+    
+  validate :party_votes_provided  
+
+  after_create :match_and_validate  
+
+  #######################
+  #######################
+  
+  # at least one party must have votes
+  def party_votes_provided
+    has_value = false
+    parties = [self.party_1, self.party_2, self.party_3, self.party_4, self.party_5, self.party_6, self.party_7, self.party_8, self.party_9, self.party_10, self.party_11, self.party_12, self.party_13, self.party_14, self.party_15, self.party_16, self.party_17, self.party_18, self.party_19, self.party_20, self.party_21, self.party_22, self.party_41]    
+    
+    parties.each do |party|
+      if party.present?
+        has_value = true
+        break
+      end
+    end
+    
+    if !has_value
+      errors.add(:base, I18n.t('activerecord.errors.messages.required_party_votes'))
+    end
+  end
+
+
 
   # if another record exists for this district/precinct 
   # and the district/precinct is not already approved
   # see if this record matches that already on file
-  def compare
+  def match_and_validate
     CrowdDatum.transaction do
-      existing = where(["district_id = ? and precinct_id = ? and user_id != ? and is_valid is null", self.district_id, self.precinct_id, self.user_id])
+      existing = CrowdDatum.where(["district_id = ? and precinct_id = ? and user_id != ? and is_valid is null and is_extra = 0", self.district_id, self.precinct_id, self.user_id])
       
       if existing.present?
         # see if same
         matches = true
-        exisiting.each do |exists|
-          matches = false if exists.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid') != self.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid')
+        existing.each do |exists|
+          matches = false if exists.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra') != self.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra')
         end
 
         # update valid status
         self.is_valid = matches
         self.save
-        exisiting.each do |exists|
+        existing.each do |exists|
           exists.is_valid = matches
           exists.save
         end
@@ -30,12 +76,11 @@ class CrowdDatum < ActiveRecord::Base
           DistrictPrecinct.where(["district_id = ? and precinct_id = ?", self.district_id, self.precinct_id]).update_all(:is_validated => true)
 
           # save pres record
-          rd = RegionDistrict.by_district(self.district_id)
-
+          rd = RegionDistrictName.by_district(self.district_id)
           pres = President2013.new  
-          pres.region = rd.present? ? rd.region ? nil
+          pres.region = rd.present? ? rd.region : nil
           pres.district_id = self.district_id
-          pres.district_name = rd.present? ? rd.district_name ? nil
+          pres.district_name = rd.present? ? rd.district_name : nil
           pres.precinct_id = self.precinct_id
           pres.attached_precinct_id = nil
           pres.num_possible_voters = self.possible_voters
@@ -80,18 +125,34 @@ class CrowdDatum < ActiveRecord::Base
           
         
         end
+      else
+        # check if this district/precinct has already been validated
+        # if so, this is an extra
+        dp = DistrictPrecinct.where(["district_id = ? and precinct_id = ?", self.district_id, self.precinct_id])
+        if dp.present?
+          if dp.first.is_validated
+            self.is_extra = true
+            self.save
+          end
+        end
       end
     end
   end
 
 
+  #######################
+  #######################
+
+
   # get the next record to be processed
   def self.next_available_record(user_id)
     next_record = nil
-    needs_match = CrowdDatum.select('id').where("user_id != ? and is_valid is null", user_id)
+    needs_match = CrowdDatum.select('id').where("user_id != ? and is_valid is null and is_extra = 0", user_id)
     if needs_match.present?
       # records exist that are waiting for a match
-      next_record = CrowdDatum.find_by_id(needs_match.map{|x| x.id}.sample)
+      rand = CrowdDatum.find_by_id(needs_match.map{|x| x.id}.sample)
+      next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+       
     else
       # see if there are any precincts that are still waiting for processing
       needs_processing = DistrictPrecinct.select('district_id, precinct_id').where(:is_validated => false)
@@ -100,7 +161,7 @@ class CrowdDatum < ActiveRecord::Base
         # precincts are waiting for processing
         # create a new crowd data record so it can be processed
         rand = needs_processing.sample
-        next_record = CrowdDatum.create(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id) 
+        next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id) 
       end
     end
     

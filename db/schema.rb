@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131022125759) do
+ActiveRecord::Schema.define(:version => 20131023060511) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "district_id"
@@ -50,9 +50,11 @@ ActiveRecord::Schema.define(:version => 20131022125759) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "is_valid"
+    t.boolean  "is_extra",                  :default => false
   end
 
   add_index "crowd_data", ["district_id", "precinct_id"], :name => "idx_location"
+  add_index "crowd_data", ["is_extra"], :name => "index_crowd_data_on_is_extra"
   add_index "crowd_data", ["is_valid"], :name => "index_crowd_data_on_is_valid"
   add_index "crowd_data", ["user_id"], :name => "index_crowd_data_on_user_id"
 

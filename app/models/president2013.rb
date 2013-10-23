@@ -43,29 +43,29 @@ class President2013 < ActiveRecord::Base
   
   def sum_party_votes
     sum = 0
-    sum += pres['1 - Tamaz Bibiluri'].present? ? pres['1 - Tamaz Bibiluri'] : 0
-    sum += pres['2 - Giorgi Liluashvili'].present? ? pres['2 - Giorgi Liluashvili'] : 0
-    sum += pres['3 - Sergo Javakhidze'].present? ? pres['3 - Sergo Javakhidze'] : 0
-    sum += pres['4 - Koba Davitashvili'].present? ? pres['4 - Koba Davitashvili'] : 0
-    sum += pres['5 - Davit Bakradze'].present? ? pres['5 - Davit Bakradze'] : 0
-    sum += pres['6 - Akaki Asatiani'].present? ? pres['6 - Akaki Asatiani'] : 0
-    sum += pres['7 - Nino Chanishvili'].present? ? pres['7 - Nino Chanishvili'] : 0
-    sum += pres['8 - Teimuraz Bobokhidze'].present? ? pres['8 - Teimuraz Bobokhidze'] : 0
-    sum += pres['9 - Shalva Natelashvili'].present? ? pres['9 - Shalva Natelashvili'] : 0
-    sum += pres['10 - Giorgi Targamadze'].present? ? pres['10 - Giorgi Targamadze'] : 0
-    sum += pres['11 - Levan Chachua'].present? ? pres['11 - Levan Chachua'] : 0
-    sum += pres['12 - Nestan Kirtadze'].present? ? pres['12 - Nestan Kirtadze'] : 0
-    sum += pres['13 - Giorgi Chikhladze'].present? ? pres['13 - Giorgi Chikhladze'] : 0
-    sum += pres['14 - Nino Burjanadze'].present? ? pres['14 - Nino Burjanadze'] : 0
-    sum += pres['15 - Zurab Kharatishvili'].present? ? pres['15 - Zurab Kharatishvili'] : 0
-    sum += pres['16 - Mikheil Saluashvili'].present? ? pres['16 - Mikheil Saluashvili'] : 0
-    sum += pres['17 - Kartlos Gharibashvili'].present? ? pres['17 - Kartlos Gharibashvili'] : 0
-    sum += pres['18 - Mamuka Chokhonelidze'].present? ? pres['18 - Mamuka Chokhonelidze'] : 0
-    sum += pres['19 - Avtandil Margiani'].present? ? pres['19 - Avtandil Margiani'] : 0
-    sum += pres['20 - Nugzar Avaliani'].present? ? pres['20 - Nugzar Avaliani'] : 0
-    sum += pres['21 - Mamuka Melikishvili'].present? ? pres['21 - Mamuka Melikishvili'] : 0
-    sum += pres['22 - Teimuraz Mzhavia'].present? ? pres['22 - Teimuraz Mzhavia'] : 0
-    sum += pres['41 - Giorgi Margvelashvili'].present? ? pres['41 - Giorgi Margvelashvili'] : 0
+    sum += self['1 - Tamaz Bibiluri'].present? ? self['1 - Tamaz Bibiluri'] : 0
+    sum += self['2 - Giorgi Liluashvili'].present? ? self['2 - Giorgi Liluashvili'] : 0
+    sum += self['3 - Sergo Javakhidze'].present? ? self['3 - Sergo Javakhidze'] : 0
+    sum += self['4 - Koba Davitashvili'].present? ? self['4 - Koba Davitashvili'] : 0
+    sum += self['5 - Davit Bakradze'].present? ? self['5 - Davit Bakradze'] : 0
+    sum += self['6 - Akaki Asatiani'].present? ? self['6 - Akaki Asatiani'] : 0
+    sum += self['7 - Nino Chanishvili'].present? ? self['7 - Nino Chanishvili'] : 0
+    sum += self['8 - Teimuraz Bobokhidze'].present? ? self['8 - Teimuraz Bobokhidze'] : 0
+    sum += self['9 - Shalva Natelashvili'].present? ? self['9 - Shalva Natelashvili'] : 0
+    sum += self['10 - Giorgi Targamadze'].present? ? self['10 - Giorgi Targamadze'] : 0
+    sum += self['11 - Levan Chachua'].present? ? self['11 - Levan Chachua'] : 0
+    sum += self['12 - Nestan Kirtadze'].present? ? self['12 - Nestan Kirtadze'] : 0
+    sum += self['13 - Giorgi Chikhladze'].present? ? self['13 - Giorgi Chikhladze'] : 0
+    sum += self['14 - Nino Burjanadze'].present? ? self['14 - Nino Burjanadze'] : 0
+    sum += self['15 - Zurab Kharatishvili'].present? ? self['15 - Zurab Kharatishvili'] : 0
+    sum += self['16 - Mikheil Saluashvili'].present? ? self['16 - Mikheil Saluashvili'] : 0
+    sum += self['17 - Kartlos Gharibashvili'].present? ? self['17 - Kartlos Gharibashvili'] : 0
+    sum += self['18 - Mamuka Chokhonelidze'].present? ? self['18 - Mamuka Chokhonelidze'] : 0
+    sum += self['19 - Avtandil Margiani'].present? ? self['19 - Avtandil Margiani'] : 0
+    sum += self['20 - Nugzar Avaliani'].present? ? self['20 - Nugzar Avaliani'] : 0
+    sum += self['21 - Mamuka Melikishvili'].present? ? self['21 - Mamuka Melikishvili'] : 0
+    sum += self['22 - Teimuraz Mzhavia'].present? ? self['22 - Teimuraz Mzhavia'] : 0
+    sum += self['41 - Giorgi Margvelashvili'].present? ? self['41 - Giorgi Margvelashvili'] : 0
 
     return sum
   end
