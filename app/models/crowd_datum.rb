@@ -25,8 +25,26 @@ class CrowdDatum < ActiveRecord::Base
 
   after_create :match_and_validate  
 
+  FOLDER_PATH = "/system/protocols"
+
   #######################
   #######################
+
+  # get the path to the protocol image
+  # if the file does not exist, return nil
+  def image_path
+    path = nil
+    exist = false
+    
+    if self.district_id.present? && self.precinct_id.present?
+      path = "#{FOLDER_PATH}/#{district_id}/#{district_id}_#{precinct_id}.jpg"
+      exist = File.exist?("#{Rails.root}/public#{path}")
+    end
+    
+    path = nil if !exist
+
+    return path
+  end
 
   # at least one party must have votes
   def party_votes_provided
@@ -154,8 +172,12 @@ class CrowdDatum < ActiveRecord::Base
       next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
 
     else
-      # see if there are any precincts that are still waiting for processing
-      needs_processing = DistrictPrecinct.select('district_id, precinct_id').where(:is_validated => false)
+      # see if there are any precincts that are still waiting for processing that this user has not entered
+      sql = "select district_id, precinct_id from district_precincts where has_protocol = 1 and is_validated = 0 "
+      sql << "and id not in ( select dp.id from district_precincts as dp inner join crowd_data as cd "
+      sql << "  on dp.district_id = cd.district_id and dp.precinct_id = cd.precinct_id "
+      sql << "  where dp.has_protocol = 1 and dp.is_validated = 0 and cd.user_id = :user_id and (cd.is_valid is null or cd.is_valid = 0))"
+      needs_processing = DistrictPrecinct.find_by_sql([sql, :user_id => user_id])
 
       if needs_processing.present?
         # precincts are waiting for processing

@@ -20,6 +20,8 @@ BootstrapStarter::Application.routes.draw do
 		match '/json/missing_protocols', :to => 'json#missing_protocols', :as => :json_missing_protocols, :via => :get, :defaults => {:format => 'json'}
 		match '/json/mark_found_protocols', :to => 'json#mark_found_protocols', :as => :json_mark_found_protocols, :via => [:get,:post], :defaults => {:format => 'json'}
 
+		match '/protocol', :to => 'root#protocol', :as => :protocol, :via => [:get, :post]
+
 
 		match '/training', :to => 'root#training', :as => :training, :via => [:get, :post]
 
