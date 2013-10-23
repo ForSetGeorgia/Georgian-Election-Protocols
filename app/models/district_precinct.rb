@@ -18,43 +18,6 @@ class DistrictPrecinct < ActiveRecord::Base
 
 
   #######################
-  ## stats
-  #######################
-
-  # get the following:
-  # total districts (#), total precincts (#), protocols found (#/%), protocols missing (#/%), protocols not entered (#/%), protocols validated (#/%) 
-  def self.overall_stats
-    stats = nil
-    district_count = DistrictPrecinct.select('distinct district_id').count
-    
-    sql = "select count(*) as num_precincts, sum(has_protocol) as num_protocols_found, (count(*) - sum(has_protocol)) as num_protocols_missing, "
-    sql << "sum(if(has_protocol = 1 and is_validated = 0, 1, 0)) as num_protocols_not_entered, sum(if(has_protocol = 1 and is_validated = 1, 1, 0)) as num_protocols_validated "
-    sql << "from district_precincts "
-
-    data = find_by_sql(sql)
-    
-    if data.present?
-      data = data.first
-      stats = Hash.new
-      stats[:districts] = format_number(district_count)
-      stats[:precincts] = format_number(data[:num_precincts])
-      stats[:protocols_missing] = Hash.new
-      stats[:protocols_missing][:number] = format_number(data[:num_protocols_missing])
-      stats[:protocols_missing][:percent] = format_percent(100*data[:num_protocols_missing]/data[:num_precincts].to_f)
-      stats[:protocols_found] = Hash.new
-      stats[:protocols_found][:number] = format_number(data[:num_protocols_found])
-      stats[:protocols_found][:percent] = format_percent(100*data[:num_protocols_found]/data[:num_precincts].to_f)
-      stats[:protocols_not_entered] = Hash.new
-      stats[:protocols_not_entered][:number] = data[:num_protocols_found] > 0 ? format_number(data[:num_protocols_not_entered]) : I18n.t('app.common.na')
-      stats[:protocols_not_entered][:percent] = data[:num_protocols_found] > 0 ? format_percent(100*data[:num_protocols_not_entered]/data[:num_protocols_found].to_f) : I18n.t('app.common.na')
-      stats[:protocols_validated] = Hash.new
-      stats[:protocols_validated][:number] = data[:num_protocols_found] > 0 ? format_number(data[:num_protocols_validated]) : I18n.t('app.common.na')
-      stats[:protocols_validated][:percent] = data[:num_protocols_found] > 0 ? format_percent(100*data[:num_protocols_validated]/data[:num_protocols_found].to_f) : I18n.t('app.common.na')
-    end    
-    return stats
-  end
-
-  #######################
   #######################
 
   # creates array of districts/precincts that are missing protocols
@@ -125,6 +88,88 @@ class DistrictPrecinct < ActiveRecord::Base
 
     return success
   end
+
+
+  #######################
+  ## stats
+  #######################
+
+  # get the following:
+  # total districts (#), total precincts (#), protocols found (#/%), protocols missing (#/%), protocols not entered (#/%), protocols validated (#/%) 
+  def self.overall_stats
+    stats = nil
+    district_count = DistrictPrecinct.select('distinct district_id').count
+    
+    sql = "select count(*) as num_precincts, sum(has_protocol) as num_protocols_found, (count(*) - sum(has_protocol)) as num_protocols_missing, "
+    sql << "sum(if(has_protocol = 1 and is_validated = 0, 1, 0)) as num_protocols_not_entered, sum(if(has_protocol = 1 and is_validated = 1, 1, 0)) as num_protocols_validated "
+    sql << "from district_precincts "
+
+    data = find_by_sql(sql)
+    
+    if data.present?
+      data = data.first
+      stats = Hash.new
+      stats[:districts] = format_number(district_count)
+      stats[:precincts] = format_number(data[:num_precincts])
+      stats[:protocols_missing] = Hash.new
+      stats[:protocols_missing][:number] = format_number(data[:num_protocols_missing])
+      stats[:protocols_missing][:percent] = format_percent(100*data[:num_protocols_missing]/data[:num_precincts].to_f)
+      stats[:protocols_found] = Hash.new
+      stats[:protocols_found][:number] = format_number(data[:num_protocols_found])
+      stats[:protocols_found][:percent] = format_percent(100*data[:num_protocols_found]/data[:num_precincts].to_f)
+      stats[:protocols_not_entered] = Hash.new
+      stats[:protocols_not_entered][:number] = data[:num_protocols_found] > 0 ? format_number(data[:num_protocols_not_entered]) : I18n.t('app.common.na')
+      stats[:protocols_not_entered][:percent] = data[:num_protocols_found] > 0 ? format_percent(100*data[:num_protocols_not_entered]/data[:num_protocols_found].to_f) : I18n.t('app.common.na')
+      stats[:protocols_validated] = Hash.new
+      stats[:protocols_validated][:number] = data[:num_protocols_found] > 0 ? format_number(data[:num_protocols_validated]) : I18n.t('app.common.na')
+      stats[:protocols_validated][:percent] = data[:num_protocols_found] > 0 ? format_percent(100*data[:num_protocols_validated]/data[:num_protocols_found].to_f) : I18n.t('app.common.na')
+    end    
+    return stats
+  end
+
+
+  # get the following:
+  # district id/name, total precincts (#), protocols found (#/%), protocols missing (#/%), protocols not entered (#/%), protocols validated (#/%) 
+  def self.overall_stats_by_district
+    districts = []
+
+    names = RegionDistrictName.all    
+    
+    sql = "select district_id, count(*) as num_precincts, sum(has_protocol) as num_protocols_found, (count(*) - sum(has_protocol)) as num_protocols_missing, "
+    sql << "sum(if(has_protocol = 1 and is_validated = 0, 1, 0)) as num_protocols_not_entered, sum(if(has_protocol = 1 and is_validated = 1, 1, 0)) as num_protocols_validated "
+    sql << "from district_precincts group by district_id order by district_id"
+
+    data = find_by_sql(sql)
+    
+    if data.present?
+      data.each do |district|
+        stats = Hash.new
+        districts << stats
+
+        index = names.index{|x| x.district_id == district[:district_id]}
+        
+        stats[:region] = index.present? ? names[index].region : nil
+        stats[:district] = index.present? ? names[index].district_name : nil
+        stats[:district_id] = district[:district_id]
+        stats[:district_id] = district[:district_id]
+        stats[:precincts] = format_number(district[:num_precincts])
+        stats[:protocols_missing] = Hash.new
+        stats[:protocols_missing][:number] = format_number(district[:num_protocols_missing])
+        stats[:protocols_missing][:percent] = format_percent(100*district[:num_protocols_missing]/district[:num_precincts].to_f)
+        stats[:protocols_found] = Hash.new
+        stats[:protocols_found][:number] = format_number(district[:num_protocols_found])
+        stats[:protocols_found][:percent] = format_percent(100*district[:num_protocols_found]/district[:num_precincts].to_f)
+        stats[:protocols_not_entered] = Hash.new
+        stats[:protocols_not_entered][:number] = district[:num_protocols_found] > 0 ? format_number(district[:num_protocols_not_entered]) : I18n.t('app.common.na')
+        stats[:protocols_not_entered][:percent] = district[:num_protocols_found] > 0 ? format_percent(100*district[:num_protocols_not_entered]/district[:num_protocols_found].to_f) : I18n.t('app.common.na')
+        stats[:protocols_validated] = Hash.new
+        stats[:protocols_validated][:number] = district[:num_protocols_found] > 0 ? format_number(district[:num_protocols_validated]) : I18n.t('app.common.na')
+        stats[:protocols_validated][:percent] = district[:num_protocols_found] > 0 ? format_percent(100*district[:num_protocols_validated]/district[:num_protocols_found].to_f) : I18n.t('app.common.na')
+      end
+    end    
+    return districts
+  end
+
 
 
 

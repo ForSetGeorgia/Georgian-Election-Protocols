@@ -1,76 +1,173 @@
+<div id="landing_page">
+  <div class="row-fluid">
+    <div class="span6">
+      <h2><%= t('.overall_stats.header') %></h2>
+      <% if @overall_stats.present? %>
+        <ul>
+          <li>
+            <strong><%= t('overall_stats.districts')%>:</strong>
+            <%= @overall_stats[:districts] %>
+          </li>
+          <li>
+            <strong><%= t('overall_stats.precincts')%>:</strong>
+            <%= @overall_stats[:precincts] %>
+          </li>
+          <li>
+            <strong><%= t('overall_stats.protocols_missing')%>:</strong>
+            <%= @overall_stats[:protocols_missing][:number] %>
+            (<%= @overall_stats[:protocols_missing][:percent] %>)
+          </li>
+          <li>
+            <strong><%= t('overall_stats.protocols_found')%>:</strong>
+            <%= @overall_stats[:protocols_found][:number] %>
+            (<%= @overall_stats[:protocols_found][:percent] %>)
+          </li>
+          <li>
+            <strong><%= t('overall_stats.protocols_not_entered')%>:</strong>
+            <%= @overall_stats[:protocols_not_entered][:number] %>
+            <% if @overall_stats[:protocols_not_entered][:number] != I18n.t('app.common.na') %>
+              (<%= @overall_stats[:protocols_not_entered][:percent] %>)
+            <% end %>
+          </li>
+          <li>
+            <strong><%= t('overall_stats.protocols_validated')%>:</strong>
+            <%= @overall_stats[:protocols_validated][:number] %>
+            <% if @overall_stats[:protocols_validated][:number] != I18n.t('app.common.na') %>
+              (<%= @overall_stats[:protocols_validated][:percent] %>)
+            <% end %>
+          </li>
+        </ul>
+      <% end %>
+    </div>
+    <div class="span6">
+      <h2><%= t('.overall_user_stats.header') %></h2>
+      <% if @overall_user_stats.present? %>
+        <ul>
+          <li>
+            <strong><%= t('.overall_user_stats.users')%>:</strong>
+            <%= @overall_user_stats[:users] %>
+          </li>
+          <li>
+            <strong><%= t('.overall_user_stats.submitted')%>:</strong>
+            <%= @overall_user_stats[:submitted] %>
+          </li>
+          <li>
+            <strong><%= t('.overall_user_stats.pending')%>:</strong>
+            <%= @overall_user_stats[:pending][:number] %>
+            <% if @overall_user_stats[:pending][:number] != I18n.t('app.common.na') %>
+              (<%= @overall_user_stats[:pending][:percent] %>)
+            <% end %>
+          </li>
+          <li>
+            <strong><%= t('.overall_user_stats.valid')%>:</strong>
+            <%= @overall_user_stats[:valid][:number] %>
+            <% if @overall_user_stats[:valid][:number] != I18n.t('app.common.na') %>
+              (<%= @overall_user_stats[:valid][:percent] %>)
+            <% end %>
+          </li>
+          <li>
+            <strong><%= t('.overall_user_stats.invalid')%>:</strong>
+            <%= @overall_user_stats[:invalid][:number] %>
+            <% if @overall_user_stats[:invalid][:number] != I18n.t('app.common.na') %>
+              (<%= @overall_user_stats[:invalid][:percent] %>)
+            <% end %>
+          </li>
+        </ul>
+      <% end %>
+    </div>
+  </div>
 
 
-<h2><%= t('.overall_stats.header') %></h2>
-<% if @overall_stats.present? %>
-  <ul>
-    <li>
-      <strong><%= t('overall_stats.districts')%>:</strong>
-      <%= @overall_stats[:districts] %>
-    </li>
-    <li>
-      <strong><%= t('overall_stats.precincts')%>:</strong>
-      <%= @overall_stats[:precincts] %>
-    </li>
-    <li>
-      <strong><%= t('overall_stats.protocols_missing')%>:</strong>
-      <%= @overall_stats[:protocols_missing][:number] %>
-      (<%= @overall_stats[:protocols_missing][:percent] %>)
-    </li>
-    <li>
-      <strong><%= t('overall_stats.protocols_found')%>:</strong>
-      <%= @overall_stats[:protocols_found][:number] %>
-      (<%= @overall_stats[:protocols_found][:percent] %>)
-    </li>
-    <li>
-      <strong><%= t('overall_stats.protocols_not_entered')%>:</strong>
-      <%= @overall_stats[:protocols_not_entered][:number] %>
-      <% if @overall_stats[:protocols_not_entered][:number] != I18n.t('app.common.na') %>
-        (<%= @overall_stats[:protocols_not_entered][:percent] %>)
-      <% end %>
-    </li>
-    <li>
-      <strong><%= t('overall_stats.protocols_validated')%>:</strong>
-      <%= @overall_stats[:protocols_validated][:number] %>
-      <% if @overall_stats[:protocols_validated][:number] != I18n.t('app.common.na') %>
-        (<%= @overall_stats[:protocols_validated][:percent] %>)
-      <% end %>
-    </li>
-  </ul>
-<% end %>
+  <h2><%= t('.overall_stats_by_district.header') %></h2>
+  <% if @overall_stats_by_district.present? %>
+    <table id="overall_stats_by_district" class="table table-striped">
+      <thead>
+        <tr>
+          <th>
+            <%= t('.overall_stats_by_district.region') %>
+          </th>
+          <th>
+            <%= t('.overall_stats_by_district.district') %>
+          </th>
+          <th>
+            <%= t('.overall_stats_by_district.district_id') %>
+          </th>
+          <th>
+            <%= t('.overall_stats_by_district.precincts') %>
+          </th>
+          <th>
+            <%= t('.overall_stats_by_district.protocols_missing') %> (#)
+          </th>
+          <th>
+            <%= t('.overall_stats_by_district.protocols_found') %> (#)
+          </th>
+          <th>
+            <%= t('.overall_stats_by_district.protocols_not_entered') %> (#)
+          </th>
+          <th>
+            <%= t('.overall_stats_by_district.protocols_validated') %> (#)
+          </th>
+          <th>
+            <%= t('.overall_stats_by_district.protocols_missing') %> (%)
+          </th>
+          <th>
+            <%= t('.overall_stats_by_district.protocols_found') %> (%)
+          </th>
+          <th>
+            <%= t('.overall_stats_by_district.protocols_not_entered') %> (%)
+          </th>
+          <th>
+            <%= t('.overall_stats_by_district.protocols_validated') %> (%)
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @overall_stats_by_district.each do |district| %>
+          <tr>
+            <td>
+              <%= district[:region] %>
+            </td>    
+            <td>
+              <%= district[:district] %>
+            </td>    
+            <td>
+              <%= district[:district_id] %>
+            </td>    
+            <td>
+              <%= district[:precincts] %>
+            </td>    
+            <td>
+              <%= district[:protocols_missing][:number] %>
+            </td>    
+            <td>
+              <%= district[:protocols_found][:number] %>
+            </td>    
+            <td>
+              <%= district[:protocols_not_entered][:number] %>
+            </td>    
+            <td>
+              <%= district[:protocols_validated][:number] %>
+            </td>    
+            <td>
+              <%= district[:protocols_missing][:percent] %>
+            </td>    
+            <td>
+              <%= district[:protocols_found][:percent] %>
+            </td>    
+            <td>
+              <%= district[:protocols_not_entered][:percent] %>
+            </td>    
+            <td>
+              <%= district[:protocols_validated][:percent] %>
+            </td>    
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
 
-<br /><br/>
-<h2><%= t('.overall_user_stats.header') %></h2>
-<% if @overall_user_stats.present? %>
-  <ul>
-    <li>
-      <strong><%= t('.overall_user_stats.users')%>:</strong>
-      <%= @overall_user_stats[:users] %>
-    </li>
-    <li>
-      <strong><%= t('.overall_user_stats.submitted')%>:</strong>
-      <%= @overall_user_stats[:submitted] %>
-    </li>
-    <li>
-      <strong><%= t('.overall_user_stats.pending')%>:</strong>
-      <%= @overall_user_stats[:pending][:number] %>
-      <% if @overall_user_stats[:pending][:number] != I18n.t('app.common.na') %>
-        (<%= @overall_user_stats[:pending][:percent] %>)
-      <% end %>
-    </li>
-    <li>
-      <strong><%= t('.overall_user_stats.valid')%>:</strong>
-      <%= @overall_user_stats[:valid][:number] %>
-      <% if @overall_user_stats[:valid][:number] != I18n.t('app.common.na') %>
-        (<%= @overall_user_stats[:valid][:percent] %>)
-      <% end %>
-    </li>
-    <li>
-      <strong><%= t('.overall_user_stats.invalid')%>:</strong>
-      <%= @overall_user_stats[:invalid][:number] %>
-      <% if @overall_user_stats[:invalid][:number] != I18n.t('app.common.na') %>
-        (<%= @overall_user_stats[:invalid][:percent] %>)
-      <% end %>
-    </li>
-  </ul>
-<% end %>
+
+  <% end %>
+
+</div>
+
 
