@@ -190,14 +190,14 @@ class CrowdDatum < ActiveRecord::Base
       stats[:users] = format_number(user_count)
       stats[:submitted] = format_number(data[:num_submitted])
       stats[:pending] = Hash.new
-      stats[:pending][:number] = data[:num_submitted] > 0 ? format_number(data[:num_pending]) : I18n.t('app.common.na')
-      stats[:pending][:percent] = data[:num_submitted] > 0 ? format_percent(100*data[:num_pending]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+      stats[:pending][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_pending]) : I18n.t('app.common.na')
+      stats[:pending][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_pending]/data[:num_submitted].to_f) : I18n.t('app.common.na')
       stats[:valid] = Hash.new
-      stats[:valid][:number] = data[:num_submitted] > 0 ? format_number(data[:num_valid]) : I18n.t('app.common.na')
-      stats[:valid][:percent] = data[:num_submitted] > 0 ? format_percent(100*data[:num_valid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+      stats[:valid][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_valid]) : I18n.t('app.common.na')
+      stats[:valid][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_valid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
       stats[:invalid] = Hash.new
-      stats[:invalid][:number] = data[:num_submitted] > 0 ? format_number(data[:num_invalid]) : I18n.t('app.common.na')
-      stats[:invalid][:percent] = data[:num_submitted] > 0 ? format_percent(100*data[:num_invalid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+      stats[:invalid][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_invalid]) : I18n.t('app.common.na')
+      stats[:invalid][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_invalid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
     end    
     return stats
   
