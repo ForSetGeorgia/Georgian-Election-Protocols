@@ -63,9 +63,17 @@ en:
     application:
       admin: Admin
       sign_out: Sign Out
+      sign_in: Sign In
       js_link_title: "Visit JumpStart Georgia's website"
       js_link_text: Built by
       js_slogan: JumpStart Georgia - Communicating Information Better
+      training: Training
+      enter_data: Enter Data
+      user_stats:
+        submitted: Submitted
+        pedning: Pending
+        valid: Valid
+        invalid: Invalid
     unsupported_browser:
       title: Unsupported Browser
       p1: We are sorry to report that your browser is out of date and will not properly render the content from this website.
@@ -120,8 +128,11 @@ en:
         valid: Records with Valid Match
         invalid: Records with Invalid Match
     training:
-      data_mismatch: Red fields don't match the correct data
+      title: Training Center
+      data_mismatch: "Red fields don't match the correct data"
       success: Success, data entered by you was correct. Showing next protocol
       completed: You have successfully completed the training
-              
+    protocol:
+      title: Enter Data
+      no_protocols: At this time, there are no protocols to enter.              
       

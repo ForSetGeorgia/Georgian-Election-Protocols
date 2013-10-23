@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 
 	before_filter :set_locale
 	before_filter :is_browser_supported?
+	before_filter :set_global_variables
 	before_filter :initialize_gon
 
 	unless Rails.application.config.consider_all_requests_local
@@ -56,6 +57,13 @@ logger.debug "////////////////////////// BROWSER NOT SUPPORTED"
   def default_url_options(options={})
     { :locale => I18n.locale }
   end
+
+	def set_global_variables
+	  # the user stats are updated after a protocol is saved so do not need to call twice
+	  if user_signed_in? && !(params[:contorller] == "root" && params[:action] == "protocol")
+  		@user_stats = CrowdDatum.overall_stats_by_user(current_user.id) 
+		end
+	end
 
 	def initialize_gon
 		gon.set = true

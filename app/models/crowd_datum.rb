@@ -225,6 +225,41 @@ class CrowdDatum < ActiveRecord::Base
 
   end
 
+  #######################
+  #######################
+  # get the following for a user:
+  # user id, total submitted (#), pending (#/%), valid (#/%), invalid (#/%)
+  def self.overall_stats_by_user(user_id)
+    stats = nil
+
+    if user_id.present?
+
+      sql = "select sum(if(is_extra = 0, 1, 0)) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
+      sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
+      sql << "from crowd_data where user_id = :user_id"
+
+      data = find_by_sql([sql, :user_id => user_id])
+
+      if data.present?
+        data = data.first
+        stats = Hash.new
+        stats[:user_id] = user_id
+        stats[:submitted] = data[:num_submitted].present? ? format_number(data[:num_submitted]) : 0
+        stats[:pending] = Hash.new
+        stats[:pending][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_pending]) : I18n.t('app.common.na')
+        stats[:pending][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_pending]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+        stats[:valid] = Hash.new
+        stats[:valid][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_valid]) : I18n.t('app.common.na')
+        stats[:valid][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_valid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+        stats[:invalid] = Hash.new
+        stats[:invalid][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_invalid]) : I18n.t('app.common.na')
+        stats[:invalid][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_invalid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+      end
+      return stats
+
+    end
+  end
+
 
 
   protected 

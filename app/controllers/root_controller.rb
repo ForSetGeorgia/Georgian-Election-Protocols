@@ -17,6 +17,7 @@ class RootController < ApplicationController
     if request.post?
       @crowd_datum = CrowdDatum.new(params[:crowd_datum])
       valid = @crowd_datum.save
+  		@user_stats = CrowdDatum.overall_stats_by_user(current_user.id) 
     end
 
     # get the next record if there were no errors

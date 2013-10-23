@@ -1,71 +1,81 @@
-<div id="protocol-form-container">
+<% title t('.title') %>
 
-  <%= image_tag @crowd_datum.image_path, :id => 'protocolimg' %>
+<% if @crowd_datum.blank? %>
+  <p>
+    <%= t('.no_protocols') %>  
+  </p>
 
-  <%= semantic_form_for @crowd_datum, :url => protocol_path do |f| %>
-    <%= f.inputs do %>
-      <%= f.input :district_id, :as => :hidden %>
-      <%= f.input :precinct_id, :as => :hidden %>
-      <%= f.input :user_id, :as => :hidden %>
+<% else %>
 
-      <div class="m m1">
-        <%= f.input :possible_voters, :label => '1', :as => :string %>
-      </div>
+  <div id="protocol-form-container">
 
-      <div class="m m2">
-        <%= f.input :special_voters, :label => '2', :as => :string %>
-      </div>
+    <%= image_tag @crowd_datum.image_path, :id => 'protocolimg' %>
 
-      <div class="inline clearfix">
-        <div class="m m3">
-          <%= f.input :votes_by_1200, :label => '3a (12:00)', :as => :string %>
+    <%= semantic_form_for @crowd_datum, :url => protocol_path do |f| %>
+      <%= f.inputs do %>
+        <%= f.input :district_id, :as => :hidden %>
+        <%= f.input :precinct_id, :as => :hidden %>
+        <%= f.input :user_id, :as => :hidden %>
+
+        <div class="m m1">
+          <%= f.input :possible_voters, :label => '1', :as => :string %>
         </div>
-        <div class="m m4">
-          <%= f.input :votes_by_1700, :label => '3b (17:00)', :as => :string %>
+
+        <div class="m m2">
+          <%= f.input :special_voters, :label => '2', :as => :string %>
         </div>
-      </div>
+
+        <div class="inline clearfix">
+          <div class="m m3">
+            <%= f.input :votes_by_1200, :label => '3a (12:00)', :as => :string %>
+          </div>
+          <div class="m m4">
+            <%= f.input :votes_by_1700, :label => '3b (17:00)', :as => :string %>
+          </div>
+        </div>
 
 
-      <%  [
-            [4, :ballots_signed_for],
-            [5, :ballots_available],
-            [1, :party_1],
-            [2, :party_2],
-            [3, :party_3],
-            [4, :party_4],
-            [5, :party_5],
-            [6, :party_6],
-            [7, :party_7],
-            [8, :party_8],
-            [9, :party_9],
-            [10, :party_10],
-            [11, :party_11],
-            [12, :party_12],
-            [13, :party_13],
-            [14, :party_14],
-            [15, :party_15],
-            [16, :party_16],
-            [17, :party_17],
-            [18, :party_18],
-            [19, :party_19],
-            [20, :party_20],
-            [21, :party_21],
-            [22, :party_22],
-            [41, :party_41],
-            [6, :invalid_ballots_submitted]
-          ].each_with_index do |x, i| %>
-        <div class="m m<%= (i + 5) %>">
-          <%= f.input x[1], :label => x[0].to_s, :as => :string %>
-        </div>
+        <%  [
+              [4, :ballots_signed_for],
+              [5, :ballots_available],
+              [1, :party_1],
+              [2, :party_2],
+              [3, :party_3],
+              [4, :party_4],
+              [5, :party_5],
+              [6, :party_6],
+              [7, :party_7],
+              [8, :party_8],
+              [9, :party_9],
+              [10, :party_10],
+              [11, :party_11],
+              [12, :party_12],
+              [13, :party_13],
+              [14, :party_14],
+              [15, :party_15],
+              [16, :party_16],
+              [17, :party_17],
+              [18, :party_18],
+              [19, :party_19],
+              [20, :party_20],
+              [21, :party_21],
+              [22, :party_22],
+              [41, :party_41],
+              [6, :invalid_ballots_submitted]
+            ].each_with_index do |x, i| %>
+          <div class="m m<%= (i + 5) %>">
+            <%= f.input x[1], :label => x[0].to_s, :as => :string %>
+          </div>
+        <% end %>
+
+
+
       <% end %>
 
+      <%= f.actions do %>
+        <%= f.action :submit, :as => :input %>
+      <% end %>
+  <% end %>
 
-
-    <% end %>
-
-    <%= f.actions do %>
-      <%= f.action :submit, :as => :input %>
-    <% end %>
+  </div>
 <% end %>
-
-</div>

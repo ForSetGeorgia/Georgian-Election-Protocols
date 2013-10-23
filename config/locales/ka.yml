@@ -63,9 +63,17 @@ ka:
     application:
       admin: ადმინისტრატო
       sign_out: გასვლა
+      sign_in: Sign In
       js_link_title: "ეწვიეთ ჯამპსტარტ ჯორჯიას ვებ-გვერდს"
       js_link_text: აგებულია
       js_slogan: ჯამპსტარტ ჯორჯიას - ჩვენ გაწვდით ინფორმაციას უკეთ
+      training: Training
+      enter_data: Enter Data
+      user_stats:
+        submitted: Submitted
+        pedning: Pending
+        valid: Valid
+        invalid: Invalid
     unsupported_browser:
       title: არასათანადო ბრაუზერი
       p1: სამწუხაროდ თქვენი ინტერნეტ ბრაუზერის მოხმარების ვადა გასულია და ვერ მოხდება ვებ-გვერდთან სრულად დაკავშირება.
@@ -121,7 +129,10 @@ ka:
         valid: Records with Valid Match
         invalid: Records with Invalid Match
     training:
+      title: Training Center
       data_mismatch: გაწითლებული ველები არ ემთხვევა სწორ მონაცემებს
       success: თქვენ ყველა ველი სწორად შეავსეთ. მოცემულია შემდეგი ოქმი
       completed: თქვენ წარმატებით დაასრულეთ მოსამზადებელი ეტაპი
-        
+    protocol:
+      title: Enter Data
+      no_protocols: At this time, there are no protocols to enter.        
