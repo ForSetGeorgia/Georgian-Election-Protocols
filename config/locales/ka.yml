@@ -102,4 +102,11 @@ ka:
         protocols_found: Protocols Found
         protocols_not_entered: Protocols Not Entered
         protocols_validated: Protocols Validated
+      overall_user_stats:
+        header: User Statistics
+        users: Users
+        submitted: Records Submitted
+        pending: Records Waiting for Match
+        valid: Records with Valid Match
+        invalid: Records with Invalid Match
         
