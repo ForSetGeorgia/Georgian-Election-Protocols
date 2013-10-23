@@ -45,11 +45,11 @@ class DistrictPrecinct < ActiveRecord::Base
       stats[:protocols_found][:number] = format_number(data[:num_protocols_found])
       stats[:protocols_found][:percent] = format_percent(100*data[:num_protocols_found]/data[:num_precincts].to_f)
       stats[:protocols_not_entered] = Hash.new
-      stats[:protocols_not_entered][:number] = format_number(data[:num_protocols_not_entered])
-      stats[:protocols_not_entered][:percent] = format_percent(100*data[:num_protocols_not_entered]/data[:num_protocols_found].to_f)
+      stats[:protocols_not_entered][:number] = data[:num_protocols_found] > 0 ? format_number(data[:num_protocols_not_entered]) : I18n.t('app.common.na')
+      stats[:protocols_not_entered][:percent] = data[:num_protocols_found] > 0 ? format_percent(100*data[:num_protocols_not_entered]/data[:num_protocols_found].to_f) : I18n.t('app.common.na')
       stats[:protocols_validated] = Hash.new
-      stats[:protocols_validated][:number] = format_number(data[:num_protocols_validated])
-      stats[:protocols_validated][:percent] = format_percent(100*data[:num_protocols_validated]/data[:num_protocols_found].to_f)
+      stats[:protocols_validated][:number] = data[:num_protocols_found] > 0 ? format_number(data[:num_protocols_validated]) : I18n.t('app.common.na')
+      stats[:protocols_validated][:percent] = data[:num_protocols_found] > 0 ? format_percent(100*data[:num_protocols_validated]/data[:num_protocols_found].to_f) : I18n.t('app.common.na')
     end    
     return stats
   end

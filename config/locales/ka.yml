@@ -53,6 +53,7 @@ ka:
     common:
       app_name: 2013 Presidential Protocols
       added_on: "დამატებულია: %{date}" 
+      na: 'N/A'
     msgs:
       does_not_exist: თქვენ ცდილობთ იხილოთ გვერდი, რომელიც არ არსებობს.
       not_authorized: თქვენ არ გაქვთ უფლება იხილოთ ეს გვერდი.
