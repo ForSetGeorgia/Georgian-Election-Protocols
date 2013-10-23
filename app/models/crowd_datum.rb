@@ -188,7 +188,7 @@ class CrowdDatum < ActiveRecord::Base
       data = data.first
       stats = Hash.new
       stats[:users] = format_number(user_count)
-      stats[:submitted] = format_number(data[:num_submitted])
+      stats[:submitted] = data[:num_submitted].present? ? format_number(data[:num_submitted]) : 0
       stats[:pending] = Hash.new
       stats[:pending][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_pending]) : I18n.t('app.common.na')
       stats[:pending][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_pending]/data[:num_submitted].to_f) : I18n.t('app.common.na')
