@@ -65,6 +65,7 @@ en:
       sign_out: Sign Out
       js_link_title: "Visit JumpStart Georgia's website"
       js_link_text: Built by
+      js_slogan: JumpStart Georgia - Communicating Information Better
     unsupported_browser:
       title: Unsupported Browser
       p1: We are sorry to report that your browser is out of date and will not properly render the content from this website.
@@ -96,6 +97,16 @@ en:
       overall_stats:
         header: Overall Statistics
         districts: Districts
+        precincts: Precincts
+        protocols_missing: Protocols Missing
+        protocols_found: Protocols Found
+        protocols_not_entered: Protocols Not Entered
+        protocols_validated: Protocols Validated
+      overall_stats_by_district:
+        header: District Statistics
+        region: Region
+        district: District
+        district_id: District ID
         precincts: Precincts
         protocols_missing: Protocols Missing
         protocols_found: Protocols Found

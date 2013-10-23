@@ -65,6 +65,7 @@ ka:
       sign_out: გასვლა
       js_link_title: "ეწვიეთ ჯამპსტარტ ჯორჯიას ვებ-გვერდს"
       js_link_text: აგებულია
+      js_slogan: ჯამპსტარტ ჯორჯიას - ჩვენ გაწვდით ინფორმაციას უკეთ
     unsupported_browser:
       title: არასათანადო ბრაუზერი
       p1: სამწუხაროდ თქვენი ინტერნეტ ბრაუზერის მოხმარების ვადა გასულია და ვერ მოხდება ვებ-გვერდთან სრულად დაკავშირება.
@@ -97,6 +98,16 @@ ka:
       overall_stats:
         header: Overall Statistics
         districts: Districts
+        precincts: Precincts
+        protocols_missing: Protocols Missing
+        protocols_found: Protocols Found
+        protocols_not_entered: Protocols Not Entered
+        protocols_validated: Protocols Validated
+      overall_stats_by_district:
+        header: District Statistics
+        region: Region
+        district: District
+        district_id: District ID
         precincts: Precincts
         protocols_missing: Protocols Missing
         protocols_found: Protocols Found
