@@ -14,6 +14,7 @@ ka:
       messages:
         required_field: "სავალდებულოა"
         already_exists: 'უკვე არსებობს მონაცემთა ბაზაში'
+        required_party_votes: "At least one candidate/party must have a vote value."
   helpers:
     actions: აირჩიეთ
     links:
