@@ -1,7 +1,7 @@
 ##################################
 ##### SET THESE VARIABLES ########
 ##################################
-server "alpha.jumpstart.ge", :web, :app, :db, primary: true # server where app is located
+server "epsilon.jumpstart.ge", :web, :app, :db, primary: true # server where app is located
 set :application, "Protocols" # unique name of application
 set :user, "protocols"# name of user on server
 set :ngnix_conf_file_loc, "production/nginx.conf" # location of nginx conf file
