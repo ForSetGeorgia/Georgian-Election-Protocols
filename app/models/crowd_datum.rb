@@ -20,26 +20,26 @@ class CrowdDatum < ActiveRecord::Base
   validates :district_id, :precinct_id, :possible_voters, :special_voters, 
     :votes_by_1200, :votes_by_1700, :ballots_signed_for, :ballots_available, 
     :invalid_ballots_submitted, :presence => true
-    
-  validate :party_votes_provided  
+
+  validate :party_votes_provided
 
   after_create :match_and_validate  
 
   #######################
   #######################
-  
+
   # at least one party must have votes
   def party_votes_provided
     has_value = false
     parties = [self.party_1, self.party_2, self.party_3, self.party_4, self.party_5, self.party_6, self.party_7, self.party_8, self.party_9, self.party_10, self.party_11, self.party_12, self.party_13, self.party_14, self.party_15, self.party_16, self.party_17, self.party_18, self.party_19, self.party_20, self.party_21, self.party_22, self.party_41]    
-    
+
     parties.each do |party|
       if party.present?
         has_value = true
         break
       end
     end
-    
+
     if !has_value
       errors.add(:base, I18n.t('activerecord.errors.messages.required_party_votes'))
     end
@@ -47,13 +47,13 @@ class CrowdDatum < ActiveRecord::Base
 
 
 
-  # if another record exists for this district/precinct 
+  # if another record exists for this district/precinct
   # and the district/precinct is not already approved
   # see if this record matches that already on file
   def match_and_validate
     CrowdDatum.transaction do
       existing = CrowdDatum.where(["district_id = ? and precinct_id = ? and user_id != ? and is_valid is null and is_extra = 0", self.district_id, self.precinct_id, self.user_id])
-      
+
       if existing.present?
         # see if same
         matches = true
@@ -77,7 +77,7 @@ class CrowdDatum < ActiveRecord::Base
 
           # save pres record
           rd = RegionDistrictName.by_district(self.district_id)
-          pres = President2013.new  
+          pres = President2013.new
           pres.region = rd.present? ? rd.region : nil
           pres.district_id = self.district_id
           pres.district_name = rd.present? ? rd.district_name : nil
@@ -115,15 +115,15 @@ class CrowdDatum < ActiveRecord::Base
           pres['41 - Giorgi Margvelashvili'] = self.party_41
           pres.num_valid_votes = pres.calculate_valid_votes
           pres.logic_check_fail = pres.calculate_logic_check_fail
-          pres.logic_check_difference = pres.calculate_logic_check_difference 
+          pres.logic_check_difference = pres.calculate_logic_check_difference
           pres.more_ballots_than_votes_flag = pres.calculate_more_ballots_than_votes_flag
           pres.more_ballots_than_votes = pres.calculate_more_ballots_than_votes
           pres.more_votes_than_ballots_flag = pres.calculate_more_votes_than_ballots_flag
           pres.more_votes_than_ballots = pres.calculate_more_votes_than_ballots
-          
+
           pres.save
-          
-        
+
+
         end
       else
         # check if this district/precinct has already been validated
@@ -152,19 +152,19 @@ class CrowdDatum < ActiveRecord::Base
       # records exist that are waiting for a match
       rand = CrowdDatum.find_by_id(needs_match.map{|x| x.id}.sample)
       next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
-       
+
     else
       # see if there are any precincts that are still waiting for processing
       needs_processing = DistrictPrecinct.select('district_id, precinct_id').where(:is_validated => false)
-      
+
       if needs_processing.present?
         # precincts are waiting for processing
         # create a new crowd data record so it can be processed
         rand = needs_processing.sample
-        next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id) 
+        next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
       end
     end
-    
+
     return next_record
   end
 
@@ -177,13 +177,13 @@ class CrowdDatum < ActiveRecord::Base
     stats = nil
 
     user_count = User.count
-    
+
     sql = "select sum(if(is_extra = 0, 1, 0)) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
     sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
     sql << "from crowd_data"
-  
+
     data = find_by_sql(sql)
-    
+
     if data.present?
       data = data.first
       stats = Hash.new
@@ -198,16 +198,16 @@ class CrowdDatum < ActiveRecord::Base
       stats[:invalid] = Hash.new
       stats[:invalid][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_invalid]) : I18n.t('app.common.na')
       stats[:invalid][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_invalid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
-    end    
+    end
     return stats
-  
-  end  
+
+  end
 
 
 
   protected 
-  
-  
+
+
   def self.format_number(number)
     ActionController::Base.helpers.number_with_delimiter(ActionController::Base.helpers.number_with_precision(number))
   end
