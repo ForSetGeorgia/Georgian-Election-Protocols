@@ -21,9 +21,9 @@ BootstrapStarter::Application.routes.draw do
 		match '/json/mark_found_protocols', :to => 'json#mark_found_protocols', :as => :json_mark_found_protocols, :via => [:get,:post], :defaults => {:format => 'json'}
 
 		match '/protocol', :to => 'root#protocol', :as => :protocol, :via => [:get, :post]
-
-
 		match '/training', :to => 'root#training', :as => :training, :via => [:get, :post]
+		match '/download', :to => 'root#download', :as => :download, :via => :get
+		match '/generate_spreadsheet', :to => 'root#generate_spreadsheet', :as => :generate_spreadsheet, :via => :get, :default => {:format => 'csv'}
 
 
 		root :to => 'root#index'

@@ -54,11 +54,48 @@ en:
       app_name: 2013 Presidential Protocols
       added_on: "Added on: %{date}" 
       na: 'N/A'
+      file_name: 2013 Presidential Results
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
       success_created: "%{obj} was successfully created."
       success_updated: "%{obj} was successfully updated."
+    csv_header:
+      region: Region
+      district_id: District ID
+      district_name: District Name
+      precinct_id: Precinct ID
+      attached_precinct_id: Special Precincts
+      num_possible_voters: Possible Voters
+      num_special_voters: Special Voters
+      num_at_12: 'Votes by 12:00'
+      num_at_17: 'Votes by 17:00'
+      num_votes: Ballots Signed For
+      num_ballots: Ballots Availabl
+      num_invalid_votes: Invalid Ballots
+      1_Tamaz_Bibiluri: 1 Tamaz Bibiluri  
+      2_Giorgi_Liluashvili: 2 Giorgi Liluashvili 
+      3_Sergo_Javakhidze: 3 Sergo Javakhidze 
+      4_Koba_Davitashvili: 4 Koba Davitashvili 
+      5_Davit_Bakradze: 5 Davit Bakradze 
+      6_Akaki_Asatiani: 6 Akaki Asatiani 
+      7_Nino_Chanishvili: 7 Nino Chanishvili 
+      8_Teimuraz_Bobokhidze: 8 Teimuraz Bobokhidze 
+      9_Shalva_Natelashvili: 9 Shalva Natelashvili 
+      10_Giorgi_Targamadze: 10 Giorgi Targamadze 
+      11_Levan_Chachua: 11 Levan Chachua 
+      12_Nestan_Kirtadze: 12 Nestan Kirtadze 
+      13_Giorgi_Chikhladze: 13 Giorgi Chikhladze 
+      14_Nino_Burjanadze: 14 Nino Burjanadze 
+      15_Zurab_Kharatishvili: 15 Zurab Kharatishvili 
+      16_Mikheil_Saluashvili: 16 Mikheil Saluashvili 
+      17_Kartlos_Gharibashvili: 17 Kartlos Gharibashvili 
+      18_Mamuka_Chokhonelidze: 18 Mamuka Chokhonelidze 
+      19_Avtandil_Margiani: 19 Avtandil Margiani 
+      20_Nugzar_Avaliani: 20 Nugzar Avaliani 
+      21_Mamuka_Melikishvili: 21 Mamuka Melikishvili 
+      22_Teimuraz_Mzhavia: 22 Teimuraz Mzhavia 
+      41_Giorgi_Margvelashvili: 41 Giorgi Margvelashvili       
   layouts:
     application:
       admin: Admin
@@ -69,6 +106,7 @@ en:
       js_slogan: JumpStart Georgia - Communicating Information Better
       training: Training
       enter_data: Enter Data
+      download: Download Data
       user_stats:
         submitted: Submitted
         pedning: Pending
@@ -136,3 +174,6 @@ en:
       title: Enter Data
       no_protocols: At this time, there are no protocols to enter.              
       no_training: You must completed training before you can start entering real data.
+    download:
+      title: Download 2013 Election Results Data
+      num_precincts: There are %{count} out of %{total} precincts (%{percent}) with election data.
