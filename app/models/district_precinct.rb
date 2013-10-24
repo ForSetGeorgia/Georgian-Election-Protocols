@@ -171,7 +171,28 @@ class DistrictPrecinct < ActiveRecord::Base
   end
 
 
+  ############################################
+  ############################################
+  def self.new_image_search
+    files = Dir.glob("#{Rails.root}/public/system/protocols/**/*.jpg")
+    if files.present?
+      ids = files.map{|x| x.split('/').last.gsub('.jpg', '').split('-')}    
+      if ids.present?
+        # remove anything that was there
+        HasProtocol.delete_all
 
+        # load all districts/precincts that exist
+        sql = "insert into has_protocols (district_id, precinct_id) values "
+        sql << ids.map{|x| "(#{x[0]}, #{x[1]})"}.join(", ")
+        ActiveRecord::Base.connection.execute(sql)
+        
+        # update district precint table to mark these as existing
+        sql = "update district_precincts as dp inner join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
+        sql << "set dp.has_protocol = 1 "
+        ActiveRecord::Base.connection.execute(sql)
+      end
+    end
+  end
 
   protected 
   

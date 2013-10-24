@@ -37,7 +37,7 @@ class CrowdDatum < ActiveRecord::Base
     exist = false
     
     if self.district_id.present? && self.precinct_id.present?
-      path = "#{FOLDER_PATH}/#{district_id}/#{district_id}_#{precinct_id}.jpg"
+      path = "#{FOLDER_PATH}/#{district_id}/#{district_id}-#{precinct_id}.jpg"
       exist = File.exist?("#{Rails.root}/public#{path}")
     end
     
