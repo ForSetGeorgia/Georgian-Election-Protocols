@@ -4,7 +4,7 @@
 
   <%= image_tag '/training/' + @next_protocol.to_s + '.jpg', :id => 'protocolimg' %>
 
-  <form action="" method="post" class="training">
+  <%= form_tag training_path, :class => 'training' do %>
     <% [
         [1, :possible_voters],
         [2, :special_voters],
@@ -51,7 +51,6 @@
     <input type="hidden" name="protocol_number" value="<%= @next_protocol %>" />
     <input type="submit" value="Submit" />
 
-  </form>
-
+  <% end %>
 
 </div>

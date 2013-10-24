@@ -1,10 +1,10 @@
 {
   "possible_voters": "997",
   "special_voters": "7",
-  "votes_by_1200": "656",
+  "votes_by_1200": "350",
   "votes_by_1700": "656",
-  "ballots_signed_for": "900",
-  "ballots_available": "1",
+  "ballots_signed_for": "656",
+  "ballots_available": "900",
   "party_1": "1",
   "party_4": "",
   "party_5": "224",

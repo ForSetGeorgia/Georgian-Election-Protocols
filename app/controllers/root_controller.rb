@@ -31,25 +31,17 @@ class RootController < ApplicationController
   def training
     protocols = (1..5).to_a
 
-    user = User.find(1)
+    user = User.find(current_user.id)
+    trained = user.trained.present? ? user.trained.split(',') : []
+    trained = trained.map{|x| x.to_i}
 
-    if params['protocol'].nil?
-      if user.trained.blank?
-        @next_protocol = protocols.sample
-      else
-        trained = user.trained.split(',')
-        left = protocols - trained
-        if left.length
-          @next_protocol = left.sample
-        else
-          redirect_to root_path, :notice => I18n.t('root.training.completed')
-        end
-      end
-    elsif
+    if params['protocol'].present?
       @next_protocol = params['protocol_number']
       filedata = JSON.parse(File.read('public/training/' + @next_protocol + '.json'))
       if filedata == params['protocol']
-        user.update(:trained => (user.trained.split(',') + [@next_protocol]).join(','))
+        trained << @next_protocol
+        user.trained = trained.join(',')
+        user.save
   			flash[:notice] = I18n.t('root.training.success')
       else
         @errors = []
@@ -62,7 +54,25 @@ class RootController < ApplicationController
       end
     end
 
-    render :template => 'root/training'
+    # if no errors, load the next protocol
+    if @errors.blank?
+      params['protocol'] = nil # make sure form fields are not pre-populated with the last form
+      if user.trained.blank?
+        @next_protocol = protocols.sample
+      else
+        left = protocols.reject{|x| trained.include?(x)}
+        if left.present?
+          @next_protocol = left.sample
+        else
+          redirect_to protocol_path, :notice => I18n.t('root.training.completed')
+          return
+        end
+      end
+    end
+    
+    respond_to do |format|
+      format.html # index.html.erb
+    end
   end
 
 end
