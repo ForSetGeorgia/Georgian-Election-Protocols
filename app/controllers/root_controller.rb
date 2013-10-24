@@ -48,7 +48,7 @@ class RootController < ApplicationController
       @next_protocol = params['protocol_number']
       filedata = JSON.parse(File.read('public/training/' + @next_protocol + '.json'))
       if filedata == params['protocol']
-        trained << @next_protocol
+        trained = (trained + [@next_protocol.to_i]).uniq.sort
         user.trained = trained.join(',')
         user.save
   			flash[:notice] = I18n.t('root.training.success')
@@ -69,7 +69,7 @@ class RootController < ApplicationController
       if user.trained.blank?
         @next_protocol = protocols.sample
       else
-        left = protocols.reject{|x| trained.include?(x)}
+        left = protocols - trained
         if left.present?
           @next_protocol = left.sample
         else
@@ -78,7 +78,7 @@ class RootController < ApplicationController
         end
       end
     end
-    
+
     respond_to do |format|
       format.html # index.html.erb
     end

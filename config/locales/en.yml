@@ -168,7 +168,7 @@ en:
     training:
       title: Training Center
       data_mismatch: "Red fields don't match the correct data"
-      success: Success, data entered by you was correct. Showing next protocol
+      success: Success, data you entered was correct. Showing next protocol
       completed: You have successfully completed the training
     protocol:
       title: Enter Data
