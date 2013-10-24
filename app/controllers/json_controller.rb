@@ -32,7 +32,7 @@ Rails.logger.debug "+++++++++++ params success and file_url present"
       file_name = params[:file_url].split('/').last
 Rails.logger.debug "+++++++++++ file_name = #{file_name}"
   
-      ElectionDataMigration.record_notification(params[:success], params[:msg], file_name)
+      ElectionDataMigration.record_notification(file_name, params[:success], params[:msg])
     end
 
     render text: "OK"

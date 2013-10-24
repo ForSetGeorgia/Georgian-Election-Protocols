@@ -11,6 +11,7 @@ BootstrapStarter::Application.routes.draw do
 		namespace :admin do
 			resources :users
   		match '/election_data', :to => 'election_data#index', :as => :election_data, :via => :get
+  		match '/election_data/create_migration', :to => 'election_data#create_migration', :as => :election_data_create_migration, :via => [:post, :get], :defaults => {:format => 'json'}
 		end
 
 
@@ -20,7 +21,7 @@ BootstrapStarter::Application.routes.draw do
     # json data
 		match '/json/missing_protocols', :to => 'json#missing_protocols', :as => :json_missing_protocols, :via => :get, :defaults => {:format => 'json'}
 		match '/json/mark_found_protocols', :to => 'json#mark_found_protocols', :as => :json_mark_found_protocols, :via => [:get,:post], :defaults => {:format => 'json'}
-		match '/json/election_data_notification_response', :to => 'json#election_data_notification', :as => :json_election_data_notification, :via => :put
+		match '/json/election_data_notification_response', :to => 'json#election_data_notification', :as => :json_election_data_notification, :via => :post
 
 		match '/protocol', :to => 'root#protocol', :as => :protocol, :via => [:get, :post]
 		match '/training', :to => 'root#training', :as => :training, :via => [:get, :post]

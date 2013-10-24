@@ -3,7 +3,7 @@ class ElectionDataMigration < ActiveRecord::Base
   require 'utf8_converter'
   require 'net/http'
 
-  MIN_PRECINCTS_CHANGE = 50
+  MIN_PRECINCTS_CHANGE = 2
   FILE_PATH = "#{Rails.root}/public/system/election_data_migrations/"
   URL_PATH = "/system/election_data_migrations/"
   
@@ -24,12 +24,42 @@ class ElectionDataMigration < ActiveRecord::Base
   end
   
   
-  def self.push_data(current_domain, respond_to_url)
+  def self.create_record
+Rails.logger.debug "################## create migration record"
+    migration = nil
+    
+    precinct_count = President2013.count
+    
+    if (precinct_count - last_precinct_count) >= MIN_PRECINCTS_CHANGE
+Rails.logger.debug "################## need to send data!"
+      # create record
+      migration = ElectionDataMigration.new(:num_precincts => precinct_count)
+
+      # get the csv data
+      csv = President2013.download_election_map_data    
+      # create directory if not exist
+      FileUtils.mkpath(FILE_PATH)
+      # save file
+  	  filename = clean_filename("#{I18n.t('app.common.file_name')}-#{I18n.l Time.now, :format => :file}") + ".csv"
+      File.open(FILE_PATH + filename, 'w') {|f| f.write(csv) }
+
+      migration.file_name = filename
+      
+      migration.save
+Rails.logger.debug "################## created migration record: #{migration.inspect}"
+      
+    end
+    
+Rails.logger.debug "################## create migration end"
+    return migration
+  end
+
+
+  def self.push_data_old(current_domain, respond_to_url)
 Rails.logger.debug "################## push data start"
     pushed = false
     
-#    precinct_count = President2013.count
-precinct_count = 50
+    precinct_count = President2013.count
     
     if (precinct_count - last_precinct_count) >= MIN_PRECINCTS_CHANGE
 Rails.logger.debug "################## need to send data!"
@@ -66,7 +96,7 @@ Rails.logger.debug "################## push data end"
 
   def self.record_notification(file_name, success, message)
     ElectionDataMigration.where(:file_name => file_name)
-      .update_all(:recieved_success_notification_at => Time.now, :success => success, :notification_message => message)
+      .update_all(:recieved_success_notification_at => Time.now, :success => success, :notification_msg => message)
   end
 
 
