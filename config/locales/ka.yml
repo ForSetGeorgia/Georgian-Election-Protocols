@@ -136,3 +136,4 @@ ka:
     protocol:
       title: Enter Data
       no_protocols: At this time, there are no protocols to enter.        
+      no_training: You must completed training before you can start entering real data.

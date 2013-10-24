@@ -13,6 +13,13 @@ class RootController < ApplicationController
 
   def protocol
 
+    # if the user has not completed training send them there
+    trained = current_user.trained.present? ? current_user.trained.split(',') : []
+    if trained.length < 5
+      redirect_to training_path, :notice => I18n.t('root.protocol.no_training')
+      return
+    end
+
     valid = true
     if request.post?
       @crowd_datum = CrowdDatum.new(params[:crowd_datum])
