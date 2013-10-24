@@ -22,6 +22,7 @@ class CrowdDatum < ActiveRecord::Base
     :invalid_ballots_submitted, :presence => true
 
   validate :party_votes_provided
+  validate :validate_numerical_values
 
   after_create :match_and_validate  
 
@@ -63,6 +64,28 @@ class CrowdDatum < ActiveRecord::Base
     end
   end
 
+  def self.numerical_values_provided(fields)
+    needed = [:possible_voters, :special_voters, :votes_by_1200, :votes_by_1700, :ballots_signed_for, :ballots_available, :invalid_ballots_submitted,
+              :party_1, :party_2, :party_3, :party_4, :party_5, :party_6, :party_7, :party_8, :party_9, :party_10, :party_11, :party_12,
+              :party_13, :party_14, :party_15, :party_16, :party_17, :party_18, :party_19, :party_20, :party_21, :party_22, :party_41]
+
+    errors = []
+    needed.each do |key|
+      val = fields[key]
+      if !val.nil? && val.length > 0 && !!val.to_s.match(/[a-zA-Z]/)
+        errors.push([key, I18n.t('errors.messages.not_a_number')])
+      end
+    end
+    @@numerical_errors = errors
+  end
+
+  def validate_numerical_values
+    if @@numerical_errors.present?
+      @@numerical_errors.each do |nm|
+        errors.add(nm[0], nm[1]);
+      end
+    end
+  end
 
 
   # if another record exists for this district/precinct

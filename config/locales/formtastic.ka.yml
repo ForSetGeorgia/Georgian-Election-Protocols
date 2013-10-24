@@ -9,5 +9,5 @@ ka:
     :submit: 'შენახვა %{model}'
     :cancel: 'გაუქმება %{model}'
     :reset: 'გადატვირთვა %{model}'
-    :required: 'საჭირო'      
+    :required: 'აუცილებელი'      
 
