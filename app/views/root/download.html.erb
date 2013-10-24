@@ -6,10 +6,15 @@
         :percent => number_to_percentage(number_with_precision(100*@num_precincts/@total_precincts.to_f))) %>
   </p>
 
-  <p>
-    <%= link_to 'CSV', generate_spreadsheet_path(:format => :csv) %>
+  <% if true @num_precincts == 0 %>
+    <p>
+      <%= t('.no_precincts') %>
+    </p>
+  <% else %>
+    <p>
+      <%= link_to 'CSV', generate_spreadsheet_path(:format => :csv) %>
 
-    <%= link_to 'XLS', generate_spreadsheet_path(:format => :xls) %>
-  </p>
-  
+      <%= link_to 'XLS', generate_spreadsheet_path(:format => :xls) %>
+    </p>
+  <% end %>  
 </div>

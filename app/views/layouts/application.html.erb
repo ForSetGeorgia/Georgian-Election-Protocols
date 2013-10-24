@@ -52,7 +52,10 @@
 				          <ul class="dropdown-menu">
                     <% if current_user.role?(User::ROLES[:admin]) %>
 						          <li>
-				   		         <%= link_to t('.admin'), admin_path %>
+				   		         <%= link_to t('.users'), admin_users_path %>
+										  </li>
+						          <li>
+				   		         <%= link_to t('.election_data'), admin_election_data_path %>
 										  </li>
                     <% end %>
 						        <li>

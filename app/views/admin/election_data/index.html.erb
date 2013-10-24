@@ -1,0 +1,62 @@
+<% title t('.title') %>
+
+<h2>
+  <%= t('.precinct_count', :count => @current_precinct_count) %>
+</h2>
+
+<% if @current_precinct_count == 0 %>
+
+  <p>
+    <%= t('.no_precincts') %>
+  </p>
+
+<% else %>
+
+  <p id="election_data_links">
+    <%= link_to t('.push_data'), admin_election_data_path(:push => "data") %>
+  </p>
+
+  <% if @migrations.present? %>
+      <table id="election_data" class="table table-striped">
+        <thead>
+          <tr>
+            <th>
+              <%= t('.sent_at') %>
+            </th>
+            <th>
+              <%= t('.num_precincts') %>
+            </th>
+            <th>
+              <%= t('.recieved_success_notification_at') %>
+            </th>
+            <th>
+              <%= t('.file') %>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @migrations.each do |migration| %>
+            <tr>
+              <td>
+                <%= l migration.created_at, :format => :file if migration.created_at.present? %>
+              </td>    
+              <td>
+                <%= migration.num_precincts %>
+              </td>    
+              <td>
+                <%= l migration.recieved_success_notification_at, :format => :file if migration.recieved_success_notification_at.present? %>
+              </td>    
+              <td>
+                <%= link_to(t('.view_file'), migration.file_url_path) if migration.file_url_path.present? %>
+              </td>    
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+  <% else %>
+    <p>
+      <%= t('.no_migrations') %>  
+    </p>
+  <% end %>
+<% end %>

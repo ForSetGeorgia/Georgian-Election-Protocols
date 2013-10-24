@@ -99,6 +99,8 @@ en:
   layouts:
     application:
       admin: Admin
+      users: Manage Users
+      election_data: Election Data Migration
       sign_out: Sign Out
       sign_in: Sign In
       js_link_title: "Visit JumpStart Georgia's website"
@@ -109,7 +111,7 @@ en:
       download: Download Data
       user_stats:
         submitted: Submitted
-        pedning: Pending
+        pending: Pending
         valid: Valid
         invalid: Invalid
     unsupported_browser:
@@ -138,6 +140,18 @@ en:
         title: New User
       show:
         title: User Details
+    election_data:
+      index:
+        title: Data Sent to Election Data Website
+        precinct_count: "Number of Precincts Procesed to Date: %{count}"
+        no_precincts: No election results exist yet!
+        push_data: Start a Migration
+        no_migrations: No data has been sent to the Election Data Website yet.
+        view_file: Download File
+        sent_at: Time Sent
+        num_precincts: Number of Precincts in File
+        recieved_success_notification_at: When Received Success Notification
+        file: CSV File
   root:
     index:
       overall_stats:
@@ -180,3 +194,4 @@ en:
     download:
       title: Download 2013 Election Results Data
       num_precincts: There are %{count} out of %{total} precincts (%{percent}) with election data.
+      no_precincts: No election results exist to download.           
