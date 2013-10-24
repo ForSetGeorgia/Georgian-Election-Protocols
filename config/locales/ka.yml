@@ -142,16 +142,18 @@ ka:
         title: მომხმარებლის დეტალები
     election_data:
       index:
-        title: Data Sent to Election Data Website
+        title: Data Sent to Election Data application
         precinct_count: "Number of Precincts Procesed to Date: %{count}"
         no_precincts: No election results exist yet!
         push_data: Start a Migration
-        no_migrations: No data has been sent to the Election Data Website yet.
+        no_migrations: No data has been sent to the Election Data application yet.
         view_file: Download File
         sent_at: Time Sent
         num_precincts: Number of Precincts in File
         recieved_success_notification_at: When Received Success Notification
         file: CSV File
+        push_success: The data was successfully sent to the Election Data application
+        push_fail: Not enough new precincts exist to warrant pushing data to the Election Data application
   root:
     index:
       overall_stats:

@@ -75,6 +75,8 @@ ActiveRecord::Schema.define(:version => 20131024120212) do
     t.integer  "num_precincts"
     t.string   "file_name"
     t.datetime "recieved_success_notification_at"
+    t.boolean  "success"
+    t.string   "notification_msg"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

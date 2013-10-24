@@ -4,6 +4,8 @@ class CreateElectionDataMigrations < ActiveRecord::Migration
       t.integer :num_precincts
       t.string :file_name
       t.datetime :recieved_success_notification_at
+      t.boolean :success
+      t.string :notification_msg
 
       t.timestamps
     end

@@ -1,11 +1,14 @@
 class ElectionDataMigration < ActiveRecord::Base
 	require 'fileutils'
   require 'utf8_converter'
+  require 'net/http'
 
   MIN_PRECINCTS_CHANGE = 50
   FILE_PATH = "#{Rails.root}/public/system/election_data_migrations/"
   URL_PATH = "/system/election_data_migrations/"
   
+  PUSH_DATA_URL_PATH = "en/migration/load_data/from_protocols_app"
+   
   scope :sorted, order("created_at desc")
 
   def file_url_path
@@ -21,12 +24,15 @@ class ElectionDataMigration < ActiveRecord::Base
   end
   
   
-  def self.push_data
+  def self.push_data(current_domain, respond_to_url)
+Rails.logger.debug "################## push data start"
     pushed = false
     
-    precinct_count = President2013.count
+#    precinct_count = President2013.count
+precinct_count = 50
     
     if (precinct_count - last_precinct_count) >= MIN_PRECINCTS_CHANGE
+Rails.logger.debug "################## need to send data!"
       # create record
       migration = ElectionDataMigration.new(:num_precincts => precinct_count)
 
@@ -41,19 +47,26 @@ class ElectionDataMigration < ActiveRecord::Base
       migration.file_name = filename
       
       migration.save
+Rails.logger.debug "################## created migration record: #{migration.inspect}"
       
+Rails.logger.debug "################## sending data"
       # push the data to the election site
-            
-            
+      uri = URI(site_url + PUSH_DATA_URL_PATH)
+Rails.logger.debug "################## uri = #{uri.inspect}"
+      res = Net::HTTP.post_form(uri, {'event_id' => event_id, 'file_url' => current_domain + migration.file_url_path,
+        'precincts_completed' => migration.num_precincts, 'precincts_total' => DistrictPrecinct.count,
+        'respond_to_url' => respond_to_url})
+
       pushed = true
     end
     
+Rails.logger.debug "################## push data end"
     return pushed
-  
   end
 
-  def self.record_notification(file_name)
-    ElectionDataMigration.where(:file_name => file_name).update_all(:recieved_success_notification_at => Time.now)
+  def self.record_notification(file_name, success, message)
+    ElectionDataMigration.where(:file_name => file_name)
+      .update_all(:recieved_success_notification_at => Time.now, :success => success, :notification_message => message)
   end
 
 
@@ -74,5 +87,18 @@ class ElectionDataMigration < ActiveRecord::Base
     end
     
     return url
+  end
+
+
+  def self.event_id
+    event_id = 42
+    
+    if Rails.env.production?
+      event_id = 38
+    elsif Rails.env.staging?
+      event_id = 38
+    end
+    
+    return event_id
   end
 end

@@ -5,9 +5,13 @@ class Admin::ElectionDataController < ApplicationController
   end
 
   def index
-  
+    
     if params[:push] == "data"
-      @push_created = ElectionDataMigration.push_data
+      if ElectionDataMigration.push_data("#{request.protocol}#{request.host_with_port}", json_election_data_notification_url)
+        flash[:success] = I18n.t('admin.election_data.index.push_success')
+      else
+        flash[:notice] = I18n.t('admin.election_data.index.push_fail')
+      end
     end
   
     @current_precinct_count = President2013.count
@@ -17,6 +21,7 @@ class Admin::ElectionDataController < ApplicationController
       format.html # index.html.erb
     end
   end
+
 
 
 end
