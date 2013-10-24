@@ -168,9 +168,12 @@ ka:
         invalid: Records with Invalid Match
     training:
       title: Training Center
-      data_mismatch: გაწითლებული ველები არ ემთხვევა სწორ მონაცემებს
       success: თქვენ ყველა ველი სწორად შეავსეთ. მოცემულია შემდეგი ოქმი
       completed: თქვენ წარმატებით დაასრულეთ მოსამზადებელი ეტაპი
+      errors:
+        incorrect: "შეყვანილი ინფორმაცია არასწორია"
+        mismatch: "არასწორია"
+        number: "უნდა იყოს რიცხვი"
     protocol:
       title: Enter Data
       no_protocols: At this time, there are no protocols to enter.        

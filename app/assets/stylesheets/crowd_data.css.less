@@ -40,6 +40,8 @@
   float: left;
 }
 
+@h: 22px;
+
 #protocolimg + form {
   float: left;
   display: block;
@@ -53,7 +55,6 @@
         display: block;
         float: left;
       }
-      @h: 22px;
       label {
         .box-sizing();
         width: 80px;
@@ -110,6 +111,11 @@
   .inline {
     .m {
       float: left;
+      &:not(:first-child) {
+        label {
+          border: none;
+        }
+      }
     }
   }
   .actions {
@@ -134,9 +140,14 @@
       &.error {
         input, label {
           border-color: red;
-        }
-        label {
           color: red;
+        }
+        .error-message {
+          color: red;
+          margin: 0px 10px;
+          float: left;
+          height: @h;
+          line-height: @h;
         }
       }
     }
