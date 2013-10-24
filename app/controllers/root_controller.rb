@@ -1,5 +1,6 @@
 class RootController < ApplicationController
   before_filter :authenticate_user!, :except => :index
+  PROTOCOL_NUMBERS = (1..5).to_a
 
   def index
     @overall_stats = DistrictPrecinct.overall_stats
@@ -15,7 +16,7 @@ class RootController < ApplicationController
 
     # if the user has not completed training send them there
     trained = current_user.trained.present? ? current_user.trained.split(',') : []
-    if trained.length < 5
+    if trained.length < PROTOCOL_NUMBERS.length
       redirect_to training_path, :notice => I18n.t('root.protocol.no_training')
       return
     end
@@ -24,7 +25,7 @@ class RootController < ApplicationController
     if request.post?
       @crowd_datum = CrowdDatum.new(params[:crowd_datum])
       valid = @crowd_datum.save
-  		@user_stats = CrowdDatum.overall_stats_by_user(current_user.id) 
+  		@user_stats = CrowdDatum.overall_stats_by_user(current_user.id)
     end
 
     # get the next record if there were no errors
@@ -36,8 +37,6 @@ class RootController < ApplicationController
   end
 
   def training
-    protocols = (1..5).to_a
-
     user = User.find(current_user.id)
     trained = user.trained.present? ? user.trained.split(',') : []
     trained = trained.map{|x| x.to_i}
@@ -51,13 +50,16 @@ class RootController < ApplicationController
         user.save
   			flash[:notice] = I18n.t('root.training.success')
       else
-        @errors = []
+        @errors = {}
         filedata.each_pair do |key, value|
-          if value != params['protocol'][key]
-            @errors.push(key)
+          pval = params['protocol'][key]
+          if pval.length > 0 && pval.gsub(/[a-zA-Z]/, '') != pval
+            @errors[key] = I18n.t('root.training.errors.number')
+          elsif value != pval
+            @errors[key] = I18n.t('root.training.errors.mismatch')
           end
         end
-  			flash[:alert] = I18n.t('root.training.data_mismatch')
+  			flash[:alert] = I18n.t('root.training.errors.incorrect')
       end
     end
 
@@ -65,9 +67,9 @@ class RootController < ApplicationController
     if @errors.blank?
       params['protocol'] = nil # make sure form fields are not pre-populated with the last form
       if user.trained.blank?
-        @next_protocol = protocols.sample
+        @next_protocol = PROTOCOL_NUMBERS.sample
       else
-        left = protocols - trained
+        left = PROTOCOL_NUMBERS - trained
         if left.present?
           @next_protocol = left.sample
         else

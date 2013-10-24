@@ -129,9 +129,12 @@ en:
         invalid: Records with Invalid Match
     training:
       title: Training Center
-      data_mismatch: "Red fields don't match the correct data"
       success: Success, data you entered was correct. Showing next protocol
       completed: You have successfully completed the training
+      errors:
+        incorrect: "Data you entered is incorrect"
+        mismatch: "Field is incorrect"
+        number: "Field must be numeric"
     protocol:
       title: Enter Data
       no_protocols: At this time, there are no protocols to enter.              

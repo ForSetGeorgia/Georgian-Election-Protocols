@@ -269,6 +269,21 @@ class CrowdDatum < ActiveRecord::Base
     end
   end
 
+=begin
+  def self.validate_numbers (pairs)
+    pairs.each_pair do |key, val|
+      valtos = val.to_s
+      if valtos.downcase.include? 'x'
+        val = valtos.gsub(/(^x+)|(x+$)/, '')
+      end
+      if valtos.start_with?('0') && valtos.length > 1
+        val = valtos.gsub(/^0+/, '')
+      end
+      pairs[key] = val
+    end
+    return pairs
+  end
+=end
 
 
   protected 
