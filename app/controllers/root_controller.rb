@@ -117,6 +117,24 @@ logger.debug ">>>>>>>>>>>>>>>> format = xls"
   end
 
 
+  def election_data_spreadsheet
+
+		# create file name using event name and map title that were passed in
+    filename = I18n.t('app.common.file_name')
+		filename << "-#{l Time.now, :format => :file}"
+
+		respond_to do |format|
+		  format.csv {
+logger.debug ">>>>>>>>>>>>>>>> format = csv"
+        send_data President2013.download_election_map_data, 
+		      :type => 'text/csv; header=present',
+		      :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
+			}
+		end
+  end
+
+
+
   protected
   
 	# remove bad characters from file name

@@ -168,4 +168,76 @@ class President2013 < ActiveRecord::Base
     return csv_data
   end
   
+  
+  # call the csv view to get the complete dataset to load into the election map application
+  def self.download_election_map_data
+		csv_data = CSV.generate(:col_sep=>',') do |csv|
+      # add header
+      row = ['shape', 'common_id', 'common_name', 'Total Voter Turnout (#)', 'Total Voter Turnout (%)', 'Number of Precincts with Invalid Ballots from 0-1%', 'Number of Precincts with Invalid Ballots from 1-3%', 'Number of Precincts with Invalid Ballots from 3-5%', 'Number of Precincts with Invalid Ballots > 5%', 'Invalid Ballots (%)', 'Precincts with More Ballots Than Votes (#)', 'Precincts with More Ballots Than Votes (%)', 'More Ballots Than Votes (Average)', 'More Ballots Than Votes (#)','Precincts with More Votes than Ballots (#)', 'Precincts with More Votes than Ballots (%)', 'More Votes than Ballots (Average)', 'More Votes than Ballots (#)','Average votes per minute (08:00-12:00)', 'Average votes per minute (12:00-17:00)', 'Average votes per minute (17:00-20:00)', 'Number of Precincts with votes per minute > 2 (08:00-12:00)', 'Number of Precincts with votes per minute > 2 (12:00-17:00)', 'Number of Precincts with votes per minute > 2 (17:00-20:00)', 'Number of Precincts with votes per minute > 2', 'Precincts Reported (#)', 'Precincts Reported (%)', 'Tamaz Bibiluri', 'Giorgi Liluashvili', 'Sergo Javakhidze', 'Koba Davitashvili', 'Davit Bakradze', 'Akaki Asatiani', 'Nino Chanishvili', 'Teimuraz Bobokhidze', 'Shalva Natelashvili', 'Giorgi Targamadze', 'Levan Chachua', 'Nestan Kirtadze', 'Giorgi Chikhladze', 'Nino Burjanadze', 'Zurab Kharatishvili', 'Mikheil Saluashvili', 'Kartlos Gharibashvili', 'Mamuka Chokhonelidze', 'Avtandil Margiani', 'Nugzar Avaliani', 'Mamuka Melikishvili', 'Teimuraz Mzhavia', 'Giorgi Margvelashvili']
+      csv << row
+        
+      # add the data
+      sql = "select * from `president2013s - csv`"
+      data = ActiveRecord::Base.connection.select_all(sql)
+      
+      if data.present?
+        data.each do |data_row|
+          row = []
+          row << data_row['shape']
+          row << data_row['common_id']
+          row << data_row['common_name']
+          row << data_row['Total Voter Turnout (#)']
+          row << data_row['Total Voter Turnout (%)']
+          row << data_row['Number of Precincts with Invalid Ballots from 0-1%']
+          row << data_row['Number of Precincts with Invalid Ballots from 1-3%']
+          row << data_row['Number of Precincts with Invalid Ballots from 3-5%']
+          row << data_row['Number of Precincts with Invalid Ballots > 5%']
+          row << data_row['Invalid Ballots (%)']
+          row << data_row['Precincts with More Ballots Than Votes (#)']
+          row << data_row['Precincts with More Ballots Than Votes (%)']
+          row << data_row['More Ballots Than Votes (Average)']
+          row << data_row['More Ballots Than Votes (#)']
+          row << data_row['Precincts with More Votes than Ballots (#)']
+          row << data_row['Precincts with More Votes than Ballots (%)']
+          row << data_row['More Votes than Ballots (Average)']
+          row << data_row['More Votes than Ballots (#)']
+          row << data_row['Average votes per minute (08:00-12:00)']
+          row << data_row['Average votes per minute (12:00-17:00)']
+          row << data_row['Average votes per minute (17:00-20:00)']
+          row << data_row['Number of Precincts with votes per minute > 2 (08:00-12:00)']
+          row << data_row['Number of Precincts with votes per minute > 2 (12:00-17:00)']
+          row << data_row['Number of Precincts with votes per minute > 2 (17:00-20:00)']
+          row << data_row['Number of Precincts with votes per minute > 2']
+          row << data_row['Precincts Reported (#)']
+          row << data_row['Precincts Reported (%)']
+          row << data_row['Tamaz Bibiluri']
+          row << data_row['Giorgi Liluashvili']
+          row << data_row['Sergo Javakhidze']
+          row << data_row['Koba Davitashvili']
+          row << data_row['Davit Bakradze']
+          row << data_row['Akaki Asatiani']
+          row << data_row['Nino Chanishvili']
+          row << data_row['Teimuraz Bobokhidze']
+          row << data_row['Shalva Natelashvili']
+          row << data_row['Giorgi Targamadze']
+          row << data_row['Levan Chachua']
+          row << data_row['Nestan Kirtadze']
+          row << data_row['Giorgi Chikhladze']
+          row << data_row['Nino Burjanadze']
+          row << data_row['Zurab Kharatishvili']
+          row << data_row['Mikheil Saluashvili']
+          row << data_row['Kartlos Gharibashvili']
+          row << data_row['Mamuka Chokhonelidze']
+          row << data_row['Avtandil Margiani']
+          row << data_row['Nugzar Avaliani']
+          row << data_row['Mamuka Melikishvili']
+          row << data_row['Teimuraz Mzhavia']
+          row << data_row['Giorgi Margvelashvili']
+
+          csv << row
+        end
+      end
+
+    end  
+  end
 end
