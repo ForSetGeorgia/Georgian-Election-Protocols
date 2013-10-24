@@ -167,23 +167,32 @@ class CrowdDatum < ActiveRecord::Base
     next_record = nil
     needs_match = CrowdDatum.select('id').where("user_id != ? and is_valid is null and is_extra = 0", user_id)
     if needs_match.present?
-      # records exist that are waiting for a match
-      rand = CrowdDatum.find_by_id(needs_match.map{|x| x.id}.sample)
-      next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
-
+      # it is possible that next record may not have image, so check
+      # if not have image after 5 attempts, stop
+      (0..4).each do |try|
+        # records exist that are waiting for a match
+        rand = CrowdDatum.find_by_id(needs_match.map{|x| x.id}.sample)
+        next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+        break if next_record.image_path.present?
+      end
     else
       # see if there are any precincts that are still waiting for processing that this user has not entered
       sql = "select district_id, precinct_id from district_precincts where has_protocol = 1 and is_validated = 0 "
       sql << "and id not in ( select dp.id from district_precincts as dp inner join crowd_data as cd "
       sql << "  on dp.district_id = cd.district_id and dp.precinct_id = cd.precinct_id "
-      sql << "  where dp.has_protocol = 1 and dp.is_validated = 0 and cd.user_id = :user_id and (cd.is_valid is null or cd.is_valid = 0))"
+      sql << "  where dp.has_protocol = 1 and dp.is_validated = 0 and cd.user_id = :user_id and (((cd.is_valid is null and cd.is_extra = 0) or cd.is_valid = 1)))"
       needs_processing = DistrictPrecinct.find_by_sql([sql, :user_id => user_id])
 
       if needs_processing.present?
-        # precincts are waiting for processing
-        # create a new crowd data record so it can be processed
-        rand = needs_processing.sample
-        next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+        # it is possible that next record may not have image, so check
+        # if not have image after 5 attempts, stop
+        (0..4).each do |try|
+          # precincts are waiting for processing
+          # create a new crowd data record so it can be processed
+          rand = needs_processing.sample
+          next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+          break if next_record.image_path.present?
+        end
       end
     end
 
