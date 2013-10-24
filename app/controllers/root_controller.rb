@@ -1,5 +1,7 @@
 class RootController < ApplicationController
-  before_filter :authenticate_user!, :except => :index
+  before_filter :authenticate_user!, :except => [:index, :download, :generate_spreadsheet]
+  require 'utf8_converter'
+
   PROTOCOL_NUMBERS = (1..5).to_a
 
   def index
@@ -83,5 +85,63 @@ class RootController < ApplicationController
       format.html # index.html.erb
     end
   end
+  
+  def download
+    @num_precincts = President2013.count
+    @total_precincts = DistrictPrecinct.count
+  
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
+  
+  def generate_spreadsheet
 
+		# create file name using event name and map title that were passed in
+    filename = I18n.t('app.common.file_name')
+		filename << "-#{l Time.now, :format => :file}"
+
+		respond_to do |format|
+		  format.csv {
+logger.debug ">>>>>>>>>>>>>>>> format = csv"
+        send_data President2013.download_precinct_data, 
+		      :type => 'text/csv; header=present',
+		      :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
+			}
+
+		  format.xls{
+logger.debug ">>>>>>>>>>>>>>>> format = xls"
+				send_data President2013.download_precinct_data, 
+		    :disposition => "attachment; filename=#{clean_filename(filename)}.xls"
+			}
+		end
+  
+  end
+
+
+  def election_data_spreadsheet
+
+		# create file name using event name and map title that were passed in
+    filename = I18n.t('app.common.file_name')
+		filename << "-#{l Time.now, :format => :file}"
+
+		respond_to do |format|
+		  format.csv {
+logger.debug ">>>>>>>>>>>>>>>> format = csv"
+        send_data President2013.download_election_map_data, 
+		      :type => 'text/csv; header=present',
+		      :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
+			}
+		end
+  end
+
+
+
+  protected
+  
+	# remove bad characters from file name
+	def clean_filename(filename)
+		Utf8Converter.convert_ka_to_en(filename.gsub(' ', '_').gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,''))
+	end
+  
 end

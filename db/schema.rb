@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131023135930) do
+ActiveRecord::Schema.define(:version => 20131024084112) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "district_id"
@@ -70,6 +70,15 @@ ActiveRecord::Schema.define(:version => 20131023135930) do
   add_index "district_precincts", ["district_id", "precinct_id"], :name => "idx_dp_location"
   add_index "district_precincts", ["has_protocol"], :name => "index_district_precincts_on_has_protocol"
   add_index "district_precincts", ["is_validated"], :name => "index_district_precincts_on_is_validated"
+
+  create_table "has_protocols", :force => true do |t|
+    t.integer  "district_id"
+    t.integer  "precinct_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "has_protocols", ["district_id", "precinct_id"], :name => "idx_hp_ids"
 
   create_table "president2013s", :force => true do |t|
     t.string   "region"

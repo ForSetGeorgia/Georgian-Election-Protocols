@@ -34,12 +34,13 @@
           </a>
           <%= link_to(t('app.common.app_name'), root_path(:locale => I18n.locale),:class=>"brand font")%>
           <div class="container-fluid nav-collapse">
-	          <% if user_signed_in? %>
-              <ul class="nav">
+            <ul class="nav">
+  	          <% if user_signed_in? %>
                 <li><%= link_to t('.training'), training_path %></li>
                 <li><%= link_to t('.enter_data'), protocol_path %></li>
-              </ul>
-            <% end %>
+              <% end %>
+              <li><%= link_to t('.download'), download_path %></li>
+            </ul>
             
 	          <ul class="nav pull-right">
 		          <% if user_signed_in? %>
