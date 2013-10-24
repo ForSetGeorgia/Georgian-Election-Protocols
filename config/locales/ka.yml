@@ -98,7 +98,7 @@ ka:
       41_Giorgi_Margvelashvili: 41 Giorgi Margvelashvili       
   layouts:
     application:
-      admin: ადმინისტრატო
+      admin: ადმინისტრატორი
       sign_out: გასვლა
       sign_in: Sign In
       js_link_title: "ეწვიეთ ჯამპსტარტ ჯორჯიას ვებ-გვერდს"
