@@ -11,6 +11,8 @@ class Admin::ElectionDataController < ApplicationController
     @min_precinct_change = ElectionDataMigration::MIN_PRECINCTS_CHANGE
     @last_precinct_count = ElectionDataMigration.last_precinct_count
 
+    gon.notification_url = admin_election_data_notification_url
+
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -31,7 +33,6 @@ class Admin::ElectionDataController < ApplicationController
       data['precincts_completed'] = migration.num_precincts
       data['precincts_total'] = DistrictPrecinct.count
       data['event_id'] = event_id
-      data['respond_to_url'] = json_election_data_notification_url
     end
     
     if success
@@ -46,6 +47,29 @@ class Admin::ElectionDataController < ApplicationController
       format.json { render json: {'success' => success, 'msg' => msg, 'data' => data}.to_json}
     end
   end
+
+
+
+  # recieve notification response from election data app
+  # that indicates if the data migration push was successful
+  def notification
+Rails.logger.debug "+++++++++++++++++++++++++++++++++"
+Rails.logger.debug "+++++++++++ notification_response start"
+Rails.logger.debug "+++++++++++++++++++++++++++++++++"
+Rails.logger.debug "+++++++++++ params = #{params}"
+
+    if params[:success].present? && params[:file_url].present?
+Rails.logger.debug "+++++++++++ params success and file_url present"
+
+      file_name = params[:file_url].split('/').last
+Rails.logger.debug "+++++++++++ file_name = #{file_name}"
+  
+      ElectionDataMigration.record_notification(file_name, params[:success], params[:msg])
+    end
+
+    render text: "OK"
+  end
+
 
 
   protected

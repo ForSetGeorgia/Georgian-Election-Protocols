@@ -95,8 +95,9 @@ Rails.logger.debug "################## push data end"
   end
 
   def self.record_notification(file_name, success, message)
+    x = success.downcase == 'true' ? true : false
     ElectionDataMigration.where(:file_name => file_name)
-      .update_all(:recieved_success_notification_at => Time.now, :success => success, :notification_msg => message)
+      .update_all(:recieved_success_notification_at => Time.now, :success => x, :notification_msg => message)
   end
 
 
