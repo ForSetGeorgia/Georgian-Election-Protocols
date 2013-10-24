@@ -10,6 +10,7 @@ BootstrapStarter::Application.routes.draw do
 
 		namespace :admin do
 			resources :users
+  		match '/election_data', :to => 'election_data#index', :as => :election_data, :via => :get
 		end
 
 
@@ -25,6 +26,7 @@ BootstrapStarter::Application.routes.draw do
 		match '/download', :to => 'root#download', :as => :download, :via => :get
 		match '/generate_spreadsheet', :to => 'root#generate_spreadsheet', :as => :generate_spreadsheet, :via => :get, :default => {:format => 'csv'}
 		match '/election_data_spreadsheet', :to => 'root#election_data_spreadsheet', :as => :election_data_spreadsheet, :via => :get, :default => {:format => 'csv'}
+
 
 
 		root :to => 'root#index'

@@ -99,6 +99,8 @@ ka:
   layouts:
     application:
       admin: ადმინისტრატო
+      users: Manage Users
+      election_data: Election Data Migration
       sign_out: გასვლა
       sign_in: Sign In
       js_link_title: "ეწვიეთ ჯამპსტარტ ჯორჯიას ვებ-გვერდს"
@@ -109,7 +111,7 @@ ka:
       download: Download Data
       user_stats:
         submitted: Submitted
-        pedning: Pending
+        pending: Pending
         valid: Valid
         invalid: Invalid
     unsupported_browser:
@@ -125,7 +127,6 @@ ka:
       sign_out: გასვლა
       js_link_title: "ეწვიეთ ჯამპსტარტ ჯორჯიას ვებ-გვერდს"
       js_link_text: აგებულია
-
   admin:
     index:
       title: ადმინისტრატორის განყოფილება
@@ -139,6 +140,18 @@ ka:
         title: ახალი მომხმარებელი
       show:
         title: მომხმარებლის დეტალები
+    election_data:
+      index:
+        title: Data Sent to Election Data Website
+        precinct_count: "Number of Precincts Procesed to Date: %{count}"
+        no_precincts: No election results exist yet!
+        push_data: Start a Migration
+        no_migrations: No data has been sent to the Election Data Website yet.
+        view_file: Download File
+        sent_at: Time Sent
+        num_precincts: Number of Precincts in File
+        recieved_success_notification_at: When Received Success Notification
+        file: CSV File
   root:
     index:
       overall_stats:
@@ -179,4 +192,6 @@ ka:
       no_protocols: At this time, there are no protocols to enter.        
       no_training: You must completed training before you can start entering real data.
     download:
-      title: Download 2013 Election Results Data      
+      title: Download 2013 Election Results Data 
+      num_precincts: There are %{count} out of %{total} precincts (%{percent}) with election data.
+      no_precincts: No election results exist to download.     

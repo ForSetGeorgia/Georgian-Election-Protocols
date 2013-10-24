@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  num_precincts: 1
+  file_name: MyString
+  recieved_success_notification_at: 2013-10-24 16:02:12
+
+two:
+  num_precincts: 1
+  file_name: MyString
+  recieved_success_notification_at: 2013-10-24 16:02:12
