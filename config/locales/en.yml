@@ -99,7 +99,7 @@ en:
       41_Giorgi_Margvelashvili: 41 Giorgi Margvelashvili       
     user_stats:
       submitted: Submitted
-      pending: Pending
+      pending: Waiting for Match
       valid: Valid
       invalid: Invalid
   layouts:
@@ -199,6 +199,7 @@ en:
     protocol:
       title: Enter Data
       p1: "Please only enter numbers; do not enter any 'X'."
+      p2: "If a required field (*) does not have a number, please enter 0."
       no_protocols: At this time, there are no protocols to enter.              
       no_training: You must completed training before you can start entering real data.
     download:
