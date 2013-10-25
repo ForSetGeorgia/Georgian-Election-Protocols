@@ -42,6 +42,7 @@ class RootController < ApplicationController
   def training
     user = User.find(current_user.id)
     trained = user.trained
+    @user_trained_num = trained.length
 
     if params['protocol'].present?
       @next_protocol = params['protocol_number']
@@ -50,6 +51,7 @@ class RootController < ApplicationController
         trained = (trained + [@next_protocol.to_i]).uniq.sort
         user.trained = trained.join(',')
         user.save
+        @user_trained_num = user.trained.length
   			flash[:notice] = I18n.t('root.training.success')
       else
         @errors = {}
