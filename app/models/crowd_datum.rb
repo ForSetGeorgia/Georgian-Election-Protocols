@@ -17,9 +17,7 @@ class CrowdDatum < ActiveRecord::Base
   #######################
   #######################
 
-  validates :district_id, :precinct_id, :possible_voters, :special_voters, 
-    :votes_by_1200, :votes_by_1700, :ballots_signed_for, :ballots_available, 
-    :invalid_ballots_submitted, :presence => true
+  validates :district_id, :precinct_id, :possible_voters, :ballots_signed_for, :presence => true
 
   validate :party_votes_provided
   validate :validate_numerical_values
