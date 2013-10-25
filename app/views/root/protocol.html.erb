@@ -8,6 +8,13 @@
 
 <% else %>
 
+  <% if !@crowd_datum.errors[:base].nil? && @crowd_datum.errors[:base].length > 0 %>
+    <div class="alert alert-error fade in">
+      <a href="#" data-dismiss="alert" class="close">×</a>
+      <%= @crowd_datum.errors[:base].join('<br />'.html_safe) %>
+    </div>
+  <% end %>
+
   <div id="protocol-form-container">
 
     <p>
