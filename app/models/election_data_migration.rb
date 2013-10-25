@@ -34,7 +34,7 @@ Rails.logger.debug "################## create migration record"
 Rails.logger.debug "################## need to send data!"
       # create record
       migration = ElectionDataMigration.new(:num_precincts => precinct_count)
-=begin
+
       # get the csv data
       csv = President2013.download_election_map_data    
       # create directory if not exist
@@ -44,8 +44,6 @@ Rails.logger.debug "################## need to send data!"
       File.open(FILE_PATH + filename, 'w') {|f| f.write(csv) }
 
       migration.file_name = filename
-=end      
-migration.file_name = "test.csv"
 
       migration.save
 Rails.logger.debug "################## created migration record: #{migration.inspect}"
@@ -57,14 +55,16 @@ Rails.logger.debug "################## create migration end"
   end
 
 
-  def self.push_data_old(current_domain, respond_to_url)
-Rails.logger.debug "################## push data start"
+  def self.push_data
+puts "################## push data start"
     pushed = false
     
     precinct_count = President2013.count
+
+puts "################## difference value = #{precinct_count - last_precinct_count}; min need = #{MIN_PRECINCTS_CHANGE}"
     
     if (precinct_count - last_precinct_count) >= MIN_PRECINCTS_CHANGE
-Rails.logger.debug "################## need to send data!"
+puts "################## need to send data!"
       # create record
       migration = ElectionDataMigration.new(:num_precincts => precinct_count)
 
@@ -79,25 +79,32 @@ Rails.logger.debug "################## need to send data!"
       migration.file_name = filename
       
       migration.save
-Rails.logger.debug "################## created migration record: #{migration.inspect}"
+puts "################## created migration record: #{migration.inspect}"
       
-Rails.logger.debug "################## sending data"
+puts "################## sending data"
       # push the data to the election site
       uri = URI(site_url + PUSH_DATA_URL_PATH)
-Rails.logger.debug "################## uri = #{uri.inspect}"
       res = Net::HTTP.post_form(uri, {'event_id' => event_id, 'file_url' => current_domain + migration.file_url_path,
-        'precincts_completed' => migration.num_precincts, 'precincts_total' => DistrictPrecinct.count,
-        'respond_to_url' => respond_to_url})
+        'precincts_completed' => migration.num_precincts, 'precincts_total' => DistrictPrecinct.count})
 
-      pushed = true
+puts "################## migration complete"
+puts "################## - response = #{res.body}"
+      if res.body.present? && res.body[0] == "{"
+puts "################## recording notification"
+        # record the notification
+        response = JSON.parse(res.body)
+        filename = response['file_url'].split('/').last
+        record_notification(filename, response['success'], response['msg'])
+        pushed = response['success'].to_s.downcase == 'true' ? true : false
+      end
     end
     
-Rails.logger.debug "################## push data end"
+puts "################## push data end"
     return pushed
   end
 
   def self.record_notification(file_name, success, message)
-    x = success.downcase == 'true' ? true : false
+    x = success.to_s.downcase == 'true' ? true : false
     ElectionDataMigration.where(:file_name => file_name)
       .update_all(:recieved_success_notification_at => Time.now, :success => x, :notification_msg => message)
   end
@@ -122,6 +129,17 @@ Rails.logger.debug "################## push data end"
     return url
   end
 
+  def self.current_domain
+    domain = 'http://localhost:3001'
+    
+    if Rails.env.production?
+      domain = 'http://protocols.jumpstart.ge'
+    elsif Rails.env.staging?
+      domain = 'http://dev-protocols.jumpstart.ge'
+    end
+    
+    return domain
+  end
 
   def self.event_id
     event_id = 42
