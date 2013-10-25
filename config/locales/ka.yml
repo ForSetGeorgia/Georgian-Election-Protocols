@@ -187,6 +187,8 @@ ka:
         invalid: Records with Invalid Match
     training:
       title: Training Center
+      p1: You must successfully complete 5 training protocols before you can enter data for real protocols.  So far you have completed %{count}.
+      p2: "Please only enter numbers; do not enter any 'X'."
       success: თქვენ ყველა ველი სწორად შეავსეთ. მოცემულია შემდეგი ოქმი
       completed: თქვენ წარმატებით დაასრულეთ მოსამზადებელი ეტაპი
       errors:
@@ -195,6 +197,7 @@ ka:
         number: "უნდა იყოს რიცხვი"
     protocol:
       title: Enter Data
+      p1: "Please only enter numbers; do not enter any 'X'."
       no_protocols: At this time, there are no protocols to enter.        
       no_training: You must completed training before you can start entering real data.
     download:

@@ -17,7 +17,7 @@ class RootController < ApplicationController
   def protocol
 
     # if the user has not completed training send them there
-    trained = current_user.trained.present? ? current_user.trained.split(',') : []
+    trained = current_user.trained
     if trained.length < PROTOCOL_NUMBERS.length
       redirect_to training_path, :notice => I18n.t('root.protocol.no_training')
       return
@@ -41,8 +41,7 @@ class RootController < ApplicationController
 
   def training
     user = User.find(current_user.id)
-    trained = user.trained.present? ? user.trained.split(',') : []
-    trained = trained.map{|x| x.to_i}
+    trained = user.trained
 
     if params['protocol'].present?
       @next_protocol = params['protocol_number']

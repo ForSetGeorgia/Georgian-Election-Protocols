@@ -10,6 +10,12 @@ class User < ActiveRecord::Base
 
   validates :role, :presence => true
 
+
+  def trained
+    y = read_attribute('trained').present? ? read_attribute('trained').split(',') : []
+    y.map{|x| x.to_i}
+  end
+
   def self.no_admins
     where("role != ?", ROLES[:admin])
   end

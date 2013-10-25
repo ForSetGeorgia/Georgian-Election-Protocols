@@ -2,6 +2,15 @@
 
 <div id="protocol-form-container">
 
+  <p>
+    <%= t('.p1', :count => current_user.trained.length) %>
+  </p>
+
+  <p>
+    <%= t('.p2') %>
+  </p>
+
+
   <%= image_tag '/training/' + @next_protocol.to_s + '.jpg', :id => 'protocolimg' %>
 
   <%= form_tag training_path, :class => 'training' do %>

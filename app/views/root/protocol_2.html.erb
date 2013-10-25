@@ -1,5 +1,6 @@
 <% title t('.title') %>
 
+
 <% if @crowd_datum.blank? %>
   <p>
     <%= t('.no_protocols') %>  
@@ -8,6 +9,10 @@
 <% else %>
 
   <div id="protocol-form-container">
+
+    <p>
+      <%= t('.p1') %>
+    </p>
 
     <%= image_tag @crowd_datum.image_path, :id => 'protocolimg' %>
 
