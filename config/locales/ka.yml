@@ -55,6 +55,7 @@ ka:
       added_on: "დამატებულია: %{date}" 
       na: 'N/A'
       file_name: 2013 Presidential Results
+      submit: Submit
     msgs:
       does_not_exist: თქვენ ცდილობთ იხილოთ გვერდი, რომელიც არ არსებობს.
       not_authorized: თქვენ არ გაქვთ უფლება იხილოთ ეს გვერდი.
