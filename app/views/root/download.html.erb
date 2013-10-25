@@ -6,7 +6,7 @@
         :percent => number_to_percentage(number_with_precision(100*@num_precincts/@total_precincts.to_f))) %>
   </p>
 
-  <% if true @num_precincts == 0 %>
+  <% if @num_precincts == 0 %>
     <p>
       <%= t('.no_precincts') %>
     </p>
