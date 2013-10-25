@@ -3,7 +3,7 @@ class ElectionDataMigration < ActiveRecord::Base
   require 'utf8_converter'
   require 'net/http'
 
-  MIN_PRECINCTS_CHANGE = 2
+  MIN_PRECINCTS_CHANGE = 50
   FILE_PATH = "#{Rails.root}/public/system/election_data_migrations/"
   URL_PATH = "/system/election_data_migrations/"
   
