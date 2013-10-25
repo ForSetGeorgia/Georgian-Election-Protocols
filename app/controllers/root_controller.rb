@@ -28,7 +28,7 @@ class RootController < ApplicationController
       CrowdDatum.numerical_values_provided(params[:crowd_datum])
       @crowd_datum = CrowdDatum.new(params[:crowd_datum])
       valid = @crowd_datum.save
-  		@user_stats = CrowdDatum.overall_stats_by_user(current_user.id)
+  		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id)
     end
 
     # get the next record if there were no errors
