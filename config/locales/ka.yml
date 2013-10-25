@@ -97,6 +97,11 @@ ka:
       21_Mamuka_Melikishvili: 21 Mamuka Melikishvili 
       22_Teimuraz_Mzhavia: 22 Teimuraz Mzhavia 
       41_Giorgi_Margvelashvili: 41 Giorgi Margvelashvili       
+    user_stats:
+      submitted: Submitted
+      pending: Pending
+      valid: Valid
+      invalid: Invalid
   layouts:
     application:
       admin: ადმინისტრატო
@@ -110,11 +115,6 @@ ka:
       training: Training
       enter_data: Enter Data
       download: Download Data
-      user_stats:
-        submitted: Submitted
-        pending: Pending
-        valid: Valid
-        invalid: Invalid
     unsupported_browser:
       title: არასათანადო ბრაუზერი
       p1: სამწუხაროდ თქვენი ინტერნეტ ბრაუზერის მოხმარების ვადა გასულია და ვერ მოხდება ვებ-გვერდთან სრულად დაკავშირება.

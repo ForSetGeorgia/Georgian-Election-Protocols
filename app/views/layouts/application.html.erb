@@ -65,25 +65,25 @@
 				        </li>
 				        <% if @user_stats.present? %>
                   <li class="user_stats">
-                    <strong><%= t('.user_stats.submitted')%>:</strong>
+                    <strong><%= t('app.user_stats.submitted')%>:</strong>
                     <%= @user_stats[:submitted] %>
                   </li>
                   <li class="user_stats">
-                    <strong><%= t('.user_stats.pending')%>:</strong>
+                    <strong><%= t('app.user_stats.pending')%>:</strong>
                     <%= @user_stats[:pending][:number] %>
                     <% if @user_stats[:pending][:number] != I18n.t('app.common.na') %>
                       (<%= @user_stats[:pending][:percent] %>)
                     <% end %>
                   </li>
                   <li class="user_stats">
-                    <strong><%= t('.user_stats.valid')%>:</strong>
+                    <strong><%= t('app.user_stats.valid')%>:</strong>
                     <%= @user_stats[:valid][:number] %>
                     <% if @user_stats[:valid][:number] != I18n.t('app.common.na') %>
                       (<%= @user_stats[:valid][:percent] %>)
                     <% end %>
                   </li>
                   <li class="user_stats">
-                    <strong><%= t('.user_stats.invalid')%>:</strong>
+                    <strong><%= t('app.user_stats.invalid')%>:</strong>
                     <%= @user_stats[:invalid][:number] %>
                     <% if @user_stats[:invalid][:number] != I18n.t('app.common.na') %>
                       (<%= @user_stats[:invalid][:percent] %>)

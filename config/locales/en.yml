@@ -97,6 +97,11 @@ en:
       21_Mamuka_Melikishvili: 21 Mamuka Melikishvili 
       22_Teimuraz_Mzhavia: 22 Teimuraz Mzhavia 
       41_Giorgi_Margvelashvili: 41 Giorgi Margvelashvili       
+    user_stats:
+      submitted: Submitted
+      pending: Pending
+      valid: Valid
+      invalid: Invalid
   layouts:
     application:
       admin: Admin
@@ -110,11 +115,6 @@ en:
       training: Training
       enter_data: Enter Data
       download: Download Data
-      user_stats:
-        submitted: Submitted
-        pending: Pending
-        valid: Valid
-        invalid: Invalid
     unsupported_browser:
       title: Unsupported Browser
       p1: We are sorry to report that your browser is out of date and will not properly render the content from this website.
