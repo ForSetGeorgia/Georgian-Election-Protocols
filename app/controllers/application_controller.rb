@@ -61,7 +61,7 @@ logger.debug "////////////////////////// BROWSER NOT SUPPORTED"
 	def set_global_variables
 	  # the user stats are updated after a protocol is saved so do not need to call twice
 	  if user_signed_in? && !(params[:contorller] == "root" && params[:action] == "protocol")
-  		@user_stats = CrowdDatum.overall_stats_by_user(current_user.id) 
+  		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id) 
 		end
 	end
 

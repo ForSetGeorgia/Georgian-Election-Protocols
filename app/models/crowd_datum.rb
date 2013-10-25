@@ -259,7 +259,7 @@ class CrowdDatum < ActiveRecord::Base
   #######################
   # get the following for a user:
   # user id, total submitted (#), pending (#/%), valid (#/%), invalid (#/%)
-  def self.overall_stats_by_user(user_id)
+  def self.overall_stats_for_user(user_id)
     stats = nil
 
     if user_id.present?
@@ -285,10 +285,44 @@ class CrowdDatum < ActiveRecord::Base
         stats[:invalid][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_invalid]) : I18n.t('app.common.na')
         stats[:invalid][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_invalid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
       end
-      return stats
-
     end
+    return stats
   end
+
+  #######################
+  #######################
+  # get the following for a user:
+  # user id, total submitted (#), pending (#/%), valid (#/%), invalid (#/%)
+  def self.overall_stats_by_user
+    users = []
+
+    sql = "select user_id, sum(if(is_extra = 0, 1, 0)) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
+    sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
+    sql << "from crowd_data group by user_id"
+
+    data = find_by_sql(sql)
+
+    if data.present?
+      data.each do |user|
+        stats = Hash.new
+        users << stats
+        stats[:user_id] = user[:user_id]
+        stats[:submitted] = user[:num_submitted].present? ? format_number(user[:num_submitted]) : 0
+        stats[:pending] = Hash.new
+        stats[:pending][:number] = user[:num_submitted].present? && user[:num_submitted] > 0 ? format_number(user[:num_pending]) : I18n.t('app.common.na')
+        stats[:pending][:percent] = user[:num_submitted].present? && user[:num_submitted] > 0 ? format_percent(100*user[:num_pending]/user[:num_submitted].to_f) : I18n.t('app.common.na')
+        stats[:valid] = Hash.new
+        stats[:valid][:number] = user[:num_submitted].present? && user[:num_submitted] > 0 ? format_number(user[:num_valid]) : I18n.t('app.common.na')
+        stats[:valid][:percent] = user[:num_submitted].present? && user[:num_submitted] > 0 ? format_percent(100*user[:num_valid]/user[:num_submitted].to_f) : I18n.t('app.common.na')
+        stats[:invalid] = Hash.new
+        stats[:invalid][:number] = user[:num_submitted].present? && user[:num_submitted] > 0 ? format_number(user[:num_invalid]) : I18n.t('app.common.na')
+        stats[:invalid][:percent] = user[:num_submitted].present? && user[:num_submitted] > 0 ? format_percent(100*user[:num_invalid]/user[:num_submitted].to_f) : I18n.t('app.common.na')
+      end
+    end
+    return users
+  end
+
+
 
 =begin
   def self.validate_numbers (pairs)
