@@ -54,7 +54,7 @@ $(document).ready(function(){
     "oLanguage": {
       "sUrl": gon.datatable_i18n_url
     },
-    "aaSorting": [[0, 'asc']]
+    "aaSorting": [[0, 'desc']]
   });
 
 

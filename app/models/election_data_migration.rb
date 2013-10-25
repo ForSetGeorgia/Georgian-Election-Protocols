@@ -3,7 +3,7 @@ class ElectionDataMigration < ActiveRecord::Base
   require 'utf8_converter'
   require 'net/http'
 
-  MIN_PRECINCTS_CHANGE = 50
+  MIN_PRECINCTS_CHANGE = 4
   FILE_PATH = "#{Rails.root}/public/system/election_data_migrations/"
   URL_PATH = "/system/election_data_migrations/"
   
@@ -34,7 +34,7 @@ Rails.logger.debug "################## create migration record"
 Rails.logger.debug "################## need to send data!"
       # create record
       migration = ElectionDataMigration.new(:num_precincts => precinct_count)
-
+=begin
       # get the csv data
       csv = President2013.download_election_map_data    
       # create directory if not exist
@@ -44,7 +44,9 @@ Rails.logger.debug "################## need to send data!"
       File.open(FILE_PATH + filename, 'w') {|f| f.write(csv) }
 
       migration.file_name = filename
-      
+=end      
+migration.file_name = "test.csv"
+
       migration.save
 Rails.logger.debug "################## created migration record: #{migration.inspect}"
       

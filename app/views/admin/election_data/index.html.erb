@@ -17,7 +17,7 @@
     </p>
   </div>
   <div class="span3">
-    <% if @current_precinct_count >= (@last_precinct_count + @min_precinct_change) %>
+    <% if true #@current_precinct_count >= (@last_precinct_count + @min_precinct_change) %>
       <p id="create_migration_link">
         <%= link_to t('.push_data'), admin_election_data_create_migration_path, :id => 'create_migration' %>
       </p>
