@@ -1,6 +1,30 @@
 class President2013 < ActiveRecord::Base
   require 'csv'
 
+  after_create :notify_if_can_migrate
+
+
+  #####################
+  #####################
+
+  # if there are enough precincts on file since the last migraiton, 
+  # send notification
+  def notify_if_can_migrate
+
+    last_precinct_count = ElectionDataMigration.last_precinct_count
+    precinct_count = President2013.count
+    
+    if (precinct_count - last_precinct_count) == ElectionDataMigration::MIN_PRECINCTS_CHANGE
+      message = Message.new
+      message.locale = I18n.locale
+      message.subject = I18n.t("mailer.notification.can_migrate.subject", :locale => I18n.locale, :env => Rails.env, :app_name => I18n.t('app.common.app_name'))
+      message.message = I18n.t("mailer.notification.can_migrate.message", :locale => I18n.locale)
+
+      NotificationMailer.can_migrate(message).deliver
+    end
+    
+  end
+  
   #####################
   #####################
 

@@ -15,6 +15,11 @@ en:
         required_field: "is a required field."
         already_exists: 'already exists in the database.'
         required_party_votes: "At least one candidate/party must have a vote value."
+  mailer:
+    notification:
+      can_migrate:
+        subject: "%{app_name} (%{env}) - Enough Precincts Exist to Migrate Data!"
+        message: "Enough protocols have been entered since the last migration that a new migration should be run."
   helpers:
     actions: Actions
     links:
