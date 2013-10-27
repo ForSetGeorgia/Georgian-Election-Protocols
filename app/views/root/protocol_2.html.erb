@@ -8,7 +8,7 @@
 
 <% else %>
 
-  <% if !@crowd_datum.errors[:base].nil? && @crowd_datum.errors[:base].length > 0 %>
+  <% if @crowd_datum.errors[:base].present? %>
     <div class="alert alert-error fade in">
       <a href="#" data-dismiss="alert" class="close">×</a>
       <%= @crowd_datum.errors[:base].join('<br />'.html_safe) %>
@@ -23,6 +23,16 @@
     <p>
       <%= t('.p2') %>
     </p>
+
+    <% if @crowd_datum.amendment_image_path.present? %>
+
+      <p id="amendment_explanation">
+        <%= t('.amendment_explanation1') %>
+        <br />
+        <%= t('.amendment_explanation2') %>
+      </p>
+
+    <% end %>
 
 
     <%= image_tag @crowd_datum.image_path, :id => 'protocolimg' %>
@@ -85,7 +95,11 @@
       <%= f.actions do %>
         <%= f.action :submit, :as => :input, :label => t('app.common.submit') %>
       <% end %>
-  <% end %>
+    <% end %>
+
+    <div id="amendment_image" class="clear">
+      <%= image_tag @crowd_datum.amendment_image_path if @crowd_datum.amendment_image_path.present?%>
+    </div>
 
   </div>
 <% end %>

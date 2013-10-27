@@ -210,19 +210,56 @@ class DistrictPrecinct < ActiveRecord::Base
     if files.present?
       ids = files.map{|x| x.split('/').last.gsub('.jpg', '').split('-')}    
       if ids.present?
-        # remove anything that was there
-        HasProtocol.delete_all
+        DistrictPrecinct.transaction do
+          # remove anything that was there
+          HasProtocol.delete_all
 
-        # load all districts/precincts that exist
-        sql = "insert into has_protocols (district_id, precinct_id) values "
-        sql << ids.map{|x| "(#{x[0]}, #{x[1]})"}.join(", ")
-        ActiveRecord::Base.connection.execute(sql)
-        
-        # update district precint table to mark these as existing
-        now = Time.now
-        sql = "update district_precincts as dp left join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
-        sql << "set dp.has_protocol = if(hp.id is null, 0, 1), dp.updated_at = '#{now}' "
-        ActiveRecord::Base.connection.execute(sql)
+          # load all districts/precincts that exist
+          sql = "insert into has_protocols (district_id, precinct_id) values "
+          sql << ids.map{|x| "(#{x[0]}, #{x[1]})"}.uniq.join(", ")
+          ActiveRecord::Base.connection.execute(sql)
+          
+          # update district precint table to mark these as existing
+          now = Time.now
+          sql = "update district_precincts as dp left join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
+          sql << "set dp.has_protocol = if(hp.id is null, 0, 1), dp.updated_at = '#{now}' "
+          ActiveRecord::Base.connection.execute(sql)
+          
+          # if an amendment has been found for a protocol that has already been entered, the protocol needs to be re-entered
+          # -> mark the crowd data records as invalid and delete the pres2013 record.
+          HasProtocol.delete_all
+
+          # load all districts/precincts that have amendment
+          sql = "insert into has_protocols (district_id, precinct_id) values "
+          sql << ids.select{|x| x.length == 3}.map{|x| "(#{x[0]}, #{x[1]})"}.uniq.join(", ")
+          ActiveRecord::Base.connection.execute(sql)
+          
+          # if district/precinct did not have amendment:
+          # - update flag
+          # - mark crowd datum as invalid
+          # - delete pres2013
+          sql = "select dp.district_id, dp.precinct_id from district_precincts as dp "
+          sql << "inner join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
+          sql << "where dp.has_amendment = 0"
+          precincts = ActiveRecord::Base.connection.select_all(sql)
+          if precincts.present?
+            # mark flag
+            sql = "update district_precincts as dp inner join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
+            sql << "set dp.has_amendment = 1, dp.is_validated = 0, dp.updated_at = '#{now}' "
+            ActiveRecord::Base.connection.execute(sql)
+            
+            # mark crowd datum as invalid
+            sql = "update crowd_data as cd inner join has_protocols as hp on hp.district_id = cd.district_id and hp.precinct_id = cd.precinct_id "
+            sql << "set cd.is_valid = 0, cd.updated_at = '#{now}' where cd.is_valid = 1"
+            ActiveRecord::Base.connection.execute(sql)
+            
+            # delete pres record
+            sql = "delete p from president2013s as p inner join has_protocols as hp on hp.district_id = p.district_id and hp.precinct_id = p.precinct_id "
+            ActiveRecord::Base.connection.execute(sql)
+          
+          end
+          
+        end
       end
     end
   end

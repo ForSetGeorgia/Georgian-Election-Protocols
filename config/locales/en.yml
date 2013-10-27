@@ -205,6 +205,8 @@ en:
       title: Enter Data
       p1: "Please only enter numbers; do not enter any 'X'."
       p2: "If a required field (*) does not have a number, please enter 0."
+      amendment_explanation1: The CEC has issued an amendment for this protocol, which is located at the bottom of this page.
+      amendment_explanation2: Please enter the numbers from the amendment into the approptiate form fields.
       no_protocols: At this time, there are no protocols to enter.              
       no_training: You must completed training before you can start entering real data.
     download:

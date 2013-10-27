@@ -45,6 +45,22 @@ class CrowdDatum < ActiveRecord::Base
     return path
   end
 
+  # get the path to the protocol amendment image
+  # if the file does not exist, return nil
+  def amendment_image_path
+    path = nil
+    exist = false
+    
+    if self.district_id.present? && self.precinct_id.present?
+      path = "#{FOLDER_PATH}/#{district_id}/#{district_id}-#{precinct_id}-amended.jpg"
+      exist = File.exist?("#{Rails.root}/public#{path}")
+    end
+    
+    path = nil if !exist
+
+    return path
+  end
+
   # at least one party must have votes
   def party_votes_provided
     has_value = false

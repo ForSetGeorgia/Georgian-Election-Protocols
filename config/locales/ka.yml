@@ -205,6 +205,8 @@ ka:
       title: მონაცემების შეყვანა
       p1: "გთხოვთ, შეიყვანოთ მხოლოდ რიცხვები; არ შეიყვანოთ 'X'."
       p2: "თუ სავალდებულს ველი (*)  არ აქვს რიცხვი გთხოვთ, შეიყვანოთ 0"
+      amendment_explanation1: The CEC has issued an amendment for this protocol, which is located at the bottom of this page.
+      amendment_explanation2: Please enter the numbers from the amendment into the approptiate form fields.
       no_protocols: ამ დროისთვის არ არის შესაყვანი ოქმები    
       no_training: თქვენ უნდა დაასრულოთ ტრენინგი, სანამ ნამდვილი მონაცემების შეყვანას დაიწყებთ.
     download:
