@@ -9,6 +9,7 @@ set :whenever_environment, defer { stage } # get it to work with stages
 
 require 'capistrano/ext/multistage' # so we can deploy to staging and production servers
 require "bundler/capistrano" # Load Bundler's capistrano plugin.
+require "whenever/capistrano" # whenever gem to update crontab
 
 # these vars are set in deploy/env.rb
 #set :user, "placeholder"
