@@ -33,7 +33,7 @@ $(function ()
   }
 
 
-
+/*
   if ($('#protocolimg').length)
   {
     var img = new Image();
@@ -46,7 +46,7 @@ $(function ()
     }
     img.src = $('#protocolimg').attr('src');
   }
-
+*/
 
 
 
