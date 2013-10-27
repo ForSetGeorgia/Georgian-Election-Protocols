@@ -15,7 +15,10 @@
       <th><%= model_class.human_attribute_name(:email) %></th>
       <th><%= model_class.human_attribute_name(:role) %></th>
       <th>
-        <%= t('app.user_stats.submitted')%>
+        <%= t('.training')%> (#)
+      </th>
+      <th>
+        <%= t('app.user_stats.submitted')%> (#)
       </th>
       <th>
         <%= t('app.user_stats.pending')%> (#)
@@ -48,6 +51,9 @@
         <td>
           <%= user.role_name.humanize %>
         </td>
+        <td>
+          <%= user.trained.length %>
+        </td>        
         <td>
           <%= @all_user_stats[index][:submitted] if index.present? %>
         </td>        

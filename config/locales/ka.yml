@@ -144,6 +144,7 @@ ka:
         title: ცვლილებების შეტანა მომხმარებლის გვერდზე
       index:
         title: მომხმარებლები
+        training: Trainings Completed
       new:
         title: ახალი მომხმარებელი
       show:

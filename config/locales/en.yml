@@ -144,6 +144,7 @@ en:
         title: Editing User
       index:
         title: Users
+        training: Trainings Completed
       new:
         title: New User
       show:
