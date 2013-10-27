@@ -13,6 +13,7 @@ BootstrapStarter::Application.routes.draw do
   		match '/election_data', :to => 'election_data#index', :as => :election_data, :via => :get
   		match '/election_data/create_migration', :to => 'election_data#create_migration', :as => :election_data_create_migration, :via => :get, :defaults => {:format => 'json'}
   		match '/election_data/notification_response', :to => 'election_data#notification', :as => :election_data_notification, :via => :get
+  		match '/election_data/edit/:district_id/:precinct_id', :to => 'election_data#edit', :as => :election_data_edit, :via => [:get,:put]
   		
 		end
 

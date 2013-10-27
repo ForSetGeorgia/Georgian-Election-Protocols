@@ -168,16 +168,8 @@ class CrowdDatum < ActiveRecord::Base
           pres['21 - Mamuka Melikishvili'] = self.party_21
           pres['22 - Teimuraz Mzhavia'] = self.party_22
           pres['41 - Giorgi Margvelashvili'] = self.party_41
-          pres.num_valid_votes = pres.calculate_valid_votes
-          pres.logic_check_fail = pres.calculate_logic_check_fail
-          pres.logic_check_difference = pres.calculate_logic_check_difference
-          pres.more_ballots_than_votes_flag = pres.calculate_more_ballots_than_votes_flag
-          pres.more_ballots_than_votes = pres.calculate_more_ballots_than_votes
-          pres.more_votes_than_ballots_flag = pres.calculate_more_votes_than_ballots_flag
-          pres.more_votes_than_ballots = pres.calculate_more_votes_than_ballots
 
           pres.save
-
 
         end
       else

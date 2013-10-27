@@ -17,6 +17,27 @@ class Admin::ElectionDataController < ApplicationController
       format.html # index.html.erb
     end
   end
+  
+  def edit
+
+    @record = President2013.where(:district_id => params[:district_id], :precinct_id => params[:precinct_id])
+    
+    @record = @record.first if @record.present?
+  
+    if @record.present? && params[:president2013].present? && request.put?
+logger.debug "******************************** form is put"      
+      if @record.update_attributes(params[:president2013])
+        flash[:notice] = t('app.msgs.success_updated', :obj => t('activerecord.models.president2013'))
+      else
+        flash[:error] = t('app.msgs.no_success_updated', :obj => t('activerecord.models.president2013'))
+      end
+    
+    end
+    
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
 
   def create_migration
     Rails.logger.debug "$$$$$$$$$$$$$$$$ create_migration start"

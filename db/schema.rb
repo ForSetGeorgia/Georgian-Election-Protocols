@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131027104138) do
+ActiveRecord::Schema.define(:version => 20131027132301) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "district_id"
@@ -139,9 +139,11 @@ ActiveRecord::Schema.define(:version => 20131027104138) do
     t.integer  "41 - Giorgi Margvelashvili"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_overriden",                 :default => false
   end
 
   add_index "president2013s", ["district_id"], :name => "index_president2013s_on_district_id"
+  add_index "president2013s", ["is_overriden"], :name => "index_president2013s_on_is_overriden"
   add_index "president2013s", ["precinct_id"], :name => "index_president2013s_on_precinct_id"
   add_index "president2013s", ["region"], :name => "index_president2013s_on_region"
 

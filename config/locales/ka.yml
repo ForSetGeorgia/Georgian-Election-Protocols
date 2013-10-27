@@ -3,6 +3,7 @@ ka:
   activerecord:
     models:
       user: მომხმარებელი
+      president2013: President 2013
     attributes:
       user:
         email: ელ.ფოსტა
@@ -66,6 +67,7 @@ ka:
       not_authorized: თქვენ არ გაქვთ უფლება იხილოთ ეს გვერდი.
       success_created: "%{obj} შექმნილია."
       success_updated: "%{obj} განახლებულია."
+      no_success_updated: "%{obj} was NOT successfully updated."
     csv_header:
       region: რეგიონი
       district_id: ოლქის ID

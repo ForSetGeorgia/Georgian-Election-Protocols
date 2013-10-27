@@ -3,6 +3,67 @@ class President2013 < ActiveRecord::Base
 
   after_create :notify_if_can_migrate
 
+  validates :region, :district_name, :district_id, :precinct_id, 
+     :num_possible_voters, :num_special_voters, :num_at_12, :num_at_17, 
+     :num_votes, :num_ballots, :num_invalid_votes, :presence => true
+
+  before_save :perform_calculations
+
+  FOLDER_PATH = "/system/protocols"
+
+  #####################
+  #####################
+  
+  
+  # update the calculations
+  def perform_calculations
+    self.num_valid_votes = calculate_valid_votes
+    self.logic_check_fail = calculate_logic_check_fail
+    self.logic_check_difference = calculate_logic_check_difference
+    self.more_ballots_than_votes_flag = calculate_more_ballots_than_votes_flag
+    self.more_ballots_than_votes = calculate_more_ballots_than_votes
+    self.more_votes_than_ballots_flag = calculate_more_votes_than_ballots_flag
+    self.more_votes_than_ballots = calculate_more_votes_than_ballots
+  end
+
+
+
+  #####################
+  #####################
+
+  # get the path to the protocol image
+  # if the file does not exist, return nil
+  def image_path
+    path = nil
+    exist = false
+    
+    if self.district_id.present? && self.precinct_id.present?
+      path = "#{FOLDER_PATH}/#{district_id}/#{district_id}-#{precinct_id}.jpg"
+      exist = File.exist?("#{Rails.root}/public#{path}")
+    end
+    
+    path = nil if !exist
+
+    return path
+  end
+
+  # get the path to the protocol amendment image
+  # if the file does not exist, return nil
+  def amendment_image_path
+    path = nil
+    exist = false
+    
+    if self.district_id.present? && self.precinct_id.present?
+      path = "#{FOLDER_PATH}/#{district_id}/#{district_id}-#{precinct_id}-amended.jpg"
+      exist = File.exist?("#{Rails.root}/public#{path}")
+    end
+    
+    path = nil if !exist
+
+    return path
+  end
+
+
 
   #####################
   #####################
