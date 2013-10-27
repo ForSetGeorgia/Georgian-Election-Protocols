@@ -109,6 +109,7 @@ en:
       pending: Waiting for Match
       valid: Valid
       invalid: Invalid
+      extra: Duplicate
   layouts:
     application:
       admin: Admin
@@ -194,6 +195,7 @@ en:
         pending: Records Waiting for Match
         valid: Records with Valid Match
         invalid: Records with Invalid Match
+        extra: Duplicate Submission
     training:
       title: Training Center
       p1: You must successfully complete 5 training protocols before you can enter data for real protocols.  So far you have completed %{count}.

@@ -34,7 +34,7 @@
 
     <% end %>
 
-    <%= image_tag @crowd_datum.image_path, :id => 'protocolimg', :class => (FastImage.size(@crowd_datum.image_path)[1] < 1100 ? 'low' : '') %>
+    <%= image_tag @crowd_datum.image_path, :id => 'protocolimg' %>
     <%#= image_tag 'http://localhost:3000/system/protocols/1/1-1.jpg', :id => 'protocolimg', :class => (FastImage.size("http://localhost:3000/system/protocols/1/1-1.jpg")[1] < 1100 ? 'low' : '') %>
 
     <%= semantic_form_for @crowd_datum, :url => protocol_path do |f| %>
