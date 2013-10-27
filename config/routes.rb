@@ -21,6 +21,7 @@ BootstrapStarter::Application.routes.draw do
 
 
     # json data
+		match '/json/found_protocols', :to => 'json#found_protocols', :as => :json_found_protocols, :via => :get, :defaults => {:format => 'json'}
 		match '/json/missing_protocols', :to => 'json#missing_protocols', :as => :json_missing_protocols, :via => :get, :defaults => {:format => 'json'}
 		match '/json/mark_found_protocols', :to => 'json#mark_found_protocols', :as => :json_mark_found_protocols, :via => [:get,:post], :defaults => {:format => 'json'}
 

@@ -1,5 +1,11 @@
 class JsonController < ApplicationController
 
+  def found_protocols
+    respond_to do |format|
+      format.json { render json: DistrictPrecinct.found_protocols}
+    end
+  end
+  
   def missing_protocols
     respond_to do |format|
       format.json { render json: DistrictPrecinct.missing_protocols}
