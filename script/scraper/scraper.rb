@@ -38,7 +38,7 @@ end
 # check if scraper is already running
 
 start_time = Time.now
-checkfile = "scraper_check"
+checkfile = "prot_scraper_check"
 
 if File.exist?(protocol_dir + '/' + checkfile)
   puts "Scraper is already running."
@@ -51,27 +51,27 @@ else
 
   # get list of missing precincts
 
-#  file = Net::HTTP.get(app_base_url, app_get_uri)
-#  districts = JSON.parse(file)
+  file = Net::HTTP.get(app_base_url, app_get_uri)
+  districts = JSON.parse(file)
   
   counter = 0 
   
   districts.each do |district|
 
-#    district_id = district["district_id"]
-    district_id = "15"
+    district_id = district["district_id"]
+#    district_id = district
          
     # create protocol directory if it doesn't exist
     
     district_dir = protocol_dir + district_id.to_s
     Dir.mkdir(district_dir) unless File.exists?(district_dir)
 
-#    precincts = district["precincts"]
-    precincts = ["1", "2", "3", "4", "5", "7", "9", "10", "12", "14", "15", "16", "17", "18", "19", "20"]    
+    precincts = district["precincts"]
+#    precincts = ["1", "2", "3", "4", "5", "7", "9", "10", "12", "14", "15", "16", "17", "18", "19", "20"]    
     precincts.each do |precinct|
     
-      precinct_id = precinct
-      #precinct_id = precinct["id"]
+      #precinct_id = precinct
+      precinct_id = precinct["id"]
       
       cec_page_uri = "/#{election}/oqmi_" + 
                  district_id.to_s + "_" + 
@@ -109,7 +109,7 @@ else
             puts "*** Amended #{district_id}-#{precinct_id} image found. ***"
             amend_image_uri = page_contents.css("img")[1].attribute("src").to_s.sub("..", "")
             amend_image_url = "http://" + cec_base_url + amend_image_uri
-            amend_filename = district_id.to_s + "-" + precinct_id.to_s + "amended.jpg"
+            amend_filename = district_id.to_s + "-" + precinct_id.to_s + "-amended.jpg"
           end
           
           if remote_server_up?(prot_image_url)
