@@ -20,7 +20,6 @@
     <p>
       <%= t('.p1') %>
     </p>
-
     <p>
       <%= t('.p2') %>
     </p>
@@ -36,8 +35,9 @@
     <% end %>
 
     <%= image_tag @crowd_datum.image_path, :id => 'protocolimg' %>
+    <%#= image_tag 'http://localhost:3000/system/protocols/1/1-1.jpg', :id => 'protocolimg' %>
 
-    <%= semantic_form_for @crowd_datum, :html => {:class => 'training'}, :url => protocol_path do |f| %>
+    <%= semantic_form_for @crowd_datum, :url => protocol_path do |f| %>
       <%= f.inputs do %>
         <%= f.input :district_id, :as => :hidden %>
         <%= f.input :precinct_id, :as => :hidden %>
@@ -51,21 +51,28 @@
               [4, :ballots_signed_for],
               [5, :ballots_available],
               [1, :party_1],
-              [4, :party_2],
-              [5, :party_3],
-              [9, :party_4],
-              [10, :party_5],
-              [17, :party_6],
-              [19, :party_7],
-              [23, :party_8],
-              [24, :party_9],
-              [26, :party_10],
-              [30, :party_11],
-              [35, :party_12],
-              [36, :party_13],
-              [38, :party_14],
-              [40, :party_15],
-              [41, :party_16],
+              [2, :party_2],
+              [3, :party_3],
+              [4, :party_4],
+              [5, :party_5],
+              [6, :party_6],
+              [7, :party_7],
+              [8, :party_8],
+              [9, :party_9],
+              [10, :party_10],
+              [11, :party_11],
+              [12, :party_12],
+              [13, :party_13],
+              [14, :party_14],
+              [15, :party_15],
+              [16, :party_16],
+              [17, :party_17],
+              [18, :party_18],
+              [19, :party_19],
+              [20, :party_20],
+              [21, :party_21],
+              [22, :party_22],
+              [41, :party_41],
               [6, :invalid_ballots_submitted]
             ].each_with_index do |x, i| %>
 

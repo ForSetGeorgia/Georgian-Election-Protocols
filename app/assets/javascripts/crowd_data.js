@@ -34,4 +34,24 @@ $(function ()
 
 
 
+  if ($('#protocolimg').length)
+  {
+    var img = new Image();
+    img.onload = function ()
+    {
+      if (img.height < 1100)
+      {
+        $('#protocolimg').addClass('low');
+      }
+    }
+    img.src = $('#protocolimg').attr('src');
+  }
+
+
+
+
+
+
+
+
 });

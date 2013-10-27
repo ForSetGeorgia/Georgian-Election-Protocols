@@ -78,12 +78,12 @@
   float: left;
 }
 
-@h: 22px;
+@h: 21px;
 
 #protocolimg + form {
   float: left;
   display: block;
-  margin-left: -55px;
+  margin-left: -50px;
 
   .m {
     .control-group {
@@ -95,7 +95,7 @@
       }
       label {
         .box-sizing();
-        width: 80px;
+        width: 95px;
         text-align: center;
         line-height: @h;
         height: @h;
@@ -120,7 +120,7 @@
       }
     }
     &.m1 {
-      margin-top: 90px;
+      margin-top: 108px;
     }
     &.m2 {
       margin-top: 5px;
@@ -132,7 +132,7 @@
       margin-top: 6px;
     }
     &.m6 {
-      margin-top: 3.5px;
+      margin-top: 2.5px;
       border-bottom: 4.5px solid #333;
     }
     &.m7 {
@@ -232,6 +232,27 @@
           width: 85px;
         }
       }
+    }
+  }
+}
+
+#protocolimg.low + form {
+  .m {
+    @h: 22.5px;
+    label, input {
+      height: @h;
+    }
+    label {
+      line-height: @h;
+      padding-right: 10px;
+      width: 85px;
+      text-align: right;
+    }
+    &.m1 {
+      margin-top: 125px;
+    }
+    &.m2 {
+      margin-top: 5px;
     }
   }
 }
