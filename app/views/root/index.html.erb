@@ -72,6 +72,13 @@
               (<%= @overall_user_stats[:invalid][:percent] %>)
             <% end %>
           </li>
+          <li>
+            <strong><%= t('.overall_user_stats.extra')%>:</strong>
+            <%= @overall_user_stats[:extra][:number] %>
+            <% if @overall_user_stats[:extra][:number] != I18n.t('app.common.na') %>
+              (<%= @overall_user_stats[:extra][:percent] %>)
+            <% end %>
+          </li>
         </ul>
       <% end %>
     </div>

@@ -238,8 +238,12 @@ class CrowdDatum < ActiveRecord::Base
 
     user_count = User.count
 
-    sql = "select sum(if(is_extra = 0, 1, 0)) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
-    sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
+#    sql = "select sum(if(is_extra = 0, 1, 0)) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
+#    sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
+#    sql << "from crowd_data"
+
+    sql = "select count(*) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
+    sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid, sum(if(is_extra = 1, 1, 0)) as num_extra "
     sql << "from crowd_data"
 
     data = find_by_sql(sql)
@@ -258,6 +262,9 @@ class CrowdDatum < ActiveRecord::Base
       stats[:invalid] = Hash.new
       stats[:invalid][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_invalid]) : I18n.t('app.common.na')
       stats[:invalid][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_invalid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+      stats[:extra] = Hash.new
+      stats[:extra][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_extra]) : I18n.t('app.common.na')
+      stats[:extra][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_extra]/data[:num_submitted].to_f) : I18n.t('app.common.na')
     end
     return stats
 
@@ -272,9 +279,14 @@ class CrowdDatum < ActiveRecord::Base
 
     if user_id.present?
 
-      sql = "select sum(if(is_extra = 0, 1, 0)) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
-      sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
+#      sql = "select sum(if(is_extra = 0, 1, 0)) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
+#      sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
+#      sql << "from crowd_data where user_id = :user_id"
+
+      sql = "select count(*) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
+      sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid, sum(if(is_extra = 1, 1, 0)) as num_extra "
       sql << "from crowd_data where user_id = :user_id"
+
 
       data = find_by_sql([sql, :user_id => user_id])
 
@@ -292,6 +304,9 @@ class CrowdDatum < ActiveRecord::Base
         stats[:invalid] = Hash.new
         stats[:invalid][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_invalid]) : I18n.t('app.common.na')
         stats[:invalid][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_invalid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+        stats[:extra] = Hash.new
+        stats[:extra][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_extra]) : I18n.t('app.common.na')
+        stats[:extra][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_extra]/data[:num_submitted].to_f) : I18n.t('app.common.na')
       end
     end
     return stats
@@ -304,8 +319,12 @@ class CrowdDatum < ActiveRecord::Base
   def self.overall_stats_by_user
     users = []
 
-    sql = "select user_id, sum(if(is_extra = 0, 1, 0)) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
-    sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
+#    sql = "select user_id, sum(if(is_extra = 0, 1, 0)) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
+#    sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
+#    sql << "from crowd_data group by user_id"
+
+    sql = "select count(*) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
+    sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid, sum(if(is_extra = 1, 1, 0)) as num_extra "
     sql << "from crowd_data group by user_id"
 
     data = find_by_sql(sql)
@@ -325,6 +344,9 @@ class CrowdDatum < ActiveRecord::Base
         stats[:invalid] = Hash.new
         stats[:invalid][:number] = user[:num_submitted].present? && user[:num_submitted] > 0 ? format_number(user[:num_invalid]) : I18n.t('app.common.na')
         stats[:invalid][:percent] = user[:num_submitted].present? && user[:num_submitted] > 0 ? format_percent(100*user[:num_invalid]/user[:num_submitted].to_f) : I18n.t('app.common.na')
+        stats[:extra] = Hash.new
+        stats[:extra][:number] = user[:num_submitted].present? && user[:num_submitted] > 0 ? format_number(user[:num_extra]) : I18n.t('app.common.na')
+        stats[:extra][:percent] = user[:num_submitted].present? && user[:num_submitted] > 0 ? format_percent(100*user[:num_extra]/user[:num_submitted].to_f) : I18n.t('app.common.na')
       end
     end
     return users
