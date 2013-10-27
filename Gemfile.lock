@@ -72,6 +72,7 @@ GEM
       net-sftp (>= 2.0.0)
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.1.0)
+    chronic (0.9.1)
     cocaine (0.4.2)
     coffee-rails (3.1.1)
       coffee-script (>= 2.2.0)
@@ -211,6 +212,9 @@ GEM
       raindrops (~> 0.7)
     warden (1.1.1)
       rack (>= 1.0)
+    whenever (0.8.2)
+      activesupport (>= 2.3.4)
+      chronic (>= 0.6.3)
     will_paginate (3.0.3)
 
 PLATFORMS
@@ -247,4 +251,5 @@ DEPENDENCIES
   uglifier (>= 1.0.3)
   unicorn (~> 4.2.1)
   useragent!
+  whenever (~> 0.8.2)
   will_paginate (~> 3.0.3)

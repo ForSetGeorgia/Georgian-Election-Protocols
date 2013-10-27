@@ -29,6 +29,7 @@ gem "useragent", :git => "https://github.com/jilion/useragent.git" # browser det
 #gem 'acts_as_commentable', '2.0.1' #comments
 #gem "paper_trail", "~> 2.6.3" # keep audit log of all transactions
 gem "active_attr", "~> 0.5.1" # to create tabless models; using for contact form
+gem "whenever", "~> 0.8.2", require: false # easily schedule cron jobs
 
 # Gems used only for assets and not required
 # in production environments by default.
