@@ -129,6 +129,10 @@ class CrowdDatum < ActiveRecord::Base
   # see if this record matches that already on file
   def match_and_validate
     CrowdDatum.transaction do
+      # finished queue item
+      CrowdQueue.finished(self.user_id, self.district_id, self.precinct_id)
+    
+      # see if existing, not validated record exists
       existing = CrowdDatum.where(["district_id = ? and precinct_id = ? and user_id != ? and is_valid is null and is_extra = 0", self.district_id, self.precinct_id, self.user_id])
 
       if existing.present?

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  user_id: 1
+  district_id: 1
+  precinct_id: 1
+  is_finished: false
+
+two:
+  user_id: 1
+  district_id: 1
+  precinct_id: 1
+  is_finished: false

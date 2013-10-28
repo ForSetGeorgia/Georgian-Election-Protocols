@@ -214,6 +214,8 @@ class DistrictPrecinct < ActiveRecord::Base
           # remove anything that was there
           HasProtocol.delete_all
 
+          puts "++++++++++ image count = #{ids.length}"
+
           # load all districts/precincts that exist
           sql = "insert into has_protocols (district_id, precinct_id) values "
           sql << ids.map{|x| "(#{x[0]}, #{x[1]})"}.uniq.join(", ")
