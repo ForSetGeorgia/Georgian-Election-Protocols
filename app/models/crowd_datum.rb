@@ -63,17 +63,14 @@ class CrowdDatum < ActiveRecord::Base
 
   # at least one party must have votes
   def party_votes_provided
-    has_value = false
     parties = [self.party_1, self.party_2, self.party_3, self.party_4, self.party_5, self.party_6, self.party_7, self.party_8, self.party_9, self.party_10, self.party_11, self.party_12, self.party_13, self.party_14, self.party_15, self.party_16, self.party_17, self.party_18, self.party_19, self.party_20, self.party_21, self.party_22, self.party_41]    
 
+    sum = 0
     parties.each do |party|
-      if party.present?
-        has_value = true
-        break
-      end
+      sum += party
     end
 
-    if !has_value
+    if sum == 0
       errors.add(:base, I18n.t('activerecord.errors.messages.required_party_votes'))
     end
   end
