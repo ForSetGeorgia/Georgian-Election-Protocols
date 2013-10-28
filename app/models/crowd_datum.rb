@@ -17,8 +17,9 @@ class CrowdDatum < ActiveRecord::Base
   #######################
   #######################
 
-  validates :district_id, :precinct_id, :possible_voters, :ballots_signed_for, :presence => true
+  validates :district_id, :precinct_id, :presence => true
 
+  validate :required_fields
   validate :party_votes_provided
  #validate :validate_numerical_values
 
@@ -59,6 +60,12 @@ class CrowdDatum < ActiveRecord::Base
     path = nil if !exist
 
     return path
+  end
+
+  def required_fields
+    [:possible_voters, :ballots_signed_for].each do |f|
+      errors.add(f, I18n.t('errors.messages.blank')) if self[f.to_s].to_i == 0
+    end
   end
 
   # at least one party must have votes
