@@ -15,7 +15,7 @@ ka:
       messages:
         required_field: "სავალდებულოა"
         already_exists: 'უკვე არსებობს მონაცემთა ბაზაში'
-        required_party_votes: "სულ მცირე ერთ კანდიდატს/პარტიას უნდა ჰქონდეს ხმ."
+        required_party_votes: "სულ მცირე ერთ კანდიდატს/პარტიას უნდა ჰქონდეს ხმა."
   mailer:
     notification:
       can_migrate:

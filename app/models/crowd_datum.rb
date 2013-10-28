@@ -20,9 +20,9 @@ class CrowdDatum < ActiveRecord::Base
   validates :district_id, :precinct_id, :possible_voters, :ballots_signed_for, :presence => true
 
   validate :party_votes_provided
-  validate :validate_numerical_values
+ #validate :validate_numerical_values
 
-  after_create :match_and_validate  
+  after_create :match_and_validate
 
   FOLDER_PATH = "/system/protocols"
 
@@ -78,6 +78,7 @@ class CrowdDatum < ActiveRecord::Base
     end
   end
 
+=begin
   def self.numerical_values_provided(fields)
     needed = [:possible_voters, :special_voters, :votes_by_1200, :votes_by_1700, :ballots_signed_for, :ballots_available, :invalid_ballots_submitted,
               :party_1, :party_2, :party_3, :party_4, :party_5, :party_6, :party_7, :party_8, :party_9, :party_10, :party_11, :party_12,
@@ -99,6 +100,21 @@ class CrowdDatum < ActiveRecord::Base
         errors.add(nm[0], nm[1]);
       end
     end
+  end
+=end
+
+  def self.extract_numbers (pairs)
+    pairs.each_pair do |key, val|
+      valtos = val.to_s
+      if valtos.downcase.include? 'x'
+        val = valtos.gsub(/^x+/, '').gsub(/x+$/, '')
+      end
+      if valtos.start_with?('0') && valtos.length > 1
+        val = valtos.to_i
+      end
+      pairs[key] = val
+    end
+    return pairs
   end
 
 
@@ -352,23 +368,6 @@ class CrowdDatum < ActiveRecord::Base
     return users
   end
 
-
-
-=begin
-  def self.validate_numbers (pairs)
-    pairs.each_pair do |key, val|
-      valtos = val.to_s
-      if valtos.downcase.include? 'x'
-        val = valtos.gsub(/(^x+)|(x+$)/, '')
-      end
-      if valtos.start_with?('0') && valtos.length > 1
-        val = valtos.gsub(/^0+/, '')
-      end
-      pairs[key] = val
-    end
-    return pairs
-  end
-=end
 
 
   protected 

@@ -25,7 +25,8 @@ class RootController < ApplicationController
 
     valid = true
     if request.post?
-      CrowdDatum.numerical_values_provided(params[:crowd_datum])
+     #CrowdDatum.numerical_values_provided(params[:crowd_datum])
+      params[:crowd_datum] = CrowdDatum.extract_numbers(params[:crowd_datum])
       @crowd_datum = CrowdDatum.new(params[:crowd_datum])
       valid = @crowd_datum.save
   		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id)
