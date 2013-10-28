@@ -220,6 +220,11 @@ class CrowdDatum < ActiveRecord::Base
   # get the next record to be processed
   def self.next_available_record(user_id)
     next_record = nil
+    
+    # make sure the queue is clean
+    CrowdQueue.clean_queue(user_id)
+    
+    # see if a record needs a match
     needs_match = CrowdDatum.select('id').where("user_id != ? and is_valid is null and is_extra = 0", user_id)
     if needs_match.present?
       # it is possible that next record may not have image, so check
@@ -228,6 +233,7 @@ class CrowdDatum < ActiveRecord::Base
         # records exist that are waiting for a match
         rand = CrowdDatum.find_by_id(needs_match.map{|x| x.id}.sample)
         next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+        CrowdQueue.create(:user_id => user_id, :district_id => rand.district_id, :precinct_id => rand.precinct_id)
         break if next_record.image_path.present?
       end
     else
@@ -246,6 +252,7 @@ class CrowdDatum < ActiveRecord::Base
           # create a new crowd data record so it can be processed
           rand = needs_processing.sample
           next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+          CrowdQueue.create(:user_id => user_id, :district_id => rand.district_id, :precinct_id => rand.precinct_id)
           break if next_record.image_path.present?
         end
       end

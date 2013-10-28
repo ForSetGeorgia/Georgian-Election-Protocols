@@ -22,10 +22,10 @@ class CrowdQueue < ActiveRecord::Base
   # and remove all unfinished items for this user
   def self.clean_queue(user_id=nil)
     # mark old records as not finished
-    CrowdQueue.where("is_finished is null and create_at < ?", MAX_TIME.minutes.ago).update_all(:is_finished => false)
+    CrowdQueue.where("is_finished is null and created_at < ?", MAX_TIME.minutes.ago).update_all(:is_finished => false)
     
     # if this user has any pending records, marked as not finished
-    CrowdQueue.where("is_finished is null and user_id ?", user_id).update_all(:is_finished => false) if user_id.present?
+    CrowdQueue.where("is_finished is null and user_id = ?", user_id).update_all(:is_finished => false) if user_id.present?
   end
 
 
