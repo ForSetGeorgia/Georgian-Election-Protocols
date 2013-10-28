@@ -67,12 +67,28 @@ class CrowdDatum < ActiveRecord::Base
 
     sum = 0
     parties.each do |party|
-      sum += party
+      sum += party if !party.nil?
     end
 
     if sum == 0
       errors.add(:base, I18n.t('activerecord.errors.messages.required_party_votes'))
     end
+  end
+
+  def self.extract_numbers (pairs)
+    pairs.each_pair do |key, val|
+      val = val.to_s.downcase
+      if val.match(/[a-z]/)
+        val = val.gsub(/^[a-z]+/, '').gsub(/[a-z]+$/, '')
+      end
+      if val == ''
+        val = '0'
+      elsif val.start_with?('0') && val.length > 1
+        val = val.to_i.to_s
+      end
+      pairs[key] = val
+    end
+    return pairs
   end
 
 =begin
@@ -99,22 +115,6 @@ class CrowdDatum < ActiveRecord::Base
     end
   end
 =end
-
-  def self.extract_numbers (pairs)
-    pairs.each_pair do |key, val|
-      val = val.to_s.downcase
-      if val.include? 'x'
-        val = val.gsub(/^x+/, '').gsub(/x+$/, '')
-      end
-      if val == ''
-        val = '0'
-      elsif val.start_with?('0') && val.length > 1
-        val = val.to_i.to_s
-      end
-      pairs[key] = val
-    end
-    return pairs
-  end
 
 
   # if another record exists for this district/precinct
