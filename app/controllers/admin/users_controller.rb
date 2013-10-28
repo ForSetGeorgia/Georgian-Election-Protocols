@@ -9,7 +9,7 @@ class Admin::UsersController < ApplicationController
   def index
     @users = User.all
     @all_user_stats = CrowdDatum.overall_stats_by_user
-    
+
     respond_to do |format|
       format.html # index.html.erb
     end

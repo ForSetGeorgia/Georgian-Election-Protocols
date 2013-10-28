@@ -370,7 +370,7 @@ class CrowdDatum < ActiveRecord::Base
 #    sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
 #    sql << "from crowd_data group by user_id"
 
-    sql = "select count(*) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
+    sql = "select user_id, count(*) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
     sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid, sum(if(is_extra = 1, 1, 0)) as num_extra "
     sql << "from crowd_data group by user_id"
 
