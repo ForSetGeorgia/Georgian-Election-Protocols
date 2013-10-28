@@ -105,12 +105,14 @@ class CrowdDatum < ActiveRecord::Base
 
   def self.extract_numbers (pairs)
     pairs.each_pair do |key, val|
-      valtos = val.to_s
-      if valtos.downcase.include? 'x'
-        val = valtos.gsub(/^x+/, '').gsub(/x+$/, '')
+      val = val.to_s.downcase
+      if val.include? 'x'
+        val = val.gsub(/^x+/, '').gsub(/x+$/, '')
       end
-      if valtos.start_with?('0') && valtos.length > 1
-        val = valtos.to_i
+      if val == ''
+        val = '0'
+      elsif val.start_with?('0') && val.length > 1
+        val = val.to_i.to_s
       end
       pairs[key] = val
     end
