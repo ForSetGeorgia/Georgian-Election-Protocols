@@ -17,7 +17,7 @@ class CrowdDatum < ActiveRecord::Base
   #######################
   #######################
 
-  validates :district_id, :precinct_id, :presence => true
+  validates :district_id, :precinct_id, :possible_voters, :ballots_signed_for, :presence => true
 
   validate :required_fields
   validate :party_votes_provided
