@@ -249,7 +249,7 @@ class CrowdDatum < ActiveRecord::Base
       sql << "from district_precincts as dp inner join crowd_data as cd on dp.district_id = cd.district_id and dp.precinct_id = cd.precinct_id "
       sql << "where dp.is_validated = 0 and dp.has_protocol = 1 and cd.is_valid = 0 and cd.user_id != :user_id "
       sql << "group by dp.district_id, dp.precinct_id having c > 1) as dp "
-      sql << "left join ( select cq.id, cq.district_id, cq.precinct_id from crowd_queues as cq where is_finished is null) "
+      sql << "left join ( select cq.id, cq.district_id, cq.precinct_id from crowd_queues as cq where cq.is_finished is null and cq.user_id != :user_id) "
       sql << "as y on dp.district_id = y.district_id and dp.precinct_id = y.precinct_id WHERE y.id is null"
 
       needs_match = DistrictPrecinct.find_by_sql([sql, :user_id => user_id])
