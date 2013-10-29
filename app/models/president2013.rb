@@ -209,7 +209,7 @@ class President2013 < ActiveRecord::Base
       
       
       # add data
-      President2013.precinct_data.find_each do |precinct|
+      President2013.precinct_data.each do |precinct|
         row = []
         row << precinct["region"]
         row << precinct["district_id"]
