@@ -242,35 +242,64 @@ class CrowdDatum < ActiveRecord::Base
       end
       CrowdQueue.create(:user_id => user_id, :district_id => next_record.district_id, :precinct_id => next_record.precinct_id) if next_record.present?
     else
-      # see if there are any precincts that are still waiting for processing that this user has not entered
+
+      # see if a district/precinct has invalid records and is still not valid, show one
+      sql = "SELECT dp.district_id, dp.precinct_id "
+      sql << "FROM (select dp.district_id, dp.precinct_id, count(*) as c "
+      sql << "from district_precincts as dp inner join crowd_data as cd on dp.district_id = cd.district_id and dp.precinct_id = cd.precinct_id "
+      sql << "where dp.is_validated = 0 and dp.has_protocol = 1 and cd.is_valid = 0 and cd.user_id != :user_id "
+      sql << "group by dp.district_id, dp.precinct_id having c > 1) as dp "
+      sql << "left join ( select cq.id, cq.district_id, cq.precinct_id from crowd_queues as cq where is_finished is null) "
+      sql << "as y on dp.district_id = y.district_id and dp.precinct_id = y.precinct_id WHERE y.id is null"
+
+      needs_match = DistrictPrecinct.find_by_sql([sql, :user_id => user_id])
+Rails.logger.debug "88888888888888888888888888888888888"
+Rails.logger.debug "districts/precints with only invalid records:"
+Rails.logger.debug needs_match
+      if needs_match.present?
+      
+        # it is possible that next record may not have image, so check
+        # if not have image after 5 attempts, stop
+        (0..4).each do |try|
+          # records exist that are waiting for a match
+          rand = needs_match.sample
+          next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+Rails.logger.debug "***** found match!"
+          break if next_record.image_path.present?
+          
+        end
+        CrowdQueue.create(:user_id => user_id, :district_id => next_record.district_id, :precinct_id => next_record.precinct_id) if next_record.present?
+
+      else
+        # see if there are any precincts that are still waiting for processing that this user has not entered
 =begin      
       sql = "select district_id, precinct_id from district_precincts where has_protocol = 1 and is_validated = 0 "
       sql << "and id not in ( select dp.id from district_precincts as dp inner join crowd_data as cd "
       sql << "  on dp.district_id = cd.district_id and dp.precinct_id = cd.precinct_id "
       sql << "  where dp.has_protocol = 1 and dp.is_validated = 0 and cd.user_id = :user_id and (((cd.is_valid is null and cd.is_extra = 0) or cd.is_valid = 1)))"
 =end      
-      sql = "select dp.district_id, dp.precinct_id from district_precincts as dp left join ( "
-	    sql << "select cd.id, cd.district_id, cd.precinct_id from crowd_data as cd where cd.is_valid is null "
-      sql << ") as x on dp.district_id = x.district_id and dp.precinct_id = x.precinct_id "
-      sql << "left join (select cq.id, cq.district_id, cq.precinct_id	from crowd_queues as cq "
-    	sql << "where is_finished is null) as y on dp.district_id = y.district_id and dp.precinct_id = y.precinct_id "
-      sql << "where dp.has_protocol = 1 and dp.is_validated = 0 and x.id is null and y.id is null"
-      needs_processing = DistrictPrecinct.find_by_sql([sql, :user_id => user_id])
+        sql = "select dp.district_id, dp.precinct_id from district_precincts as dp left join ( "
+        sql << "select cd.id, cd.district_id, cd.precinct_id from crowd_data as cd where cd.is_valid is null "
+        sql << ") as x on dp.district_id = x.district_id and dp.precinct_id = x.precinct_id "
+        sql << "left join (select cq.id, cq.district_id, cq.precinct_id	from crowd_queues as cq "
+      	sql << "where is_finished is null) as y on dp.district_id = y.district_id and dp.precinct_id = y.precinct_id "
+        sql << "where dp.has_protocol = 1 and dp.is_validated = 0 and x.id is null and y.id is null"
+        needs_processing = DistrictPrecinct.find_by_sql([sql, :user_id => user_id])
 
-      if needs_processing.present?
-        # it is possible that next record may not have image, so check
-        # if not have image after 5 attempts, stop
-        (0..4).each do |try|
-          # precincts are waiting for processing
-          # create a new crowd data record so it can be processed
-          rand = needs_processing.sample
-          next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
-          break if next_record.image_path.present?
+        if needs_processing.present?
+          # it is possible that next record may not have image, so check
+          # if not have image after 5 attempts, stop
+          (0..4).each do |try|
+            # precincts are waiting for processing
+            # create a new crowd data record so it can be processed
+            rand = needs_processing.sample
+            next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+            break if next_record.image_path.present?
+          end
+          CrowdQueue.create(:user_id => user_id, :district_id => next_record.district_id, :precinct_id => next_record.precinct_id) if next_record.present?
         end
-        CrowdQueue.create(:user_id => user_id, :district_id => next_record.district_id, :precinct_id => next_record.precinct_id) if next_record.present?
       end
     end
-
     return next_record
   end
 
