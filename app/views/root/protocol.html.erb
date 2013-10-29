@@ -97,6 +97,15 @@
       <%= f.actions do %>
         <%= f.action :submit, :as => :input, :label => t('app.common.submit') %>
       <% end %>
+
+      <% if @crowd_datum.amendment_image_path.present? %>
+        <p id="amendment_copy">
+          <%= t('.amendment_explanation1') %>
+          <br />
+          <%= t('.amendment_explanation2') %>
+        </p>
+      <% end %>
+
     <% end %>
 
     <div id="votesum">
