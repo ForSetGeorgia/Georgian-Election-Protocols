@@ -217,6 +217,10 @@ en:
       no_protocols: At this time, there are no protocols to enter.              
       no_training: You must completed training before you can start entering real data.
       sum_party_votes: SUM(Party Votes) - Invalid Ballots
+      votesum_explanation1: "მარცხენა რიცხვი: %{label}"
+      votesum_explanation2: "მარჯვენა რიცხვი: %{label}"
+      votesum_explanation3: "ეს რიცხვები დაგეხმარებათ მონაცემთა სეყვანაში."
+      votesum_explanation4: "შესაძლოა, რომ ეს რიცხვები არ ემთხვეოდეს ."
     download:
       title: Download 2013 Election Results Data
       num_precincts: There are %{count} out of %{total} precincts (%{percent}) with election data.

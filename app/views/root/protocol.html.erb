@@ -116,17 +116,35 @@
         </p>
       <% end %>
 
+      <div id="votesum_explanation">
+        <p>
+          **
+          <%= t('.votesum_explanation1', :label => t('app.csv_header.num_votes')) %>
+        </p>
+        <p>
+          <%= t('.votesum_explanation2', :label => t('.sum_party_votes')) %>
+        </p>
+        <p>
+          <%= t('.votesum_explanation3') %>
+        </p>
+        <p>
+          <%= t('.votesum_explanation4') %>
+        </p>
+      </div>
+
     <% end %>
 
     <div id="votesum">
       <span class="f" title="<%= t('app.csv_header.num_votes') %>">0</span>
       <span class="e">=</span>
       <span class="s" title="<%= t('.sum_party_votes')%>">0</span>
+      **
     </div>
 
     <div id="amendment_image" class="clear">
       <%= image_tag @crowd_datum.amendment_image_path if @crowd_datum.amendment_image_path.present?%>
     </div>
+
 
   </div>
 <% end %>
