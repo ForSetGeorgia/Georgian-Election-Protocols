@@ -253,9 +253,6 @@ class CrowdDatum < ActiveRecord::Base
       sql << "as y on dp.district_id = y.district_id and dp.precinct_id = y.precinct_id WHERE y.id is null"
 
       needs_match = DistrictPrecinct.find_by_sql([sql, :user_id => user_id])
-Rails.logger.debug "88888888888888888888888888888888888"
-Rails.logger.debug "districts/precints with only invalid records:"
-Rails.logger.debug needs_match
       if needs_match.present?
       
         # it is possible that next record may not have image, so check
@@ -264,7 +261,6 @@ Rails.logger.debug needs_match
           # records exist that are waiting for a match
           rand = needs_match.sample
           next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
-Rails.logger.debug "***** found match!"
           break if next_record.image_path.present?
           
         end
