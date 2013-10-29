@@ -258,8 +258,8 @@ class DistrictPrecinct < ActiveRecord::Base
             # delete pres record
             sql = "delete p from president2013s as p inner join has_protocols as hp on hp.district_id = p.district_id and hp.precinct_id = p.precinct_id "
             ActiveRecord::Base.connection.execute(sql)
-=end          
           end
+=end          
         end
       end
     end
