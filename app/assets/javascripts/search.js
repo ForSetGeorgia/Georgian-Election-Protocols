@@ -37,11 +37,7 @@ $(document).ready(function(){
 
   var col_sort = new Array($('#users-datatable > thead > tr > th').length);
   for(var i=0;i<$('#users-datatable > thead > tr > th').length;i++){
-    if (i < 8 || i > 11){
-      col_sort[i] = null;
-    }else {
-      col_sort[i] = {"sType": "formatted-num" };
-    }
+    col_sort[i] = {"sType": "formatted-num" };
   }
 
   $('#users-datatable').dataTable({
@@ -58,11 +54,7 @@ $(document).ready(function(){
 
   col_sort = new Array($('#overall_stats_by_district > thead > tr > th').length);
   for(var i=0;i<$('#overall_stats_by_district > thead > tr > th').length;i++){
-    if (i < 8){
-      col_sort[i] = null;
-    }else {
-      col_sort[i] = {"sType": "formatted-num" };
-    }
+    col_sort[i] = {"sType": "formatted-num" };
   }
 
   $('#overall_stats_by_district').dataTable({
