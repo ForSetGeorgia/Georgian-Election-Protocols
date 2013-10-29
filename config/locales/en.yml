@@ -212,6 +212,8 @@ en:
       p2: "If a required field (*) does not have a number, please enter 0."
       amendment_explanation1: The CEC has issued an amendment for this protocol, which is located at the bottom of this page.
       amendment_explanation2: Please enter the numbers from the amendment into the appropriate form fields.
+      overseas_explanation1: This is an overseas district.
+      overseas_explanation2: "Please enter the number from #2 into #1 and enter '0' for #2."
       no_protocols: At this time, there are no protocols to enter.              
       no_training: You must completed training before you can start entering real data.
     download:
