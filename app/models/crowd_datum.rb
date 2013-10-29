@@ -63,9 +63,11 @@ class CrowdDatum < ActiveRecord::Base
   end
 
   def required_fields
+=begin # turning off since all values are default to 0
     [:possible_voters, :ballots_signed_for].each do |f|
       errors.add(f, I18n.t('errors.messages.blank')) if self[f.to_s].to_i == 0
     end
+=end    
   end
 
   # at least one party must have votes
