@@ -33,6 +33,47 @@ $(function ()
   }
 
 
+  var votesum = $('#votesum');
+  if (votesum.length)
+  {
+    var vch = {s: votesum.children('.s'), f: votesum.children('.f')};
+
+    var input = $('#crowd_datum_invalid_ballots_submitted'),
+    offset = input.offset();
+    votesum.css({left: offset.left + input.outerWidth(), top: offset.top});
+
+    var partyinputs = $('input[id*="crowd_datum_party_"]').add(input);
+    partyinputs.bind('keyup change', function ()
+    {
+      var sum = 0;
+      partyinputs.each(function ()
+      {
+        sum += +$(this).val();
+      });
+      vch.s[0].innerHTML = sum;
+      check_values();
+    });
+
+    $('#crowd_datum_ballots_signed_for').bind('keyup change', function ()
+    {
+      vch.f[0].innerHTML = +$(this).val();
+      check_values();
+    });
+
+    function check_values ()
+    {
+      if (vch.s[0].innerHTML == vch.f[0].innerHTML && +vch.f[0].innerHTML > 0)
+      {
+        votesum.addClass('same');
+      }
+      else
+      {
+        votesum.removeClass('same');
+      }
+    }
+  }
+
+
 /*
   if ($('#protocolimg').length)
   {

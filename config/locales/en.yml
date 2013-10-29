@@ -216,6 +216,7 @@ en:
       overseas_explanation2: "Please enter the number from #2 into #1 and enter '0' for #2."
       no_protocols: At this time, there are no protocols to enter.              
       no_training: You must completed training before you can start entering real data.
+      sum_party_votes: SUM(Party Votes) - Invalid Ballots
     download:
       title: Download 2013 Election Results Data
       num_precincts: There are %{count} out of %{total} precincts (%{percent}) with election data.

@@ -35,7 +35,7 @@
     text-align: center;
     font-size: 18px;
     margin-bottom: 15px;
-    &#amendment_explanation{
+    &#amendment_explanation, &#amendment_copy{
       background-color: #ca4748;
       color: #fff;
       padding: 5px;
@@ -44,6 +44,10 @@
       background-color: #1b70af;
       color: #fff;
       padding: 5px;
+    }
+    &#amendment_copy {
+      width: 255px;
+      margin: 15px 0px 0px 60px;
     }
   }
   
@@ -261,6 +265,50 @@
     }
   }
 }
+
+
+
+#votesum {
+  position: absolute;
+  margin: 1px 0px 0px 50px;
+  left: -9998px;
+  top: -9999px;
+  span {
+    display: inline-block;
+    background: #B94A48;
+    color: #fff;
+    padding: 2px 5px;
+    height: 19px;
+    line-height: 16px;
+    .box-sizing();
+    .border-radius(2px);
+    &:not(:last-child) {
+      margin-right: 1px;
+    }
+    &.e {
+      visibility: hidden;
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+  }
+  &.same {
+    span {
+      background: #056A2E;
+      &.e {
+        visibility: visible;
+        background: transparent;
+        color: #000;
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
 
 
 

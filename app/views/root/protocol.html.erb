@@ -44,8 +44,8 @@
 
     <% end %>
 
-    <%#= image_tag @crowd_datum.image_path, :id => 'protocolimg' %>
-    <%= image_tag @crowd_datum.image_path, :id => 'protocolimg', :class => (FastImage.size(full_url(@crowd_datum.image_path))[1] < 1100 ? 'low' : '') %>
+    <%= image_tag @crowd_datum.image_path, :id => 'protocolimg' %>
+    <%#= image_tag @crowd_datum.image_path, :id => 'protocolimg', :class => (FastImage.size(full_url(@crowd_datum.image_path))[1] < 1100 ? 'low' : '') %>
     <%#= image_tag 'http://localhost:3000/system/protocols/53/53-29.jpg', :id => 'protocolimg', :class => (FastImage.size("/system/protocols/53/53-29.jpg")[1] < 1100 ? 'low' : '') %>
 
 
@@ -107,7 +107,22 @@
       <%= f.actions do %>
         <%= f.action :submit, :as => :input, :label => t('app.common.submit') %>
       <% end %>
+
+      <% if @crowd_datum.amendment_image_path.present? %>
+        <p id="amendment_copy">
+          <%= t('.amendment_explanation1') %>
+          <br />
+          <%= t('.amendment_explanation2') %>
+        </p>
+      <% end %>
+
     <% end %>
+
+    <div id="votesum">
+      <span class="f" title="<%= t('app.csv_header.num_votes') %>">0</span>
+      <span class="e">=</span>
+      <span class="s" title="<%= t('.sum_party_votes')%>">0</span>
+    </div>
 
     <div id="amendment_image" class="clear">
       <%= image_tag @crowd_datum.amendment_image_path if @crowd_datum.amendment_image_path.present?%>
