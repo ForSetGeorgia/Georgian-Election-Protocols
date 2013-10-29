@@ -220,7 +220,7 @@ ka:
       votesum_explanation1: "მარცხენა რიცხვი: %{label}"
       votesum_explanation2: "მარჯვენა რიცხვი: %{label}"
       votesum_explanation3: "ეს რიცხვები დაგეხმარებათ მონაცემთა სეყვანაში."
-      votesum_explanation4: "შესაძლოა, რომ ეს რიცხვები არ ემთხვეოდეს ."
+      votesum_explanation4: "შესაძლოა, რომ ეს რიცხვები არ ემთხვეოდეს."
     download:
       title: ჩამოტვირთეთ 2013 წლის არჩევნების შედეგების მონაცემები
       num_precincts: არსებობს %{total}-დან %{count} საარჩევნო უბანი საარჩევნო მონაცემებით.
