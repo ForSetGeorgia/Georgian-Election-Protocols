@@ -133,26 +133,25 @@ class CrowdDatum < ActiveRecord::Base
       CrowdQueue.finished(self.user_id, self.district_id, self.precinct_id)
     
       # see if existing, not validated record exists
-      existing = CrowdDatum.where(["district_id = ? and precinct_id = ? and user_id != ? and is_valid is null and is_extra = 0", self.district_id, self.precinct_id, self.user_id])
+      existing = CrowdDatum.where(["district_id = ? and precinct_id = ? and user_id != ? and is_extra = 0 and (is_valid is null or is_valid = 0)", self.district_id, self.precinct_id, self.user_id])
 
       if existing.present?
         # see if same
-        matches = true
+        found_match = false
         existing.each do |exists|
-          matches = false if exists.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra') != self.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra')
+          exists.is_valid = exists.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra') == self.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra')
+          
+          exists.save
+          found_match = true if exists.is_valid
         end
 
         # update valid status
-        self.is_valid = matches
+        self.is_valid = found_match
         self.save
-        existing.each do |exists|
-          exists.is_valid = matches
-          exists.save
-        end
 
         # if found match, copy data to pres table
         # indicate that match found
-        if matches
+        if found_match
           # indicate that the precinct has been processed and validated
           DistrictPrecinct.where(["district_id = ? and precinct_id = ?", self.district_id, self.precinct_id]).update_all(:is_validated => true)
 
