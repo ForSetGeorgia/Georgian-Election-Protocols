@@ -43,7 +43,7 @@ $(function ()
     votesum.css({left: offset.left + input.outerWidth(), top: offset.top});
 
     var partyinputs = $('input[id*="crowd_datum_party_"]').add(input);
-    partyinputs.keyup(function ()
+    partyinputs.bind('keyup change', function ()
     {
       var sum = 0;
       partyinputs.each(function ()
@@ -54,16 +54,15 @@ $(function ()
       check_values();
     });
 
-    $('#crowd_datum_ballots_signed_for').keyup(function ()
+    $('#crowd_datum_ballots_signed_for').bind('keyup change', function ()
     {
-      console.log($(this).val());
-      vch.f[0].innerHTML = $(this).val();
+      vch.f[0].innerHTML = +$(this).val();
       check_values();
     });
 
     function check_values ()
     {
-      if (vch.s[0].innerHTML == vch.f[0].innerHTML)
+      if (vch.s[0].innerHTML == vch.f[0].innerHTML && +vch.f[0].innerHTML > 0)
       {
         votesum.addClass('same');
       }
