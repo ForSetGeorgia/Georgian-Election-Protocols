@@ -86,7 +86,7 @@
 
 
           <div class="m m<%= i + 1 %>">
-            <%= f.input x[1], :label => x[0].to_s, :as => :string %>
+            <%= f.input x[1], :label => x[0].to_s, :as => :string, :input_html => {:autocomplete => :off} %>
           </div>
         <% end %>
 

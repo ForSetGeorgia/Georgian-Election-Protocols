@@ -52,7 +52,7 @@
         <div class="string control-group optional stringish">
           <label class="control-label" for="protocol_<%= f[1] %>"><%= f[0] %></label>
           <div class="controls">
-            <input id="protocol_<%= f[1] %>" maxlength="4" name="protocol[<%= f[1] %>]" type="text" value="<%= if (!params['protocol'].nil?); params['protocol'][f[1]]; end %>" />
+            <input id="protocol_<%= f[1] %>" maxlength="4" name="protocol[<%= f[1] %>]" type="text" autocomplete="off" value="<%= if (!params['protocol'].nil?); params['protocol'][f[1]]; end %>" />
           </div>
           <% if field_with_error %>
             <div class="error-message">
