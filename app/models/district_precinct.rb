@@ -226,10 +226,12 @@ class DistrictPrecinct < ActiveRecord::Base
           sql = "update district_precincts as dp left join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
           sql << "set dp.has_protocol = if(hp.id is null, 0, 1), dp.updated_at = '#{now}' "
           ActiveRecord::Base.connection.execute(sql)
-=begin          
+
           # if an amendment has been found for a protocol that has already been entered, the protocol needs to be re-entered
           # -> mark the crowd data records as invalid and delete the pres2013 record.
           HasProtocol.delete_all
+
+          puts "++++++++++ image's with amendment count = #{ids.select{|x| x.length == 3}.length}"
 
           # load all districts/precincts that have amendment
           sql = "insert into has_protocols (district_id, precinct_id) values "
@@ -244,6 +246,8 @@ class DistrictPrecinct < ActiveRecord::Base
           sql << "inner join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
           sql << "where dp.has_amendment = 0"
           precincts = ActiveRecord::Base.connection.select_all(sql)
+          puts "++++++++++ found #{precincts.present? ? precincts.length : 0} new amendments"
+=begin
           if precincts.present?
             # mark flag
             sql = "update district_precincts as dp inner join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
@@ -259,7 +263,7 @@ class DistrictPrecinct < ActiveRecord::Base
             sql = "delete p from president2013s as p inner join has_protocols as hp on hp.district_id = p.district_id and hp.precinct_id = p.precinct_id "
             ActiveRecord::Base.connection.execute(sql)
           end
-=end          
+=end
         end
       end
     end
