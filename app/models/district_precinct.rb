@@ -247,8 +247,16 @@ class DistrictPrecinct < ActiveRecord::Base
           sql << "where dp.has_amendment = 0"
           precincts = ActiveRecord::Base.connection.select_all(sql)
           puts "++++++++++ found #{precincts.present? ? precincts.length : 0} new amendments"
-=begin
+
           if precincts.present?
+            # clear out temp table
+            HasProtocol.delete_all
+            
+            # insert the records that have no protocols
+            sql = "insert into has_protocols (district_id, precinct_id) values "
+            sql << precincts.map{|x| "(#{x['district_id']}, #{x['precinct_id']})"}.uniq.join(", ")
+            ActiveRecord::Base.connection.execute(sql)
+            
             # mark flag
             sql = "update district_precincts as dp inner join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
             sql << "set dp.has_amendment = 1, dp.is_validated = 0, dp.updated_at = '#{now}' "
@@ -263,7 +271,7 @@ class DistrictPrecinct < ActiveRecord::Base
             sql = "delete p from president2013s as p inner join has_protocols as hp on hp.district_id = p.district_id and hp.precinct_id = p.precinct_id "
             ActiveRecord::Base.connection.execute(sql)
           end
-=end
+
         end
       end
     end
