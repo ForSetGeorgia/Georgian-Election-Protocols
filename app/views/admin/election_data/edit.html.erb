@@ -41,7 +41,7 @@
     <%#= image_tag 'http://localhost:3000/system/protocols/53/53-29.jpg', :id => 'protocolimg', :class => (FastImage.size("/system/protocols/53/53-29.jpg")[1] < 1100 ? 'low' : '') %>
 
 
-    <%= semantic_form_for @record, :url => protocol_path do |f| %>
+    <%= semantic_form_for @record, :url => admin_election_data_edit_path do |f| %>
       <%= f.inputs do %>
         <%= f.input :district_id, :as => :hidden %>
         <%= f.input :precinct_id, :as => :hidden %>
@@ -101,6 +101,7 @@
 
       <%= f.actions do %>
         <%= f.action :submit, :as => :input, :label => t('app.common.submit') %>
+        <%= f.submit nil, :class => 'btn btn-warning', :type => :reset, :value => t('helpers.links.reset'), :name => :reset %>
       <% end %>
 
       <% if @record.amendment_image_path.present? %>
