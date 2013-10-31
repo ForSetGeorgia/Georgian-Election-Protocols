@@ -7,114 +7,141 @@
   
   <% else %>
 
-    <div id="protocol-form-container">
+  <div id="protocol-form-container">
 
-      <% if @record.amendment_image_path.present? %>
+    <p>
+      <%= t('.p1') %>
+    </p>
+    <p>
+      <%= t('.p2') %>
+    </p>
 
-        <p id="amendment_explanation">
-          <%= t('.amendment_explanation1') %>
-          <br />
-          <%= t('.amendment_explanation2') %>
-        </p>
+    <% if @record.amendment_image_path.present? %>
 
-      <% end %>
-
-      <p>
-        <strong>
-          <%= I18n.t('app.csv_header.region') %>:
-        </strong>
-        <%= @record.region %>
-      </p>
-      <p>
-        <strong>
-          <%= I18n.t('app.csv_header.district_name') %>:
-        </strong>
-        <%= @record.district_name %>
-      </p>
-      <p>
-        <strong>
-          <%= I18n.t('app.csv_header.district_id') %>:
-        </strong>
-        <%= @record.district_id %>
-      </p>
-      <p>
-        <strong>
-          <%= I18n.t('app.csv_header.precinct_id') %>:
-        </strong>
-        <%= @record.precinct_id %>
+      <p id="amendment_explanation">
+        <%= t('.amendment_explanation1') %>
+        <br />
+        <%= t('.amendment_explanation2') %>
       </p>
 
+    <% end %>
 
-      <%= image_tag @record.image_path, :id => 'protocolimg' %>
+    <% if @record.district_id == 87 %>
 
-      <%= semantic_form_for @record, :url => admin_election_data_edit_path do |f| %>
-        <%= f.inputs do %>
-          <%= f.input :is_overriden, :as => :hidden, :value => true %>
-          <%  [
-                [1, :num_possible_voters],
-                [2, :num_special_voters],
-                ['3ა (12:00)', :num_at_12],
-                ['3ბ (17:00)', :num_at_17],
-                [4, :num_votes],
-                [5, :num_ballots],
-                [1, '1 - Tamaz Bibiluri'],
-                [2, '2 - Giorgi Liluashvili'],
-                [3, '3 - Sergo Javakhidze'],
-                [4, '4 - Koba Davitashvili'],
-                [5, '5 - Davit Bakradze'],
-                [6, '6 - Akaki Asatiani'],
-                [7, '7 - Nino Chanishvili'],
-                [8, '8 - Teimuraz Bobokhidze'],
-                [9, '9 - Shalva Natelashvili'],
-                [10, '10 - Giorgi Targamadze'],
-                [11, '11 - Levan Chachua'],
-                [12, '12 - Nestan Kirtadze'],
-                [13, '13 - Giorgi Chikhladze'],
-                [14, '14 - Nino Burjanadze'],
-                [15, '15 - Zurab Kharatishvili'],
-                [16, '16 - Mikheil Saluashvili'],
-                [17, '17 - Kartlos Gharibashvili'],
-                [18, '18 - Mamuka Chokhonelidze'],
-                [19, '19 - Avtandil Margiani'],
-                [20, '20 - Nugzar Avaliani'],
-                [21, '21 - Mamuka Melikishvili'],
-                [22, '22 - Teimuraz Mzhavia'],
-                [41, '41 - Giorgi Margvelashvili'],
-                [6, :num_invalid_votes]
-              ].each_with_index do |x, i| %>
+      <p id="overseas_explanation">
+        <%= t('.overseas_explanation1') %>
+        <br />
+        <%= t('.overseas_explanation2') %>
+      </p>
+
+    <% end %>
+
+    <%= image_tag @record.image_path, :id => 'protocolimg' %>
+    <%#= image_tag @record.image_path, :id => 'protocolimg', :class => (FastImage.size(full_url(@record.image_path))[1] < 1100 ? 'low' : '') %>
+    <%#= image_tag 'http://localhost:3000/system/protocols/53/53-29.jpg', :id => 'protocolimg', :class => (FastImage.size("/system/protocols/53/53-29.jpg")[1] < 1100 ? 'low' : '') %>
 
 
+    <%= semantic_form_for @record, :url => protocol_path do |f| %>
+      <%= f.inputs do %>
+        <%= f.input :district_id, :as => :hidden %>
+        <%= f.input :precinct_id, :as => :hidden %>
 
+        <%  [
+              [1, :num_possible_voters],
+              [2, :num_special_voters],
+              ['3ა (12:00)', :num_at_12],
+              ['3ბ (17:00)', :num_at_17],
+              [4, :num_votes],
+              [5, :num_ballots],
+              [1, '1 - Tamaz Bibiluri'],
+              [2, '2 - Giorgi Liluashvili'],
+              [3, '3 - Sergo Javakhidze'],
+              [4, '4 - Koba Davitashvili'],
+              [5, '5 - Davit Bakradze'],
+              [6, '6 - Akaki Asatiani'],
+              [7, '7 - Nino Chanishvili'],
+              [8, '8 - Teimuraz Bobokhidze'],
+              [9, '9 - Shalva Natelashvili'],
+              [10, '10 - Giorgi Targamadze'],
+              [11, '11 - Levan Chachua'],
+              [12, '12 - Nestan Kirtadze'],
+              [13, '13 - Giorgi Chikhladze'],
+              [14, '14 - Nino Burjanadze'],
+              [15, '15 - Zurab Kharatishvili'],
+              [16, '16 - Mikheil Saluashvili'],
+              [17, '17 - Kartlos Gharibashvili'],
+              [18, '18 - Mamuka Chokhonelidze'],
+              [19, '19 - Avtandil Margiani'],
+              [20, '20 - Nugzar Avaliani'],
+              [21, '21 - Mamuka Melikishvili'],
+              [22, '22 - Teimuraz Mzhavia'],
+              [41, '41 - Giorgi Margvelashvili'],
+              [6, :num_invalid_votes]
+            ].each_with_index do |x, i| %>
 
-
-            <% if i == 2 %>
-              <div class="inline clearfix">
-            <% elsif i == 4 %>
-              </div>
-            <% end %>
-
-
-            <div class="m m<%= i + 1 %>">
-              <%= f.input x[1], :label => x[0].to_s, :as => :string %>
+          <% if i == 2 %>
+            <div class="inline clearfix">
+          <% elsif i == 4 %>
             </div>
           <% end %>
 
 
-
+          <div class="m m<%= i + 1 %>">
+            <% input_class = '' %>
+            <% if i > 6 && i < 29 %>
+              <% input_class = 'edit_party' %>
+            <% end %>
+            <%= f.input x[1], :label => x[0].to_s, :as => :string, :input_html => {:autocomplete => :off, :class => input_class} %>
+          </div>
         <% end %>
 
-        <%= f.actions do %>
-          <%= f.action :submit, :as => :input, :label => t('app.common.submit') %>
-    	    <%= f.submit nil, :class => 'btn btn-warning', :type => :reset, :value => t('helpers.links.reset'), :name => :reset %>
-        <% end %>
+
+
       <% end %>
 
-      <div id="amendment_image" class="clear">
-        <%= image_tag @record.amendment_image_path if @record.amendment_image_path.present?%>
+      <%= f.actions do %>
+        <%= f.action :submit, :as => :input, :label => t('app.common.submit') %>
+      <% end %>
+
+      <% if @record.amendment_image_path.present? %>
+        <p id="amendment_copy">
+          <%= t('.amendment_explanation1') %>
+          <br />
+          <%= t('.amendment_explanation2') %>
+        </p>
+      <% end %>
+
+      <div id="votesum_explanation">
+        <p>
+          **
+          <%= t('.votesum_explanation1', :label => t('app.csv_header.num_votes')) %>
+        </p>
+        <p>
+          <%= t('.votesum_explanation2', :label => t('.sum_party_votes')) %>
+        </p>
+        <p>
+          <%= t('.votesum_explanation3') %>
+        </p>
+        <p>
+          <%= t('.votesum_explanation4') %>
+        </p>
       </div>
 
+    <% end %>
+
+    <div id="votesum_edit">
+      <span class="f" title="<%= t('app.csv_header.num_votes') %>">0</span>
+      <span class="e">=</span>
+      <span class="s" title="<%= t('.sum_party_votes')%>">0</span>
+      **
     </div>
 
+    <div id="amendment_image" class="clear">
+      <%= image_tag @record.amendment_image_path if @record.amendment_image_path.present?%>
+    </div>
+
+
+  </div>
   <% end %>
 
 

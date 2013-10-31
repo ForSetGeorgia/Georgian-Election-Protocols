@@ -1,5 +1,48 @@
 $(document).ready(function(){
 
+
+
+
+  var votesum_edit = $('#votesum_edit');
+  if (votesum_edit.length)
+  {
+    var vch = {s: votesum_edit.children('.s'), f: votesum_edit.children('.f')};
+
+    var input = $('#president2013_num_invalid_votes'),
+    offset = input.offset();
+    votesum_edit.css({left: offset.left + input.outerWidth(), top: offset.top});
+
+    var partyinputs = $('input[class="edit_party"]').add(input);
+    partyinputs.bind('keyup change', function ()
+    {
+      var sum = 0;
+      partyinputs.each(function ()
+      {
+        sum += +$(this).val();
+      });
+      vch.s[0].innerHTML = sum;
+      check_values();
+    });
+
+    $('#president2013_num_votes').bind('keyup change', function ()
+    {
+      vch.f[0].innerHTML = +$(this).val();
+      check_values();
+    });
+
+    function check_values ()
+    {
+      if (vch.s[0].innerHTML == vch.f[0].innerHTML && +vch.f[0].innerHTML > 0)
+      {
+        votesum_edit.addClass('same');
+      }
+      else
+      {
+        votesum_edit.removeClass('same');
+      }
+    }
+  }
+
   
   $('#create_migration').click(function(){
     console.log('create_migration click'); 
