@@ -57,7 +57,7 @@ en:
       confirm: Are you sure?
       new: New
     common:
-      app_name: 2013 Presidential Protocols
+      app_name: Georgian Election Protocols
       added_on: "Added on: %{date}" 
       na: 'N/A'
       file_name: 2013 Presidential Results
@@ -119,7 +119,7 @@ en:
       sign_in: Sign In
       js_link_title: "Visit JumpStart Georgia's website"
       js_link_text: Built by
-      js_slogan: JumpStart Georgia - Communicating Information Better
+      js_slogan: JumpStart Georgia - Informing Communities with Data and Design
       training: Training
       enter_data: Enter Data
       download: Download Data
