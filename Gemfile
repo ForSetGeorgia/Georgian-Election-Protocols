@@ -33,6 +33,8 @@ gem "useragent", :git => "https://github.com/jilion/useragent.git" # browser det
 gem 'active_attr', '~> 0.9.0' # to create tabless models; using for contact form
 gem "fastimage" # get image size without downloading the image
 
+gem 'test-unit', '~> 3.0' # needed for rails console
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do

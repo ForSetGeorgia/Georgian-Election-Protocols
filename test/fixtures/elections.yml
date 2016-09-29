@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  election_at: 2016-09-30
+  can_enter_data: false
+  election_app_event_id: 1
+
+two:
+  name: MyString
+  election_at: 2016-09-30
+  can_enter_data: false
+  election_app_event_id: 1

@@ -1,7 +1,31 @@
 class DistrictPrecinct < ActiveRecord::Base
 
+  #######################################
+  ## ATTRIBUTES
+  attr_accessible :election_id, :district_id, :precinct_id, :has_protocol, :is_validated, :has_amendment
   attr_accessor :num_precincts, :num_protocols_found, :num_protocols_missing, :num_protocols_not_entered, :num_protocols_validated
 
+  #######################################
+  ## VALIDATIONS
+  validates :election_id, :district_id, :precinct_id, :presence => true
+
+  #######################################
+  ## SCOPES
+  def self.by_election(election_id)
+    where(election_id: election_id)
+  end
+
+  def self.with_protocols
+    where(:has_protocol => true).order("district_id, precinct_id")
+  end
+
+  def self.awaiting_protocols
+    where(:has_protocol => false).order("district_id, precinct_id")
+  end
+
+  def self.district_count
+    select('distinct district_id').count
+  end
 
   #######################
   # flag descriptions
@@ -9,11 +33,11 @@ class DistrictPrecinct < ActiveRecord::Base
   # has_protocol
   # - 0 = default value
   # - 1 = set to true when scrapper indicates that it found the protocol
-  
+
   # is_validated
   # - 0 = default value
   # - 1 = set to true two crowd datum records have matched and the data has been moved to pres table
-  
+
   #######################
 
 
@@ -24,8 +48,8 @@ class DistrictPrecinct < ActiveRecord::Base
   #format: [ {district_id => x, precincts => [ {id => x }, ...  ] }, .... ]
   def self.found_protocols
     records = []
-    x = where(:has_protocol => true).order("district_id, precinct_id")
-    
+    x = with_protocols
+
     if x.present?
       district_ids = x.map{|x| x.district_id}.uniq
       if district_ids.present?
@@ -35,29 +59,29 @@ class DistrictPrecinct < ActiveRecord::Base
           district['district_id'] = district_id
           district['precincts'] = []
           precinct_ids = x.select{|x| x.district_id == district_id}.map{|x| x.precinct_id}.sort
-          
+
           if precinct_ids.present?
             precinct_ids.each do |precinct_id|
               precinct = Hash.new
               district['precincts'] << precinct
               precinct['id'] = precinct_id
-            end          
+            end
           end
-        
-        end          
+
+        end
       end
     end
-  
+
     return records
   end
-  
-  
+
+
   # creates array of districts/precincts that are missing protocols
   #format: [ {district_id => x, precincts => [ {id => x, found => false }, ...  ] }, .... ]
   def self.missing_protocols
     records = []
-    x = where(:has_protocol => false).order("district_id, precinct_id")
-    
+    x = awaiting_protocols
+
     if x.present?
       district_ids = x.map{|x| x.district_id}.uniq
       if district_ids.present?
@@ -67,50 +91,50 @@ class DistrictPrecinct < ActiveRecord::Base
           district['district_id'] = district_id
           district['precincts'] = []
           precinct_ids = x.select{|x| x.district_id == district_id}.map{|x| x.precinct_id}.sort
-          
+
           if precinct_ids.present?
             precinct_ids.each do |precinct_id|
               precinct = Hash.new
               district['precincts'] << precinct
               precinct['id'] = precinct_id
 #              precinct['found'] = false
-            end          
+            end
           end
-        
-        end          
+
+        end
       end
     end
-  
+
     return records
   end
-  
-  
+
+
   # for each precinct in a district, if it is marked as found, update the table record
   def self.mark_found_protocols(json)
     success = true
-    
+
     if json.present?
       DistrictPrecinct.transaction do
         json.each do |district|
-          if district.has_key?('district_id') && district['district_id'].present? && 
+          if district.has_key?('district_id') && district['district_id'].present? &&
               district.has_key?('precincts') && district['precincts'].present?
 
             district['precincts'].each do |precinct|
-              if precinct.has_key?('id') && precinct['id'].present? && 
-                  precinct.has_key?('found') && precinct['found'].present? && 
+              if precinct.has_key?('id') && precinct['id'].present? &&
+                  precinct.has_key?('found') && precinct['found'].present? &&
                   (precinct['found'] == true || precinct['found'] == 'true')
-              
+
                 # found district/precinct that has a protocol
                 # - update the record
                 u = DistrictPrecinct.where(:district_id => district['district_id'], :precinct_id => precinct['id'])
                   .update_all(:has_protocol => true)
-                  
+
                 if u == 0
-                  success = false 
+                  success = false
 	                raise ActiveRecord::Rollback
                   return success
-                end                
-                
+                end
+
               end
             end
           end
@@ -127,21 +151,21 @@ class DistrictPrecinct < ActiveRecord::Base
   #######################
 
   # get the following:
-  # total districts (#), total precincts (#), protocols found (#/%), protocols missing (#/%), protocols not entered (#/%), protocols validated (#/%) 
+  # total districts (#), total precincts (#), protocols found (#/%), protocols missing (#/%), protocols not entered (#/%), protocols validated (#/%)
   def self.overall_stats
     stats = nil
-    district_count = DistrictPrecinct.select('distinct district_id').count
-    
+    dist_count = self.district_count
+
     sql = "select count(*) as num_precincts, sum(has_protocol) as num_protocols_found, (count(*) - sum(has_protocol)) as num_protocols_missing, "
     sql << "sum(if(has_protocol = 1 and is_validated = 0, 1, 0)) as num_protocols_not_entered, sum(if(has_protocol = 1 and is_validated = 1, 1, 0)) as num_protocols_validated "
     sql << "from district_precincts "
 
     data = find_by_sql(sql)
-    
+
     if data.present?
       data = data.first
       stats = Hash.new
-      stats[:districts] = format_number(district_count)
+      stats[:districts] = format_number(dist_count)
       stats[:precincts] = format_number(data[:num_precincts])
       stats[:protocols_missing] = Hash.new
       stats[:protocols_missing][:number] = format_number(data[:num_protocols_missing])
@@ -155,31 +179,31 @@ class DistrictPrecinct < ActiveRecord::Base
       stats[:protocols_validated] = Hash.new
       stats[:protocols_validated][:number] = data[:num_protocols_found] > 0 ? format_number(data[:num_protocols_validated]) : I18n.t('app.common.na')
       stats[:protocols_validated][:percent] = data[:num_protocols_found] > 0 ? format_percent(100*data[:num_protocols_validated]/data[:num_protocols_found].to_f) : I18n.t('app.common.na')
-    end    
+    end
     return stats
   end
 
 
   # get the following:
-  # district id/name, total precincts (#), protocols found (#/%), protocols missing (#/%), protocols not entered (#/%), protocols validated (#/%) 
+  # district id/name, total precincts (#), protocols found (#/%), protocols missing (#/%), protocols not entered (#/%), protocols validated (#/%)
   def self.overall_stats_by_district
     districts = []
 
-    names = RegionDistrictName.all    
-    
+    names = RegionDistrictName.all
+
     sql = "select district_id, count(*) as num_precincts, sum(has_protocol) as num_protocols_found, (count(*) - sum(has_protocol)) as num_protocols_missing, "
     sql << "sum(if(has_protocol = 1 and is_validated = 0, 1, 0)) as num_protocols_not_entered, sum(if(has_protocol = 1 and is_validated = 1, 1, 0)) as num_protocols_validated "
     sql << "from district_precincts group by district_id order by district_id"
 
     data = find_by_sql(sql)
-    
+
     if data.present?
       data.each do |district|
         stats = Hash.new
         districts << stats
 
         index = names.index{|x| x.district_id == district[:district_id]}
-        
+
         stats[:region] = index.present? ? names[index].region : nil
         stats[:district] = index.present? ? names[index].district_name : nil
         stats[:district_id] = district[:district_id]
@@ -198,7 +222,7 @@ class DistrictPrecinct < ActiveRecord::Base
         stats[:protocols_validated][:number] = district[:num_protocols_found] > 0 ? format_number(district[:num_protocols_validated]) : I18n.t('app.common.na')
         stats[:protocols_validated][:percent] = district[:num_protocols_found] > 0 ? format_percent(100*district[:num_protocols_validated]/district[:num_protocols_found].to_f) : I18n.t('app.common.na')
       end
-    end    
+    end
     return districts
   end
 
@@ -208,7 +232,7 @@ class DistrictPrecinct < ActiveRecord::Base
   def self.new_image_search
     files = Dir.glob("#{Rails.root}/public/system/protocols/**/*.jpg")
     if files.present?
-      ids = files.map{|x| x.split('/').last.gsub('.jpg', '').split('-')}    
+      ids = files.map{|x| x.split('/').last.gsub('.jpg', '').split('-')}
       if ids.present?
         DistrictPrecinct.transaction do
           # remove anything that was there
@@ -220,7 +244,7 @@ class DistrictPrecinct < ActiveRecord::Base
           sql = "insert into has_protocols (district_id, precinct_id) values "
           sql << ids.map{|x| "(#{x[0]}, #{x[1]})"}.uniq.join(", ")
           ActiveRecord::Base.connection.execute(sql)
-          
+
           # update district precint table to mark these as existing
           now = Time.now
           sql = "update district_precincts as dp left join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
@@ -237,7 +261,7 @@ class DistrictPrecinct < ActiveRecord::Base
           sql = "insert into has_protocols (district_id, precinct_id) values "
           sql << ids.select{|x| x.length == 3}.map{|x| "(#{x[0]}, #{x[1]})"}.uniq.join(", ")
           ActiveRecord::Base.connection.execute(sql)
-          
+
           # if district/precinct did not have amendment:
           # - update flag
           # - mark crowd datum as invalid
@@ -251,22 +275,22 @@ class DistrictPrecinct < ActiveRecord::Base
           if precincts.present?
             # clear out temp table
             HasProtocol.delete_all
-            
+
             # insert the records that have no protocols
             sql = "insert into has_protocols (district_id, precinct_id) values "
             sql << precincts.map{|x| "(#{x['district_id']}, #{x['precinct_id']})"}.uniq.join(", ")
             ActiveRecord::Base.connection.execute(sql)
-            
+
             # mark flag
             sql = "update district_precincts as dp inner join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
             sql << "set dp.has_amendment = 1, dp.is_validated = 0, dp.updated_at = '#{now}' "
             ActiveRecord::Base.connection.execute(sql)
-            
+
             # mark crowd datum as invalid
             sql = "update crowd_data as cd inner join has_protocols as hp on hp.district_id = cd.district_id and hp.precinct_id = cd.precinct_id "
             sql << "set cd.is_valid = 0, cd.updated_at = '#{now}' where cd.is_valid = 1"
             ActiveRecord::Base.connection.execute(sql)
-            
+
             # delete pres record
             sql = "delete p from president2013s as p inner join has_protocols as hp on hp.district_id = p.district_id and hp.precinct_id = p.precinct_id "
             ActiveRecord::Base.connection.execute(sql)
@@ -277,9 +301,9 @@ class DistrictPrecinct < ActiveRecord::Base
     end
   end
 
-  protected 
-  
-  
+  protected
+
+
   def self.format_number(number)
     ActionController::Base.helpers.number_with_delimiter(ActionController::Base.helpers.number_with_precision(number))
   end
