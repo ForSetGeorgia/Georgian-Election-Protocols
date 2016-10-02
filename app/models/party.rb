@@ -22,4 +22,10 @@ class Party < ActiveRecord::Base
   def self.by_election(election_id)
     where(election_id: election_id)
   end
+
+  #######################################
+  ## METHODS
+  def self.hash_for_analysis(election_id)
+    by_election(election_id).map{|x| {id: x.number, name: x.name}}
+  end
 end

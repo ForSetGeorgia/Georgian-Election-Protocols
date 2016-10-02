@@ -5,6 +5,10 @@ class CreateElections < ActiveRecord::Migration
       t.integer :election_app_event_id
       t.boolean :can_enter_data, default: false
       t.boolean :parties_same_for_all_districts, default: true
+      t.boolean :is_local_majoritarian, default: false
+      t.boolean :has_regions, default: false
+      t.boolean :has_district_names, default: false
+      t.string :analysis_table_name
 
       t.timestamps
     end
@@ -15,7 +19,8 @@ class CreateElections < ActiveRecord::Migration
 
     # add election to districts precincts
     add_column :district_precincts, :election_id, :integer
-    add_index :district_precincts, [:election_id, :district_id, :precinct_id], name: 'idx_elec_dist_prec'
+    add_column :district_precincts, :region, :string
+    add_index :district_precincts, [:election_id, :region, :district_id, :precinct_id], name: 'idx_elec_dist_prec'
   end
   def self.down
     drop_table :elections
@@ -23,6 +28,7 @@ class CreateElections < ActiveRecord::Migration
 
     # districts precincts
     remove_column :district_precincts, :election_id
+    remove_column :district_precincts, :region, :string
     remove_index :district_precincts, name: 'idx_elec_dist_prec'
   end
 end

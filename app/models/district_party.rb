@@ -11,10 +11,12 @@ class DistrictParty < ActiveRecord::Base
   #######################################
   ## VALIDATIONS
   validates :district_id, :election_id, :party_id, :presence => true
-  validates :party_id, uniquness: { scope: [:election_id, :district_id]}
+  validates :party_id, uniqueness: { scope: [:election_id, :district_id]}
 
   #######################################
   ## SCOPES
-  scope :sorted, with_translations(I18n.locale).order("election_translations.name asc")
+  def self.by_election_district(election_id, district_id)
+    where(election_id: election_id, district_id: district_id)
+  end
 
 end

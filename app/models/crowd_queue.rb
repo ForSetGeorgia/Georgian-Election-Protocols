@@ -1,5 +1,5 @@
 class CrowdQueue < ActiveRecord::Base
-  
+
   #######################
   # flag descriptions
   #######################
@@ -12,18 +12,18 @@ class CrowdQueue < ActiveRecord::Base
   #######################
   #######################
 
-  validates :district_id, :precinct_id, :user_id, :presence => true
+  validates :election_id, :district_id, :precinct_id, :user_id, :presence => true
 
-  
+
   MAX_TIME = 5
-  
-  
+
+
   # clean the queue from old items that were never finished
   # and remove all unfinished items for this user
   def self.clean_queue(user_id=nil)
     # mark old records as not finished
     CrowdQueue.where("is_finished is null and created_at < ?", MAX_TIME.minutes.ago).update_all(:is_finished => false)
-    
+
     # if this user has any pending records, marked as not finished
     CrowdQueue.where("is_finished is null and user_id = ?", user_id).update_all(:is_finished => false) if user_id.present?
   end

@@ -7,7 +7,7 @@ class CrowdDatum < ActiveRecord::Base
   # - by default is null which means that it has not been matched and validated against a matching district/precinct
   # - 0 = it was matched and validation failed
   # - 1 = it was matched and validated
-  
+
   # is_extra
   # - 0 = default value
   # - 1 = when matched and validated, the district/precinct was already validated so this record is extra
@@ -17,7 +17,7 @@ class CrowdDatum < ActiveRecord::Base
   #######################
   #######################
 
-  validates :district_id, :precinct_id, :possible_voters, :ballots_signed_for, :presence => true
+  validates :election_id, :district_id, :precinct_id, :possible_voters, :ballots_signed_for, :presence => true
 
   validate :required_fields
   validate :party_votes_provided
@@ -26,7 +26,7 @@ class CrowdDatum < ActiveRecord::Base
   after_create :match_and_validate
 
   FOLDER_PATH = "/system/protocols"
-
+  MAX_PARTIES = 60
   #######################
   #######################
 
@@ -35,12 +35,12 @@ class CrowdDatum < ActiveRecord::Base
   def image_path
     path = nil
     exist = false
-    
+
     if self.district_id.present? && self.precinct_id.present?
       path = "#{FOLDER_PATH}/#{district_id}/#{district_id}-#{precinct_id}.jpg"
       exist = File.exist?("#{Rails.root}/public#{path}")
     end
-    
+
     path = nil if !exist
 
     return path
@@ -51,12 +51,12 @@ class CrowdDatum < ActiveRecord::Base
   def amendment_image_path
     path = nil
     exist = false
-    
+
     if self.district_id.present? && self.precinct_id.present?
       path = "#{FOLDER_PATH}/#{district_id}/#{district_id}-#{precinct_id}-amended.jpg"
       exist = File.exist?("#{Rails.root}/public#{path}")
     end
-    
+
     path = nil if !exist
 
     return path
@@ -67,16 +67,15 @@ class CrowdDatum < ActiveRecord::Base
     [:possible_voters, :ballots_signed_for].each do |f|
       errors.add(f, I18n.t('errors.messages.blank')) if self[f.to_s].to_i == 0
     end
-=end    
+=end
   end
 
   # at least one party must have votes
   def party_votes_provided
-    parties = [self.party_1, self.party_2, self.party_3, self.party_4, self.party_5, self.party_6, self.party_7, self.party_8, self.party_9, self.party_10, self.party_11, self.party_12, self.party_13, self.party_14, self.party_15, self.party_16, self.party_17, self.party_18, self.party_19, self.party_20, self.party_21, self.party_22, self.party_41]    
-
     sum = 0
-    parties.each do |party|
-      sum += party if !party.nil?
+    (1..MAX_PARTIES).each do |party_id|
+      sum += self["party_#{party_id}"] if !self["party_#{party_id}"].nil?
+      break if sum > 0
     end
 
     if sum == 0
@@ -133,7 +132,7 @@ class CrowdDatum < ActiveRecord::Base
     CrowdDatum.transaction do
       # finished queue item
       CrowdQueue.finished(self.user_id, self.district_id, self.precinct_id)
-    
+
       # see if existing, not validated record exists
       existing = CrowdDatum.where(["district_id = ? and precinct_id = ? and user_id != ? and is_extra = 0 and (is_valid is null or is_valid = 0)", self.district_id, self.precinct_id, self.user_id])
 
@@ -142,7 +141,7 @@ class CrowdDatum < ActiveRecord::Base
         found_match = false
         existing.each do |exists|
           exists.is_valid = exists.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra') == self.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra')
-          
+
           exists.save
           found_match = true if exists.is_valid
         end
@@ -221,12 +220,12 @@ class CrowdDatum < ActiveRecord::Base
   # get the next record to be processed
   def self.next_available_record(user_id)
     next_record = nil
-    
+
     # make sure the queue is clean
     CrowdQueue.clean_queue(user_id)
-    
+
     # see if a record needs a match
-#    needs_match = CrowdDatum.select('id').where("user_id != ? and is_valid is null and is_extra = 0", user_id)  
+#    needs_match = CrowdDatum.select('id').where("user_id != ? and is_valid is null and is_extra = 0", user_id)
     sql = "SELECT cd.id , cd.district_id, cd.precinct_id FROM `crowd_data` as cd left join ( "
 	  sql << "select cq.id, cq.district_id, cq.precinct_id from crowd_queues as cq where is_finished is null) "
 	  sql << "as y on cd.district_id = y.district_id and cd.precinct_id = y.precinct_id "
@@ -256,7 +255,7 @@ class CrowdDatum < ActiveRecord::Base
 
       needs_match = DistrictPrecinct.find_by_sql([sql, :user_id => user_id])
       if needs_match.present?
-      
+
         # it is possible that next record may not have image, so check
         # if not have image after 5 attempts, stop
         (0..4).each do |try|
@@ -264,18 +263,18 @@ class CrowdDatum < ActiveRecord::Base
           rand = needs_match.sample
           next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
           break if next_record.image_path.present?
-          
+
         end
         CrowdQueue.create(:user_id => user_id, :district_id => next_record.district_id, :precinct_id => next_record.precinct_id) if next_record.present?
 
       else
         # see if there are any precincts that are still waiting for processing that this user has not entered
-=begin      
+=begin
       sql = "select district_id, precinct_id from district_precincts where has_protocol = 1 and is_validated = 0 "
       sql << "and id not in ( select dp.id from district_precincts as dp inner join crowd_data as cd "
       sql << "  on dp.district_id = cd.district_id and dp.precinct_id = cd.precinct_id "
       sql << "  where dp.has_protocol = 1 and dp.is_validated = 0 and cd.user_id = :user_id and (((cd.is_valid is null and cd.is_extra = 0) or cd.is_valid = 1)))"
-=end      
+=end
         sql = "select dp.district_id, dp.precinct_id from district_precincts as dp left join ( "
         sql << "select cd.id, cd.district_id, cd.precinct_id from crowd_data as cd where cd.is_valid is null "
         sql << ") as x on dp.district_id = x.district_id and dp.precinct_id = x.precinct_id "
@@ -427,7 +426,7 @@ class CrowdDatum < ActiveRecord::Base
 
 
 
-  protected 
+  protected
 
 
   def self.format_number(number)
