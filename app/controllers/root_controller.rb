@@ -5,9 +5,10 @@ class RootController < ApplicationController
   PROTOCOL_NUMBERS = (1..5).to_a
 
   def index
-    @overall_stats = DistrictPrecinct.overall_stats
-    @overall_stats_by_district = DistrictPrecinct.overall_stats_by_district
-    @overall_user_stats = CrowdDatum.overall_user_stats
+    # get the events that are currently open for data entry
+    @overall_stats = DistrictPrecinct.overall_stats(@election_ids)
+    @overall_stats_by_district = DistrictPrecinct.overall_stats_by_district(@election_ids)
+    @overall_user_stats = CrowdDatum.overall_user_stats(@election_ids)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -34,7 +35,7 @@ class RootController < ApplicationController
 
     # get the next record if there were no errors
     @crowd_datum = CrowdDatum.next_available_record(current_user.id) if valid
-    
+
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -88,16 +89,16 @@ class RootController < ApplicationController
       format.html # index.html.erb
     end
   end
-  
+
   def download
     @num_precincts = President2013.count
     @total_precincts = DistrictPrecinct.count
-  
+
     respond_to do |format|
       format.html # index.html.erb
     end
   end
-  
+
   def generate_spreadsheet
 
 		# create file name using event name and map title that were passed in
@@ -107,18 +108,18 @@ class RootController < ApplicationController
 		respond_to do |format|
 		  format.csv {
 logger.debug ">>>>>>>>>>>>>>>> format = csv"
-        send_data President2013.download_precinct_data, 
+        send_data President2013.download_precinct_data,
 		      :type => 'text/csv; header=present',
 		      :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
 			}
 
 		  format.xls{
 logger.debug ">>>>>>>>>>>>>>>> format = xls"
-				send_data President2013.download_precinct_data, 
+				send_data President2013.download_precinct_data,
 		    :disposition => "attachment; filename=#{clean_filename(filename)}.xls"
 			}
 		end
-  
+
   end
 
 
@@ -131,7 +132,7 @@ logger.debug ">>>>>>>>>>>>>>>> format = xls"
 		respond_to do |format|
 		  format.csv {
 logger.debug ">>>>>>>>>>>>>>>> format = csv"
-        send_data President2013.download_election_map_data, 
+        send_data President2013.download_election_map_data,
 		      :type => 'text/csv; header=present',
 		      :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
 			}
@@ -141,10 +142,10 @@ logger.debug ">>>>>>>>>>>>>>>> format = csv"
 
 
   protected
-  
+
 	# remove bad characters from file name
 	def clean_filename(filename)
 		Utf8Converter.convert_ka_to_en(filename.gsub(' ', '_').gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,''))
 	end
-  
+
 end

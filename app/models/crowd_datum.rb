@@ -13,20 +13,141 @@ class CrowdDatum < ActiveRecord::Base
   # - 1 = when matched and validated, the district/precinct was already validated so this record is extra
   #######################
 
+  #######################################
+  ## RELATIONSHIPS
+  belongs_to :election
 
-  #######################
-  #######################
+  #######################################
+  ## ATTRIBUTES
+  FOLDER_PATH = "/system/protocols"
+  MAX_PARTIES = 60
 
+  #######################################
+  ## VALIDATIONS
   validates :election_id, :district_id, :precinct_id, :possible_voters, :ballots_signed_for, :presence => true
 
   validate :required_fields
   validate :party_votes_provided
  #validate :validate_numerical_values
 
+  #######################################
+  ## SCOPES
+  def self.existing_not_validated(election_id, district_id, precinct_id, user_id)
+    where(["election_id = ? and district_id = ? and precinct_id = ? and user_id != ? and is_extra = 0 and (is_valid is null or is_valid = 0)",
+      election_id, district_id, precinct_id, user_id])
+  end
+
+  def self.by_ids(election_id, district_id, precinct_id, user_id)
+    where(election_id: election_id, district_id: district_id, precinct_id: precinct_id, user_id: user_id)
+  end
+
+
+  #######################################
+  ## CALLBACKS
   after_create :match_and_validate
 
-  FOLDER_PATH = "/system/protocols"
-  MAX_PARTIES = 60
+  # if another record exists for this district/precinct
+  # and the district/precinct is not already approved
+  # see if this record matches that already on file
+  def match_and_validate
+    puts "==> match_and_validate start"
+    CrowdDatum.transaction do
+      # finished queue item
+      CrowdQueue.finished(self.election_id, self.district_id, self.precinct_id, self.user_id)
+
+      # see if existing, not validated record exists
+      existing = CrowdDatum.existing_not_validated(self.election_id, self.district_id, self.precinct_id, self.user_id)
+      puts "==> existing count = #{existing.length}"
+
+      if existing.present?
+        puts "==> FOUND EXISTING!!"
+        # see if same
+        found_match = false
+        existing.each do |exists|
+          exists.is_valid = exists.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra') == self.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra')
+
+          exists.save
+          found_match = true if exists.is_valid
+          puts "==> - exists = #{exists.id}; is valid = #{exists.is_valid}"
+
+        end
+
+        # update valid status
+        self.is_valid = found_match
+        self.save
+
+        # if found match, copy data to analysis table
+        # indicate that match found
+        if found_match
+          puts "==> match was found, saving to analysis table"
+
+          # indicate that the precinct has been processed and validated
+          DistrictPrecinct.where(["election_id = ? and district_id = ? and precinct_id = ?",
+                                  self.election_id, self.district_id, self.precinct_id])
+                          .update_all(:is_validated => true)
+
+          # get election and parties
+          election = self.election
+          parties = election.parties
+          rd = RegionDistrictName.by_district(self.district_id)
+
+          # insert the record
+          client = ActiveRecord::Base.connection
+          sql = "insert into `#{election.analysis_table_name} - raw` ("
+          if election.has_regions
+            sql << "`region`, "
+          end
+          sql << "`district_id`, `district_name`, `precinct_id`,
+                 `num_possible_voters`, `num_special_voters`, `num_at_12`, `num_at_17`, `num_votes`, `num_ballots`,
+                 `num_invalid_votes`, "
+          sql << parties.map{|x| "`#{x.column_name}`"}.join(', ')
+          sql << ") values ( "
+
+          # create array of values
+          sql_values = []
+          if election.has_regions && rd.present?
+            sql_values << rd.region
+          else
+            sql_values << nil
+          end
+          sql_values << self.district_id
+          if election.has_district_names && rd.present?
+            sql_values << rd.district_name
+          else
+            sql_values << district_id
+          end
+          sql_values << [
+            self.precinct_id, self.possible_voters, self.special_voters,
+            self.votes_by_1200, self.votes_by_1700, self.ballots_signed_for, self.ballots_available, self.invalid_ballots_submitted
+          ]
+          parties.each do |p|
+            puts "- adding value for party #{p.number}"
+            sql_values << self["party_#{p.number}"]
+          end
+          sql_values.flatten!
+
+          sql << sql_values.map{|x| "'#{x}'"}.join(', ')
+          sql << ")"
+          puts "=======> insert = #{sql}"
+          client.execute(sql)
+
+        end
+      else
+        puts "==> no match, seeing if is extra"
+        # check if this district/precinct has already been validated
+        # if so, this is an extra
+        dp = DistrictPrecinct.by_ids(self.election_id, self.district_id, self.precinct_id).first
+        if dp.present?
+          if dp.is_validated
+            puts "====> is extra!"
+            self.is_extra = true
+            self.save
+          end
+        end
+      end
+    end
+  end
+
   #######################
   #######################
 
@@ -36,8 +157,8 @@ class CrowdDatum < ActiveRecord::Base
     path = nil
     exist = false
 
-    if self.district_id.present? && self.precinct_id.present?
-      path = "#{FOLDER_PATH}/#{district_id}/#{district_id}-#{precinct_id}.jpg"
+    if self.election_id.present? && self.district_id.present? && self.precinct_id.present?
+      path = "#{FOLDER_PATH}/#{election_id}/#{district_id}/#{district_id}-#{precinct_id}.jpg"
       exist = File.exist?("#{Rails.root}/public#{path}")
     end
 
@@ -52,8 +173,8 @@ class CrowdDatum < ActiveRecord::Base
     path = nil
     exist = false
 
-    if self.district_id.present? && self.precinct_id.present?
-      path = "#{FOLDER_PATH}/#{district_id}/#{district_id}-#{precinct_id}-amended.jpg"
+    if self.election_id.present? && self.district_id.present? && self.precinct_id.present?
+      path = "#{FOLDER_PATH}/#{election_id}/#{district_id}/#{district_id}-#{precinct_id}-amended.jpg"
       exist = File.exist?("#{Rails.root}/public#{path}")
     end
 
@@ -125,93 +246,6 @@ class CrowdDatum < ActiveRecord::Base
 =end
 
 
-  # if another record exists for this district/precinct
-  # and the district/precinct is not already approved
-  # see if this record matches that already on file
-  def match_and_validate
-    CrowdDatum.transaction do
-      # finished queue item
-      CrowdQueue.finished(self.user_id, self.district_id, self.precinct_id)
-
-      # see if existing, not validated record exists
-      existing = CrowdDatum.where(["district_id = ? and precinct_id = ? and user_id != ? and is_extra = 0 and (is_valid is null or is_valid = 0)", self.district_id, self.precinct_id, self.user_id])
-
-      if existing.present?
-        # see if same
-        found_match = false
-        existing.each do |exists|
-          exists.is_valid = exists.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra') == self.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra')
-
-          exists.save
-          found_match = true if exists.is_valid
-        end
-
-        # update valid status
-        self.is_valid = found_match
-        self.save
-
-        # if found match, copy data to pres table
-        # indicate that match found
-        if found_match
-          # indicate that the precinct has been processed and validated
-          DistrictPrecinct.where(["district_id = ? and precinct_id = ?", self.district_id, self.precinct_id]).update_all(:is_validated => true)
-
-          # save pres record
-          rd = RegionDistrictName.by_district(self.district_id)
-          pres = President2013.new
-          pres.region = rd.present? ? rd.region : nil
-          pres.district_id = self.district_id
-          pres.district_name = rd.present? ? rd.district_name : nil
-          pres.precinct_id = self.precinct_id
-          pres.attached_precinct_id = nil
-          pres.num_possible_voters = self.possible_voters
-          pres.num_special_voters = self.special_voters
-          pres.num_at_12 = self.votes_by_1200
-          pres.num_at_17 = self.votes_by_1700
-          pres.num_votes = self.ballots_signed_for
-          pres.num_ballots = self.ballots_available
-          pres.num_invalid_votes = self.invalid_ballots_submitted
-          pres['1 - Tamaz Bibiluri'] = self.party_1
-          pres['2 - Giorgi Liluashvili'] = self.party_2
-          pres['3 - Sergo Javakhidze'] = self.party_3
-          pres['4 - Koba Davitashvili'] = self.party_4
-          pres['5 - Davit Bakradze'] = self.party_5
-          pres['6 - Akaki Asatiani'] = self.party_6
-          pres['7 - Nino Chanishvili'] = self.party_7
-          pres['8 - Teimuraz Bobokhidze'] = self.party_8
-          pres['9 - Shalva Natelashvili'] = self.party_9
-          pres['10 - Giorgi Targamadze'] = self.party_10
-          pres['11 - Levan Chachua'] = self.party_11
-          pres['12 - Nestan Kirtadze'] = self.party_12
-          pres['13 - Giorgi Chikhladze'] = self.party_13
-          pres['14 - Nino Burjanadze'] = self.party_14
-          pres['15 - Zurab Kharatishvili'] = self.party_15
-          pres['16 - Mikheil Saluashvili'] = self.party_16
-          pres['17 - Kartlos Gharibashvili'] = self.party_17
-          pres['18 - Mamuka Chokhonelidze'] = self.party_18
-          pres['19 - Avtandil Margiani'] = self.party_19
-          pres['20 - Nugzar Avaliani'] = self.party_20
-          pres['21 - Mamuka Melikishvili'] = self.party_21
-          pres['22 - Teimuraz Mzhavia'] = self.party_22
-          pres['41 - Giorgi Margvelashvili'] = self.party_41
-
-          pres.save
-
-        end
-      else
-        # check if this district/precinct has already been validated
-        # if so, this is an extra
-        dp = DistrictPrecinct.where(["district_id = ? and precinct_id = ?", self.district_id, self.precinct_id])
-        if dp.present?
-          if dp.first.is_validated
-            self.is_extra = true
-            self.save
-          end
-        end
-      end
-    end
-  end
-
 
   #######################
   #######################
@@ -226,9 +260,9 @@ class CrowdDatum < ActiveRecord::Base
 
     # see if a record needs a match
 #    needs_match = CrowdDatum.select('id').where("user_id != ? and is_valid is null and is_extra = 0", user_id)
-    sql = "SELECT cd.id , cd.district_id, cd.precinct_id FROM `crowd_data` as cd left join ( "
-	  sql << "select cq.id, cq.district_id, cq.precinct_id from crowd_queues as cq where is_finished is null) "
-	  sql << "as y on cd.district_id = y.district_id and cd.precinct_id = y.precinct_id "
+    sql = "SELECT cd.id, cd.election_id, cd.district_id, cd.precinct_id FROM `crowd_data` as cd left join ( "
+	  sql << "select cq.id, cq.election_id, cq.district_id, cq.precinct_id from crowd_queues as cq where is_finished is null) "
+	  sql << "as y on cd.election_id = y.election_id and cd.district_id = y.district_id and cd.precinct_id = y.precinct_id "
 	  sql << "WHERE cd.user_id != :user_id and cd.is_valid is null and cd.is_extra = 0 and y.id is null"
     needs_match = CrowdDatum.find_by_sql([sql, :user_id => user_id])
 
@@ -238,16 +272,16 @@ class CrowdDatum < ActiveRecord::Base
       (0..4).each do |try|
         # records exist that are waiting for a match
         rand = CrowdDatum.find_by_id(needs_match.map{|x| x.id}.sample)
-        next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+        next_record = CrowdDatum.new(:election_id => rand.election_id, :district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
         break if next_record.image_path.present?
       end
-      CrowdQueue.create(:user_id => user_id, :district_id => next_record.district_id, :precinct_id => next_record.precinct_id) if next_record.present?
+      CrowdQueue.create(:user_id => user_id, :election_id => next_record.election_id, :district_id => next_record.district_id, :precinct_id => next_record.precinct_id) if next_record.present?
     else
 
       # see if a district/precinct has invalid records and is still not valid, show one
-      sql = "SELECT dp.district_id, dp.precinct_id "
-      sql << "FROM (select dp.district_id, dp.precinct_id, count(*) as c "
-      sql << "from district_precincts as dp inner join crowd_data as cd on dp.district_id = cd.district_id and dp.precinct_id = cd.precinct_id "
+      sql = "SELECT dp.election_id, dp.district_id, dp.precinct_id "
+      sql << "FROM (select dp.election_id, dp.district_id, dp.precinct_id, count(*) as c "
+      sql << "from district_precincts as dp inner join crowd_data as cd on dp.election_id = cd.election_id and dp.district_id = cd.district_id and dp.precinct_id = cd.precinct_id "
       sql << "where dp.is_validated = 0 and dp.has_protocol = 1 and cd.is_valid = 0 and cd.user_id != :user_id "
       sql << "group by dp.district_id, dp.precinct_id having c > 1) as dp "
       sql << "left join ( select cq.id, cq.district_id, cq.precinct_id from crowd_queues as cq where cq.is_finished is null and cq.user_id != :user_id) "
@@ -261,11 +295,10 @@ class CrowdDatum < ActiveRecord::Base
         (0..4).each do |try|
           # records exist that are waiting for a match
           rand = needs_match.sample
-          next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+          next_record = CrowdDatum.new(:election_id => rand.election_id, :district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
           break if next_record.image_path.present?
-
         end
-        CrowdQueue.create(:user_id => user_id, :district_id => next_record.district_id, :precinct_id => next_record.precinct_id) if next_record.present?
+        CrowdQueue.create(:user_id => user_id, :election_id => next_record.election_id, :district_id => next_record.district_id, :precinct_id => next_record.precinct_id) if next_record.present?
 
       else
         # see if there are any precincts that are still waiting for processing that this user has not entered
@@ -275,11 +308,11 @@ class CrowdDatum < ActiveRecord::Base
       sql << "  on dp.district_id = cd.district_id and dp.precinct_id = cd.precinct_id "
       sql << "  where dp.has_protocol = 1 and dp.is_validated = 0 and cd.user_id = :user_id and (((cd.is_valid is null and cd.is_extra = 0) or cd.is_valid = 1)))"
 =end
-        sql = "select dp.district_id, dp.precinct_id from district_precincts as dp left join ( "
-        sql << "select cd.id, cd.district_id, cd.precinct_id from crowd_data as cd where cd.is_valid is null "
-        sql << ") as x on dp.district_id = x.district_id and dp.precinct_id = x.precinct_id "
-        sql << "left join (select cq.id, cq.district_id, cq.precinct_id	from crowd_queues as cq "
-      	sql << "where is_finished is null) as y on dp.district_id = y.district_id and dp.precinct_id = y.precinct_id "
+        sql = "select dp.election_id, dp.district_id, dp.precinct_id from district_precincts as dp left join ( "
+        sql << "select cd.id, cd.election_id, cd.district_id, cd.precinct_id from crowd_data as cd where cd.is_valid is null "
+        sql << ") as x on dp.election_id = x.election_id and dp.district_id = x.district_id and dp.precinct_id = x.precinct_id "
+        sql << "left join (select cq.id, cq.election_id, cq.district_id, cq.precinct_id	from crowd_queues as cq "
+      	sql << "where is_finished is null) as y on dp.election_id = y.election_id and dp.district_id = y.district_id and dp.precinct_id = y.precinct_id "
         sql << "where dp.has_protocol = 1 and dp.is_validated = 0 and x.id is null and y.id is null"
         needs_processing = DistrictPrecinct.find_by_sql([sql, :user_id => user_id])
 
@@ -290,10 +323,10 @@ class CrowdDatum < ActiveRecord::Base
             # precincts are waiting for processing
             # create a new crowd data record so it can be processed
             rand = needs_processing.sample
-            next_record = CrowdDatum.new(:district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+            next_record = CrowdDatum.new(:election_id => rand.election_id, :district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
             break if next_record.image_path.present?
           end
-          CrowdQueue.create(:user_id => user_id, :district_id => next_record.district_id, :precinct_id => next_record.precinct_id) if next_record.present?
+          CrowdQueue.create(:user_id => user_id, :election_id => next_record.election_id, :district_id => next_record.district_id, :precinct_id => next_record.precinct_id) if next_record.present?
         end
       end
     end
@@ -305,38 +338,43 @@ class CrowdDatum < ActiveRecord::Base
   #######################
   # get the following:
   # total users (#), total submitted (#), pending (#/%), valid (#/%), invalid (#/%)
-  def self.overall_user_stats
+  def self.overall_user_stats(election_ids)
     stats = nil
 
-    user_count = User.count
+    if election_ids.present?
+      election_ids = [election_ids] if election_ids.class.name == 'Fixnum'
 
-#    sql = "select sum(if(is_extra = 0, 1, 0)) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
-#    sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
-#    sql << "from crowd_data"
+      # get the count of users assigned to the elections
+      user_count = User.in_election(election_ids).uniq.count
 
-    sql = "select count(*) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
-    sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid, sum(if(is_extra = 1, 1, 0)) as num_extra "
-    sql << "from crowd_data"
+  #    sql = "select sum(if(is_extra = 0, 1, 0)) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
+  #    sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
+  #    sql << "from crowd_data"
 
-    data = find_by_sql(sql)
+      sql = "select count(*) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
+      sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid, sum(if(is_extra = 1, 1, 0)) as num_extra "
+      sql << "from crowd_data where election_id in (?)"
 
-    if data.present?
-      data = data.first
-      stats = Hash.new
-      stats[:users] = format_number(user_count)
-      stats[:submitted] = data[:num_submitted].present? ? format_number(data[:num_submitted]) : 0
-      stats[:pending] = Hash.new
-      stats[:pending][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_pending]) : I18n.t('app.common.na')
-      stats[:pending][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_pending]/data[:num_submitted].to_f) : I18n.t('app.common.na')
-      stats[:valid] = Hash.new
-      stats[:valid][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_valid]) : I18n.t('app.common.na')
-      stats[:valid][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_valid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
-      stats[:invalid] = Hash.new
-      stats[:invalid][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_invalid]) : I18n.t('app.common.na')
-      stats[:invalid][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_invalid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
-      stats[:extra] = Hash.new
-      stats[:extra][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_extra]) : I18n.t('app.common.na')
-      stats[:extra][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_extra]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+      data = find_by_sql([sql, election_ids])
+
+      if data.present?
+        data = data.first
+        stats = Hash.new
+        stats[:users] = format_number(user_count)
+        stats[:submitted] = data[:num_submitted].present? ? format_number(data[:num_submitted]) : 0
+        stats[:pending] = Hash.new
+        stats[:pending][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_pending]) : I18n.t('app.common.na')
+        stats[:pending][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_pending]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+        stats[:valid] = Hash.new
+        stats[:valid][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_valid]) : I18n.t('app.common.na')
+        stats[:valid][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_valid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+        stats[:invalid] = Hash.new
+        stats[:invalid][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_invalid]) : I18n.t('app.common.na')
+        stats[:invalid][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_invalid]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+        stats[:extra] = Hash.new
+        stats[:extra][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_extra]) : I18n.t('app.common.na')
+        stats[:extra][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_extra]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+      end
     end
     return stats
 
@@ -346,21 +384,18 @@ class CrowdDatum < ActiveRecord::Base
   #######################
   # get the following for a user:
   # user id, total submitted (#), pending (#/%), valid (#/%), invalid (#/%)
-  def self.overall_stats_for_user(user_id)
+  def self.overall_stats_for_user(user_id, election_ids)
     stats = nil
 
-    if user_id.present?
-
-#      sql = "select sum(if(is_extra = 0, 1, 0)) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
-#      sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
-#      sql << "from crowd_data where user_id = :user_id"
+    if user_id.present? && election_ids.present?
+      election_ids = [election_ids] if election_ids.class.name == 'Fixnum'
 
       sql = "select count(*) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
       sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid, sum(if(is_extra = 1, 1, 0)) as num_extra "
-      sql << "from crowd_data where user_id = :user_id"
+      sql << "from crowd_data where user_id = :user_id and election_id in (:election_ids)"
 
 
-      data = find_by_sql([sql, :user_id => user_id])
+      data = find_by_sql([sql, :user_id => user_id, election_ids: election_ids])
 
       if data.present?
         data = data.first
@@ -388,18 +423,22 @@ class CrowdDatum < ActiveRecord::Base
   #######################
   # get the following for a user:
   # user id, total submitted (#), pending (#/%), valid (#/%), invalid (#/%)
-  def self.overall_stats_by_user
+  # if election_ids provided then only get stats for the provided elections, else do it for all elections
+  def self.overall_stats_by_user(election_ids=nil)
     users = []
-
-#    sql = "select user_id, sum(if(is_extra = 0, 1, 0)) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
-#    sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid "
-#    sql << "from crowd_data group by user_id"
 
     sql = "select user_id, count(*) as num_submitted, sum(if(is_valid is null and is_extra = 0, 1, 0)) as num_pending, "
     sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid, sum(if(is_extra = 1, 1, 0)) as num_extra "
-    sql << "from crowd_data group by user_id"
+    sql << "from crowd_data "
 
-    data = find_by_sql(sql)
+    if election_ids.present?
+      election_ids = [election_ids] if election_ids.class.name == 'Fixnum'
+      sql << "where election_id in (?) "
+    end
+
+    sql << "group by user_id"
+
+    data = find_by_sql([sql, election_ids])
 
     if data.present?
       data.each do |user|

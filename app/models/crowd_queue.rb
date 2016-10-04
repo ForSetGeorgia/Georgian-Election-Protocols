@@ -10,9 +10,12 @@ class CrowdQueue < ActiveRecord::Base
 
 
   #######################
-  #######################
-
+  ## VALIDATIONS
   validates :election_id, :district_id, :precinct_id, :user_id, :presence => true
+
+  #######################################
+  ## RELATIONSHIPS
+  belongs_to :election
 
 
   MAX_TIME = 5
@@ -30,9 +33,9 @@ class CrowdQueue < ActiveRecord::Base
 
 
   # mark a queue item as finished
-  def self.finished(user_id, district_id, precinct_id)
-    if user_id.present? && district_id.present? && precinct_id.present?
-      CrowdQueue.where(["user_id = ? and district_id = ? and precinct_id = ? and is_finished is null", user_id, district_id, precinct_id]).update_all(:is_finished => true)
+  def self.finished(election_id, district_id, precinct_id, user_id)
+    if election_id.present? && user_id.present? && district_id.present? && precinct_id.present?
+      CrowdQueue.where(["election_id = ? and user_id = ? and district_id = ? and precinct_id = ? and is_finished is null", election_id, user_id, district_id, precinct_id]).update_all(:is_finished => true)
     end
   end
 end

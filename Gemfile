@@ -45,7 +45,7 @@ group :assets do
   gem 'less-rails', "~> 2.6.0"
   gem "twitter-bootstrap-rails", "~> 2.2.8"
   gem 'jquery-ui-rails', '~> 5.0', '>= 5.0.5'
-  gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
+  gem 'jquery-datatables-rails', '~> 1.12', '>= 1.12.2'
 end
 
 group :development do

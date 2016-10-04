@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161002210535) do
+ActiveRecord::Schema.define(:version => 20161003191155) do
 
   create_table "2012_parliamentary_majoritarian - country", :id => false, :force => true do |t|
     t.decimal "possible voters",                                              :precision => 32, :scale => 0
@@ -1990,6 +1990,16 @@ ActiveRecord::Schema.define(:version => 20161002210535) do
   add_index "election_translations", ["election_id"], :name => "index_election_translations_on_election_id"
   add_index "election_translations", ["locale"], :name => "index_election_translations_on_locale"
   add_index "election_translations", ["name"], :name => "index_election_translations_on_name"
+
+  create_table "election_users", :force => true do |t|
+    t.integer  "election_id"
+    t.integer  "user_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "election_users", ["election_id"], :name => "index_election_users_on_election_id"
+  add_index "election_users", ["user_id"], :name => "index_election_users_on_user_id"
 
   create_table "elections", :force => true do |t|
     t.date     "election_at"

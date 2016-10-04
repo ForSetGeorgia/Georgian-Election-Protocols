@@ -10,6 +10,19 @@ class User < ActiveRecord::Base
 
   validates :role, :presence => true
 
+  #######################################
+  ## RELATIONSHIPS
+  has_many :election_users, :dependent => :destroy
+  has_many :elections, :through => :election_users
+
+  #######################################
+  ## SCOPES
+  def self.in_election(election_ids)
+    joins(:election_users).where(election_users: {election_id: election_ids})
+  end
+
+  #######################################
+  ## METHODS
 
   def trained
     y = read_attribute('trained').present? ? read_attribute('trained').split(',') : []
@@ -34,11 +47,11 @@ class User < ActiveRecord::Base
     end
     return false
   end
-  
+
   def role_name
     ROLES.keys[ROLES.values.index(self.role)].to_s
   end
-  
+
   def nickname
     self.email.split('@')[0]
   end

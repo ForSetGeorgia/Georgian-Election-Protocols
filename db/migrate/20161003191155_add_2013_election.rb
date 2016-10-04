@@ -11,6 +11,9 @@ class Add2013Election < ActiveRecord::Migration
       e.election_translations.build(locale: 'ka', name: '2013 Presidential')
       e.save
 
+      puts '- assigning users to election'
+      e.users << User.all
+
       puts '- assigning id to crowd data, queue, etc'
       CrowdDatum.where(election_id: nil).update_all(election_id: e.id)
       CrowdQueue.where(election_id: nil).update_all(election_id: e.id)
@@ -80,6 +83,7 @@ class Add2013Election < ActiveRecord::Migration
       ElectionTranslation.where(election_id: e_ids).delete_all
       DistrictParty.where(election_id: e_ids).delete_all
       Party.where(election_id: e_ids).delete_all
+      ElectionUser.where(election_id: e_ids).delete_all
       e = Election.where(id: e_ids)
       if e.present?
         e.each{|x|

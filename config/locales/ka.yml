@@ -58,7 +58,7 @@ ka:
       new: ახალი
     common:
       app_name: Georgian Election Protocols
-      added_on: "დამატებულია: %{date}" 
+      added_on: "დამატებულია: %{date}"
       na: 'N/A'
       file_name: საპრეზიდენტო არჩევნების შედეგები
       submit: შეყვანა
@@ -146,7 +146,9 @@ ka:
       index:
         title: მომხმარებლები
         training: ტრენინგი დასრულებულია
-      new:
+        all_stats: View Stats for all Elections
+        current_election_stats: View Stats for Current Elections
+        new:
         title: ახალი მომხმარებელი
       show:
         title: მომხმარებლის დეტალები
@@ -174,9 +176,9 @@ ka:
         p2: "თუ სავალდებულს ველი (*)  არ აქვს რიცხვი გთხოვთ, შეიყვანოთ 0"
         amendment_explanation1: ცესკომ ამ ოქმში შეიტანა ცვლილება, რომელიც განთავსებულია ამ გვერდი ბოლოში.
         amendment_explanation2: გთხოვთ, შეიყვანოთ ცვლილებაში მოცემული რიცხვები შესაბამისი ველის ფორმებში.
-        overseas_explanation1: ეს არის სხვა სახელმწიფოში შედგენილი ოქმი. 
+        overseas_explanation1: ეს არის სხვა სახელმწიფოში შედგენილი ოქმი.
         overseas_explanation2: "გთხოვთ, პირველ გრაფაში შეიყვანოთ რიცხვი #2 გრაფიდან, ხოლო #2 გრაფა დატოვეთ ცარიელი."
-        no_protocols: ამ დროისთვის არ არის შესაყვანი ოქმები    
+        no_protocols: ამ დროისთვის არ არის შესაყვანი ოქმები
         no_training: თქვენ უნდა დაასრულოთ ტრენინგი, სანამ ნამდვილი მონაცემების შეყვანას დაიწყებთ.
         sum_party_votes: ჯამი (პარტიების ხმები) - ბათილი ბიულეტენები
         votesum_explanation1: "მარცხენა რიცხვი: %{label}"
@@ -185,6 +187,7 @@ ka:
         votesum_explanation4: "შესაძლოა, რომ ეს რიცხვები არ ემთხვეოდეს."
   root:
     index:
+      stats_header: Data Entry Statistics
       overall_stats:
         header: სრული სტატისტიკა
         districts: ოლქები
@@ -192,16 +195,6 @@ ka:
         protocols_missing: დაკარგული ოქმები
         protocols_found: ნაპოვნი ოქმები
         protocols_not_entered: შსაყვანი ოქმები
-        protocols_validated: დამოწმებული ოქმები
-      overall_stats_by_district:
-        header: ოლქის სტატისტიკა
-        region: რეგიონი
-        district: ოლქი
-        district_id: ოლქის ID
-        precincts: უბნები
-        protocols_missing: დაკარგული ოქმები
-        protocols_found: ნაპოვნი ოქმები
-        protocols_not_entered: შესაყვანი ოქმები
         protocols_validated: დამოწმებული ოქმები
       overall_user_stats:
         header: მომხმარებლების სტატისტიკა
@@ -211,6 +204,16 @@ ka:
         valid: ჩანაწერები სწორი წყვილებით
         invalid: ჩანაწერები არასწორი წყვილებით
         extra: დუბლიკატი
+      overall_stats_by_district:
+        header: Election Standings by District
+        region: რეგიონი
+        district: ოლქი
+        district_id: ოლქის ID
+        precincts: უბნები
+        protocols_missing: დაკარგული ოქმები
+        protocols_found: ნაპოვნი ოქმები
+        protocols_not_entered: შესაყვანი ოქმები
+        protocols_validated: დამოწმებული ოქმები
     training:
       title: ტრენინგ ცენტრი
       p1: თქვენ წარმატებით უნდა შეავსოთ ტრენინგის 5 ოქმი, სანამ ნამდვილი ოქმების მონაცემების შეყვანას დაიწყებთ. ამჟამად შევსებული გაქვთ %{count} ოქმი.
@@ -227,9 +230,9 @@ ka:
       p2: "თუ სავალდებულს ველი (*)  არ აქვს რიცხვი გთხოვთ, შეიყვანოთ 0"
       amendment_explanation1: ცესკომ ამ ოქმში შეიტანა ცვლილება, რომელიც განთავსებულია ამ გვერდი ბოლოში.
       amendment_explanation2: გთხოვთ, შეიყვანოთ ცვლილებაში მოცემული რიცხვები შესაბამისი ველის ფორმებში.
-      overseas_explanation1: ეს არის სხვა სახელმწიფოში შედგენილი ოქმი. 
+      overseas_explanation1: ეს არის სხვა სახელმწიფოში შედგენილი ოქმი.
       overseas_explanation2: "გთხოვთ, პირველ გრაფაში შეიყვანოთ რიცხვი #2 გრაფიდან, ხოლო #2 გრაფა დატოვეთ ცარიელი."
-      no_protocols: ამ დროისთვის არ არის შესაყვანი ოქმები    
+      no_protocols: ამ დროისთვის არ არის შესაყვანი ოქმები
       no_training: თქვენ უნდა დაასრულოთ ტრენინგი, სანამ ნამდვილი მონაცემების შეყვანას დაიწყებთ.
       sum_party_votes: ჯამი (პარტიების ხმები) - ბათილი ბიულეტენები
       votesum_explanation1: "მარცხენა რიცხვი: %{label}"

@@ -8,7 +8,7 @@ class Admin::UsersController < ApplicationController
   # GET /admin/users.json
   def index
     @users = User.all
-    @all_user_stats = CrowdDatum.overall_stats_by_user
+    @all_user_stats = CrowdDatum.overall_stats_by_user(params[:current_elections] == 'true' ? @election_ids : nil)
 
     respond_to do |format|
       format.html # index.html.erb

@@ -59,9 +59,13 @@ logger.debug "////////////////////////// BROWSER NOT SUPPORTED"
   end
 
 	def set_global_variables
+    # get the events that are currently open for data entry
+    @elections = Election.can_enter
+    @election_ids = @elections.map{|x| x.id}
+
 	  # the user stats are updated after a protocol is saved so do not need to call twice
 	  if user_signed_in? && !(params[:contorller] == "root" && params[:action] == "protocol")
-  		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id) 
+  		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id, @election_ids)
 		end
 	end
 

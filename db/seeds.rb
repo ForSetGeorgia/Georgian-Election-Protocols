@@ -8,6 +8,90 @@ require 'csv'
 #   Mayor.create(name: 'Emanuel', city: cities.first, '#{now}', '#{now}')"
 
 
+# load test data
+# - mark district/precinct as having protocol
+# - add to queue for users (is finished)
+# - add to crowd data (set is valid)
+# - if both users and valid, then add to raw table
+def load_crowd_data(election_id, csv_data, party_ids, u1, u2)
+  csv_data.each_with_index do |row, i|
+    if i > 0
+      # indicate district/precinct has protocol
+      district_precinct = DistrictPrecinct.by_ids(election_id, row[1], row[3]).first
+      if district_precinct.nil?
+        puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        puts "ROW #{i+1} - THE DISTRICT/PRECINCT COULD NOT BE FOUND FOR THIS ELECTION"
+        puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+
+        return
+      end
+      district_precinct.has_protocol = true
+      district_precinct.save
+
+      # add to queue of users if have users assigned
+      if row[-2].present?
+        cq = CrowdQueue.new(election_id: election_id, district_id: row[1], precinct_id: row[3], is_finished: true)
+        cd = CrowdDatum.new(election_id: election_id, district_id: row[1], precinct_id: row[3],
+            possible_voters: row[5],
+            special_voters: row[6],
+            votes_by_1200: row[7],
+            votes_by_1700: row[8],
+            ballots_signed_for: row[9],
+            ballots_available: row[10],
+            invalid_ballots_submitted: row[11]
+        )
+        party_ids.each_with_index do |party_id, i|
+          cd["party_#{party_id}"] = row[19+i]
+        end
+        is_valid = row[-1] == '1' ? true : row[-1] == '0' ? false : nil
+
+        if row[-2].include?(',')
+          # both users
+          cq1 = cq.dup
+          cq2 = cq.dup
+          cq1.user_id = u1.id
+          cq2.user_id = u2.id
+          cq1.save
+          cq2.save
+
+          cd1 = cd.dup
+          cd2 = cd.dup
+          cd1.user_id = u1.id
+          cd2.user_id = u2.id
+          cd1.save
+          cd2.save
+
+          district_precinct.is_validated = true
+          district_precinct.save
+
+        elsif row[-2] == '1'
+          # user 1
+          cq1 = cq.dup
+          cq1.user_id = u1.id
+          cq1.save
+
+          cd1 = cd.dup
+          cd1.user_id = u1.id
+          cd1.save
+
+        elsif row[-2] == '2'
+          # user 2
+          cq2 = cq.dup
+          cq2.user_id = u2.id
+          cq2.save
+
+          cd2 = cd.dup
+          cd2.user_id = u2.id
+          cd2.save
+
+        end
+      end
+
+    end
+  end
+end
+
+
 ###############################
 # load the 2012 test data
 ###############################
@@ -24,10 +108,14 @@ if ENV['load_test_data'].present? && !Rails.env.production?
     # delete existing 2012 data
     puts '- deleting existing 2012 data (elections, district/precinct, party, etc...)'
     e_ids = Election.where(election_at: '2012-10-01').pluck(:id)
-    ElectionTranslation.where(election_id: e_ids).delete_all
     DistrictPrecinct.where(election_id: e_ids).delete_all
+    CrowdQueue.where(election_id: e_ids).delete_all
+    CrowdDatum.where(election_id: e_ids).delete_all
+    HasProtocol.where(election_id: e_ids).delete_all
+    ElectionTranslation.where(election_id: e_ids).delete_all
     DistrictParty.where(election_id: e_ids).delete_all
     Party.where(election_id: e_ids).delete_all
+    ElectionUser.where(election_id: e_ids).delete_all
     e = Election.where(id: e_ids)
     if e.present?
       e.each{|x|
@@ -102,8 +190,6 @@ if ENV['load_test_data'].present? && !Rails.env.production?
       if i > 0
         sql_values << "(#{prop.id}, #{row[0]}, #{row[1]}, '#{now}')"
         sql_values << "(#{major.id}, #{row[0]}, #{row[1]}, '#{now}')"
-        # prop.district_precincts.create(district_id: row[0], precinct_id: row[1])
-        # major.district_precincts.create(district_id: row[0], precinct_id: row[1])
       end
     end
     client.execute("insert into district_precincts
@@ -115,15 +201,39 @@ if ENV['load_test_data'].present? && !Rails.env.production?
     major.assign_region_names
 
     # create precinct counts
-    puts '-> creating party list anaylsis precinct count records'
+    puts '- creating party list anaylsis precinct count records'
     prop.create_analysis_precinct_counts
-    puts '-> creating major anaylsis precinct count records'
+    puts '- creating major anaylsis precinct count records'
     major.create_analysis_precinct_counts
 
+    # create test users for data
+    u1 = User.where(email: 'user1@test.ge').first_or_create do |u|
+      puts "creating test user: users1"
+      u.password = 'password123'
+      u.role = 0
+    end
+    u2 = User.where(email: 'user2@test.ge').first_or_create do |u|
+      puts "creating test user: users2"
+      u.password = 'password123'
+      u.role = 0
+    end
 
-    # load test data
+    puts '- assign users to party list'
+    prop.users << u1
+    prop.users << u2
+
+    puts '- assign users to major'
+    major.users << u1
+    major.users << u2
 
 
+    puts '- load data for party list'
+    csv_data = CSV.read(csv_path + '2012_party_list_data.csv')
+    load_crowd_data(prop.id, csv_data, prop.parties.party_numbers, u1, u2)
+
+    puts '- load data for major'
+    csv_data = CSV.read(csv_path + '2012_major_data.csv')
+    load_crowd_data(major.id, csv_data, major.parties.party_numbers, u1, u2)
 
   end
 

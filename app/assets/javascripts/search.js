@@ -16,11 +16,11 @@ $(document).ready(function(){
     var y = b.match(/\d/) ? b.replace( /[^\d\-\.]/g, "" ) : 0;
     return parseFloat(y) - parseFloat(x);
   };
-  
+
 
 /*
   $('#users-datatable').dataTable({
-    "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",    
+    "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
     "sPaginationType": "bootstrap",
     "bJQueryUI": true,
     "bProcessing": true,
@@ -41,7 +41,7 @@ $(document).ready(function(){
   }
 
   $('#users-datatable').dataTable({
-    "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",    
+    "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
     "sPaginationType": "bootstrap",
     "bJQueryUI": true,
     "bProcessing": true,
@@ -57,7 +57,7 @@ $(document).ready(function(){
     col_sort[i] = {"sType": "formatted-num" };
   }
 
-  $('#overall_stats_by_district').dataTable({
+  $('.overall_stats_by_district').dataTable({
     "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
     "sPaginationType": "bootstrap",
     "bJQueryUI": true,

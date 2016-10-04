@@ -12,6 +12,11 @@ class Election < ActiveRecord::Base
   has_many :district_parties, :dependent => :destroy
   has_many :district_precincts, :dependent => :destroy
   has_many :election_translations, :dependent => :destroy
+  has_many :election_users, :dependent => :destroy
+  has_many :users, :through => :election_users
+  has_many :crowd_data, :dependent => :destroy
+  has_many :crowd_queues, :dependent => :destroy
+  has_many :has_protocols, :dependent => :destroy
   accepts_nested_attributes_for :election_translations
 
   #######################################

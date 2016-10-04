@@ -7,7 +7,7 @@
  *= require formtastic-bootstrap
  *= require jquery-ui/core
  *= require jquery-ui/theme
- *= require dataTables/bootstrap/2/jquery.dataTables.bootstrap
+ *= require dataTables/jquery.dataTables.bootstrap
  *= require_tree .
  *= require vendor
  *= require_self
@@ -109,7 +109,7 @@ ol.standard li {
 
 /* so ie will display the correct color background */
 .navbar-fixed-top .navbar-inner, .navbar-fixed-bottom .navbar-inner {
-	filter: none; 
+	filter: none;
 }
 
 /* multilanguage form styles */

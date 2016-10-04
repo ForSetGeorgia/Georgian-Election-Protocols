@@ -23,9 +23,17 @@ class Party < ActiveRecord::Base
     where(election_id: election_id)
   end
 
+  def self.party_numbers
+    pluck(:number)
+  end
+
   #######################################
   ## METHODS
   def self.hash_for_analysis(election_id)
     by_election(election_id).map{|x| {id: x.number, name: x.name}}
+  end
+
+  def column_name
+    "#{self.number} - #{self.name}"
   end
 end

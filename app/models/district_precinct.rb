@@ -15,6 +15,10 @@ class DistrictPrecinct < ActiveRecord::Base
     where(election_id: election_id)
   end
 
+  def self.by_ids(election_id, district_id, precinct_id)
+    where(election_id: election_id, district_id: district_id, precinct_id: precinct_id)
+  end
+
   def self.with_protocols
     where(:has_protocol => true).order("district_id, precinct_id")
   end
@@ -165,11 +169,10 @@ class DistrictPrecinct < ActiveRecord::Base
 
   # get the following:
   # total districts (#), total precincts (#), protocols found (#/%), protocols missing (#/%), protocols not entered (#/%), protocols validated (#/%)
-  def self.overall_stats
+  def self.overall_stats(election_ids)
     election_stats = []
 
-    # get the events that are currently open for data entry
-    election_ids = Election.can_enter.pluck(:id)
+    election_ids = [election_ids] if election_ids.class.name == 'Fixnum'
 
     # only continue if there are elections running
     if election_ids.present?
@@ -212,11 +215,10 @@ class DistrictPrecinct < ActiveRecord::Base
 
   # get the following:
   # district id/name, total precincts (#), protocols found (#/%), protocols missing (#/%), protocols not entered (#/%), protocols validated (#/%)
-  def self.overall_stats_by_district
+  def self.overall_stats_by_district(election_ids)
     election_stats = []
 
-    # get the events that are currently open for data entry
-    election_ids = Election.can_enter.pluck(:id)
+    election_ids = [election_ids] if election_ids.class.name == 'Fixnum'
 
     # only continue if there are elections running
     if election_ids.present?
