@@ -3,6 +3,15 @@ module ApplicationHelper
     content_for(:title) { page_title }
   end
 
+  def current_url
+    "#{request.protocol}#{request.host_with_port}#{request.fullpath}"
+  end
+
+  def full_url(path)
+    "#{request.protocol}#{request.host_with_port}#{path}"
+  end
+
+
 	def flash_translation(level)
     case level
     when :notice then "alert-info"

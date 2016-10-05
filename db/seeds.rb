@@ -98,7 +98,7 @@ end
 if ENV['load_test_data'].present? && !Rails.env.production?
   client = ActiveRecord::Base.connection
   now = Time.now
-  csv_path = "#{Rails.root}/db/data/"
+  csv_path = "#{Rails.root}/db/data/2012/"
 
   puts '++++++++++++++++++++++++'
   puts 'LOADING TEST DATA FOR 2012'
@@ -131,14 +131,14 @@ if ENV['load_test_data'].present? && !Rails.env.production?
     prop = Election.new(can_enter_data: true, election_at: '2012-10-01', election_app_event_id: 1,
                         has_regions: true, has_district_names: true)
     prop.election_translations.build(locale: 'en', name: '2012 Parliamentary - Party List')
-    prop.election_translations.build(locale: 'ka', name: '2012 Parliamentary - Party List')
+    prop.election_translations.build(locale: 'ka', name: '2012 წლის საპარლამენტო არჩევნები - პარტიული სია')
     prop.save
     # major
     puts '- major election'
     major = Election.new(can_enter_data: true, election_at: '2012-10-01', election_app_event_id: 1,
                         has_regions: true, has_district_names: true, parties_same_for_all_districts: false)
     major.election_translations.build(locale: 'en', name: '2012 Parliamentary - Majoritarian')
-    major.election_translations.build(locale: 'ka', name: '2012 Parliamentary - Majoritarian')
+    major.election_translations.build(locale: 'ka', name: '2012 წლის საპარლამენტო არჩევნები - მაჟორიტარული')
     major.save
 
     # load parties for prop

@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  PROTOCOL_NUMBERS = (1..5).to_a
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
 	# :registerable, :recoverable,
@@ -23,6 +25,10 @@ class User < ActiveRecord::Base
 
   #######################################
   ## METHODS
+
+  def completed_training?
+    trained.length >= PROTOCOL_NUMBERS.length
+  end
 
   def trained
     y = read_attribute('trained').present? ? read_attribute('trained').split(',') : []

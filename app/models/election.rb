@@ -68,6 +68,12 @@ class Election < ActiveRecord::Base
     where(analysis_table_name: analysis_table_name).first
   end
 
+  # election_at is >= today-1
+  # - -1 is because the election data is usually not available until the day after
+  def self.coming_up
+    where('can_enter_data = 0 and election_at >= ?', (Time.now-1.day).to_date)
+  end
+
   #######################################
   ## METHODS
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161003191155) do
+ActiveRecord::Schema.define(:version => 20161005110326) do
 
   create_table "2012_parliamentary_majoritarian - country", :id => false, :force => true do |t|
     t.decimal "possible voters",                                              :precision => 32, :scale => 0
@@ -1794,6 +1794,1352 @@ ActiveRecord::Schema.define(:version => 20161003191155) do
     t.integer "vpm > 2",     :limit => 8, :default => 0, :null => false
   end
 
+  create_table "2016_parliamentary_majoritarian - country", :id => false, :force => true do |t|
+    t.decimal "possible voters",                                              :precision => 32, :scale => 0
+    t.decimal "total ballots cast",                                           :precision => 32, :scale => 0
+    t.decimal "total valid ballots cast",                                     :precision => 32, :scale => 0
+    t.decimal "num invalid ballots from 0-1%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 1-3%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 3-5%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots >5%",                                      :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "percent voters voting",                                        :precision => 39, :scale => 4
+    t.decimal "num precincts logic fail",                                     :precision => 32, :scale => 0
+    t.decimal "percent precincts logic fail",                                 :precision => 39, :scale => 4
+    t.decimal "avg precinct logic fail difference",                           :precision => 36, :scale => 4
+    t.decimal "num precincts more ballots than votes",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more ballots than votes",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more ballots than votes",              :precision => 36, :scale => 4
+    t.decimal "num precincts more votes than ballots",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more votes than ballots",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more votes than ballots",              :precision => 36, :scale => 4
+    t.decimal "votes 8-12",                                                   :precision => 32, :scale => 0
+    t.decimal "votes 12-17",                                                  :precision => 33, :scale => 0
+    t.decimal "votes 17-20",                                                  :precision => 33, :scale => 0
+    t.decimal "avg votes/precinct 8-12",                                      :precision => 36, :scale => 4
+    t.decimal "avg votes/precinct 12-17",                                     :precision => 37, :scale => 4
+    t.decimal "avg votes/precinct 17-20",                                     :precision => 37, :scale => 4
+    t.decimal "vpm 8-12",                                                     :precision => 36, :scale => 4
+    t.decimal "vpm 12-17",                                                    :precision => 37, :scale => 4
+    t.decimal "vpm 17-20",                                                    :precision => 37, :scale => 4
+    t.decimal "avg vpm/precinct 8-12",                                        :precision => 40, :scale => 8
+    t.decimal "avg vpm/precinct 12-17",                                       :precision => 41, :scale => 8
+    t.decimal "avg vpm/precinct 17-20",                                       :precision => 41, :scale => 8
+    t.decimal "num precincts vpm 8-12 > 2",                                   :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 12-17 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 17-20 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm > 2",                                        :precision => 44, :scale => 0, :default => 0, :null => false
+    t.decimal "num_precincts_possible",                                       :precision => 32, :scale => 0
+    t.integer "num_precincts_reported_number",                   :limit => 8,                                :default => 0, :null => false
+    t.decimal "num_precincts_reported_percent",                               :precision => 27, :scale => 4
+    t.decimal "1 - State for the People count",                               :precision => 32, :scale => 0
+    t.decimal "1 - State for the People",                                     :precision => 39, :scale => 4
+    t.decimal "2 - Progressive Democratic Movement count",                    :precision => 32, :scale => 0
+    t.decimal "2 - Progressive Democratic Movement",                          :precision => 39, :scale => 4
+    t.decimal "3 - Democratic Movement count",                                :precision => 32, :scale => 0
+    t.decimal "3 - Democratic Movement",                                      :precision => 39, :scale => 4
+    t.decimal "4 - Georgian Group count",                                     :precision => 32, :scale => 0
+    t.decimal "4 - Georgian Group",                                           :precision => 39, :scale => 4
+    t.decimal "5 - United National Movement count",                           :precision => 32, :scale => 0
+    t.decimal "5 - United National Movement",                                 :precision => 39, :scale => 4
+    t.decimal "6 - Republican Party count",                                   :precision => 32, :scale => 0
+    t.decimal "6 - Republican Party",                                         :precision => 39, :scale => 4
+    t.decimal "7 - For United Georgia count",                                 :precision => 32, :scale => 0
+    t.decimal "7 - For United Georgia",                                       :precision => 39, :scale => 4
+    t.decimal "8 - Alliance of Patriots count",                               :precision => 32, :scale => 0
+    t.decimal "8 - Alliance of Patriots",                                     :precision => 39, :scale => 4
+    t.decimal "10 - Labour count",                                            :precision => 32, :scale => 0
+    t.decimal "10 - Labour",                                                  :precision => 39, :scale => 4
+    t.decimal "12 - Communist Party - Stalin count",                          :precision => 32, :scale => 0
+    t.decimal "12 - Communist Party - Stalin",                                :precision => 39, :scale => 4
+    t.decimal "14 - Georgia for Peace count",                                 :precision => 32, :scale => 0
+    t.decimal "14 - Georgia for Peace",                                       :precision => 39, :scale => 4
+    t.decimal "15 - Socialist Workers Party count",                           :precision => 32, :scale => 0
+    t.decimal "15 - Socialist Workers Party",                                 :precision => 39, :scale => 4
+    t.decimal "16 - United Communist Party count",                            :precision => 32, :scale => 0
+    t.decimal "16 - United Communist Party",                                  :precision => 39, :scale => 4
+    t.decimal "17 - Georgia count",                                           :precision => 32, :scale => 0
+    t.decimal "17 - Georgia",                                                 :precision => 39, :scale => 4
+    t.decimal "18 - Georgian Idea count",                                     :precision => 32, :scale => 0
+    t.decimal "18 - Georgian Idea",                                           :precision => 39, :scale => 4
+    t.decimal "19 - Industrialists - Our Homeland count",                     :precision => 32, :scale => 0
+    t.decimal "19 - Industrialists - Our Homeland",                           :precision => 39, :scale => 4
+    t.decimal "22 - Merab Kostava Society count",                             :precision => 32, :scale => 0
+    t.decimal "22 - Merab Kostava Society",                                   :precision => 39, :scale => 4
+    t.decimal "23 - Ours - People's Party count",                             :precision => 32, :scale => 0
+    t.decimal "23 - Ours - People's Party",                                   :precision => 39, :scale => 4
+    t.decimal "25 - Leftist Alliance count",                                  :precision => 32, :scale => 0
+    t.decimal "25 - Leftist Alliance",                                        :precision => 39, :scale => 4
+    t.decimal "26 - National Forum count",                                    :precision => 32, :scale => 0
+    t.decimal "26 - National Forum",                                          :precision => 39, :scale => 4
+    t.decimal "27 - Free Democrats count",                                    :precision => 32, :scale => 0
+    t.decimal "27 - Free Democrats",                                          :precision => 39, :scale => 4
+    t.decimal "28 - In the Name of the Lord count",                           :precision => 32, :scale => 0
+    t.decimal "28 - In the Name of the Lord",                                 :precision => 39, :scale => 4
+    t.decimal "41 - Georgian Dream count",                                    :precision => 32, :scale => 0
+    t.decimal "41 - Georgian Dream",                                          :precision => 39, :scale => 4
+  end
+
+  create_table "2016_parliamentary_majoritarian - csv", :id => false, :force => true do |t|
+    t.string  "shape",                                                       :limit => 16,                                :default => "", :null => false
+    t.string  "common_id",                                                   :limit => 20
+    t.string  "common_name"
+    t.decimal "Total Voter Turnout (#)",                                                   :precision => 32, :scale => 0
+    t.decimal "Total Voter Turnout (%)",                                                   :precision => 39, :scale => 4
+    t.decimal "Number of Precincts with Invalid Ballots from 0-1%",                        :precision => 42, :scale => 0
+    t.decimal "Number of Precincts with Invalid Ballots from 1-3%",                        :precision => 42, :scale => 0
+    t.decimal "Number of Precincts with Invalid Ballots from 3-5%",                        :precision => 42, :scale => 0
+    t.decimal "Number of Precincts with Invalid Ballots > 5%",                             :precision => 42, :scale => 0
+    t.decimal "Invalid Ballots (%)",                                                       :precision => 17, :scale => 4
+    t.decimal "Precincts with More Ballots Than Votes (#)",                                :precision => 32, :scale => 0
+    t.decimal "Precincts with More Ballots Than Votes (%)",                                :precision => 39, :scale => 4
+    t.decimal "More Ballots Than Votes (Average)",                                         :precision => 36, :scale => 4
+    t.integer "More Ballots Than Votes (#)"
+    t.decimal "Precincts with More Votes than Ballots (#)",                                :precision => 32, :scale => 0
+    t.decimal "Precincts with More Votes than Ballots (%)",                                :precision => 39, :scale => 4
+    t.decimal "More Votes than Ballots (Average)",                                         :precision => 36, :scale => 4
+    t.integer "More Votes than Ballots (#)"
+    t.decimal "Average votes per minute (08:00-12:00)",                                    :precision => 14, :scale => 4
+    t.decimal "Average votes per minute (12:00-17:00)",                                    :precision => 15, :scale => 4
+    t.decimal "Average votes per minute (17:00-20:00)",                                    :precision => 15, :scale => 4
+    t.decimal "Number of Precincts with votes per minute > 2 (08:00-12:00)",               :precision => 42, :scale => 0
+    t.decimal "Number of Precincts with votes per minute > 2 (12:00-17:00)",               :precision => 42, :scale => 0
+    t.decimal "Number of Precincts with votes per minute > 2 (17:00-20:00)",               :precision => 42, :scale => 0
+    t.decimal "Number of Precincts with votes per minute > 2",                             :precision => 44, :scale => 0
+    t.integer "Precincts Reported (#)",                                      :limit => 8
+    t.decimal "Precincts Reported (%)",                                                    :precision => 27, :scale => 4
+    t.decimal "State for the People",                                                      :precision => 39, :scale => 4
+    t.decimal "Progressive Democratic Movement",                                           :precision => 39, :scale => 4
+    t.decimal "Democratic Movement",                                                       :precision => 39, :scale => 4
+    t.decimal "Georgian Group",                                                            :precision => 39, :scale => 4
+    t.decimal "United National Movement",                                                  :precision => 39, :scale => 4
+    t.decimal "Republican Party",                                                          :precision => 39, :scale => 4
+    t.decimal "For United Georgia",                                                        :precision => 39, :scale => 4
+    t.decimal "Alliance of Patriots",                                                      :precision => 39, :scale => 4
+    t.decimal "Labour",                                                                    :precision => 39, :scale => 4
+    t.decimal "Communist Party - Stalin",                                                  :precision => 39, :scale => 4
+    t.decimal "Georgia for Peace",                                                         :precision => 39, :scale => 4
+    t.decimal "Socialist Workers Party",                                                   :precision => 39, :scale => 4
+    t.decimal "United Communist Party",                                                    :precision => 39, :scale => 4
+    t.decimal "Georgia",                                                                   :precision => 39, :scale => 4
+    t.decimal "Georgian Idea",                                                             :precision => 39, :scale => 4
+    t.decimal "Industrialists - Our Homeland",                                             :precision => 39, :scale => 4
+    t.decimal "Merab Kostava Society",                                                     :precision => 39, :scale => 4
+    t.decimal "Ours - People's Party",                                                     :precision => 39, :scale => 4
+    t.decimal "Leftist Alliance",                                                          :precision => 39, :scale => 4
+    t.decimal "National Forum",                                                            :precision => 39, :scale => 4
+    t.decimal "Free Democrats",                                                            :precision => 39, :scale => 4
+    t.decimal "In the Name of the Lord",                                                   :precision => 39, :scale => 4
+    t.decimal "Georgian Dream",                                                            :precision => 39, :scale => 4
+  end
+
+  create_table "2016_parliamentary_majoritarian - district", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id",                                     :limit => 8
+    t.string  "district_Name"
+    t.decimal "possible voters",                                              :precision => 32, :scale => 0
+    t.decimal "total ballots cast",                                           :precision => 32, :scale => 0
+    t.decimal "total valid ballots cast",                                     :precision => 32, :scale => 0
+    t.decimal "num invalid ballots from 0-1%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 1-3%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 3-5%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots >5%",                                      :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "percent voters voting",                                        :precision => 39, :scale => 4
+    t.decimal "num precincts logic fail",                                     :precision => 32, :scale => 0
+    t.decimal "percent precincts logic fail",                                 :precision => 39, :scale => 4
+    t.decimal "avg precinct logic fail difference",                           :precision => 36, :scale => 4
+    t.decimal "num precincts more ballots than votes",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more ballots than votes",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more ballots than votes",              :precision => 36, :scale => 4
+    t.decimal "num precincts more votes than ballots",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more votes than ballots",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more votes than ballots",              :precision => 36, :scale => 4
+    t.decimal "votes 8-12",                                                   :precision => 32, :scale => 0
+    t.decimal "votes 12-17",                                                  :precision => 33, :scale => 0
+    t.decimal "votes 17-20",                                                  :precision => 33, :scale => 0
+    t.decimal "avg votes/precinct 8-12",                                      :precision => 36, :scale => 4
+    t.decimal "avg votes/precinct 12-17",                                     :precision => 37, :scale => 4
+    t.decimal "avg votes/precinct 17-20",                                     :precision => 37, :scale => 4
+    t.decimal "vpm 8-12",                                                     :precision => 36, :scale => 4
+    t.decimal "vpm 12-17",                                                    :precision => 37, :scale => 4
+    t.decimal "vpm 17-20",                                                    :precision => 37, :scale => 4
+    t.decimal "avg vpm/precinct 8-12",                                        :precision => 40, :scale => 8
+    t.decimal "avg vpm/precinct 12-17",                                       :precision => 41, :scale => 8
+    t.decimal "avg vpm/precinct 17-20",                                       :precision => 41, :scale => 8
+    t.decimal "num precincts vpm 8-12 > 2",                                   :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 12-17 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 17-20 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm > 2",                                        :precision => 44, :scale => 0, :default => 0, :null => false
+    t.decimal "num_precincts_possible",                                       :precision => 32, :scale => 0
+    t.integer "num_precincts_reported_number",                   :limit => 8,                                :default => 0, :null => false
+    t.decimal "num_precincts_reported_percent",                               :precision => 27, :scale => 4
+    t.decimal "1 - State for the People count",                               :precision => 32, :scale => 0
+    t.decimal "1 - State for the People",                                     :precision => 39, :scale => 4
+    t.decimal "2 - Progressive Democratic Movement count",                    :precision => 32, :scale => 0
+    t.decimal "2 - Progressive Democratic Movement",                          :precision => 39, :scale => 4
+    t.decimal "3 - Democratic Movement count",                                :precision => 32, :scale => 0
+    t.decimal "3 - Democratic Movement",                                      :precision => 39, :scale => 4
+    t.decimal "4 - Georgian Group count",                                     :precision => 32, :scale => 0
+    t.decimal "4 - Georgian Group",                                           :precision => 39, :scale => 4
+    t.decimal "5 - United National Movement count",                           :precision => 32, :scale => 0
+    t.decimal "5 - United National Movement",                                 :precision => 39, :scale => 4
+    t.decimal "6 - Republican Party count",                                   :precision => 32, :scale => 0
+    t.decimal "6 - Republican Party",                                         :precision => 39, :scale => 4
+    t.decimal "7 - For United Georgia count",                                 :precision => 32, :scale => 0
+    t.decimal "7 - For United Georgia",                                       :precision => 39, :scale => 4
+    t.decimal "8 - Alliance of Patriots count",                               :precision => 32, :scale => 0
+    t.decimal "8 - Alliance of Patriots",                                     :precision => 39, :scale => 4
+    t.decimal "10 - Labour count",                                            :precision => 32, :scale => 0
+    t.decimal "10 - Labour",                                                  :precision => 39, :scale => 4
+    t.decimal "12 - Communist Party - Stalin count",                          :precision => 32, :scale => 0
+    t.decimal "12 - Communist Party - Stalin",                                :precision => 39, :scale => 4
+    t.decimal "14 - Georgia for Peace count",                                 :precision => 32, :scale => 0
+    t.decimal "14 - Georgia for Peace",                                       :precision => 39, :scale => 4
+    t.decimal "15 - Socialist Workers Party count",                           :precision => 32, :scale => 0
+    t.decimal "15 - Socialist Workers Party",                                 :precision => 39, :scale => 4
+    t.decimal "16 - United Communist Party count",                            :precision => 32, :scale => 0
+    t.decimal "16 - United Communist Party",                                  :precision => 39, :scale => 4
+    t.decimal "17 - Georgia count",                                           :precision => 32, :scale => 0
+    t.decimal "17 - Georgia",                                                 :precision => 39, :scale => 4
+    t.decimal "18 - Georgian Idea count",                                     :precision => 32, :scale => 0
+    t.decimal "18 - Georgian Idea",                                           :precision => 39, :scale => 4
+    t.decimal "19 - Industrialists - Our Homeland count",                     :precision => 32, :scale => 0
+    t.decimal "19 - Industrialists - Our Homeland",                           :precision => 39, :scale => 4
+    t.decimal "22 - Merab Kostava Society count",                             :precision => 32, :scale => 0
+    t.decimal "22 - Merab Kostava Society",                                   :precision => 39, :scale => 4
+    t.decimal "23 - Ours - People's Party count",                             :precision => 32, :scale => 0
+    t.decimal "23 - Ours - People's Party",                                   :precision => 39, :scale => 4
+    t.decimal "25 - Leftist Alliance count",                                  :precision => 32, :scale => 0
+    t.decimal "25 - Leftist Alliance",                                        :precision => 39, :scale => 4
+    t.decimal "26 - National Forum count",                                    :precision => 32, :scale => 0
+    t.decimal "26 - National Forum",                                          :precision => 39, :scale => 4
+    t.decimal "27 - Free Democrats count",                                    :precision => 32, :scale => 0
+    t.decimal "27 - Free Democrats",                                          :precision => 39, :scale => 4
+    t.decimal "28 - In the Name of the Lord count",                           :precision => 32, :scale => 0
+    t.decimal "28 - In the Name of the Lord",                                 :precision => 39, :scale => 4
+    t.decimal "41 - Georgian Dream count",                                    :precision => 32, :scale => 0
+    t.decimal "41 - Georgian Dream",                                          :precision => 39, :scale => 4
+  end
+
+  create_table "2016_parliamentary_majoritarian - invalid ballots 0-1", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "num_invalid_ballots", :limit => 8, :default => 0, :null => false
+  end
+
+  create_table "2016_parliamentary_majoritarian - invalid ballots 1-3", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "num_invalid_ballots", :limit => 8, :default => 0, :null => false
+  end
+
+  create_table "2016_parliamentary_majoritarian - invalid ballots 3-5", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "num_invalid_ballots", :limit => 8, :default => 0, :null => false
+  end
+
+  create_table "2016_parliamentary_majoritarian - invalid ballots >5", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "num_invalid_ballots", :limit => 8, :default => 0, :null => false
+  end
+
+  create_table "2016_parliamentary_majoritarian - precinct", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.string  "district_Name"
+    t.integer "precinct_id"
+    t.string  "precinct_name",                             :limit => 23
+    t.integer "possible voters"
+    t.integer "total ballots cast"
+    t.integer "total valid ballots cast"
+    t.decimal "percent invalid ballots",                                 :precision => 17, :scale => 4
+    t.decimal "percent voters voting",                                   :precision => 17, :scale => 4
+    t.integer "logic_check_fail"
+    t.integer "logic_check_difference"
+    t.integer "more_ballots_than_votes_flag"
+    t.integer "more_ballots_than_votes"
+    t.integer "more_votes_than_ballots_flag"
+    t.integer "more_votes_than_ballots"
+    t.integer "votes 8-12"
+    t.integer "votes 12-17",                               :limit => 8
+    t.integer "votes 17-20",                               :limit => 8
+    t.decimal "vpm 8-12",                                                :precision => 14, :scale => 4
+    t.decimal "vpm 12-17",                                               :precision => 15, :scale => 4
+    t.decimal "vpm 17-20",                                               :precision => 15, :scale => 4
+    t.integer "1 - State for the People count"
+    t.decimal "1 - State for the People",                                :precision => 17, :scale => 4
+    t.integer "2 - Progressive Democratic Movement count"
+    t.decimal "2 - Progressive Democratic Movement",                     :precision => 17, :scale => 4
+    t.integer "3 - Democratic Movement count"
+    t.decimal "3 - Democratic Movement",                                 :precision => 17, :scale => 4
+    t.integer "4 - Georgian Group count"
+    t.decimal "4 - Georgian Group",                                      :precision => 17, :scale => 4
+    t.integer "5 - United National Movement count"
+    t.decimal "5 - United National Movement",                            :precision => 17, :scale => 4
+    t.integer "6 - Republican Party count"
+    t.decimal "6 - Republican Party",                                    :precision => 17, :scale => 4
+    t.integer "7 - For United Georgia count"
+    t.decimal "7 - For United Georgia",                                  :precision => 17, :scale => 4
+    t.integer "8 - Alliance of Patriots count"
+    t.decimal "8 - Alliance of Patriots",                                :precision => 17, :scale => 4
+    t.integer "10 - Labour count"
+    t.decimal "10 - Labour",                                             :precision => 17, :scale => 4
+    t.integer "12 - Communist Party - Stalin count"
+    t.decimal "12 - Communist Party - Stalin",                           :precision => 17, :scale => 4
+    t.integer "14 - Georgia for Peace count"
+    t.decimal "14 - Georgia for Peace",                                  :precision => 17, :scale => 4
+    t.integer "15 - Socialist Workers Party count"
+    t.decimal "15 - Socialist Workers Party",                            :precision => 17, :scale => 4
+    t.integer "16 - United Communist Party count"
+    t.decimal "16 - United Communist Party",                             :precision => 17, :scale => 4
+    t.integer "17 - Georgia count"
+    t.decimal "17 - Georgia",                                            :precision => 17, :scale => 4
+    t.integer "18 - Georgian Idea count"
+    t.decimal "18 - Georgian Idea",                                      :precision => 17, :scale => 4
+    t.integer "19 - Industrialists - Our Homeland count"
+    t.decimal "19 - Industrialists - Our Homeland",                      :precision => 17, :scale => 4
+    t.integer "22 - Merab Kostava Society count"
+    t.decimal "22 - Merab Kostava Society",                              :precision => 17, :scale => 4
+    t.integer "23 - Ours - People's Party count"
+    t.decimal "23 - Ours - People's Party",                              :precision => 17, :scale => 4
+    t.integer "25 - Leftist Alliance count"
+    t.decimal "25 - Leftist Alliance",                                   :precision => 17, :scale => 4
+    t.integer "26 - National Forum count"
+    t.decimal "26 - National Forum",                                     :precision => 17, :scale => 4
+    t.integer "27 - Free Democrats count"
+    t.decimal "27 - Free Democrats",                                     :precision => 17, :scale => 4
+    t.integer "28 - In the Name of the Lord count"
+    t.decimal "28 - In the Name of the Lord",                            :precision => 17, :scale => 4
+    t.integer "41 - Georgian Dream count"
+    t.decimal "41 - Georgian Dream",                                     :precision => 17, :scale => 4
+  end
+
+  create_table "2016_parliamentary_majoritarian - precinct count", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id",   :default => 0, :null => false
+    t.integer "num_precincts"
+  end
+
+  add_index "2016_parliamentary_majoritarian - precinct count", ["district_id"], :name => "district"
+  add_index "2016_parliamentary_majoritarian - precinct count", ["region"], :name => "region"
+
+  create_table "2016_parliamentary_majoritarian - precinct count by country", :id => false, :force => true do |t|
+    t.decimal "num_precincts", :precision => 32, :scale => 0
+  end
+
+  create_table "2016_parliamentary_majoritarian - precinct count by district", :id => false, :force => true do |t|
+    t.integer "district_id",                                  :default => 0, :null => false
+    t.decimal "num_precincts", :precision => 32, :scale => 0
+  end
+
+  create_table "2016_parliamentary_majoritarian - precinct count by region", :id => false, :force => true do |t|
+    t.string  "region"
+    t.decimal "num_precincts", :precision => 32, :scale => 0
+  end
+
+  create_table "2016_parliamentary_majoritarian - raw", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.string  "district_name"
+    t.integer "precinct_id"
+    t.integer "attached_precinct_id"
+    t.integer "num_possible_voters"
+    t.integer "num_special_voters"
+    t.integer "num_at_12"
+    t.integer "num_at_17"
+    t.integer "num_votes"
+    t.integer "num_ballots"
+    t.integer "num_invalid_votes"
+    t.integer "num_valid_votes"
+    t.integer "logic_check_fail"
+    t.integer "logic_check_difference"
+    t.integer "more_ballots_than_votes_flag"
+    t.integer "more_ballots_than_votes"
+    t.integer "more_votes_than_ballots_flag"
+    t.integer "more_votes_than_ballots"
+    t.integer "1 - State for the People"
+    t.integer "2 - Progressive Democratic Movement"
+    t.integer "3 - Democratic Movement"
+    t.integer "4 - Georgian Group"
+    t.integer "5 - United National Movement"
+    t.integer "6 - Republican Party"
+    t.integer "7 - For United Georgia"
+    t.integer "8 - Alliance of Patriots"
+    t.integer "10 - Labour"
+    t.integer "12 - Communist Party - Stalin"
+    t.integer "14 - Georgia for Peace"
+    t.integer "15 - Socialist Workers Party"
+    t.integer "16 - United Communist Party"
+    t.integer "17 - Georgia"
+    t.integer "18 - Georgian Idea"
+    t.integer "19 - Industrialists - Our Homeland"
+    t.integer "22 - Merab Kostava Society"
+    t.integer "23 - Ours - People's Party"
+    t.integer "25 - Leftist Alliance"
+    t.integer "26 - National Forum"
+    t.integer "27 - Free Democrats"
+    t.integer "28 - In the Name of the Lord"
+    t.integer "41 - Georgian Dream"
+  end
+
+  create_table "2016_parliamentary_majoritarian - region", :id => false, :force => true do |t|
+    t.string  "region"
+    t.decimal "possible voters",                                              :precision => 32, :scale => 0
+    t.decimal "total ballots cast",                                           :precision => 32, :scale => 0
+    t.decimal "total valid ballots cast",                                     :precision => 32, :scale => 0
+    t.decimal "num invalid ballots from 0-1%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 1-3%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 3-5%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots >5%",                                      :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "percent voters voting",                                        :precision => 39, :scale => 4
+    t.decimal "num precincts logic fail",                                     :precision => 32, :scale => 0
+    t.decimal "percent precincts logic fail",                                 :precision => 39, :scale => 4
+    t.decimal "avg precinct logic fail difference",                           :precision => 36, :scale => 4
+    t.decimal "num precincts more ballots than votes",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more ballots than votes",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more ballots than votes",              :precision => 36, :scale => 4
+    t.decimal "num precincts more votes than ballots",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more votes than ballots",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more votes than ballots",              :precision => 36, :scale => 4
+    t.decimal "votes 8-12",                                                   :precision => 32, :scale => 0
+    t.decimal "votes 12-17",                                                  :precision => 33, :scale => 0
+    t.decimal "votes 17-20",                                                  :precision => 33, :scale => 0
+    t.decimal "avg votes/precinct 8-12",                                      :precision => 36, :scale => 4
+    t.decimal "avg votes/precinct 12-17",                                     :precision => 37, :scale => 4
+    t.decimal "avg votes/precinct 17-20",                                     :precision => 37, :scale => 4
+    t.decimal "vpm 8-12",                                                     :precision => 36, :scale => 4
+    t.decimal "vpm 12-17",                                                    :precision => 37, :scale => 4
+    t.decimal "vpm 17-20",                                                    :precision => 37, :scale => 4
+    t.decimal "avg vpm/precinct 8-12",                                        :precision => 40, :scale => 8
+    t.decimal "avg vpm/precinct 12-17",                                       :precision => 41, :scale => 8
+    t.decimal "avg vpm/precinct 17-20",                                       :precision => 41, :scale => 8
+    t.decimal "num precincts vpm 8-12 > 2",                                   :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 12-17 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 17-20 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm > 2",                                        :precision => 44, :scale => 0, :default => 0, :null => false
+    t.decimal "num_precincts_possible",                                       :precision => 32, :scale => 0
+    t.integer "num_precincts_reported_number",                   :limit => 8,                                :default => 0, :null => false
+    t.decimal "num_precincts_reported_percent",                               :precision => 27, :scale => 4
+    t.decimal "1 - State for the People count",                               :precision => 32, :scale => 0
+    t.decimal "1 - State for the People",                                     :precision => 39, :scale => 4
+    t.decimal "2 - Progressive Democratic Movement count",                    :precision => 32, :scale => 0
+    t.decimal "2 - Progressive Democratic Movement",                          :precision => 39, :scale => 4
+    t.decimal "3 - Democratic Movement count",                                :precision => 32, :scale => 0
+    t.decimal "3 - Democratic Movement",                                      :precision => 39, :scale => 4
+    t.decimal "4 - Georgian Group count",                                     :precision => 32, :scale => 0
+    t.decimal "4 - Georgian Group",                                           :precision => 39, :scale => 4
+    t.decimal "5 - United National Movement count",                           :precision => 32, :scale => 0
+    t.decimal "5 - United National Movement",                                 :precision => 39, :scale => 4
+    t.decimal "6 - Republican Party count",                                   :precision => 32, :scale => 0
+    t.decimal "6 - Republican Party",                                         :precision => 39, :scale => 4
+    t.decimal "7 - For United Georgia count",                                 :precision => 32, :scale => 0
+    t.decimal "7 - For United Georgia",                                       :precision => 39, :scale => 4
+    t.decimal "8 - Alliance of Patriots count",                               :precision => 32, :scale => 0
+    t.decimal "8 - Alliance of Patriots",                                     :precision => 39, :scale => 4
+    t.decimal "10 - Labour count",                                            :precision => 32, :scale => 0
+    t.decimal "10 - Labour",                                                  :precision => 39, :scale => 4
+    t.decimal "12 - Communist Party - Stalin count",                          :precision => 32, :scale => 0
+    t.decimal "12 - Communist Party - Stalin",                                :precision => 39, :scale => 4
+    t.decimal "14 - Georgia for Peace count",                                 :precision => 32, :scale => 0
+    t.decimal "14 - Georgia for Peace",                                       :precision => 39, :scale => 4
+    t.decimal "15 - Socialist Workers Party count",                           :precision => 32, :scale => 0
+    t.decimal "15 - Socialist Workers Party",                                 :precision => 39, :scale => 4
+    t.decimal "16 - United Communist Party count",                            :precision => 32, :scale => 0
+    t.decimal "16 - United Communist Party",                                  :precision => 39, :scale => 4
+    t.decimal "17 - Georgia count",                                           :precision => 32, :scale => 0
+    t.decimal "17 - Georgia",                                                 :precision => 39, :scale => 4
+    t.decimal "18 - Georgian Idea count",                                     :precision => 32, :scale => 0
+    t.decimal "18 - Georgian Idea",                                           :precision => 39, :scale => 4
+    t.decimal "19 - Industrialists - Our Homeland count",                     :precision => 32, :scale => 0
+    t.decimal "19 - Industrialists - Our Homeland",                           :precision => 39, :scale => 4
+    t.decimal "22 - Merab Kostava Society count",                             :precision => 32, :scale => 0
+    t.decimal "22 - Merab Kostava Society",                                   :precision => 39, :scale => 4
+    t.decimal "23 - Ours - People's Party count",                             :precision => 32, :scale => 0
+    t.decimal "23 - Ours - People's Party",                                   :precision => 39, :scale => 4
+    t.decimal "25 - Leftist Alliance count",                                  :precision => 32, :scale => 0
+    t.decimal "25 - Leftist Alliance",                                        :precision => 39, :scale => 4
+    t.decimal "26 - National Forum count",                                    :precision => 32, :scale => 0
+    t.decimal "26 - National Forum",                                          :precision => 39, :scale => 4
+    t.decimal "27 - Free Democrats count",                                    :precision => 32, :scale => 0
+    t.decimal "27 - Free Democrats",                                          :precision => 39, :scale => 4
+    t.decimal "28 - In the Name of the Lord count",                           :precision => 32, :scale => 0
+    t.decimal "28 - In the Name of the Lord",                                 :precision => 39, :scale => 4
+    t.decimal "41 - Georgian Dream count",                                    :precision => 32, :scale => 0
+    t.decimal "41 - Georgian Dream",                                          :precision => 39, :scale => 4
+  end
+
+  create_table "2016_parliamentary_majoritarian - tbilisi district", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.string  "district_Name"
+    t.decimal "possible voters",                                              :precision => 32, :scale => 0
+    t.decimal "total ballots cast",                                           :precision => 32, :scale => 0
+    t.decimal "total valid ballots cast",                                     :precision => 32, :scale => 0
+    t.decimal "num invalid ballots from 0-1%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 1-3%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 3-5%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots >5%",                                      :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "percent voters voting",                                        :precision => 39, :scale => 4
+    t.decimal "num precincts logic fail",                                     :precision => 32, :scale => 0
+    t.decimal "percent precincts logic fail",                                 :precision => 39, :scale => 4
+    t.decimal "avg precinct logic fail difference",                           :precision => 36, :scale => 4
+    t.decimal "num precincts more ballots than votes",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more ballots than votes",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more ballots than votes",              :precision => 36, :scale => 4
+    t.decimal "num precincts more votes than ballots",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more votes than ballots",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more votes than ballots",              :precision => 36, :scale => 4
+    t.decimal "votes 8-12",                                                   :precision => 32, :scale => 0
+    t.decimal "votes 12-17",                                                  :precision => 33, :scale => 0
+    t.decimal "votes 17-20",                                                  :precision => 33, :scale => 0
+    t.decimal "avg votes/precinct 8-12",                                      :precision => 36, :scale => 4
+    t.decimal "avg votes/precinct 12-17",                                     :precision => 37, :scale => 4
+    t.decimal "avg votes/precinct 17-20",                                     :precision => 37, :scale => 4
+    t.decimal "vpm 8-12",                                                     :precision => 36, :scale => 4
+    t.decimal "vpm 12-17",                                                    :precision => 37, :scale => 4
+    t.decimal "vpm 17-20",                                                    :precision => 37, :scale => 4
+    t.decimal "avg vpm/precinct 8-12",                                        :precision => 40, :scale => 8
+    t.decimal "avg vpm/precinct 12-17",                                       :precision => 41, :scale => 8
+    t.decimal "avg vpm/precinct 17-20",                                       :precision => 41, :scale => 8
+    t.decimal "num precincts vpm 8-12 > 2",                                   :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 12-17 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 17-20 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm > 2",                                        :precision => 44, :scale => 0, :default => 0, :null => false
+    t.decimal "num_precincts_possible",                                       :precision => 32, :scale => 0
+    t.integer "num_precincts_reported_number",                   :limit => 8,                                :default => 0, :null => false
+    t.decimal "num_precincts_reported_percent",                               :precision => 27, :scale => 4
+    t.decimal "1 - State for the People count",                               :precision => 32, :scale => 0
+    t.decimal "1 - State for the People",                                     :precision => 39, :scale => 4
+    t.decimal "2 - Progressive Democratic Movement count",                    :precision => 32, :scale => 0
+    t.decimal "2 - Progressive Democratic Movement",                          :precision => 39, :scale => 4
+    t.decimal "3 - Democratic Movement count",                                :precision => 32, :scale => 0
+    t.decimal "3 - Democratic Movement",                                      :precision => 39, :scale => 4
+    t.decimal "4 - Georgian Group count",                                     :precision => 32, :scale => 0
+    t.decimal "4 - Georgian Group",                                           :precision => 39, :scale => 4
+    t.decimal "5 - United National Movement count",                           :precision => 32, :scale => 0
+    t.decimal "5 - United National Movement",                                 :precision => 39, :scale => 4
+    t.decimal "6 - Republican Party count",                                   :precision => 32, :scale => 0
+    t.decimal "6 - Republican Party",                                         :precision => 39, :scale => 4
+    t.decimal "7 - For United Georgia count",                                 :precision => 32, :scale => 0
+    t.decimal "7 - For United Georgia",                                       :precision => 39, :scale => 4
+    t.decimal "8 - Alliance of Patriots count",                               :precision => 32, :scale => 0
+    t.decimal "8 - Alliance of Patriots",                                     :precision => 39, :scale => 4
+    t.decimal "10 - Labour count",                                            :precision => 32, :scale => 0
+    t.decimal "10 - Labour",                                                  :precision => 39, :scale => 4
+    t.decimal "12 - Communist Party - Stalin count",                          :precision => 32, :scale => 0
+    t.decimal "12 - Communist Party - Stalin",                                :precision => 39, :scale => 4
+    t.decimal "14 - Georgia for Peace count",                                 :precision => 32, :scale => 0
+    t.decimal "14 - Georgia for Peace",                                       :precision => 39, :scale => 4
+    t.decimal "15 - Socialist Workers Party count",                           :precision => 32, :scale => 0
+    t.decimal "15 - Socialist Workers Party",                                 :precision => 39, :scale => 4
+    t.decimal "16 - United Communist Party count",                            :precision => 32, :scale => 0
+    t.decimal "16 - United Communist Party",                                  :precision => 39, :scale => 4
+    t.decimal "17 - Georgia count",                                           :precision => 32, :scale => 0
+    t.decimal "17 - Georgia",                                                 :precision => 39, :scale => 4
+    t.decimal "18 - Georgian Idea count",                                     :precision => 32, :scale => 0
+    t.decimal "18 - Georgian Idea",                                           :precision => 39, :scale => 4
+    t.decimal "19 - Industrialists - Our Homeland count",                     :precision => 32, :scale => 0
+    t.decimal "19 - Industrialists - Our Homeland",                           :precision => 39, :scale => 4
+    t.decimal "22 - Merab Kostava Society count",                             :precision => 32, :scale => 0
+    t.decimal "22 - Merab Kostava Society",                                   :precision => 39, :scale => 4
+    t.decimal "23 - Ours - People's Party count",                             :precision => 32, :scale => 0
+    t.decimal "23 - Ours - People's Party",                                   :precision => 39, :scale => 4
+    t.decimal "25 - Leftist Alliance count",                                  :precision => 32, :scale => 0
+    t.decimal "25 - Leftist Alliance",                                        :precision => 39, :scale => 4
+    t.decimal "26 - National Forum count",                                    :precision => 32, :scale => 0
+    t.decimal "26 - National Forum",                                          :precision => 39, :scale => 4
+    t.decimal "27 - Free Democrats count",                                    :precision => 32, :scale => 0
+    t.decimal "27 - Free Democrats",                                          :precision => 39, :scale => 4
+    t.decimal "28 - In the Name of the Lord count",                           :precision => 32, :scale => 0
+    t.decimal "28 - In the Name of the Lord",                                 :precision => 39, :scale => 4
+    t.decimal "41 - Georgian Dream count",                                    :precision => 32, :scale => 0
+    t.decimal "41 - Georgian Dream",                                          :precision => 39, :scale => 4
+  end
+
+  create_table "2016_parliamentary_majoritarian - tbilisi precinct", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.string  "district_Name"
+    t.integer "precinct_id"
+    t.string  "precinct_name",                             :limit => 23
+    t.integer "possible voters"
+    t.integer "total ballots cast"
+    t.integer "total valid ballots cast"
+    t.decimal "percent invalid ballots",                                 :precision => 17, :scale => 4
+    t.decimal "percent voters voting",                                   :precision => 17, :scale => 4
+    t.integer "logic_check_fail"
+    t.integer "logic_check_difference"
+    t.integer "more_ballots_than_votes_flag"
+    t.integer "more_ballots_than_votes"
+    t.integer "more_votes_than_ballots_flag"
+    t.integer "more_votes_than_ballots"
+    t.integer "votes 8-12"
+    t.integer "votes 12-17",                               :limit => 8
+    t.integer "votes 17-20",                               :limit => 8
+    t.decimal "vpm 8-12",                                                :precision => 14, :scale => 4
+    t.decimal "vpm 12-17",                                               :precision => 15, :scale => 4
+    t.decimal "vpm 17-20",                                               :precision => 15, :scale => 4
+    t.integer "1 - State for the People count"
+    t.decimal "1 - State for the People",                                :precision => 17, :scale => 4
+    t.integer "2 - Progressive Democratic Movement count"
+    t.decimal "2 - Progressive Democratic Movement",                     :precision => 17, :scale => 4
+    t.integer "3 - Democratic Movement count"
+    t.decimal "3 - Democratic Movement",                                 :precision => 17, :scale => 4
+    t.integer "4 - Georgian Group count"
+    t.decimal "4 - Georgian Group",                                      :precision => 17, :scale => 4
+    t.integer "5 - United National Movement count"
+    t.decimal "5 - United National Movement",                            :precision => 17, :scale => 4
+    t.integer "6 - Republican Party count"
+    t.decimal "6 - Republican Party",                                    :precision => 17, :scale => 4
+    t.integer "7 - For United Georgia count"
+    t.decimal "7 - For United Georgia",                                  :precision => 17, :scale => 4
+    t.integer "8 - Alliance of Patriots count"
+    t.decimal "8 - Alliance of Patriots",                                :precision => 17, :scale => 4
+    t.integer "10 - Labour count"
+    t.decimal "10 - Labour",                                             :precision => 17, :scale => 4
+    t.integer "12 - Communist Party - Stalin count"
+    t.decimal "12 - Communist Party - Stalin",                           :precision => 17, :scale => 4
+    t.integer "14 - Georgia for Peace count"
+    t.decimal "14 - Georgia for Peace",                                  :precision => 17, :scale => 4
+    t.integer "15 - Socialist Workers Party count"
+    t.decimal "15 - Socialist Workers Party",                            :precision => 17, :scale => 4
+    t.integer "16 - United Communist Party count"
+    t.decimal "16 - United Communist Party",                             :precision => 17, :scale => 4
+    t.integer "17 - Georgia count"
+    t.decimal "17 - Georgia",                                            :precision => 17, :scale => 4
+    t.integer "18 - Georgian Idea count"
+    t.decimal "18 - Georgian Idea",                                      :precision => 17, :scale => 4
+    t.integer "19 - Industrialists - Our Homeland count"
+    t.decimal "19 - Industrialists - Our Homeland",                      :precision => 17, :scale => 4
+    t.integer "22 - Merab Kostava Society count"
+    t.decimal "22 - Merab Kostava Society",                              :precision => 17, :scale => 4
+    t.integer "23 - Ours - People's Party count"
+    t.decimal "23 - Ours - People's Party",                              :precision => 17, :scale => 4
+    t.integer "25 - Leftist Alliance count"
+    t.decimal "25 - Leftist Alliance",                                   :precision => 17, :scale => 4
+    t.integer "26 - National Forum count"
+    t.decimal "26 - National Forum",                                     :precision => 17, :scale => 4
+    t.integer "27 - Free Democrats count"
+    t.decimal "27 - Free Democrats",                                     :precision => 17, :scale => 4
+    t.integer "28 - In the Name of the Lord count"
+    t.decimal "28 - In the Name of the Lord",                            :precision => 17, :scale => 4
+    t.integer "41 - Georgian Dream count"
+    t.decimal "41 - Georgian Dream",                                     :precision => 17, :scale => 4
+  end
+
+  create_table "2016_parliamentary_majoritarian - vpm 12-17>2", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "vpm > 2",     :limit => 8, :default => 0, :null => false
+  end
+
+  create_table "2016_parliamentary_majoritarian - vpm 17-20>2", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "vpm > 2",     :limit => 8, :default => 0, :null => false
+  end
+
+  create_table "2016_parliamentary_majoritarian - vpm 8-12>2", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "vpm > 2",     :limit => 8, :default => 0, :null => false
+  end
+
+  create_table "2016_parliamentary_party_list - country", :id => false, :force => true do |t|
+    t.decimal "possible voters",                                              :precision => 32, :scale => 0
+    t.decimal "total ballots cast",                                           :precision => 32, :scale => 0
+    t.decimal "total valid ballots cast",                                     :precision => 32, :scale => 0
+    t.decimal "num invalid ballots from 0-1%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 1-3%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 3-5%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots >5%",                                      :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "percent voters voting",                                        :precision => 39, :scale => 4
+    t.decimal "num precincts logic fail",                                     :precision => 32, :scale => 0
+    t.decimal "percent precincts logic fail",                                 :precision => 39, :scale => 4
+    t.decimal "avg precinct logic fail difference",                           :precision => 36, :scale => 4
+    t.decimal "num precincts more ballots than votes",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more ballots than votes",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more ballots than votes",              :precision => 36, :scale => 4
+    t.decimal "num precincts more votes than ballots",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more votes than ballots",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more votes than ballots",              :precision => 36, :scale => 4
+    t.decimal "votes 8-12",                                                   :precision => 32, :scale => 0
+    t.decimal "votes 12-17",                                                  :precision => 33, :scale => 0
+    t.decimal "votes 17-20",                                                  :precision => 33, :scale => 0
+    t.decimal "avg votes/precinct 8-12",                                      :precision => 36, :scale => 4
+    t.decimal "avg votes/precinct 12-17",                                     :precision => 37, :scale => 4
+    t.decimal "avg votes/precinct 17-20",                                     :precision => 37, :scale => 4
+    t.decimal "vpm 8-12",                                                     :precision => 36, :scale => 4
+    t.decimal "vpm 12-17",                                                    :precision => 37, :scale => 4
+    t.decimal "vpm 17-20",                                                    :precision => 37, :scale => 4
+    t.decimal "avg vpm/precinct 8-12",                                        :precision => 40, :scale => 8
+    t.decimal "avg vpm/precinct 12-17",                                       :precision => 41, :scale => 8
+    t.decimal "avg vpm/precinct 17-20",                                       :precision => 41, :scale => 8
+    t.decimal "num precincts vpm 8-12 > 2",                                   :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 12-17 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 17-20 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm > 2",                                        :precision => 44, :scale => 0, :default => 0, :null => false
+    t.decimal "num_precincts_possible",                                       :precision => 32, :scale => 0
+    t.integer "num_precincts_reported_number",                   :limit => 8,                                :default => 0, :null => false
+    t.decimal "num_precincts_reported_percent",                               :precision => 27, :scale => 4
+    t.decimal "1 - State for the People count",                               :precision => 32, :scale => 0
+    t.decimal "1 - State for the People",                                     :precision => 39, :scale => 4
+    t.decimal "2 - Progressive Democratic Movement count",                    :precision => 32, :scale => 0
+    t.decimal "2 - Progressive Democratic Movement",                          :precision => 39, :scale => 4
+    t.decimal "3 - Democratic Movement count",                                :precision => 32, :scale => 0
+    t.decimal "3 - Democratic Movement",                                      :precision => 39, :scale => 4
+    t.decimal "4 - Georgian Group count",                                     :precision => 32, :scale => 0
+    t.decimal "4 - Georgian Group",                                           :precision => 39, :scale => 4
+    t.decimal "5 - United National Movement count",                           :precision => 32, :scale => 0
+    t.decimal "5 - United National Movement",                                 :precision => 39, :scale => 4
+    t.decimal "6 - Republican Party count",                                   :precision => 32, :scale => 0
+    t.decimal "6 - Republican Party",                                         :precision => 39, :scale => 4
+    t.decimal "7 - For United Georgia count",                                 :precision => 32, :scale => 0
+    t.decimal "7 - For United Georgia",                                       :precision => 39, :scale => 4
+    t.decimal "8 - Alliance of Patriots count",                               :precision => 32, :scale => 0
+    t.decimal "8 - Alliance of Patriots",                                     :precision => 39, :scale => 4
+    t.decimal "10 - Labour count",                                            :precision => 32, :scale => 0
+    t.decimal "10 - Labour",                                                  :precision => 39, :scale => 4
+    t.decimal "11 - People's Government count",                               :precision => 32, :scale => 0
+    t.decimal "11 - People's Government",                                     :precision => 39, :scale => 4
+    t.decimal "12 - Communist Party - Stalin count",                          :precision => 32, :scale => 0
+    t.decimal "12 - Communist Party - Stalin",                                :precision => 39, :scale => 4
+    t.decimal "14 - Georgia for Peace count",                                 :precision => 32, :scale => 0
+    t.decimal "14 - Georgia for Peace",                                       :precision => 39, :scale => 4
+    t.decimal "15 - Socialist Workers Party count",                           :precision => 32, :scale => 0
+    t.decimal "15 - Socialist Workers Party",                                 :precision => 39, :scale => 4
+    t.decimal "16 - United Communist Party count",                            :precision => 32, :scale => 0
+    t.decimal "16 - United Communist Party",                                  :precision => 39, :scale => 4
+    t.decimal "17 - Georgia count",                                           :precision => 32, :scale => 0
+    t.decimal "17 - Georgia",                                                 :precision => 39, :scale => 4
+    t.decimal "18 - Georgian Idea count",                                     :precision => 32, :scale => 0
+    t.decimal "18 - Georgian Idea",                                           :precision => 39, :scale => 4
+    t.decimal "19 - Industrialists - Our Homeland count",                     :precision => 32, :scale => 0
+    t.decimal "19 - Industrialists - Our Homeland",                           :precision => 39, :scale => 4
+    t.decimal "22 - Merab Kostava Society count",                             :precision => 32, :scale => 0
+    t.decimal "22 - Merab Kostava Society",                                   :precision => 39, :scale => 4
+    t.decimal "23 - Ours - People's Party count",                             :precision => 32, :scale => 0
+    t.decimal "23 - Ours - People's Party",                                   :precision => 39, :scale => 4
+    t.decimal "25 - Leftist Alliance count",                                  :precision => 32, :scale => 0
+    t.decimal "25 - Leftist Alliance",                                        :precision => 39, :scale => 4
+    t.decimal "26 - National Forum count",                                    :precision => 32, :scale => 0
+    t.decimal "26 - National Forum",                                          :precision => 39, :scale => 4
+    t.decimal "27 - Free Democrats count",                                    :precision => 32, :scale => 0
+    t.decimal "27 - Free Democrats",                                          :precision => 39, :scale => 4
+    t.decimal "28 - In the Name of the Lord count",                           :precision => 32, :scale => 0
+    t.decimal "28 - In the Name of the Lord",                                 :precision => 39, :scale => 4
+    t.decimal "30 - Our Georgia count",                                       :precision => 32, :scale => 0
+    t.decimal "30 - Our Georgia",                                             :precision => 39, :scale => 4
+    t.decimal "41 - Georgian Dream count",                                    :precision => 32, :scale => 0
+    t.decimal "41 - Georgian Dream",                                          :precision => 39, :scale => 4
+  end
+
+  create_table "2016_parliamentary_party_list - csv", :id => false, :force => true do |t|
+    t.string  "shape",                                                       :limit => 16,                                :default => "", :null => false
+    t.string  "common_id",                                                   :limit => 20
+    t.string  "common_name"
+    t.decimal "Total Voter Turnout (#)",                                                   :precision => 32, :scale => 0
+    t.decimal "Total Voter Turnout (%)",                                                   :precision => 39, :scale => 4
+    t.decimal "Number of Precincts with Invalid Ballots from 0-1%",                        :precision => 42, :scale => 0
+    t.decimal "Number of Precincts with Invalid Ballots from 1-3%",                        :precision => 42, :scale => 0
+    t.decimal "Number of Precincts with Invalid Ballots from 3-5%",                        :precision => 42, :scale => 0
+    t.decimal "Number of Precincts with Invalid Ballots > 5%",                             :precision => 42, :scale => 0
+    t.decimal "Invalid Ballots (%)",                                                       :precision => 17, :scale => 4
+    t.decimal "Precincts with More Ballots Than Votes (#)",                                :precision => 32, :scale => 0
+    t.decimal "Precincts with More Ballots Than Votes (%)",                                :precision => 39, :scale => 4
+    t.decimal "More Ballots Than Votes (Average)",                                         :precision => 36, :scale => 4
+    t.integer "More Ballots Than Votes (#)"
+    t.decimal "Precincts with More Votes than Ballots (#)",                                :precision => 32, :scale => 0
+    t.decimal "Precincts with More Votes than Ballots (%)",                                :precision => 39, :scale => 4
+    t.decimal "More Votes than Ballots (Average)",                                         :precision => 36, :scale => 4
+    t.integer "More Votes than Ballots (#)"
+    t.decimal "Average votes per minute (08:00-12:00)",                                    :precision => 14, :scale => 4
+    t.decimal "Average votes per minute (12:00-17:00)",                                    :precision => 15, :scale => 4
+    t.decimal "Average votes per minute (17:00-20:00)",                                    :precision => 15, :scale => 4
+    t.decimal "Number of Precincts with votes per minute > 2 (08:00-12:00)",               :precision => 42, :scale => 0
+    t.decimal "Number of Precincts with votes per minute > 2 (12:00-17:00)",               :precision => 42, :scale => 0
+    t.decimal "Number of Precincts with votes per minute > 2 (17:00-20:00)",               :precision => 42, :scale => 0
+    t.decimal "Number of Precincts with votes per minute > 2",                             :precision => 44, :scale => 0
+    t.integer "Precincts Reported (#)",                                      :limit => 8
+    t.decimal "Precincts Reported (%)",                                                    :precision => 27, :scale => 4
+    t.decimal "State for the People",                                                      :precision => 39, :scale => 4
+    t.decimal "Progressive Democratic Movement",                                           :precision => 39, :scale => 4
+    t.decimal "Democratic Movement",                                                       :precision => 39, :scale => 4
+    t.decimal "Georgian Group",                                                            :precision => 39, :scale => 4
+    t.decimal "United National Movement",                                                  :precision => 39, :scale => 4
+    t.decimal "Republican Party",                                                          :precision => 39, :scale => 4
+    t.decimal "For United Georgia",                                                        :precision => 39, :scale => 4
+    t.decimal "Alliance of Patriots",                                                      :precision => 39, :scale => 4
+    t.decimal "Labour",                                                                    :precision => 39, :scale => 4
+    t.decimal "People's Government",                                                       :precision => 39, :scale => 4
+    t.decimal "Communist Party - Stalin",                                                  :precision => 39, :scale => 4
+    t.decimal "Georgia for Peace",                                                         :precision => 39, :scale => 4
+    t.decimal "Socialist Workers Party",                                                   :precision => 39, :scale => 4
+    t.decimal "United Communist Party",                                                    :precision => 39, :scale => 4
+    t.decimal "Georgia",                                                                   :precision => 39, :scale => 4
+    t.decimal "Georgian Idea",                                                             :precision => 39, :scale => 4
+    t.decimal "Industrialists - Our Homeland",                                             :precision => 39, :scale => 4
+    t.decimal "Merab Kostava Society",                                                     :precision => 39, :scale => 4
+    t.decimal "Ours - People's Party",                                                     :precision => 39, :scale => 4
+    t.decimal "Leftist Alliance",                                                          :precision => 39, :scale => 4
+    t.decimal "National Forum",                                                            :precision => 39, :scale => 4
+    t.decimal "Free Democrats",                                                            :precision => 39, :scale => 4
+    t.decimal "In the Name of the Lord",                                                   :precision => 39, :scale => 4
+    t.decimal "Our Georgia",                                                               :precision => 39, :scale => 4
+    t.decimal "Georgian Dream",                                                            :precision => 39, :scale => 4
+  end
+
+  create_table "2016_parliamentary_party_list - district", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id",                                     :limit => 8
+    t.string  "district_Name"
+    t.decimal "possible voters",                                              :precision => 32, :scale => 0
+    t.decimal "total ballots cast",                                           :precision => 32, :scale => 0
+    t.decimal "total valid ballots cast",                                     :precision => 32, :scale => 0
+    t.decimal "num invalid ballots from 0-1%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 1-3%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 3-5%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots >5%",                                      :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "percent voters voting",                                        :precision => 39, :scale => 4
+    t.decimal "num precincts logic fail",                                     :precision => 32, :scale => 0
+    t.decimal "percent precincts logic fail",                                 :precision => 39, :scale => 4
+    t.decimal "avg precinct logic fail difference",                           :precision => 36, :scale => 4
+    t.decimal "num precincts more ballots than votes",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more ballots than votes",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more ballots than votes",              :precision => 36, :scale => 4
+    t.decimal "num precincts more votes than ballots",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more votes than ballots",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more votes than ballots",              :precision => 36, :scale => 4
+    t.decimal "votes 8-12",                                                   :precision => 32, :scale => 0
+    t.decimal "votes 12-17",                                                  :precision => 33, :scale => 0
+    t.decimal "votes 17-20",                                                  :precision => 33, :scale => 0
+    t.decimal "avg votes/precinct 8-12",                                      :precision => 36, :scale => 4
+    t.decimal "avg votes/precinct 12-17",                                     :precision => 37, :scale => 4
+    t.decimal "avg votes/precinct 17-20",                                     :precision => 37, :scale => 4
+    t.decimal "vpm 8-12",                                                     :precision => 36, :scale => 4
+    t.decimal "vpm 12-17",                                                    :precision => 37, :scale => 4
+    t.decimal "vpm 17-20",                                                    :precision => 37, :scale => 4
+    t.decimal "avg vpm/precinct 8-12",                                        :precision => 40, :scale => 8
+    t.decimal "avg vpm/precinct 12-17",                                       :precision => 41, :scale => 8
+    t.decimal "avg vpm/precinct 17-20",                                       :precision => 41, :scale => 8
+    t.decimal "num precincts vpm 8-12 > 2",                                   :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 12-17 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 17-20 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm > 2",                                        :precision => 44, :scale => 0, :default => 0, :null => false
+    t.decimal "num_precincts_possible",                                       :precision => 32, :scale => 0
+    t.integer "num_precincts_reported_number",                   :limit => 8,                                :default => 0, :null => false
+    t.decimal "num_precincts_reported_percent",                               :precision => 27, :scale => 4
+    t.decimal "1 - State for the People count",                               :precision => 32, :scale => 0
+    t.decimal "1 - State for the People",                                     :precision => 39, :scale => 4
+    t.decimal "2 - Progressive Democratic Movement count",                    :precision => 32, :scale => 0
+    t.decimal "2 - Progressive Democratic Movement",                          :precision => 39, :scale => 4
+    t.decimal "3 - Democratic Movement count",                                :precision => 32, :scale => 0
+    t.decimal "3 - Democratic Movement",                                      :precision => 39, :scale => 4
+    t.decimal "4 - Georgian Group count",                                     :precision => 32, :scale => 0
+    t.decimal "4 - Georgian Group",                                           :precision => 39, :scale => 4
+    t.decimal "5 - United National Movement count",                           :precision => 32, :scale => 0
+    t.decimal "5 - United National Movement",                                 :precision => 39, :scale => 4
+    t.decimal "6 - Republican Party count",                                   :precision => 32, :scale => 0
+    t.decimal "6 - Republican Party",                                         :precision => 39, :scale => 4
+    t.decimal "7 - For United Georgia count",                                 :precision => 32, :scale => 0
+    t.decimal "7 - For United Georgia",                                       :precision => 39, :scale => 4
+    t.decimal "8 - Alliance of Patriots count",                               :precision => 32, :scale => 0
+    t.decimal "8 - Alliance of Patriots",                                     :precision => 39, :scale => 4
+    t.decimal "10 - Labour count",                                            :precision => 32, :scale => 0
+    t.decimal "10 - Labour",                                                  :precision => 39, :scale => 4
+    t.decimal "11 - People's Government count",                               :precision => 32, :scale => 0
+    t.decimal "11 - People's Government",                                     :precision => 39, :scale => 4
+    t.decimal "12 - Communist Party - Stalin count",                          :precision => 32, :scale => 0
+    t.decimal "12 - Communist Party - Stalin",                                :precision => 39, :scale => 4
+    t.decimal "14 - Georgia for Peace count",                                 :precision => 32, :scale => 0
+    t.decimal "14 - Georgia for Peace",                                       :precision => 39, :scale => 4
+    t.decimal "15 - Socialist Workers Party count",                           :precision => 32, :scale => 0
+    t.decimal "15 - Socialist Workers Party",                                 :precision => 39, :scale => 4
+    t.decimal "16 - United Communist Party count",                            :precision => 32, :scale => 0
+    t.decimal "16 - United Communist Party",                                  :precision => 39, :scale => 4
+    t.decimal "17 - Georgia count",                                           :precision => 32, :scale => 0
+    t.decimal "17 - Georgia",                                                 :precision => 39, :scale => 4
+    t.decimal "18 - Georgian Idea count",                                     :precision => 32, :scale => 0
+    t.decimal "18 - Georgian Idea",                                           :precision => 39, :scale => 4
+    t.decimal "19 - Industrialists - Our Homeland count",                     :precision => 32, :scale => 0
+    t.decimal "19 - Industrialists - Our Homeland",                           :precision => 39, :scale => 4
+    t.decimal "22 - Merab Kostava Society count",                             :precision => 32, :scale => 0
+    t.decimal "22 - Merab Kostava Society",                                   :precision => 39, :scale => 4
+    t.decimal "23 - Ours - People's Party count",                             :precision => 32, :scale => 0
+    t.decimal "23 - Ours - People's Party",                                   :precision => 39, :scale => 4
+    t.decimal "25 - Leftist Alliance count",                                  :precision => 32, :scale => 0
+    t.decimal "25 - Leftist Alliance",                                        :precision => 39, :scale => 4
+    t.decimal "26 - National Forum count",                                    :precision => 32, :scale => 0
+    t.decimal "26 - National Forum",                                          :precision => 39, :scale => 4
+    t.decimal "27 - Free Democrats count",                                    :precision => 32, :scale => 0
+    t.decimal "27 - Free Democrats",                                          :precision => 39, :scale => 4
+    t.decimal "28 - In the Name of the Lord count",                           :precision => 32, :scale => 0
+    t.decimal "28 - In the Name of the Lord",                                 :precision => 39, :scale => 4
+    t.decimal "30 - Our Georgia count",                                       :precision => 32, :scale => 0
+    t.decimal "30 - Our Georgia",                                             :precision => 39, :scale => 4
+    t.decimal "41 - Georgian Dream count",                                    :precision => 32, :scale => 0
+    t.decimal "41 - Georgian Dream",                                          :precision => 39, :scale => 4
+  end
+
+  create_table "2016_parliamentary_party_list - invalid ballots 0-1", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "num_invalid_ballots", :limit => 8, :default => 0, :null => false
+  end
+
+  create_table "2016_parliamentary_party_list - invalid ballots 1-3", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "num_invalid_ballots", :limit => 8, :default => 0, :null => false
+  end
+
+  create_table "2016_parliamentary_party_list - invalid ballots 3-5", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "num_invalid_ballots", :limit => 8, :default => 0, :null => false
+  end
+
+  create_table "2016_parliamentary_party_list - invalid ballots >5", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "num_invalid_ballots", :limit => 8, :default => 0, :null => false
+  end
+
+  create_table "2016_parliamentary_party_list - precinct", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.string  "district_Name"
+    t.integer "precinct_id"
+    t.string  "precinct_name",                             :limit => 23
+    t.integer "possible voters"
+    t.integer "total ballots cast"
+    t.integer "total valid ballots cast"
+    t.decimal "percent invalid ballots",                                 :precision => 17, :scale => 4
+    t.decimal "percent voters voting",                                   :precision => 17, :scale => 4
+    t.integer "logic_check_fail"
+    t.integer "logic_check_difference"
+    t.integer "more_ballots_than_votes_flag"
+    t.integer "more_ballots_than_votes"
+    t.integer "more_votes_than_ballots_flag"
+    t.integer "more_votes_than_ballots"
+    t.integer "votes 8-12"
+    t.integer "votes 12-17",                               :limit => 8
+    t.integer "votes 17-20",                               :limit => 8
+    t.decimal "vpm 8-12",                                                :precision => 14, :scale => 4
+    t.decimal "vpm 12-17",                                               :precision => 15, :scale => 4
+    t.decimal "vpm 17-20",                                               :precision => 15, :scale => 4
+    t.integer "1 - State for the People count"
+    t.decimal "1 - State for the People",                                :precision => 17, :scale => 4
+    t.integer "2 - Progressive Democratic Movement count"
+    t.decimal "2 - Progressive Democratic Movement",                     :precision => 17, :scale => 4
+    t.integer "3 - Democratic Movement count"
+    t.decimal "3 - Democratic Movement",                                 :precision => 17, :scale => 4
+    t.integer "4 - Georgian Group count"
+    t.decimal "4 - Georgian Group",                                      :precision => 17, :scale => 4
+    t.integer "5 - United National Movement count"
+    t.decimal "5 - United National Movement",                            :precision => 17, :scale => 4
+    t.integer "6 - Republican Party count"
+    t.decimal "6 - Republican Party",                                    :precision => 17, :scale => 4
+    t.integer "7 - For United Georgia count"
+    t.decimal "7 - For United Georgia",                                  :precision => 17, :scale => 4
+    t.integer "8 - Alliance of Patriots count"
+    t.decimal "8 - Alliance of Patriots",                                :precision => 17, :scale => 4
+    t.integer "10 - Labour count"
+    t.decimal "10 - Labour",                                             :precision => 17, :scale => 4
+    t.integer "11 - People's Government count"
+    t.decimal "11 - People's Government",                                :precision => 17, :scale => 4
+    t.integer "12 - Communist Party - Stalin count"
+    t.decimal "12 - Communist Party - Stalin",                           :precision => 17, :scale => 4
+    t.integer "14 - Georgia for Peace count"
+    t.decimal "14 - Georgia for Peace",                                  :precision => 17, :scale => 4
+    t.integer "15 - Socialist Workers Party count"
+    t.decimal "15 - Socialist Workers Party",                            :precision => 17, :scale => 4
+    t.integer "16 - United Communist Party count"
+    t.decimal "16 - United Communist Party",                             :precision => 17, :scale => 4
+    t.integer "17 - Georgia count"
+    t.decimal "17 - Georgia",                                            :precision => 17, :scale => 4
+    t.integer "18 - Georgian Idea count"
+    t.decimal "18 - Georgian Idea",                                      :precision => 17, :scale => 4
+    t.integer "19 - Industrialists - Our Homeland count"
+    t.decimal "19 - Industrialists - Our Homeland",                      :precision => 17, :scale => 4
+    t.integer "22 - Merab Kostava Society count"
+    t.decimal "22 - Merab Kostava Society",                              :precision => 17, :scale => 4
+    t.integer "23 - Ours - People's Party count"
+    t.decimal "23 - Ours - People's Party",                              :precision => 17, :scale => 4
+    t.integer "25 - Leftist Alliance count"
+    t.decimal "25 - Leftist Alliance",                                   :precision => 17, :scale => 4
+    t.integer "26 - National Forum count"
+    t.decimal "26 - National Forum",                                     :precision => 17, :scale => 4
+    t.integer "27 - Free Democrats count"
+    t.decimal "27 - Free Democrats",                                     :precision => 17, :scale => 4
+    t.integer "28 - In the Name of the Lord count"
+    t.decimal "28 - In the Name of the Lord",                            :precision => 17, :scale => 4
+    t.integer "30 - Our Georgia count"
+    t.decimal "30 - Our Georgia",                                        :precision => 17, :scale => 4
+    t.integer "41 - Georgian Dream count"
+    t.decimal "41 - Georgian Dream",                                     :precision => 17, :scale => 4
+  end
+
+  create_table "2016_parliamentary_party_list - precinct count", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id",   :default => 0, :null => false
+    t.integer "num_precincts"
+  end
+
+  add_index "2016_parliamentary_party_list - precinct count", ["district_id"], :name => "district"
+  add_index "2016_parliamentary_party_list - precinct count", ["region"], :name => "region"
+
+  create_table "2016_parliamentary_party_list - precinct count by country", :id => false, :force => true do |t|
+    t.decimal "num_precincts", :precision => 32, :scale => 0
+  end
+
+  create_table "2016_parliamentary_party_list - precinct count by district", :id => false, :force => true do |t|
+    t.integer "district_id",                                  :default => 0, :null => false
+    t.decimal "num_precincts", :precision => 32, :scale => 0
+  end
+
+  create_table "2016_parliamentary_party_list - precinct count by region", :id => false, :force => true do |t|
+    t.string  "region"
+    t.decimal "num_precincts", :precision => 32, :scale => 0
+  end
+
+  create_table "2016_parliamentary_party_list - raw", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.string  "district_name"
+    t.integer "precinct_id"
+    t.integer "attached_precinct_id"
+    t.integer "num_possible_voters"
+    t.integer "num_special_voters"
+    t.integer "num_at_12"
+    t.integer "num_at_17"
+    t.integer "num_votes"
+    t.integer "num_ballots"
+    t.integer "num_invalid_votes"
+    t.integer "num_valid_votes"
+    t.integer "logic_check_fail"
+    t.integer "logic_check_difference"
+    t.integer "more_ballots_than_votes_flag"
+    t.integer "more_ballots_than_votes"
+    t.integer "more_votes_than_ballots_flag"
+    t.integer "more_votes_than_ballots"
+    t.integer "1 - State for the People"
+    t.integer "2 - Progressive Democratic Movement"
+    t.integer "3 - Democratic Movement"
+    t.integer "4 - Georgian Group"
+    t.integer "5 - United National Movement"
+    t.integer "6 - Republican Party"
+    t.integer "7 - For United Georgia"
+    t.integer "8 - Alliance of Patriots"
+    t.integer "10 - Labour"
+    t.integer "11 - People's Government"
+    t.integer "12 - Communist Party - Stalin"
+    t.integer "14 - Georgia for Peace"
+    t.integer "15 - Socialist Workers Party"
+    t.integer "16 - United Communist Party"
+    t.integer "17 - Georgia"
+    t.integer "18 - Georgian Idea"
+    t.integer "19 - Industrialists - Our Homeland"
+    t.integer "22 - Merab Kostava Society"
+    t.integer "23 - Ours - People's Party"
+    t.integer "25 - Leftist Alliance"
+    t.integer "26 - National Forum"
+    t.integer "27 - Free Democrats"
+    t.integer "28 - In the Name of the Lord"
+    t.integer "30 - Our Georgia"
+    t.integer "41 - Georgian Dream"
+  end
+
+  create_table "2016_parliamentary_party_list - region", :id => false, :force => true do |t|
+    t.string  "region"
+    t.decimal "possible voters",                                              :precision => 32, :scale => 0
+    t.decimal "total ballots cast",                                           :precision => 32, :scale => 0
+    t.decimal "total valid ballots cast",                                     :precision => 32, :scale => 0
+    t.decimal "num invalid ballots from 0-1%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 1-3%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 3-5%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots >5%",                                      :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "percent voters voting",                                        :precision => 39, :scale => 4
+    t.decimal "num precincts logic fail",                                     :precision => 32, :scale => 0
+    t.decimal "percent precincts logic fail",                                 :precision => 39, :scale => 4
+    t.decimal "avg precinct logic fail difference",                           :precision => 36, :scale => 4
+    t.decimal "num precincts more ballots than votes",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more ballots than votes",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more ballots than votes",              :precision => 36, :scale => 4
+    t.decimal "num precincts more votes than ballots",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more votes than ballots",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more votes than ballots",              :precision => 36, :scale => 4
+    t.decimal "votes 8-12",                                                   :precision => 32, :scale => 0
+    t.decimal "votes 12-17",                                                  :precision => 33, :scale => 0
+    t.decimal "votes 17-20",                                                  :precision => 33, :scale => 0
+    t.decimal "avg votes/precinct 8-12",                                      :precision => 36, :scale => 4
+    t.decimal "avg votes/precinct 12-17",                                     :precision => 37, :scale => 4
+    t.decimal "avg votes/precinct 17-20",                                     :precision => 37, :scale => 4
+    t.decimal "vpm 8-12",                                                     :precision => 36, :scale => 4
+    t.decimal "vpm 12-17",                                                    :precision => 37, :scale => 4
+    t.decimal "vpm 17-20",                                                    :precision => 37, :scale => 4
+    t.decimal "avg vpm/precinct 8-12",                                        :precision => 40, :scale => 8
+    t.decimal "avg vpm/precinct 12-17",                                       :precision => 41, :scale => 8
+    t.decimal "avg vpm/precinct 17-20",                                       :precision => 41, :scale => 8
+    t.decimal "num precincts vpm 8-12 > 2",                                   :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 12-17 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 17-20 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm > 2",                                        :precision => 44, :scale => 0, :default => 0, :null => false
+    t.decimal "num_precincts_possible",                                       :precision => 32, :scale => 0
+    t.integer "num_precincts_reported_number",                   :limit => 8,                                :default => 0, :null => false
+    t.decimal "num_precincts_reported_percent",                               :precision => 27, :scale => 4
+    t.decimal "1 - State for the People count",                               :precision => 32, :scale => 0
+    t.decimal "1 - State for the People",                                     :precision => 39, :scale => 4
+    t.decimal "2 - Progressive Democratic Movement count",                    :precision => 32, :scale => 0
+    t.decimal "2 - Progressive Democratic Movement",                          :precision => 39, :scale => 4
+    t.decimal "3 - Democratic Movement count",                                :precision => 32, :scale => 0
+    t.decimal "3 - Democratic Movement",                                      :precision => 39, :scale => 4
+    t.decimal "4 - Georgian Group count",                                     :precision => 32, :scale => 0
+    t.decimal "4 - Georgian Group",                                           :precision => 39, :scale => 4
+    t.decimal "5 - United National Movement count",                           :precision => 32, :scale => 0
+    t.decimal "5 - United National Movement",                                 :precision => 39, :scale => 4
+    t.decimal "6 - Republican Party count",                                   :precision => 32, :scale => 0
+    t.decimal "6 - Republican Party",                                         :precision => 39, :scale => 4
+    t.decimal "7 - For United Georgia count",                                 :precision => 32, :scale => 0
+    t.decimal "7 - For United Georgia",                                       :precision => 39, :scale => 4
+    t.decimal "8 - Alliance of Patriots count",                               :precision => 32, :scale => 0
+    t.decimal "8 - Alliance of Patriots",                                     :precision => 39, :scale => 4
+    t.decimal "10 - Labour count",                                            :precision => 32, :scale => 0
+    t.decimal "10 - Labour",                                                  :precision => 39, :scale => 4
+    t.decimal "11 - People's Government count",                               :precision => 32, :scale => 0
+    t.decimal "11 - People's Government",                                     :precision => 39, :scale => 4
+    t.decimal "12 - Communist Party - Stalin count",                          :precision => 32, :scale => 0
+    t.decimal "12 - Communist Party - Stalin",                                :precision => 39, :scale => 4
+    t.decimal "14 - Georgia for Peace count",                                 :precision => 32, :scale => 0
+    t.decimal "14 - Georgia for Peace",                                       :precision => 39, :scale => 4
+    t.decimal "15 - Socialist Workers Party count",                           :precision => 32, :scale => 0
+    t.decimal "15 - Socialist Workers Party",                                 :precision => 39, :scale => 4
+    t.decimal "16 - United Communist Party count",                            :precision => 32, :scale => 0
+    t.decimal "16 - United Communist Party",                                  :precision => 39, :scale => 4
+    t.decimal "17 - Georgia count",                                           :precision => 32, :scale => 0
+    t.decimal "17 - Georgia",                                                 :precision => 39, :scale => 4
+    t.decimal "18 - Georgian Idea count",                                     :precision => 32, :scale => 0
+    t.decimal "18 - Georgian Idea",                                           :precision => 39, :scale => 4
+    t.decimal "19 - Industrialists - Our Homeland count",                     :precision => 32, :scale => 0
+    t.decimal "19 - Industrialists - Our Homeland",                           :precision => 39, :scale => 4
+    t.decimal "22 - Merab Kostava Society count",                             :precision => 32, :scale => 0
+    t.decimal "22 - Merab Kostava Society",                                   :precision => 39, :scale => 4
+    t.decimal "23 - Ours - People's Party count",                             :precision => 32, :scale => 0
+    t.decimal "23 - Ours - People's Party",                                   :precision => 39, :scale => 4
+    t.decimal "25 - Leftist Alliance count",                                  :precision => 32, :scale => 0
+    t.decimal "25 - Leftist Alliance",                                        :precision => 39, :scale => 4
+    t.decimal "26 - National Forum count",                                    :precision => 32, :scale => 0
+    t.decimal "26 - National Forum",                                          :precision => 39, :scale => 4
+    t.decimal "27 - Free Democrats count",                                    :precision => 32, :scale => 0
+    t.decimal "27 - Free Democrats",                                          :precision => 39, :scale => 4
+    t.decimal "28 - In the Name of the Lord count",                           :precision => 32, :scale => 0
+    t.decimal "28 - In the Name of the Lord",                                 :precision => 39, :scale => 4
+    t.decimal "30 - Our Georgia count",                                       :precision => 32, :scale => 0
+    t.decimal "30 - Our Georgia",                                             :precision => 39, :scale => 4
+    t.decimal "41 - Georgian Dream count",                                    :precision => 32, :scale => 0
+    t.decimal "41 - Georgian Dream",                                          :precision => 39, :scale => 4
+  end
+
+  create_table "2016_parliamentary_party_list - tbilisi district", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.string  "district_Name"
+    t.decimal "possible voters",                                              :precision => 32, :scale => 0
+    t.decimal "total ballots cast",                                           :precision => 32, :scale => 0
+    t.decimal "total valid ballots cast",                                     :precision => 32, :scale => 0
+    t.decimal "num invalid ballots from 0-1%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 1-3%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots from 3-5%",                                :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num invalid ballots >5%",                                      :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "percent voters voting",                                        :precision => 39, :scale => 4
+    t.decimal "num precincts logic fail",                                     :precision => 32, :scale => 0
+    t.decimal "percent precincts logic fail",                                 :precision => 39, :scale => 4
+    t.decimal "avg precinct logic fail difference",                           :precision => 36, :scale => 4
+    t.decimal "num precincts more ballots than votes",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more ballots than votes",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more ballots than votes",              :precision => 36, :scale => 4
+    t.decimal "num precincts more votes than ballots",                        :precision => 32, :scale => 0
+    t.decimal "percent precincts more votes than ballots",                    :precision => 39, :scale => 4
+    t.decimal "avg precinct difference more votes than ballots",              :precision => 36, :scale => 4
+    t.decimal "votes 8-12",                                                   :precision => 32, :scale => 0
+    t.decimal "votes 12-17",                                                  :precision => 33, :scale => 0
+    t.decimal "votes 17-20",                                                  :precision => 33, :scale => 0
+    t.decimal "avg votes/precinct 8-12",                                      :precision => 36, :scale => 4
+    t.decimal "avg votes/precinct 12-17",                                     :precision => 37, :scale => 4
+    t.decimal "avg votes/precinct 17-20",                                     :precision => 37, :scale => 4
+    t.decimal "vpm 8-12",                                                     :precision => 36, :scale => 4
+    t.decimal "vpm 12-17",                                                    :precision => 37, :scale => 4
+    t.decimal "vpm 17-20",                                                    :precision => 37, :scale => 4
+    t.decimal "avg vpm/precinct 8-12",                                        :precision => 40, :scale => 8
+    t.decimal "avg vpm/precinct 12-17",                                       :precision => 41, :scale => 8
+    t.decimal "avg vpm/precinct 17-20",                                       :precision => 41, :scale => 8
+    t.decimal "num precincts vpm 8-12 > 2",                                   :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 12-17 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm 17-20 > 2",                                  :precision => 42, :scale => 0, :default => 0, :null => false
+    t.decimal "num precincts vpm > 2",                                        :precision => 44, :scale => 0, :default => 0, :null => false
+    t.decimal "num_precincts_possible",                                       :precision => 32, :scale => 0
+    t.integer "num_precincts_reported_number",                   :limit => 8,                                :default => 0, :null => false
+    t.decimal "num_precincts_reported_percent",                               :precision => 27, :scale => 4
+    t.decimal "1 - State for the People count",                               :precision => 32, :scale => 0
+    t.decimal "1 - State for the People",                                     :precision => 39, :scale => 4
+    t.decimal "2 - Progressive Democratic Movement count",                    :precision => 32, :scale => 0
+    t.decimal "2 - Progressive Democratic Movement",                          :precision => 39, :scale => 4
+    t.decimal "3 - Democratic Movement count",                                :precision => 32, :scale => 0
+    t.decimal "3 - Democratic Movement",                                      :precision => 39, :scale => 4
+    t.decimal "4 - Georgian Group count",                                     :precision => 32, :scale => 0
+    t.decimal "4 - Georgian Group",                                           :precision => 39, :scale => 4
+    t.decimal "5 - United National Movement count",                           :precision => 32, :scale => 0
+    t.decimal "5 - United National Movement",                                 :precision => 39, :scale => 4
+    t.decimal "6 - Republican Party count",                                   :precision => 32, :scale => 0
+    t.decimal "6 - Republican Party",                                         :precision => 39, :scale => 4
+    t.decimal "7 - For United Georgia count",                                 :precision => 32, :scale => 0
+    t.decimal "7 - For United Georgia",                                       :precision => 39, :scale => 4
+    t.decimal "8 - Alliance of Patriots count",                               :precision => 32, :scale => 0
+    t.decimal "8 - Alliance of Patriots",                                     :precision => 39, :scale => 4
+    t.decimal "10 - Labour count",                                            :precision => 32, :scale => 0
+    t.decimal "10 - Labour",                                                  :precision => 39, :scale => 4
+    t.decimal "11 - People's Government count",                               :precision => 32, :scale => 0
+    t.decimal "11 - People's Government",                                     :precision => 39, :scale => 4
+    t.decimal "12 - Communist Party - Stalin count",                          :precision => 32, :scale => 0
+    t.decimal "12 - Communist Party - Stalin",                                :precision => 39, :scale => 4
+    t.decimal "14 - Georgia for Peace count",                                 :precision => 32, :scale => 0
+    t.decimal "14 - Georgia for Peace",                                       :precision => 39, :scale => 4
+    t.decimal "15 - Socialist Workers Party count",                           :precision => 32, :scale => 0
+    t.decimal "15 - Socialist Workers Party",                                 :precision => 39, :scale => 4
+    t.decimal "16 - United Communist Party count",                            :precision => 32, :scale => 0
+    t.decimal "16 - United Communist Party",                                  :precision => 39, :scale => 4
+    t.decimal "17 - Georgia count",                                           :precision => 32, :scale => 0
+    t.decimal "17 - Georgia",                                                 :precision => 39, :scale => 4
+    t.decimal "18 - Georgian Idea count",                                     :precision => 32, :scale => 0
+    t.decimal "18 - Georgian Idea",                                           :precision => 39, :scale => 4
+    t.decimal "19 - Industrialists - Our Homeland count",                     :precision => 32, :scale => 0
+    t.decimal "19 - Industrialists - Our Homeland",                           :precision => 39, :scale => 4
+    t.decimal "22 - Merab Kostava Society count",                             :precision => 32, :scale => 0
+    t.decimal "22 - Merab Kostava Society",                                   :precision => 39, :scale => 4
+    t.decimal "23 - Ours - People's Party count",                             :precision => 32, :scale => 0
+    t.decimal "23 - Ours - People's Party",                                   :precision => 39, :scale => 4
+    t.decimal "25 - Leftist Alliance count",                                  :precision => 32, :scale => 0
+    t.decimal "25 - Leftist Alliance",                                        :precision => 39, :scale => 4
+    t.decimal "26 - National Forum count",                                    :precision => 32, :scale => 0
+    t.decimal "26 - National Forum",                                          :precision => 39, :scale => 4
+    t.decimal "27 - Free Democrats count",                                    :precision => 32, :scale => 0
+    t.decimal "27 - Free Democrats",                                          :precision => 39, :scale => 4
+    t.decimal "28 - In the Name of the Lord count",                           :precision => 32, :scale => 0
+    t.decimal "28 - In the Name of the Lord",                                 :precision => 39, :scale => 4
+    t.decimal "30 - Our Georgia count",                                       :precision => 32, :scale => 0
+    t.decimal "30 - Our Georgia",                                             :precision => 39, :scale => 4
+    t.decimal "41 - Georgian Dream count",                                    :precision => 32, :scale => 0
+    t.decimal "41 - Georgian Dream",                                          :precision => 39, :scale => 4
+  end
+
+  create_table "2016_parliamentary_party_list - tbilisi precinct", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.string  "district_Name"
+    t.integer "precinct_id"
+    t.string  "precinct_name",                             :limit => 23
+    t.integer "possible voters"
+    t.integer "total ballots cast"
+    t.integer "total valid ballots cast"
+    t.decimal "percent invalid ballots",                                 :precision => 17, :scale => 4
+    t.decimal "percent voters voting",                                   :precision => 17, :scale => 4
+    t.integer "logic_check_fail"
+    t.integer "logic_check_difference"
+    t.integer "more_ballots_than_votes_flag"
+    t.integer "more_ballots_than_votes"
+    t.integer "more_votes_than_ballots_flag"
+    t.integer "more_votes_than_ballots"
+    t.integer "votes 8-12"
+    t.integer "votes 12-17",                               :limit => 8
+    t.integer "votes 17-20",                               :limit => 8
+    t.decimal "vpm 8-12",                                                :precision => 14, :scale => 4
+    t.decimal "vpm 12-17",                                               :precision => 15, :scale => 4
+    t.decimal "vpm 17-20",                                               :precision => 15, :scale => 4
+    t.integer "1 - State for the People count"
+    t.decimal "1 - State for the People",                                :precision => 17, :scale => 4
+    t.integer "2 - Progressive Democratic Movement count"
+    t.decimal "2 - Progressive Democratic Movement",                     :precision => 17, :scale => 4
+    t.integer "3 - Democratic Movement count"
+    t.decimal "3 - Democratic Movement",                                 :precision => 17, :scale => 4
+    t.integer "4 - Georgian Group count"
+    t.decimal "4 - Georgian Group",                                      :precision => 17, :scale => 4
+    t.integer "5 - United National Movement count"
+    t.decimal "5 - United National Movement",                            :precision => 17, :scale => 4
+    t.integer "6 - Republican Party count"
+    t.decimal "6 - Republican Party",                                    :precision => 17, :scale => 4
+    t.integer "7 - For United Georgia count"
+    t.decimal "7 - For United Georgia",                                  :precision => 17, :scale => 4
+    t.integer "8 - Alliance of Patriots count"
+    t.decimal "8 - Alliance of Patriots",                                :precision => 17, :scale => 4
+    t.integer "10 - Labour count"
+    t.decimal "10 - Labour",                                             :precision => 17, :scale => 4
+    t.integer "11 - People's Government count"
+    t.decimal "11 - People's Government",                                :precision => 17, :scale => 4
+    t.integer "12 - Communist Party - Stalin count"
+    t.decimal "12 - Communist Party - Stalin",                           :precision => 17, :scale => 4
+    t.integer "14 - Georgia for Peace count"
+    t.decimal "14 - Georgia for Peace",                                  :precision => 17, :scale => 4
+    t.integer "15 - Socialist Workers Party count"
+    t.decimal "15 - Socialist Workers Party",                            :precision => 17, :scale => 4
+    t.integer "16 - United Communist Party count"
+    t.decimal "16 - United Communist Party",                             :precision => 17, :scale => 4
+    t.integer "17 - Georgia count"
+    t.decimal "17 - Georgia",                                            :precision => 17, :scale => 4
+    t.integer "18 - Georgian Idea count"
+    t.decimal "18 - Georgian Idea",                                      :precision => 17, :scale => 4
+    t.integer "19 - Industrialists - Our Homeland count"
+    t.decimal "19 - Industrialists - Our Homeland",                      :precision => 17, :scale => 4
+    t.integer "22 - Merab Kostava Society count"
+    t.decimal "22 - Merab Kostava Society",                              :precision => 17, :scale => 4
+    t.integer "23 - Ours - People's Party count"
+    t.decimal "23 - Ours - People's Party",                              :precision => 17, :scale => 4
+    t.integer "25 - Leftist Alliance count"
+    t.decimal "25 - Leftist Alliance",                                   :precision => 17, :scale => 4
+    t.integer "26 - National Forum count"
+    t.decimal "26 - National Forum",                                     :precision => 17, :scale => 4
+    t.integer "27 - Free Democrats count"
+    t.decimal "27 - Free Democrats",                                     :precision => 17, :scale => 4
+    t.integer "28 - In the Name of the Lord count"
+    t.decimal "28 - In the Name of the Lord",                            :precision => 17, :scale => 4
+    t.integer "30 - Our Georgia count"
+    t.decimal "30 - Our Georgia",                                        :precision => 17, :scale => 4
+    t.integer "41 - Georgian Dream count"
+    t.decimal "41 - Georgian Dream",                                     :precision => 17, :scale => 4
+  end
+
+  create_table "2016_parliamentary_party_list - vpm 12-17>2", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "vpm > 2",     :limit => 8, :default => 0, :null => false
+  end
+
+  create_table "2016_parliamentary_party_list - vpm 17-20>2", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "vpm > 2",     :limit => 8, :default => 0, :null => false
+  end
+
+  create_table "2016_parliamentary_party_list - vpm 8-12>2", :id => false, :force => true do |t|
+    t.string  "region"
+    t.integer "district_id"
+    t.integer "precinct_id"
+    t.integer "vpm > 2",     :limit => 8, :default => 0, :null => false
+  end
+
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
     t.integer  "district_id",               :limit => 2
@@ -2029,12 +3375,14 @@ ActiveRecord::Schema.define(:version => 20161003191155) do
 
   create_table "parties", :force => true do |t|
     t.integer  "election_id"
-    t.integer  "number",      :limit => 1
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
+    t.integer  "number",         :limit => 1
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
+    t.boolean  "is_independent",              :default => false
   end
 
   add_index "parties", ["election_id"], :name => "index_parties_on_election_id"
+  add_index "parties", ["is_independent"], :name => "index_parties_on_is_independent"
 
   create_table "party_translations", :force => true do |t|
     t.integer  "party_id"

@@ -58,9 +58,12 @@ en:
       new: New
     common:
       app_name: Georgian Election Protocols
+      app_slogan: To help us ensure your vote counts, help us count.
+      app_description: As a civic tech organization, JumpStart often tries to find solutions to these sorts of transparency shortcomings and we often use technology to do it. This year, JumpStart is building a web-based tool that enables anyone to help us take the precinct information, which is uploaded to the CEC's website in the form of scanned documents, and digitize it so that organizations can then analyze it in time to have an impact - before the outcome of the elections has been decided. With the support of the National Democratic Institute and volunteers in Georgia and all over the world, JumpStart is spearheading a massive effort to digitize all the precinct information within 48 hours after polling stations close.
       added_on: "Added on: %{date}"
       na: 'N/A'
       submit: Submit
+      help_us: Want to help us?
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
@@ -117,12 +120,13 @@ en:
       election_data: Election Data Migration
       sign_out: Sign Out
       sign_in: Sign In
-      js_link_title: "Visit JumpStart Georgia's website"
-      js_link_text: Built by
-      js_slogan: JumpStart Georgia - Informing Communities with Data and Design
       training: Training
       enter_data: Enter Data
       download: Download Data
+      about: About
+      js_link_title: "Visit JumpStart Georgia's website"
+      js_link_text: Built by
+      js_slogan: JumpStart Georgia - Informing Communities with Data and Design
     unsupported_browser:
       title: Unsupported Browser
       p1: We are sorry to report that your browser is out of date and will not properly render the content from this website.
@@ -214,6 +218,23 @@ en:
         protocols_found: Protocols Found
         protocols_not_entered: Protocols Not Entered
         protocols_validated: Protocols Validated
+      stay_tuned:
+        header: Stay Tuned!
+        text: The following elections will soon have protocols for us to enter.
+      want_help:
+        header: Want to Help Us?
+        text: |
+          JumpStart welcomes any and all support for this effort, including YOUR time. By volunteering your time to digitize even a small number of precinct ballot protocols, you will help us achieve our goal. The data will be available to everyone for download throughout the night in spreadsheet format and will regularly feed into the <a href="http://elections.jumpstart.ge/" target="_blank">Georgian Election Data Portal</a> to make it easy for people to explore, visually, what the data means.
+
+          To help us ensure your vote counts, help us count.
+
+          <a href="http://bit.ly/Icounted" target="_blank">Register to receive an account.</a>
+      no_elections:
+        header: It is a quiet time for elections
+        text: |
+          At this time, no data entry of election protocols is occurring or is planned for the near future.
+
+          Don't fret! You can <a href="/en/download">download the data from existing elections</a>.
     training:
       title: Training Center
       p1: You must successfully complete 5 training protocols before you can enter data for real protocols.  So far you have completed %{count}.
@@ -251,3 +272,5 @@ en:
         protocols_found: Protocols Found
         protocols_not_entered: Protocols Not Entered
         protocols_validated: Protocols Validated
+    about:
+      title: About

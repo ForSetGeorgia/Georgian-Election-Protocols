@@ -31,6 +31,7 @@ BootstrapStarter::Application.routes.draw do
 		match '/download', :to => 'root#download', :as => :download, :via => :get
 		match '/generate_spreadsheet/:id', :to => 'root#generate_spreadsheet', :as => :generate_spreadsheet, :via => :get, :default => {:format => 'csv'}
 		match '/election_data_spreadsheet', :to => 'root#election_data_spreadsheet', :as => :election_data_spreadsheet, :via => :get, :default => {:format => 'csv'}
+    match '/about', :to => 'root#about', :as => :about, :via => :get
 
 
 

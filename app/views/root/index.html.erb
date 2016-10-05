@@ -1,7 +1,7 @@
-<% if @elections.present? %>
+<div id="landing_page">
+  <% if !@elections.present? %>
 
-  <% if @overall_stats.present? %>
-    <div id="landing_page">
+    <% if @overall_stats.present? %>
       <h2><%= t('.stats_header') %></h2>
       <div class="tabs">
         <ul class="nav nav-tabs">
@@ -109,125 +109,143 @@
             </div>
           <% end %>
         </div>
-      </div>
-    <% end %>
+      <% end %>
 
 
-    <% if @overall_stats_by_district.present? %>
-      <h2><%= t('.overall_stats_by_district.header') %></h2>
-      <div class="tabs">
-        <ul class="nav nav-tabs">
-          <% @elections.each_with_index do |election, index| %>
-            <% active = index == 0 ? 'active' : '' %>
-            <li class="<%= active %>"><a href="#district_stats_<%= election.analysis_table_name %>" data-toggle="tab"><%= election.name %></a></li>
+      <% if @overall_stats_by_district.present? %>
+        <h2><%= t('.overall_stats_by_district.header') %></h2>
+        <div class="tabs">
+          <ul class="nav nav-tabs">
+            <% @elections.each_with_index do |election, index| %>
+              <% active = index == 0 ? 'active' : '' %>
+              <li class="<%= active %>"><a href="#district_stats_<%= election.analysis_table_name %>" data-toggle="tab"><%= election.name %></a></li>
+            <% end %>
+          </ul>
+          <div class="tab-content">
+            <% @elections.each_with_index do |election, index| %>
+              <% active = index == 0 ? 'active' : '' %>
+              <div class="tab-pane fade in <%= active %>" id="district_stats_<%= election.analysis_table_name %>">
+                <% stats = @overall_stats_by_district.select{|x| x[:election_id] == election.id}.first %>
+                <% if stats.present? %>
+                  <table class="table table-striped overall_stats_by_district">
+                    <thead>
+                      <tr>
+                        <th>
+                          <%= t('.overall_stats_by_district.region') %>
+                        </th>
+                        <th>
+                          <%= t('.overall_stats_by_district.district') %>
+                        </th>
+                        <th>
+                          <%= t('.overall_stats_by_district.district_id') %>
+                        </th>
+                        <th>
+                          <%= t('.overall_stats_by_district.precincts') %> (#)
+                        </th>
+                        <th>
+                          <%= t('.overall_stats_by_district.protocols_missing') %> (#)
+                        </th>
+                        <th>
+                          <%= t('.overall_stats_by_district.protocols_found') %> (#)
+                        </th>
+                        <th>
+                          <%= t('.overall_stats_by_district.protocols_not_entered') %> (#)
+                        </th>
+                        <th>
+                          <%= t('.overall_stats_by_district.protocols_validated') %> (#)
+                        </th>
+                        <th>
+                          <%= t('.overall_stats_by_district.protocols_missing') %> (%)
+                        </th>
+                        <th>
+                          <%= t('.overall_stats_by_district.protocols_found') %> (%)
+                        </th>
+                        <th>
+                          <%= t('.overall_stats_by_district.protocols_not_entered') %> (%)
+                        </th>
+                        <th>
+                          <%= t('.overall_stats_by_district.protocols_validated') %> (%)
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% stats[:districts].each do |district| %>
+                        <tr>
+                          <td>
+                            <%= district[:region] %>
+                          </td>
+                          <td>
+                            <%= district[:district] %>
+                          </td>
+                          <td>
+                            <%= district[:district_id] %>
+                          </td>
+                          <td>
+                            <%= district[:precincts] %>
+                          </td>
+                          <td>
+                            <%= district[:protocols_missing][:number] %>
+                          </td>
+                          <td>
+                            <%= district[:protocols_found][:number] %>
+                          </td>
+                          <td>
+                            <%= district[:protocols_not_entered][:number] %>
+                          </td>
+                          <td>
+                            <%= district[:protocols_validated][:number] %>
+                          </td>
+                          <td>
+                            <%= district[:protocols_missing][:percent] %>
+                          </td>
+                          <td>
+                            <%= district[:protocols_found][:percent] %>
+                          </td>
+                          <td>
+                            <%= district[:protocols_not_entered][:percent] %>
+                          </td>
+                          <td>
+                            <%= district[:protocols_validated][:percent] %>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+  <% elsif @elections_coming_up.present? %>
+
+    <div class="row-fluid elections-coming-up">
+      <div class="span4">
+        <h2><%= t('.stay_tuned.header') %></h2>
+
+        <p><%= t('.stay_tuned.text') %></p>
+        <ul>
+          <% @elections_coming_up.each do |election| %>
+            <li><%= "#{election.name} (#{l election.election_at})" %></li>
           <% end %>
         </ul>
-        <div class="tab-content">
-          <% @elections.each_with_index do |election, index| %>
-            <% active = index == 0 ? 'active' : '' %>
-            <div class="tab-pane fade in <%= active %>" id="district_stats_<%= election.analysis_table_name %>">
-              <% stats = @overall_stats_by_district.select{|x| x[:election_id] == election.id}.first %>
-              <% if stats.present? %>
-                <table class="table table-striped overall_stats_by_district">
-                  <thead>
-                    <tr>
-                      <th>
-                        <%= t('.overall_stats_by_district.region') %>
-                      </th>
-                      <th>
-                        <%= t('.overall_stats_by_district.district') %>
-                      </th>
-                      <th>
-                        <%= t('.overall_stats_by_district.district_id') %>
-                      </th>
-                      <th>
-                        <%= t('.overall_stats_by_district.precincts') %> (#)
-                      </th>
-                      <th>
-                        <%= t('.overall_stats_by_district.protocols_missing') %> (#)
-                      </th>
-                      <th>
-                        <%= t('.overall_stats_by_district.protocols_found') %> (#)
-                      </th>
-                      <th>
-                        <%= t('.overall_stats_by_district.protocols_not_entered') %> (#)
-                      </th>
-                      <th>
-                        <%= t('.overall_stats_by_district.protocols_validated') %> (#)
-                      </th>
-                      <th>
-                        <%= t('.overall_stats_by_district.protocols_missing') %> (%)
-                      </th>
-                      <th>
-                        <%= t('.overall_stats_by_district.protocols_found') %> (%)
-                      </th>
-                      <th>
-                        <%= t('.overall_stats_by_district.protocols_not_entered') %> (%)
-                      </th>
-                      <th>
-                        <%= t('.overall_stats_by_district.protocols_validated') %> (%)
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% stats[:districts].each do |district| %>
-                      <tr>
-                        <td>
-                          <%= district[:region] %>
-                        </td>
-                        <td>
-                          <%= district[:district] %>
-                        </td>
-                        <td>
-                          <%= district[:district_id] %>
-                        </td>
-                        <td>
-                          <%= district[:precincts] %>
-                        </td>
-                        <td>
-                          <%= district[:protocols_missing][:number] %>
-                        </td>
-                        <td>
-                          <%= district[:protocols_found][:number] %>
-                        </td>
-                        <td>
-                          <%= district[:protocols_not_entered][:number] %>
-                        </td>
-                        <td>
-                          <%= district[:protocols_validated][:number] %>
-                        </td>
-                        <td>
-                          <%= district[:protocols_missing][:percent] %>
-                        </td>
-                        <td>
-                          <%= district[:protocols_found][:percent] %>
-                        </td>
-                        <td>
-                          <%= district[:protocols_not_entered][:percent] %>
-                        </td>
-                        <td>
-                          <%= district[:protocols_validated][:percent] %>
-                        </td>
-                      </tr>
-                    <% end %>
-                  </tbody>
-                </table>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
       </div>
+      <div class="span4">
+        <%= image_tag 'share.png' %>
+      </div>
+      <div class="span4">
+        <h2><%= t('.want_help.header') %></h2>
+        <%= simple_format(t('.want_help.text')) %>
+      </div>
+    </div>
 
+  <% else %>
 
-    <% end %>
-  </div>
+    <h2><%= t('.no_elections.header') %></h2>
+    <%= simple_format(t('.no_elections.text')) %>
 
-<% else %>
+  <% end %>
 
-
-NO ELECTIONS!!!!!!!!!!!!!!!!!!!!!!!
-
-<% end %>
-
-
+</div>
 

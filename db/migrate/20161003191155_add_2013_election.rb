@@ -1,14 +1,14 @@
 class Add2013Election < ActiveRecord::Migration
   def up
     require 'csv'
-    csv_path = "#{Rails.root}/db/data/"
+    csv_path = "#{Rails.root}/db/data/2013/"
 
     Election.transaction do
       puts '- creating election'
       e = Election.new(can_enter_data: false, election_at: '2013-10-27', election_app_event_id: 38,
                           has_regions: true, has_district_names: true)
       e.election_translations.build(locale: 'en', name: '2013 Presidential')
-      e.election_translations.build(locale: 'ka', name: '2013 Presidential')
+      e.election_translations.build(locale: 'ka', name: '2013 წლის საპრეზიდენტო არჩევნები')
       e.save
 
       puts '- assigning users to election'

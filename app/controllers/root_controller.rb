@@ -10,6 +10,17 @@ class RootController < ApplicationController
     @overall_stats_by_district = DistrictPrecinct.overall_stats_by_district(@election_ids)
     @overall_user_stats = CrowdDatum.overall_user_stats(@election_ids)
 
+    # if there are no current elections, see if there are elections coming up
+    if !@elections.empty?
+      @elections_coming_up = Election.coming_up.sorted
+    end
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
+
+  def about
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -18,8 +29,7 @@ class RootController < ApplicationController
   def protocol
 
     # if the user has not completed training send them there
-    trained = current_user.trained
-    if trained.length < PROTOCOL_NUMBERS.length
+    if !current_user.completed_training?
       redirect_to training_path, :notice => I18n.t('root.protocol.no_training')
       return
     end
