@@ -1,5 +1,5 @@
 <div id="landing_page">
-  <% if !@elections.present? %>
+  <% if @elections.present? %>
 
     <% if @overall_stats.present? %>
       <h2><%= t('.stats_header') %></h2>

@@ -2,6 +2,8 @@ class Add2013Election < ActiveRecord::Migration
   def up
     require 'csv'
     csv_path = "#{Rails.root}/db/data/2013/"
+    client = ActiveRecord::Base.connection
+    analysis_db = 'protocol_analysis'
 
     Election.transaction do
       puts '- creating election'
@@ -42,8 +44,7 @@ class Add2013Election < ActiveRecord::Migration
 
       # copy data from president2013 to the analysis raw table
       puts '- copying data from president2013 to analysis raw table'
-      client = ActiveRecord::Base.connection
-      sql = "insert into `#{e.analysis_table_name} - raw`
+      sql = "insert into `#{analysis_db}`.`#{e.analysis_table_name} - raw`
             (
             `region`, `district_id`, `district_name`, `precinct_id`, `attached_precinct_id`,
             `num_possible_voters`, `num_special_voters`, `num_at_12`, `num_at_17`, `num_votes`, `num_ballots`,

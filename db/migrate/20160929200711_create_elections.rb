@@ -28,7 +28,7 @@ class CreateElections < ActiveRecord::Migration
 
     # districts precincts
     remove_column :district_precincts, :election_id
-    remove_column :district_precincts, :region, :string
+    remove_column :district_precincts, :region
     remove_index :district_precincts, name: 'idx_elec_dist_prec'
   end
 end

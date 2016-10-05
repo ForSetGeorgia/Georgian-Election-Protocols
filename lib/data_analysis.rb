@@ -3,6 +3,8 @@
 module DataAnalysis
   require 'csv'
 
+  @@analysis_db = 'protocol_analysis'
+
   @@vpm_limit = 2
 
   # use this header text in the csv view
@@ -88,7 +90,7 @@ module DataAnalysis
     puts "load precinct counts table for #{self.name}"
     puts "===================="
 
-    sql = "insert into `#{self.analysis_table_name} - precinct count`
+    sql = "insert into `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count`
             select region, district_id, "
     if self.is_local_majoritarian
       sql << "major_district_id, "
@@ -109,7 +111,7 @@ module DataAnalysis
 
   # get all of the data in the raw table and format for csv download
   def download_raw_data
-    sql = "select * from `#{self.analysis_table_name} - raw` order by district_id, precinct_id"
+    sql = "select * from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw` order by district_id, precinct_id"
     results = @@client.exec_query(sql)
 
     if results.present?
@@ -143,10 +145,10 @@ module DataAnalysis
     puts "===================="
 
     # get parties formatted as hash
-    parties = Party.hash_for_analysis(self.id)
+    parties = Party.hash_for_analysis(self.id) if !delete_only
 
     # if there are no parties, we cannot continue
-    if parties.empty?
+    if parties.nil? && !delete_only
       puts "!!!!!!!!!!!!!!!!!!!!!!"
       puts "WARNING - ANALYSIS TABLES/VIEWS NOT CREATED BECAUSE PARTIES COULD NOT BE FOUND"
       puts "!!!!!!!!!!!!!!!!!!!!!!"
@@ -214,9 +216,9 @@ module DataAnalysis
   # run the table
   def run_table(parties, delete_only=false)
     table_name = "#{self.analysis_table_name} - raw"
-    @@client.execute("drop table if exists `#{table_name}`")
+    @@client.execute("drop table if exists `#{@@analysis_db}`.`#{table_name}`")
     if !delete_only
-      sql = "  CREATE TABLE `#{table_name}` (
+      sql = "  CREATE TABLE `#{@@analysis_db}`.`#{table_name}` (
         `region` VARCHAR(255) NULL DEFAULT NULL,
         `district_id` INT(11) NULL DEFAULT NULL,
         `district_name` VARCHAR(255) NULL DEFAULT NULL, "
@@ -272,15 +274,15 @@ module DataAnalysis
         view_name << "#{range.first}-#{range.last}"
       end
 
-      @@client.execute("drop view if exists `#{view_name}`")
+      @@client.execute("drop view if exists `#{@@analysis_db}`.`#{view_name}`")
       if !delete_only
-        sql = "create view `#{view_name}` as
+        sql = "create view `#{@@analysis_db}`.`#{view_name}` as
           select region, district_id, precinct_id, "
         if self.is_local_majoritarian
           sql << "major_district_id, "
         end
         sql << "count(0) AS `num_invalid_ballots`
-          from `#{self.analysis_table_name} - raw`
+          from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw`
           where (((100 * (num_invalid_votes / num_votes)) >= #{range.first})"
         if range.length == 2
           sql << " and ((100 * (num_invalid_votes / num_votes)) < #{range.last})"
@@ -309,15 +311,15 @@ module DataAnalysis
     ranges.each_with_index do |range, index|
       view_name = "#{self.analysis_table_name} - vpm #{range.first}-#{range.last}>#{@@vpm_limit}"
       mins = (range.last - range.first) * 60
-      @@client.execute("drop view if exists `#{view_name}`")
+      @@client.execute("drop view if exists `#{@@analysis_db}`.`#{view_name}`")
       if !delete_only
-        sql = "create view `#{view_name}` as
+        sql = "create view `#{@@analysis_db}`.`#{view_name}` as
                 select region, district_id, "
         if self.is_local_majoritarian
           sql << "major_district_id, "
         end
         sql << "precinct_id, count(0) AS `vpm > #{@@vpm_limit}`
-                from `#{self.analysis_table_name} - raw`"
+                from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw`"
         if index == 0
           sql << " where ((num_at_#{range.last} / #{mins}) > #{@@vpm_limit})"
         else
@@ -344,9 +346,9 @@ module DataAnalysis
   # run country view
   def run_country(parties, delete_only=false)
     view_name = "#{self.analysis_table_name} - #{@@shapes[:country]}"
-    @@client.execute("drop view if exists `#{view_name}`")
+    @@client.execute("drop view if exists `#{@@analysis_db}`.`#{view_name}`")
     if !delete_only
-      sql = "create view `#{view_name}` as
+      sql = "create view `#{@@analysis_db}`.`#{view_name}` as
             select sum(`raw`.`num_possible_voters`) AS `possible voters`,
             sum(`raw`.`num_votes`) AS `total ballots cast`,
             sum(`raw`.`num_valid_votes`) AS `total valid ballots cast`,
@@ -402,15 +404,15 @@ module DataAnalysis
       end
       sql << party_sql.join(', ')
 
-      sql << " from ((((((((`#{self.analysis_table_name} - raw` `raw`
-              join `#{self.analysis_table_name} - precinct count by #{@@shapes[:country]}` `precinct_count`
-              left join `#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`)))))
+      sql << " from ((((((((`#{@@analysis_db}`.`#{self.analysis_table_name} - raw` `raw`
+              join `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by #{@@shapes[:country]}` `precinct_count`
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`)))))
               "
 
       @@client.execute(sql)
@@ -422,9 +424,9 @@ module DataAnalysis
   # run regions view
   def run_regions(parties, delete_only=false)
     view_name = "#{self.analysis_table_name} - #{@@shapes[:region]}"
-    @@client.execute("drop view if exists `#{view_name}`")
+    @@client.execute("drop view if exists `#{@@analysis_db}`.`#{view_name}`")
     if !delete_only
-      sql = "create view `#{view_name}` as
+      sql = "create view `#{@@analysis_db}`.`#{view_name}` as
             select `raw`.`region` AS `region`,
             sum(`raw`.`num_possible_voters`) AS `possible voters`,
             sum(`raw`.`num_votes`) AS `total ballots cast`,
@@ -481,15 +483,15 @@ module DataAnalysis
       end
       sql << party_sql.join(', ')
 
-      sql << " from ((((((((`#{self.analysis_table_name} - raw` `raw`
-              join `#{self.analysis_table_name} - precinct count by region` `precinct_count` on((`raw`.`region` = `precinct_count`.`region`)))
-              left join `#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`))))
+      sql << " from ((((((((`#{@@analysis_db}`.`#{self.analysis_table_name} - raw` `raw`
+              join `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by region` `precinct_count` on((`raw`.`region` = `precinct_count`.`region`)))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`))))
               group by `raw`.`region`"
 
       @@client.execute(sql)
@@ -503,9 +505,9 @@ module DataAnalysis
   # - this happens by getting all districts not in tbilisi and then adding tbilisi using a union
   def run_districts(parties, delete_only=false)
     view_name = "#{self.analysis_table_name} - #{@@shapes[:district]}"
-    @@client.execute("drop view if exists `#{view_name}`")
+    @@client.execute("drop view if exists `#{@@analysis_db}`.`#{view_name}`")
     if !delete_only
-      sql = "create view `#{view_name}` as
+      sql = "create view `#{@@analysis_db}`.`#{view_name}` as
               select `raw`.`region` AS `region`,
               `raw`.`district_id` AS `district_id`,
               `raw`.`district_name` AS `district_Name`,
@@ -564,15 +566,15 @@ module DataAnalysis
       end
       sql << party_sql.join(', ')
 
-      sql << " from ((((((((`#{self.analysis_table_name} - raw` `raw`
-              join `#{self.analysis_table_name} - precinct count by district` `precinct_count` on((`raw`.`district_id` = `precinct_count`.`district_id`)))
-              left join `#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`))))
+      sql << " from ((((((((`#{@@analysis_db}`.`#{self.analysis_table_name} - raw` `raw`
+              join `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by district` `precinct_count` on((`raw`.`district_id` = `precinct_count`.`district_id`)))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`))))
               where (`raw`.`district_id` not between 1 and 10)
               group by `raw`.`region`, `raw`.`district_name`, `raw`.`district_id`"
 
@@ -636,15 +638,15 @@ module DataAnalysis
       end
       sql << party_sql.join(', ')
 
-      sql << " from ((((((((`#{self.analysis_table_name} - raw` `raw`
-              join `#{self.analysis_table_name} - precinct count by region` `precinct_count` on((`raw`.`region` = `precinct_count`.`region`)))
-              left join `#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`))))
+      sql << " from ((((((((`#{@@analysis_db}`.`#{self.analysis_table_name} - raw` `raw`
+              join `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by region` `precinct_count` on((`raw`.`region` = `precinct_count`.`region`)))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`))))
               where (`raw`.`district_id` between 1 and 10)
               group by `raw`.`region`"
 
@@ -659,9 +661,9 @@ module DataAnalysis
     major_name = self.is_local_majoritarian == true ? 'major_' : ''
     shape = @@shapes[:"#{major_name}precinct"]
     view_name = "#{self.analysis_table_name} - #{shape}"
-    @@client.execute("drop view if exists `#{view_name}`")
+    @@client.execute("drop view if exists `#{@@analysis_db}`.`#{view_name}`")
     if !delete_only
-      sql = "create view `#{view_name}` as
+      sql = "create view `#{@@analysis_db}`.`#{view_name}` as
             select `raw`.`region` AS `region`,
             `raw`.`district_id` AS `district_id`,
             `raw`.`district_name` AS `district_Name`,"
@@ -701,7 +703,7 @@ module DataAnalysis
       end
       sql << party_sql.join(', ')
 
-      sql << "from `#{self.analysis_table_name} - raw` `raw` where (`raw`.`district_id` not between 1 and 10)"
+      sql << "from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw` `raw` where (`raw`.`district_id` not between 1 and 10)"
 
       @@client.execute(sql)
     end
@@ -712,9 +714,9 @@ module DataAnalysis
   # run tbilisi districts view
   def run_tbilisi_districts(parties, delete_only=false)
     view_name = "#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}"
-    @@client.execute("drop view if exists `#{view_name}`")
+    @@client.execute("drop view if exists `#{@@analysis_db}`.`#{view_name}`")
     if !delete_only
-      sql = "create view `#{view_name}` as
+      sql = "create view `#{@@analysis_db}`.`#{view_name}` as
             select `raw`.`region` AS `region`,
             `raw`.`district_id` AS `district_id`,
             `raw`.`district_name` AS `district_Name`,
@@ -773,15 +775,15 @@ module DataAnalysis
       end
       sql << party_sql.join(', ')
 
-      sql << " from ((((((((`#{self.analysis_table_name} - raw` `raw`
-              join `#{self.analysis_table_name} - precinct count by district` `precinct_count` on((`raw`.`district_id` = `precinct_count`.`district_id`)))
-              left join `#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`))))
+      sql << " from ((((((((`#{@@analysis_db}`.`#{self.analysis_table_name} - raw` `raw`
+              join `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by district` `precinct_count` on((`raw`.`district_id` = `precinct_count`.`district_id`)))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`))))
               where (`raw`.`district_id` between 1 and 10)
               group by `raw`.`region`, `raw`.`district_name`, `raw`.`district_id`"
 
@@ -797,9 +799,9 @@ module DataAnalysis
     major_name = self.is_local_majoritarian == true ? 'major_' : ''
     shape = @@shapes[:"#{major_name}tbilisi_precinct"]
     view_name = "#{self.analysis_table_name} - #{shape}"
-    @@client.execute("drop view if exists `#{view_name}`")
+    @@client.execute("drop view if exists `#{@@analysis_db}`.`#{view_name}`")
     if !delete_only
-      sql = "create view `#{view_name}` as
+      sql = "create view `#{@@analysis_db}`.`#{view_name}` as
             select `raw`.`region` AS `region`,
             `raw`.`district_id` AS `district_id`,
             `raw`.`district_name` AS `district_Name`,"
@@ -839,7 +841,8 @@ module DataAnalysis
       end
       sql << party_sql.join(', ')
 
-      sql << "from `#{self.analysis_table_name} - raw` `raw` where (`raw`.`district_id` between 1 and 10)"
+      sql << "from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw` `raw`
+              where (`raw`.`district_id` between 1 and 10)"
 
       @@client.execute(sql)
     end
@@ -850,9 +853,9 @@ module DataAnalysis
   # run major district view
   def run_major_districts(parties, delete_only=false)
     view_name = "#{self.analysis_table_name} - #{@@shapes[:major_district]}"
-    @@client.execute("drop view if exists `#{view_name}`")
+    @@client.execute("drop view if exists `#{@@analysis_db}`.`#{view_name}`")
     if !delete_only
-      sql = "create view `#{view_name}` as
+      sql = "create view `#{@@analysis_db}`.`#{view_name}` as
               select `raw`.`region` AS `region`,
               `raw`.`district_id` AS `district_id`,
               `raw`.`district_name` AS `district_Name`,
@@ -915,15 +918,15 @@ module DataAnalysis
       end
       sql << party_sql.join(', ')
 
-      sql << " from ((((((((`#{self.analysis_table_name} - raw` `raw`
-              join `#{self.analysis_table_name} - precinct count by major district` `precinct_count` on((`raw`.`district_id` = `precinct_count`.`district_id`) and (`raw`.`major_district_id` = `precinct_count`.`major_district_id`)))
-              left join `#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and(`raw`.`major_district_id` = `vpm1`.`major_district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`major_district_id` = `vpm2`.`major_district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`major_district_id` = `vpm3`.`major_district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_01`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id` and (`raw`.`major_district_id` = `invalid_ballots_13`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_35`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_>5`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`)))))
+      sql << " from ((((((((`#{@@analysis_db}`.`#{self.analysis_table_name} - raw` `raw`
+              join `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by major district` `precinct_count` on((`raw`.`district_id` = `precinct_count`.`district_id`) and (`raw`.`major_district_id` = `precinct_count`.`major_district_id`)))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and(`raw`.`major_district_id` = `vpm1`.`major_district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`major_district_id` = `vpm2`.`major_district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`major_district_id` = `vpm3`.`major_district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_01`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id` and (`raw`.`major_district_id` = `invalid_ballots_13`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_35`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_>5`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`)))))
               where (`raw`.`district_id` not between 1 and 10)
               group by `raw`.`region`, `raw`.`district_name`, `raw`.`district_id`, `raw`.`major_district_id`"
 
@@ -936,9 +939,9 @@ module DataAnalysis
   # run major tbilisi district view
   def run_major_tbilisi_districts(parties, delete_only=false)
     view_name = "#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}"
-    @@client.execute("drop view if exists `#{view_name}`")
+    @@client.execute("drop view if exists `#{@@analysis_db}`.`#{view_name}`")
     if !delete_only
-      sql = "create view `#{view_name}` as
+      sql = "create view `#{@@analysis_db}`.`#{view_name}` as
               select `raw`.`region` AS `region`,
               `raw`.`district_id` AS `district_id`,
               `raw`.`district_name` AS `district_Name`,
@@ -1001,15 +1004,15 @@ module DataAnalysis
       end
       sql << party_sql.join(', ')
 
-      sql << " from ((((((((`#{self.analysis_table_name} - raw` `raw`
-              join `#{self.analysis_table_name} - precinct count by major district` `precinct_count` on((`raw`.`district_id` = `precinct_count`.`district_id`) and (`raw`.`major_district_id` = `precinct_count`.`major_district_id`)))
-              left join `#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and(`raw`.`major_district_id` = `vpm1`.`major_district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`major_district_id` = `vpm2`.`major_district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`major_district_id` = `vpm3`.`major_district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_01`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id` and (`raw`.`major_district_id` = `invalid_ballots_13`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_35`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
-              left join `#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_>5`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`)))))
+      sql << " from ((((((((`#{@@analysis_db}`.`#{self.analysis_table_name} - raw` `raw`
+              join `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by major district` `precinct_count` on((`raw`.`district_id` = `precinct_count`.`district_id`) and (`raw`.`major_district_id` = `precinct_count`.`major_district_id`)))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 8-12>#{@@vpm_limit}` `vpm1` on(((`raw`.`region` = `vpm1`.`region`) and (`raw`.`district_id` = `vpm1`.`district_id`) and(`raw`.`major_district_id` = `vpm1`.`major_district_id`) and (`raw`.`precinct_id` = `vpm1`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 12-17>#{@@vpm_limit}` `vpm2` on(((`raw`.`region` = `vpm2`.`region`) and (`raw`.`district_id` = `vpm2`.`district_id`) and (`raw`.`major_district_id` = `vpm2`.`major_district_id`) and (`raw`.`precinct_id` = `vpm2`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - vpm 17-20>#{@@vpm_limit}` `vpm3` on(((`raw`.`region` = convert(`vpm3`.`region` using utf8)) and (`raw`.`district_id` = `vpm3`.`district_id`) and (`raw`.`major_district_id` = `vpm3`.`major_district_id`) and (`raw`.`precinct_id` = `vpm3`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 0-1` `invalid_ballots_01` on(((`raw`.`region` = `invalid_ballots_01`.`region`) and (`raw`.`district_id` = `invalid_ballots_01`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_01`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_01`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id` and (`raw`.`major_district_id` = `invalid_ballots_13`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_35`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
+              left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_>5`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`)))))
               where (`raw`.`district_id` between 1 and 10)
               group by `raw`.`region`, `raw`.`district_name`, `raw`.`district_id`, `raw`.`major_district_id`"
 
@@ -1030,9 +1033,9 @@ module DataAnalysis
 
   def run_csv(parties, delete_only=false)
     view_name = "#{self.analysis_table_name} - csv"
-    @@client.execute("drop view if exists `#{view_name}`")
+    @@client.execute("drop view if exists `#{@@analysis_db}`.`#{view_name}`")
     if !delete_only
-      sql = "create view `#{view_name}` as "
+      sql = "create view `#{@@analysis_db}`.`#{view_name}` as "
 
       # country
       sql << "(select 'Country' AS `#{@@common_headers[0]}`,
@@ -1068,7 +1071,7 @@ module DataAnalysis
               `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num_precincts_reported_percent` AS `#{@@common_headers[30]}`,
       "
       sql << create_csv_party_names(parties, @@shapes[:country])
-      sql << " from `#{self.analysis_table_name} - #{@@shapes[:country]}`)"
+      sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{@@shapes[:country]}`)"
 
       sql << " union "
 
@@ -1108,7 +1111,7 @@ module DataAnalysis
                 `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num_precincts_reported_percent` AS `#{@@common_headers[30]}`,
                 "
         sql << create_csv_party_names(parties, @@shapes[:region])
-        sql << " from `#{self.analysis_table_name} - #{@@shapes[:region]}`)"
+        sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{@@shapes[:region]}`)"
 
         sql << " union "
       end
@@ -1148,7 +1151,7 @@ module DataAnalysis
       "
 
       sql << create_csv_party_names(parties, @@shapes[:district])
-      sql << " from `#{self.analysis_table_name} - #{@@shapes[:district]}`)"
+      sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{@@shapes[:district]}`)"
 
       sql << " union "
 
@@ -1189,7 +1192,7 @@ module DataAnalysis
                 `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num_precincts_reported_percent` AS `@@common_headers[30]`,
         "
         sql << create_csv_party_names(parties, @@shapes[:major_district])
-        sql << " from `#{self.analysis_table_name} - #{@@shapes[:major_district]}`)"
+        sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{@@shapes[:major_district]}`)"
 
         sql << " union "
 
@@ -1238,7 +1241,7 @@ module DataAnalysis
               NULL AS `#{@@common_headers[30]}`,
       "
       sql << create_csv_party_names(parties, shape)
-      sql << " from `#{self.analysis_table_name} - #{shape}`)"
+      sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{shape}`)"
 
       sql << " union "
 
@@ -1277,7 +1280,7 @@ module DataAnalysis
               `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num_precincts_reported_percent` AS `#{@@common_headers[30]}`,
       "
       sql << create_csv_party_names(parties, @@shapes[:tbilisi_district])
-      sql << " from `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`)"
+      sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`)"
 
       sql << " union "
 
@@ -1318,7 +1321,7 @@ module DataAnalysis
         "
 
         sql << create_csv_party_names(parties, @@shapes[:major_tbilisi_district])
-        sql << " from `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`)"
+        sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`)"
 
         sql << " union "
 
@@ -1367,7 +1370,7 @@ module DataAnalysis
               NULL AS `#{@@common_headers[30]}`,
       "
       sql << create_csv_party_names(parties, shape)
-      sql << " from `#{self.analysis_table_name} - #{shape}`)"
+      sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{shape}`)"
 
 
       @@client.execute(sql)
@@ -1381,9 +1384,9 @@ module DataAnalysis
     puts '> creating precinct count tables/views'
     puts "===================="
 
-    @@client.execute("drop table if exists `#{self.analysis_table_name} - precinct count`")
+    @@client.execute("drop table if exists `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count`")
     if !delete_only
-      sql = "CREATE TABLE `#{self.analysis_table_name} - precinct count` (
+      sql = "CREATE TABLE `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count` (
           `region` VARCHAR(255) NULL DEFAULT NULL,
           `district_id` INT(10) NOT NULL DEFAULT '0',"
 
@@ -1404,32 +1407,39 @@ module DataAnalysis
     end
 
     # total precincts
-    @@client.execute("drop view if exists `#{self.analysis_table_name} - precinct count by #{@@shapes[:country]}`")
+    @@client.execute("drop view if exists `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by #{@@shapes[:country]}`")
     if !delete_only
-      @@client.execute("create view `#{self.analysis_table_name} - precinct count by #{@@shapes[:country]}` as
-                  select sum(`num_precincts`) AS `num_precincts` from `#{self.analysis_table_name} - precinct count`")
+      @@client.execute("create view `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by #{@@shapes[:country]}` as
+                  select sum(`num_precincts`) AS `num_precincts`
+                  from `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count`")
     end
 
     # precincts by region
-    @@client.execute("drop view if exists `#{self.analysis_table_name} - precinct count by #{@@shapes[:region]}`")
+    @@client.execute("drop view if exists `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by #{@@shapes[:region]}`")
     if !delete_only
-      @@client.execute("create view `#{self.analysis_table_name} - precinct count by #{@@shapes[:region]}` as
-                    select `region` AS `region`,sum(`num_precincts`) AS `num_precincts` from `#{self.analysis_table_name} - precinct count` group by `region`")
+      @@client.execute("create view `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by #{@@shapes[:region]}` as
+                    select `region` AS `region`,sum(`num_precincts`) AS `num_precincts`
+                    from `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count`
+                    group by `region`")
     end
 
     # precincts by district
     if !delete_only
-      @@client.execute("drop view if exists `#{self.analysis_table_name} - precinct count by #{@@shapes[:district]}`")
-      @@client.execute("create view `#{self.analysis_table_name} - precinct count by #{@@shapes[:district]}` as
-                    select `district_id` AS `district_id`,sum(`num_precincts`) AS `num_precincts` from `#{self.analysis_table_name} - precinct count` group by `district_id`")
+      @@client.execute("drop view if exists `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by #{@@shapes[:district]}`")
+      @@client.execute("create view `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by #{@@shapes[:district]}` as
+                    select `district_id` AS `district_id`,sum(`num_precincts`) AS `num_precincts`
+                    from `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count`
+                    group by `district_id`")
     end
 
     if self.is_local_majoritarian || delete_only
       # precincts by major district
-      @@client.execute("drop view if exists `#{self.analysis_table_name} - precinct count by major district`")
+      @@client.execute("drop view if exists `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by #{@@shapes[:major_district]}`")
       if !delete_only
-        @@client.execute("create view `#{self.analysis_table_name} - precinct count by major district` as
-                    select `district_id` AS `district_id`,`major_district_id` AS `major_district_id`,sum(`num_precincts`) AS `num_precincts` from `#{self.analysis_table_name} - precinct count` group by `district_id`,`major_district_id`")
+        @@client.execute("create view `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by #{@@shapes[:major_district]}` as
+                    select `district_id` AS `district_id`,`major_district_id` AS `major_district_id`,sum(`num_precincts`) AS `num_precincts`
+                    from `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count`
+                    group by `district_id`,`major_district_id`")
       end
     end
   end

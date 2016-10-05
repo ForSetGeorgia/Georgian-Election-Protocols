@@ -99,6 +99,7 @@ if ENV['load_test_data'].present? && !Rails.env.production?
   client = ActiveRecord::Base.connection
   now = Time.now
   csv_path = "#{Rails.root}/db/data/2012/"
+  analysis_db = 'protocol_analysis'
 
   puts '++++++++++++++++++++++++'
   puts 'LOADING TEST DATA FOR 2012'

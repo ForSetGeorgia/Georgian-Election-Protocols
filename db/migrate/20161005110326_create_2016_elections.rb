@@ -4,6 +4,7 @@ class Create2016Elections < ActiveRecord::Migration
     csv_path = "#{Rails.root}/db/data/2016/"
     now = Time.now
     client = ActiveRecord::Base.connection
+    analysis_db = 'protocol_analysis'
 
     Election.transaction do
 

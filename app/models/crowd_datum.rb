@@ -21,6 +21,7 @@ class CrowdDatum < ActiveRecord::Base
   ## ATTRIBUTES
   FOLDER_PATH = "/system/protocols"
   MAX_PARTIES = 60
+  ANALYSIS_DB = 'protocol_analysis'
 
   #######################################
   ## VALIDATIONS
@@ -96,7 +97,7 @@ class CrowdDatum < ActiveRecord::Base
 
           # insert the record
           client = ActiveRecord::Base.connection
-          sql = "insert into `#{election.analysis_table_name} - raw` ("
+          sql = "insert into `#{ANALYSIS_DB}`.`#{election.analysis_table_name} - raw` ("
           if election.has_regions
             sql << "`region`, "
           end
@@ -124,14 +125,12 @@ class CrowdDatum < ActiveRecord::Base
             self.votes_by_1200, self.votes_by_1700, self.ballots_signed_for, self.ballots_available, self.invalid_ballots_submitted
           ]
           parties.each do |p|
-            puts "- adding value for party #{p.number}"
             sql_values << self["party_#{p.number}"]
           end
           sql_values.flatten!
 
           sql << sql_values.map{|x| "'#{x}'"}.join(', ')
           sql << ")"
-          puts "=======> insert = #{sql}"
           client.execute(sql)
 
         end
