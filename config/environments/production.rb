@@ -28,7 +28,7 @@ BootstrapStarter::Application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
 
   # See everything in the log (default is :info)
   # config.log_level = :debug
@@ -62,7 +62,7 @@ BootstrapStarter::Application.configure do
 
 	# options for exception notification gem
 	config.middleware.use ExceptionNotifier,
-		:email_prefix => "[2013 Presidential Protocols Error (#{Rails.env})] ",
+		:email_prefix => "[Georgian Election Protocols Error (#{Rails.env})] ",
 		:sender_address => ENV['APPLICATION_ERROR_FROM_EMAIL'],
 		:exception_recipients => [ENV['APPLICATION_ERROR_TO_EMAIL']]
 end
