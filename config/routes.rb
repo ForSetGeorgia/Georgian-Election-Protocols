@@ -14,7 +14,7 @@ BootstrapStarter::Application.routes.draw do
   		match '/election_data/create_migration', :to => 'election_data#create_migration', :as => :election_data_create_migration, :via => :get, :defaults => {:format => 'json'}
   		match '/election_data/notification_response', :to => 'election_data#notification', :as => :election_data_notification, :via => :get
   		match '/election_data/edit/:district_id/:precinct_id', :to => 'election_data#edit', :as => :election_data_edit, :via => [:get,:put]
-  		
+
 		end
 
 
@@ -29,7 +29,7 @@ BootstrapStarter::Application.routes.draw do
 		match '/protocol', :to => 'root#protocol', :as => :protocol, :via => [:get, :post]
 		match '/training', :to => 'root#training', :as => :training, :via => [:get, :post]
 		match '/download', :to => 'root#download', :as => :download, :via => :get
-		match '/generate_spreadsheet', :to => 'root#generate_spreadsheet', :as => :generate_spreadsheet, :via => :get, :default => {:format => 'csv'}
+		match '/generate_spreadsheet/:id', :to => 'root#generate_spreadsheet', :as => :generate_spreadsheet, :via => :get, :default => {:format => 'csv'}
 		match '/election_data_spreadsheet', :to => 'root#election_data_spreadsheet', :as => :election_data_spreadsheet, :via => :get, :default => {:format => 'csv'}
 
 

@@ -1,6 +1,7 @@
 # methods to work with the data analysis table/views
 # - create, delete, run, download, etc
 module DataAnalysis
+  require 'csv'
 
   @@vpm_limit = 2
 
@@ -104,6 +105,27 @@ module DataAnalysis
 
     puts "> done"
     puts "===================="
+  end
+
+  # get all of the data in the raw table and format for csv download
+  def download_raw_data
+    sql = "select * from `#{self.analysis_table_name} - raw` order by district_id, precinct_id"
+    results = @@client.exec_query(sql)
+
+    if results.present?
+      csv_data = CSV.generate(:col_sep=>',') do |csv|
+        # add header
+        csv << results.columns
+
+        # data
+        # - each row is a hash so just need to get values
+        results.each do |row|
+          csv << row.values
+        end
+      end
+    end
+
+    return csv_data
   end
 
   ###################################################

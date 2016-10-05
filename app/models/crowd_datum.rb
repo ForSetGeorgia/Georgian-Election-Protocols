@@ -41,6 +41,9 @@ class CrowdDatum < ActiveRecord::Base
     where(election_id: election_id, district_id: district_id, precinct_id: precinct_id, user_id: user_id)
   end
 
+  def self.election_ids_with_valid_data
+    where(is_valid: true).pluck(:election_id).uniq
+  end
 
   #######################################
   ## CALLBACKS

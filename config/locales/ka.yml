@@ -60,7 +60,6 @@ ka:
       app_name: Georgian Election Protocols
       added_on: "დამატებულია: %{date}"
       na: 'N/A'
-      file_name: საპრეზიდენტო არჩევნების შედეგები
       submit: შეყვანა
     msgs:
       does_not_exist: თქვენ ცდილობთ იხილოთ გვერდი, რომელიც არ არსებობს.
@@ -68,6 +67,7 @@ ka:
       success_created: "%{obj} შექმნილია."
       success_updated: "%{obj} განახლებულია."
       no_success_updated: "%{obj} was NOT successfully updated."
+      could_not_find_election: "The election could not be found."
     csv_header:
       region: რეგიონი
       district_id: ოლქის ID
@@ -240,6 +240,14 @@ ka:
       votesum_explanation3: "ეს რიცხვები დაგეხმარებათ მონაცემთა სეყვანაში."
       votesum_explanation4: "შესაძლოა, რომ ეს რიცხვები არ ემთხვეოდეს."
     download:
-      title: ჩამოტვირთეთ 2013 წლის არჩევნების შედეგების მონაცემები
+      title: Download Results of Data Entry
       num_precincts: არსებობს %{total}-დან %{count} საარჩევნო უბანი საარჩევნო მონაცემებით.
-      no_precincts: ჩამოსატვირთი არჩევნების სედეგები არ არსებობს
+      no_data: ჩამოსატვირთი არჩევნების სედეგები არ არსებობს
+      header:
+        election: Election
+        districts: ოლქები
+        precincts: უბნები
+        protocols_missing: დაკარგული ოქმები
+        protocols_found: ნაპოვნი ოქმები
+        protocols_not_entered: შსაყვანი ოქმები
+        protocols_validated: დამოწმებული ოქმები

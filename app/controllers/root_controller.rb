@@ -91,8 +91,8 @@ class RootController < ApplicationController
   end
 
   def download
-    @num_precincts = President2013.count
-    @total_precincts = DistrictPrecinct.count
+    @all_elections = Election.with_data.sorted
+    @overall_stats = DistrictPrecinct.overall_stats(@all_elections.map{|x| x.id})
 
     respond_to do |format|
       format.html # index.html.erb
@@ -101,21 +101,34 @@ class RootController < ApplicationController
 
   def generate_spreadsheet
 
+    election = Election.with_data.by_analysis_table_name(params[:id])
+
+    if election.nil?
+      redirect_to download_path, alert: I18n.t('app.msgs.could_not_find_election')
+      return
+    end
+
 		# create file name using event name and map title that were passed in
-    filename = I18n.t('app.common.file_name')
+    filename = params[:id]
 		filename << "-#{l Time.now, :format => :file}"
+    csv_data = election.download_raw_data
+
+    if csv_data.nil?
+      redirect_to download_path, alert: I18n.t('app.msgs.could_not_find_election')
+      return
+    end
 
 		respond_to do |format|
 		  format.csv {
 logger.debug ">>>>>>>>>>>>>>>> format = csv"
-        send_data President2013.download_precinct_data,
+        send_data csv_data,
 		      :type => 'text/csv; header=present',
 		      :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
 			}
 
 		  format.xls{
 logger.debug ">>>>>>>>>>>>>>>> format = xls"
-				send_data President2013.download_precinct_data,
+				send_data csv_data,
 		    :disposition => "attachment; filename=#{clean_filename(filename)}.xls"
 			}
 		end

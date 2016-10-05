@@ -1,20 +1,96 @@
 <% title t('.title') %>
 
 <div id="download">
-  <p>
-    <%= t('.num_precincts', :count => @num_precincts, :total => @total_precincts, 
-        :percent => number_to_percentage(number_with_precision(100*@num_precincts/@total_precincts.to_f))) %>
-  </p>
 
-  <% if @num_precincts == 0 %>
-    <p>
-      <%= t('.no_precincts') %>
-    </p>
-  <% else %>
-    <p>
-      <%= link_to 'CSV', generate_spreadsheet_path(:format => :csv) %>
+  <% if @elections.present? && @overall_stats.present? %>
+  <table class="table table-striped" id="download_elections">
+    <thead>
+      <tr>
+        <th>
+        </th>
+        <th>
+          <%= t('.header.election') %>
+        </th>
+        <th>
+          <%= t('.header.election_date') %>
+        </th>
+        <th>
+          <%= t('.header.protocols_missing') %> (#)
+        </th>
+        <th>
+          <%= t('.header.protocols_found') %> (#)
+        </th>
+        <th>
+          <%= t('.header.protocols_not_entered') %> (#)
+        </th>
+        <th>
+          <%= t('.header.protocols_validated') %> (#)
+        </th>
+        <th>
+          <%= t('.header.protocols_missing') %> (%)
+        </th>
+        <th>
+          <%= t('.header.protocols_found') %> (%)
+        </th>
+        <th>
+          <%= t('.header.protocols_not_entered') %> (%)
+        </th>
+        <th>
+          <%= t('.header.protocols_validated') %> (%)
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @overall_stats.each do |stats| %>
+        <tr>
+          <% election = @all_elections.select{|x| x.id == stats[:election_id]}.first %>
+          <td>
+            <%= link_to 'CSV', generate_spreadsheet_path(id: election.analysis_table_name, :format => :csv), class: 'btn btn-small' %>
+            <%= link_to 'XLS', generate_spreadsheet_path(id: election.analysis_table_name, :format => :xls), class: 'btn btn-small' %>
+          </td>
+          <td>
+            <%= election.name if election.present? %>
+          </td>
+          <td>
+            <%= l election.election_at if election.present? %>
+          </td>
+          <td>
+            <%= stats[:protocols_missing][:number] %>
+          </td>
+          <td>
+            <%= stats[:protocols_found][:number] %>
+          </td>
+          <td>
+            <%= stats[:protocols_not_entered][:number] %>
+          </td>
+          <td>
+            <%= stats[:protocols_validated][:number] %>
+          </td>
+          <td>
+            <%= stats[:protocols_missing][:percent] %>
+          </td>
+          <td>
+            <%= stats[:protocols_found][:percent] %>
+          </td>
+          <td>
+            <%= stats[:protocols_not_entered][:percent] %>
+          </td>
+          <td>
+            <%= stats[:protocols_validated][:percent] %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
-      <%= link_to 'XLS', generate_spreadsheet_path(:format => :xls) %>
-    </p>
-  <% end %>  
+<% else %>
+  <div class="alert alert-warning">
+    <%= t('.no_data') %>
+  </div>
+
+<% end %>
+
+
+
+
 </div>

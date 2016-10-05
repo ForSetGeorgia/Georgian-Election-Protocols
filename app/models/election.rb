@@ -56,6 +56,18 @@ class Election < ActiveRecord::Base
     by_election(election_id).where(district_id: district_id)
   end
 
+  def self.sorted
+    with_translations(I18n.locale).order('elections.election_at desc, election_translations.name asc')
+  end
+
+  def self.with_data
+    where(id: CrowdDatum.election_ids_with_valid_data)
+  end
+
+  def self.by_analysis_table_name(analysis_table_name)
+    where(analysis_table_name: analysis_table_name).first
+  end
+
   #######################################
   ## METHODS
 
