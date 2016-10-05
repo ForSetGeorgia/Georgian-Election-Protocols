@@ -11,7 +11,7 @@ class RootController < ApplicationController
     @overall_user_stats = CrowdDatum.overall_user_stats(@election_ids)
 
     # if there are no current elections, see if there are elections coming up
-    if !@elections.empty?
+    if @elections.nil? || @elections.empty?
       @elections_coming_up = Election.coming_up.sorted
     end
 
