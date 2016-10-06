@@ -227,8 +227,8 @@ module DataAnalysis
         sql << "`major_district_id` INT(11) NULL DEFAULT NULL, "
       end
 
-      sql << "`precinct_id` INT(11) NULL DEFAULT NULL,
-        `attached_precinct_id` INT(10) NULL DEFAULT NULL,
+      sql << "`precinct_id` varchar(10) NULL DEFAULT NULL,
+        `attached_precinct_id` varchar(10) NULL DEFAULT NULL,
         `num_possible_voters` INT(11) NULL DEFAULT NULL,
         `num_special_voters` INT(11) NULL DEFAULT NULL,
         `num_at_12` INT(11) NULL DEFAULT NULL,
@@ -1432,7 +1432,7 @@ module DataAnalysis
                     group by `district_id`")
     end
 
-    if self.is_local_majoritarian || delete_only
+    if self.is_local_majoritarian
       # precincts by major district
       @@client.execute("drop view if exists `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count by #{@@shapes[:major_district]}`")
       if !delete_only

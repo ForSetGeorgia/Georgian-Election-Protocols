@@ -26,7 +26,7 @@ class Party < ActiveRecord::Base
   def self.by_election_district(election_id, district_id)
     p = where(election_id: election_id)
     if !Election.are_parties_same_for_all_districts?(election_id)
-      p = p.where(number: DistrictParty.by_election_district(election_id, district_id).pluck(:party_id))
+      p = p.where(number: DistrictParty.by_election_district(election_id, district_id).pluck(:party_number))
     end
 
     return p

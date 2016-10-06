@@ -61,7 +61,7 @@ class Create2016Elections < ActiveRecord::Migration
         end
       end
       client.execute("insert into district_parties
-        (`election_id`, `district_id`, `party_id`, `created_at`)
+        (`election_id`, `district_id`, `party_number`, `created_at`)
         values #{sql_values.join(', ')}"
       )
 

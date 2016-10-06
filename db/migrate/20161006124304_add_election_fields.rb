@@ -1,8 +1,8 @@
 class AddElectionFields < ActiveRecord::Migration
   def up
-    add_column :elections, :max_party_in_district, :integer, length: 2, default: 0
-    add_column :elections, :protocol_top_box_margin, :integer, length: 2, default: 0
-    add_column :elections, :protocol_party_top_margin, :integer, length: 2, default: 0
+    add_column :elections, :max_party_in_district, :integer, default: 0
+    add_column :elections, :protocol_top_box_margin, :integer, default: 0
+    add_column :elections, :protocol_party_top_margin, :integer, default: 0
 
     major = Election.includes(:election_translations).where(election_translations: {name: '2012 Parliamentary - Majoritarian'}).first
     prop = Election.includes(:election_translations).where(election_translations: {name: '2012 Parliamentary - Party List'}).first
@@ -23,7 +23,7 @@ class AddElectionFields < ActiveRecord::Migration
       major.save
     else
       puts "!!!!!!!!!!!!!!!!!!!"
-      puts "ERROR - COULD NOT FIND PROP AND/OR MAJOR ELECTIONS"
+      puts "ERROR - COULD NOT FIND 2012 PROP AND/OR MAJOR ELECTIONS"
       puts "!!!!!!!!!!!!!!!!!!!"
     end
   end

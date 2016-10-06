@@ -3,7 +3,7 @@ class CreateDistrictParties < ActiveRecord::Migration
     create_table :district_parties do |t|
       t.integer :election_id
       t.integer :district_id
-      t.integer :party_id
+      t.integer :party_number
 
       t.timestamps
     end

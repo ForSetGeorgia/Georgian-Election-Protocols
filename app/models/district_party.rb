@@ -5,12 +5,12 @@ class DistrictParty < ActiveRecord::Base
 
   #######################################
   ## ATTRIBUTES
-  attr_accessible :district_id, :election_id, :party_id
+  attr_accessible :district_id, :election_id, :party_number
 
   #######################################
   ## VALIDATIONS
-  validates :district_id, :election_id, :party_id, :presence => true
-  validates :party_id, uniqueness: { scope: [:election_id, :district_id]}
+  validates :district_id, :election_id, :party_number, :presence => true
+  validates :party_number, uniqueness: { scope: [:election_id, :district_id]}
 
   #######################################
   ## SCOPES

@@ -15,80 +15,80 @@ ActiveRecord::Schema.define(:version => 20161006124304) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
-    t.integer  "district_id",               :limit => 2
-    t.integer  "precinct_id",               :limit => 2
+    t.integer  "district_id"
+    t.string   "precinct_id",               :limit => 10
     t.integer  "user_id"
-    t.integer  "possible_voters",           :limit => 3
-    t.integer  "special_voters",            :limit => 3
-    t.integer  "votes_by_1200",             :limit => 3
-    t.integer  "votes_by_1700",             :limit => 3
-    t.integer  "ballots_signed_for",        :limit => 3
-    t.integer  "ballots_available",         :limit => 3
-    t.integer  "invalid_ballots_submitted", :limit => 3
-    t.integer  "party_1",                   :limit => 3
-    t.integer  "party_2",                   :limit => 3
-    t.integer  "party_3",                   :limit => 3
-    t.integer  "party_4",                   :limit => 3
-    t.integer  "party_5",                   :limit => 3
-    t.integer  "party_6",                   :limit => 3
-    t.integer  "party_7",                   :limit => 3
-    t.integer  "party_8",                   :limit => 3
-    t.integer  "party_9",                   :limit => 3
-    t.integer  "party_10",                  :limit => 3
-    t.integer  "party_11",                  :limit => 3
-    t.integer  "party_12",                  :limit => 3
-    t.integer  "party_13",                  :limit => 3
-    t.integer  "party_14",                  :limit => 3
-    t.integer  "party_15",                  :limit => 3
-    t.integer  "party_16",                  :limit => 3
-    t.integer  "party_17",                  :limit => 3
-    t.integer  "party_18",                  :limit => 3
-    t.integer  "party_19",                  :limit => 3
-    t.integer  "party_20",                  :limit => 3
-    t.integer  "party_21",                  :limit => 3
-    t.integer  "party_22",                  :limit => 3
-    t.integer  "party_23",                  :limit => 3
-    t.integer  "party_24",                  :limit => 3
-    t.integer  "party_25",                  :limit => 3
-    t.integer  "party_26",                  :limit => 3
-    t.integer  "party_27",                  :limit => 3
-    t.integer  "party_28",                  :limit => 3
-    t.integer  "party_29",                  :limit => 3
-    t.integer  "party_30",                  :limit => 3
-    t.integer  "party_31",                  :limit => 3
-    t.integer  "party_32",                  :limit => 3
-    t.integer  "party_33",                  :limit => 3
-    t.integer  "party_34",                  :limit => 3
-    t.integer  "party_35",                  :limit => 3
-    t.integer  "party_36",                  :limit => 3
-    t.integer  "party_37",                  :limit => 3
-    t.integer  "party_38",                  :limit => 3
-    t.integer  "party_39",                  :limit => 3
-    t.integer  "party_40",                  :limit => 3
-    t.integer  "party_41",                  :limit => 3
-    t.integer  "party_42",                  :limit => 3
-    t.integer  "party_43",                  :limit => 3
-    t.integer  "party_44",                  :limit => 3
-    t.integer  "party_45",                  :limit => 3
-    t.integer  "party_46",                  :limit => 3
-    t.integer  "party_47",                  :limit => 3
-    t.integer  "party_48",                  :limit => 3
-    t.integer  "party_49",                  :limit => 3
-    t.integer  "party_50",                  :limit => 3
-    t.integer  "party_51",                  :limit => 3
-    t.integer  "party_52",                  :limit => 3
-    t.integer  "party_53",                  :limit => 3
-    t.integer  "party_54",                  :limit => 3
-    t.integer  "party_55",                  :limit => 3
-    t.integer  "party_56",                  :limit => 3
-    t.integer  "party_57",                  :limit => 3
-    t.integer  "party_58",                  :limit => 3
-    t.integer  "party_59",                  :limit => 3
-    t.integer  "party_60",                  :limit => 3
+    t.integer  "possible_voters"
+    t.integer  "special_voters"
+    t.integer  "votes_by_1200"
+    t.integer  "votes_by_1700"
+    t.integer  "ballots_signed_for"
+    t.integer  "ballots_available"
+    t.integer  "invalid_ballots_submitted"
+    t.integer  "party_1"
+    t.integer  "party_2"
+    t.integer  "party_3"
+    t.integer  "party_4"
+    t.integer  "party_5"
+    t.integer  "party_6"
+    t.integer  "party_7"
+    t.integer  "party_8"
+    t.integer  "party_9"
+    t.integer  "party_10"
+    t.integer  "party_11"
+    t.integer  "party_12"
+    t.integer  "party_13"
+    t.integer  "party_14"
+    t.integer  "party_15"
+    t.integer  "party_16"
+    t.integer  "party_17"
+    t.integer  "party_18"
+    t.integer  "party_19"
+    t.integer  "party_20"
+    t.integer  "party_21"
+    t.integer  "party_22"
+    t.integer  "party_23"
+    t.integer  "party_24"
+    t.integer  "party_25"
+    t.integer  "party_26"
+    t.integer  "party_27"
+    t.integer  "party_28"
+    t.integer  "party_29"
+    t.integer  "party_30"
+    t.integer  "party_31"
+    t.integer  "party_32"
+    t.integer  "party_33"
+    t.integer  "party_34"
+    t.integer  "party_35"
+    t.integer  "party_36"
+    t.integer  "party_37"
+    t.integer  "party_38"
+    t.integer  "party_39"
+    t.integer  "party_40"
+    t.integer  "party_41"
+    t.integer  "party_42"
+    t.integer  "party_43"
+    t.integer  "party_44"
+    t.integer  "party_45"
+    t.integer  "party_46"
+    t.integer  "party_47"
+    t.integer  "party_48"
+    t.integer  "party_49"
+    t.integer  "party_50"
+    t.integer  "party_51"
+    t.integer  "party_52"
+    t.integer  "party_53"
+    t.integer  "party_54"
+    t.integer  "party_55"
+    t.integer  "party_56"
+    t.integer  "party_57"
+    t.integer  "party_58"
+    t.integer  "party_59"
+    t.integer  "party_60"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "is_valid"
-    t.boolean  "is_extra",                               :default => false
+    t.boolean  "is_extra",                                :default => false
   end
 
   add_index "crowd_data", ["election_id", "district_id", "precinct_id"], :name => "idx_election_location"
@@ -144,7 +144,7 @@ ActiveRecord::Schema.define(:version => 20161006124304) do
   create_table "crowd_queues", :force => true do |t|
     t.integer  "user_id"
     t.integer  "district_id"
-    t.integer  "precinct_id"
+    t.string   "precinct_id", :limit => 10
     t.boolean  "is_finished"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -159,21 +159,21 @@ ActiveRecord::Schema.define(:version => 20161006124304) do
   create_table "district_parties", :force => true do |t|
     t.integer  "election_id"
     t.integer  "district_id"
-    t.integer  "party_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.integer  "party_number"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "district_parties", ["election_id", "district_id"], :name => "index_district_parties_on_election_id_and_district_id"
 
   create_table "district_precincts", :force => true do |t|
     t.integer  "district_id"
-    t.integer  "precinct_id"
-    t.boolean  "has_protocol",  :default => false
-    t.boolean  "is_validated",  :default => false
+    t.string   "precinct_id",   :limit => 10
+    t.boolean  "has_protocol",                :default => false
+    t.boolean  "is_validated",                :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "has_amendment", :default => false
+    t.boolean  "has_amendment",               :default => false
     t.integer  "election_id"
     t.string   "region"
   end
@@ -240,7 +240,7 @@ ActiveRecord::Schema.define(:version => 20161006124304) do
 
   create_table "has_protocols", :force => true do |t|
     t.integer  "district_id"
-    t.integer  "precinct_id"
+    t.string   "precinct_id", :limit => 10
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "election_id"

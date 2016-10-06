@@ -40,7 +40,7 @@ class RootController < ApplicationController
       params[:crowd_datum] = CrowdDatum.extract_numbers(params[:crowd_datum])
       @crowd_datum = CrowdDatum.new(params[:crowd_datum])
       valid = @crowd_datum.save
-  		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id)
+  		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id, @election_ids)
     end
 
     # get the next record if there were no errors
