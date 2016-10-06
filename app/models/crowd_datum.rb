@@ -95,6 +95,26 @@ class CrowdDatum < ActiveRecord::Base
           parties = election.parties
           rd = RegionDistrictName.by_district(self.district_id)
 
+          # need to calcualte the following:
+          # - valid votes (total - invalid)
+          # - logic check fail (valid == sum parties)
+          # - logic check difference (valid - sum parties)
+          # - more ballots than votes (valid > sum parties)
+          # - more ballots than votes amount (valid - sum parties if valid > sum, else 0)
+          # - more votes than ballots (valid < sum parties)
+          # - more votes than ballots amount (valid - sum parties if valid > sum, else 0)
+          valid = self.ballots_signed_for - self.invalid_ballots_submitted
+          sum_parties = 0
+          parties.each do |p|
+            sum_parties += self["party_#{p.number}"] if self["party_#{p.number}"].present?
+          end
+          logic_fail = valid == sum_parties
+          logic_diff = valid -sum_parties
+          ballots_votes = valid > sum_parties
+          ballots_votes_amount = ballots_votes == true ? logic_diff : 0
+          votes_ballots = valid < sum_parties
+          votes_ballots_amount = votes_ballots == true ? logic_diff.abs : 0
+
           # insert the record
           client = ActiveRecord::Base.connection
           sql = "insert into `#{ANALYSIS_DB}`.`#{election.analysis_table_name} - raw` ("
@@ -103,7 +123,8 @@ class CrowdDatum < ActiveRecord::Base
           end
           sql << "`district_id`, `district_name`, `precinct_id`,
                  `num_possible_voters`, `num_special_voters`, `num_at_12`, `num_at_17`, `num_votes`, `num_ballots`,
-                 `num_invalid_votes`, "
+                 `num_invalid_votes`, `num_valid_votes`, `logic_check_fail`, `logic_check_difference`,
+                 `more_ballots_than_votes_flag`, `more_ballots_than_votes`, `more_votes_than_ballots_flag`, `more_votes_than_ballots`, "
           sql << parties.map{|x| "`#{x.column_name}`"}.join(', ')
           sql << ") values ( "
 
@@ -122,7 +143,8 @@ class CrowdDatum < ActiveRecord::Base
           end
           sql_values << [
             self.precinct_id, self.possible_voters, self.special_voters,
-            self.votes_by_1200, self.votes_by_1700, self.ballots_signed_for, self.ballots_available, self.invalid_ballots_submitted
+            self.votes_by_1200, self.votes_by_1700, self.ballots_signed_for, self.ballots_available, self.invalid_ballots_submitted,
+            valid, logic_fail, logic_diff, ballots_votes, ballots_votes_amount, votes_ballots, votes_ballots_amount
           ]
           parties.each do |p|
             sql_values << self["party_#{p.number}"]
