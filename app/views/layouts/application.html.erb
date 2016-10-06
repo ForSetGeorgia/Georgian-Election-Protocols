@@ -118,7 +118,7 @@
 				        <% end %>
 			        <% else %>
                 <li>
-                  <%= link_to t('app.common.help_us'), 'http://bit.ly/Icounted', target: :blank, class: 'help-us' %>
+                  <%= link_to t('app.common.help_us'), @bitly_url, target: :blank, class: 'help-us' %>
                 </li>
 			          <li>
 	   		         <%= link_to t('.sign_in'), new_user_session_path %>

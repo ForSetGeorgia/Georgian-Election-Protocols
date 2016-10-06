@@ -67,6 +67,8 @@ logger.debug "////////////////////////// BROWSER NOT SUPPORTED"
 	  if user_signed_in? && !(params[:contorller] == "root" && params[:action] == "protocol")
   		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id, @election_ids)
 		end
+
+    @bitly_url = 'http://bit.ly/Icounted'
 	end
 
 	def initialize_gon

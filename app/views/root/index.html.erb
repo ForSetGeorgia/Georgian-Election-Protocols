@@ -232,11 +232,11 @@
         </ul>
       </div>
       <div class="span4">
-        <%= image_tag 'share.png' %>
-      </div>
-      <div class="span4">
         <h2><%= t('.want_help.header') %></h2>
         <%= simple_format(t('.want_help.text')) %>
+      </div>
+      <div class="span4">
+        <%= link_to(image_tag('share.png'), @bitly_url, target: :blank) %>
       </div>
     </div>
 

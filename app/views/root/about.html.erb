@@ -1,7 +1,7 @@
 <% title t('.title') %>
 
 <div id="about-page">
-  <%= image_tag 'share.png', class: 'pull-right' %>
+  <%= link_to(image_tag('share.png', class: 'pull-right'), @bitly_url, target: :blank) %>
   <% if I18n.locale == :ka %>
     <p>არჩევნების დროს, ხალხი ტელევიზიით იგებს, რომელმა კანდიდატმა გაიმარჯვა თითოეულ ოლქში, ხოლო ცესკო ამ ინფორმაციის რეგულარულ განახლებას უზრუნველყოფს მას შემდეგ, რაც უბნები დაიხურება. ამისათვის ცესკო თითოეული ოლქის ყველა უბნის მონაცემებს აჯამებს. თუმცა, ცესკო უბნების მონაცემებს არჩევნების დასრულებიდან მხოლოდ 20 დღის შემდეგ აქვეყნებს, მას შემდეგ, რაც არჩევნების შედეგები უკვე გადაწყვეტილია.</p>
 
@@ -14,7 +14,7 @@
     <p>ჯამპსტრატისთვის მნიშვნელოვანია ნებისმიერი სახის მხარდაჭერა ამ საქმეში. თქვენი დროის დათმობით და თუნდაც მცირე რაოდენობით საუბნო საარჩევნო ოქმების გაციფრულებით მიზნის მიღწევაში დაგვეხმარებით. არჩევნების ღამეს მონაცემების ჩამოტვირთვა შესაძლებელი იქნება ნებისმიერისთვის და რეგულარულად განახლდება საარჩევნო პორტალი, (<a href="http://elections.jumpstart.ge/ka" target="_blank">http://elections.jumpstart.ge/ka</a>) რომელიც მოსახლეობას მარტივი ვიზუალით აჩვენებს, რას ნიშნავს მონაცემები.</p>
 
     <p>დაგვეხმარე, დავრწმუნდეთ, რომ შენი ხმა ჩიათვალა. დაგვეხმარე დათვლაში! </p>
-    <p>ღონისძიებაში მონაწილეების მსურველებმა გაიარეთ რეგისტრაცია:<a href="http://bit.ly/Icounted" target="_blank">bit.ly/Icounted</a></p>
+    <p>ღონისძიებაში მონაწილეების მსურველებმა გაიარეთ რეგისტრაცია:<a href="<%= @bitly_url %>" target="_blank">bit.ly/Icounted</a></p>
   <% else %>
     <p>During elections, most people watch on TV how candidates do in each district, and the CEC provides this information with regular updates after the polling stations close. To do this, the CEC adds up all the values in each precinct in each district. However, the CEC does not make the information from each precinct public until 20 days after the elections take place, well after the outcome has been decided.</p>
 
@@ -28,6 +28,6 @@
 
     <p>To help us ensure your vote counts, help us count.</p>
 
-    <p>If you want to help us, sign up using our registration form: <a href="http://bit.ly/Icounted" target="_blank">bit.ly/Icounted</a></p>
+    <p>If you want to help us, sign up using our registration form: <a href="<%= @bitly_url %>" target="_blank">bit.ly/Icounted</a></p>
   <% end %>
 </div>
