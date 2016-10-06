@@ -68,6 +68,10 @@ class CrowdDatum < ActiveRecord::Base
         # see if same
         found_match = false
         existing.each do |exists|
+          puts "existing: "
+          puts exists.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra')
+          puts "new: "
+          puts self.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra')
           exists.is_valid = exists.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra') == self.attributes.except('id', 'created_at', 'updated_at', 'user_id', 'is_valid', 'is_extra')
 
           exists.save
@@ -183,8 +187,8 @@ class CrowdDatum < ActiveRecord::Base
 
     if self.election_id.present? && self.district_id.present? && self.precinct_id.present?
       path = "#{FOLDER_PATH}/#{election_id}/#{district_id}/#{district_id}_#{precinct_id}.jpg"
-      puts "path = #{path}"
-      puts "exist = #{File.exist?("#{Rails.root}/public#{path}")}"
+      # puts "path = #{path}"
+      # puts "exist = #{File.exist?("#{Rails.root}/public#{path}")}"
       exist = File.exist?("#{Rails.root}/public#{path}")
     end
 
