@@ -45,8 +45,6 @@
     <% end %>
 
     <%#= image_tag @crowd_datum.image_path, :id => 'protocolimg' %>
-    <% logger.debug @crowd_datum.inspect %>
-    <% logger.debug "path = #{full_url(@crowd_datum.image_path)}" %>
     <%= image_tag @crowd_datum.image_path, :id => 'protocolimg', :class => (FastImage.size(full_url(@crowd_datum.image_path))[1] < 1100 ? 'low' : '') %>
     <%#= image_tag 'http://localhost:3000/system/protocols/53/53-29.jpg', :id => 'protocolimg', :class => (FastImage.size("/system/protocols/53/53-29.jpg")[1] < 1100 ? 'low' : '') %>
 

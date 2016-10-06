@@ -245,6 +245,11 @@ en:
         incorrect: "Data you entered is incorrect"
         mismatch: "Field is incorrect"
         number: "Field must be numeric"
+      sum_party_votes: SUM(Party Votes) - Invalid Ballots
+      votesum_explanation1: "Left Number: %{label}"
+      votesum_explanation2: "Right Number: %{label}"
+      votesum_explanation3: "These numbers are here to guide you with your data entry."
+      votesum_explanation4: "It is possible that these numbers will not match."
     protocol:
       title: Enter Data
       p1: "Please only enter numbers; do not enter any 'X'."

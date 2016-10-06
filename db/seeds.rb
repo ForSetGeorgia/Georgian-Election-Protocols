@@ -207,6 +207,20 @@ if ENV['load_test_data'].present? && !Rails.env.production?
     puts '- creating major anaylsis precinct count records'
     major.create_analysis_precinct_counts
 
+    # get the 2012 major and add the max value
+    major.max_party_in_district = DistrictParty.where(election_id: major.id).group(:district_id).count.values.max
+
+    # for 2012 elections add top margin
+    prop.protocol_top_box_margin = 117
+    major.protocol_top_box_margin = 123
+
+    # for 2012 party height
+    prop.protocol_party_top_margin = 7
+    major.protocol_party_top_margin = 8
+
+    prop.save
+    major.save
+
     # create test users for data
     u1 = User.where(email: 'user1@test.ge').first_or_create do |u|
       puts "creating test user: users1"

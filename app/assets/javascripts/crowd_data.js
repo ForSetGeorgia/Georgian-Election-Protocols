@@ -38,11 +38,14 @@ $(function ()
   {
     var vch = {s: votesum.children('.s'), f: votesum.children('.f')};
 
-    var input = $('#crowd_datum_invalid_ballots_submitted'),
-    offset = input.offset();
+    var input = $('#crowd_datum_invalid_ballots_submitted');
+    if (input.length != 1){
+      input = $('#protocol_invalid_ballots_submitted');
+    }
+    var offset = input.offset();
     votesum.css({left: offset.left + input.outerWidth(), top: offset.top});
 
-    var partyinputs = $('input[id*="crowd_datum_party_"]').add(input);
+    var partyinputs = $('input[id*="crowd_datum_party_"], input[id*="protocol_party_"]').add(input);
     partyinputs.bind('keyup change', function ()
     {
       var sum = 0;
@@ -54,7 +57,7 @@ $(function ()
       check_values();
     });
 
-    $('#crowd_datum_ballots_signed_for').bind('keyup change', function ()
+    $('#crowd_datum_ballots_signed_for, #protocol_ballots_signed_for').bind('keyup change', function ()
     {
       vch.f[0].innerHTML = +$(this).val();
       check_values();

@@ -62,6 +62,9 @@ class RootController < ApplicationController
     @user_trained_num = trained.length
 
     if params['protocol'].present?
+      # if the user entered a 0, reset to '' so matching works
+      params['protocol'].select{|k,v| v == '0'}.each{|k,v| params['protocol'][k] = ''}
+
       @next_protocol = params['protocol_number']
       filedata = JSON.parse(File.read('public/training/' + @next_protocol + '.json'))
       if filedata == params['protocol']
