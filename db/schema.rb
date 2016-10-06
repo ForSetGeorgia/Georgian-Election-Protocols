@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161005110326) do
+ActiveRecord::Schema.define(:version => 20161006124304) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -231,6 +231,9 @@ ActiveRecord::Schema.define(:version => 20161005110326) do
     t.string   "analysis_table_name"
     t.datetime "created_at",                                        :null => false
     t.datetime "updated_at",                                        :null => false
+    t.integer  "max_party_in_district",          :default => 0
+    t.integer  "protocol_top_box_margin",        :default => 0
+    t.integer  "protocol_party_top_margin",      :default => 0
   end
 
   add_index "elections", ["can_enter_data"], :name => "index_elections_on_can_enter_data"

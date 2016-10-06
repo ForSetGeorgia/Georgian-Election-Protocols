@@ -1,0 +1,150 @@
+<% title t('.title') %>
+
+
+<% if @crowd_datum.blank? %>
+  <p>
+    <%= t('.no_protocols') %>  
+  </p>
+
+<% else %>
+
+  <% if @crowd_datum.errors[:base].present? %>
+    <div class="alert alert-error fade in">
+      <a href="#" data-dismiss="alert" class="close">×</a>
+      <%= @crowd_datum.errors[:base].join('<br />'.html_safe) %>
+    </div>
+  <% end %>
+
+  <div id="protocol-form-container">
+
+    <p>
+      <%= t('.p1') %>
+    </p>
+    <p>
+      <%= t('.p2') %>
+    </p>
+
+    <% if @crowd_datum.amendment_image_path.present? %>
+
+      <p id="amendment_explanation">
+        <%= t('.amendment_explanation1') %>
+        <br />
+        <%= t('.amendment_explanation2') %>
+      </p>
+
+    <% end %>
+
+    <% if @crowd_datum.district_id == 87 %>
+
+      <p id="overseas_explanation">
+        <%= t('.overseas_explanation1') %>
+        <br />
+        <%= t('.overseas_explanation2') %>
+      </p>
+
+    <% end %>
+
+    <%#= image_tag @crowd_datum.image_path, :id => 'protocolimg' %>
+    <%= image_tag @crowd_datum.image_path, :id => 'protocolimg', :class => (FastImage.size(full_url(@crowd_datum.image_path))[1] < 1100 ? 'low' : '') %>
+    <%#= image_tag 'http://localhost:3000/system/protocols/53/53-29.jpg', :id => 'protocolimg', :class => (FastImage.size("/system/protocols/53/53-29.jpg")[1] < 1100 ? 'low' : '') %>
+
+
+    <%= semantic_form_for @crowd_datum, :url => protocol_path do |f| %>
+      <%= f.inputs do %>
+        <%= f.input :district_id, :as => :hidden %>
+        <%= f.input :precinct_id, :as => :hidden %>
+        <%= f.input :user_id, :as => :hidden %>
+
+        <%  [
+              [1, :possible_voters],
+              [2, :special_voters],
+              ['3ა (12:00)', :votes_by_1200],
+              ['3ბ (17:00)', :votes_by_1700],
+              [4, :ballots_signed_for],
+              [5, :ballots_available],
+              [1, :party_1],
+              [2, :party_2],
+              [3, :party_3],
+              [4, :party_4],
+              [5, :party_5],
+              [6, :party_6],
+              [7, :party_7],
+              [8, :party_8],
+              [9, :party_9],
+              [10, :party_10],
+              [11, :party_11],
+              [12, :party_12],
+              [13, :party_13],
+              [14, :party_14],
+              [15, :party_15],
+              [16, :party_16],
+              [17, :party_17],
+              [18, :party_18],
+              [19, :party_19],
+              [20, :party_20],
+              [21, :party_21],
+              [22, :party_22],
+              [41, :party_41],
+              [6, :invalid_ballots_submitted]
+            ].each_with_index do |x, i| %>
+
+          <% if i == 2 %>
+            <div class="inline clearfix">
+          <% elsif i == 4 %>
+            </div>
+          <% end %>
+
+
+          <div class="m m<%= i + 1 %>">
+            <%= f.input x[1], :label => x[0].to_s, :as => :string, :input_html => {:autocomplete => :off} %>
+          </div>
+        <% end %>
+
+
+
+      <% end %>
+
+      <%= f.actions do %>
+        <%= f.action :submit, :as => :input, :label => t('app.common.submit') %>
+      <% end %>
+
+      <% if @crowd_datum.amendment_image_path.present? %>
+        <p id="amendment_copy">
+          <%= t('.amendment_explanation1') %>
+          <br />
+          <%= t('.amendment_explanation2') %>
+        </p>
+      <% end %>
+
+      <div id="votesum_explanation">
+        <p>
+          **
+          <%= t('.votesum_explanation1', :label => t('app.csv_header.num_votes')) %>
+        </p>
+        <p>
+          <%= t('.votesum_explanation2', :label => t('.sum_party_votes')) %>
+        </p>
+        <p>
+          <%= t('.votesum_explanation3') %>
+        </p>
+        <p>
+          <%= t('.votesum_explanation4') %>
+        </p>
+      </div>
+
+    <% end %>
+
+    <div id="votesum">
+      <span class="f" title="<%= t('app.csv_header.num_votes') %>">0</span>
+      <span class="e">=</span>
+      <span class="s" title="<%= t('.sum_party_votes')%>">0</span>
+      **
+    </div>
+
+    <div id="amendment_image" class="clear">
+      <%= image_tag @crowd_datum.amendment_image_path if @crowd_datum.amendment_image_path.present?%>
+    </div>
+
+
+  </div>
+<% end %>

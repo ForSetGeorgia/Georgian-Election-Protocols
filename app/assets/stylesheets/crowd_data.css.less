@@ -30,7 +30,7 @@
 #protocol-form-container {
   display: table;
   margin: 0px auto;
-  
+
   p{
     text-align: center;
     font-size: 18px;
@@ -62,7 +62,7 @@
       text-align: left;
     }
   }
-  
+
   #amendment_image{
     color: #fff;
     padding: 5px;
@@ -104,6 +104,91 @@
   float: left;
   display: block;
   margin-left: -50px;
+
+  .top-box{
+    margin-top: 108px;
+  }
+  .party-box{
+    .f{
+      margin-top: 9px;
+    }
+  }
+  .bottom-box{
+
+  }
+
+  .f {
+    .control-group {
+      margin: 0px;
+      .clearfix();
+      label, .controls {
+        display: block;
+        float: left;
+      }
+      label {
+        .box-sizing();
+        width: 95px;
+        text-align: center;
+        line-height: @h;
+        height: @h;
+        padding: 0px 0px 0px 10px;
+        margin: 0px;
+        border-bottom: 1px solid #ccc;
+      }
+      input {
+        width: 70px;
+        .box-sizing();
+        .border-radius(0px);
+        height: @h;
+        margin: 0px;
+      }
+      input + .help-inline {
+        display: none;
+      }
+      input + img.error-icon {
+        vertical-align: middle;
+        margin-left: 3px;
+        cursor: pointer;
+      }
+    }
+    &.f1 {
+      /*margin-top: 108px;*/
+    }
+    &.f2 {
+      margin-top: 5px;
+    }
+    &.f3, &.f4 {
+      margin-top: 18px;
+    }
+    &.f5 {
+      margin-top: 6px;
+    }
+    &.f6 {
+      margin-top: 4px;
+      border-bottom: 4.5px solid #333;
+    }
+    &.f7 {
+      padding-top: 6px;
+      border-top: 4.5px solid #333;
+      border-bottom: 1px solid #333;
+    }
+
+    &.m11, &.m17, &.m19, &.m21, &.m22, &.m23, &.m27 {
+      margin-top: .5px;
+    }
+    &.m29 {
+      margin-top: 0px;
+      border-bottom: 4px solid #333;
+      label, input {
+        height: 21px;
+        line-height: 21px;
+      }
+    }
+    &.m30 {
+      margin-top: 6px;
+      border-bottom: 1px solid #333;
+    }
+  }
 
   .m {
     .control-group {
@@ -175,6 +260,14 @@
     }
   }
   .inline {
+    .f {
+      float: left;
+      &:not(:first-child) {
+        label {
+          border: none;
+        }
+      }
+    }
     .m {
       float: left;
       &:not(:first-child) {
@@ -257,6 +350,35 @@
 }
 
 #protocolimg.low + form {
+  .top-box{
+    margin-top: 136px;
+  }
+  .party-box{
+    .f{
+      margin-top: 9px;
+    }
+  }
+  .bottom-box{
+
+  }
+
+  .f {
+    @h: 22.5px;
+    label, input {
+      height: @h;
+    }
+    label {
+      line-height: @h;
+      padding-right: 10px;
+      width: 85px;
+      text-align: right;
+    }
+    &.f1 {
+    }
+    &.f2 {
+      margin-top: 5px;
+    }
+  }
   .m {
     @h: 22.5px;
     label, input {
@@ -313,10 +435,6 @@
     }
   }
 }
-
-
-
-
 
 
 

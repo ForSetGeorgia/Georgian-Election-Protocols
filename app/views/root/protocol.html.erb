@@ -3,7 +3,7 @@
 
 <% if @crowd_datum.blank? %>
   <p>
-    <%= t('.no_protocols') %>  
+    <%= t('.no_protocols') %>
   </p>
 
 <% else %>
@@ -51,56 +51,74 @@
 
     <%= semantic_form_for @crowd_datum, :url => protocol_path do |f| %>
       <%= f.inputs do %>
+        <%= f.input :election_id, :as => :hidden %>
         <%= f.input :district_id, :as => :hidden %>
         <%= f.input :precinct_id, :as => :hidden %>
         <%= f.input :user_id, :as => :hidden %>
 
-        <%  [
-              [1, :possible_voters],
-              [2, :special_voters],
-              ['3ა (12:00)', :votes_by_1200],
-              ['3ბ (17:00)', :votes_by_1700],
-              [4, :ballots_signed_for],
-              [5, :ballots_available],
-              [1, :party_1],
-              [2, :party_2],
-              [3, :party_3],
-              [4, :party_4],
-              [5, :party_5],
-              [6, :party_6],
-              [7, :party_7],
-              [8, :party_8],
-              [9, :party_9],
-              [10, :party_10],
-              [11, :party_11],
-              [12, :party_12],
-              [13, :party_13],
-              [14, :party_14],
-              [15, :party_15],
-              [16, :party_16],
-              [17, :party_17],
-              [18, :party_18],
-              [19, :party_19],
-              [20, :party_20],
-              [21, :party_21],
-              [22, :party_22],
-              [41, :party_41],
-              [6, :invalid_ballots_submitted]
-            ].each_with_index do |x, i| %>
+        <%
+          style = ''
+          if @election.protocol_top_box_margin > 0
+            style = "margin-top: #{@election.protocol_top_box_margin}px"
+          end
+        %>
 
-          <% if i == 2 %>
-            <div class="inline clearfix">
-          <% elsif i == 4 %>
+        <div class="top-box" style='<%= style %>'>
+          <div class="f f1">
+            <%= f.input :possible_voters, :label => '1', :as => :string, :input_html => {:autocomplete => :off} %>
+          </div>
+          <div class="f f2">
+            <%= f.input :special_voters, :label => '2', :as => :string, :input_html => {:autocomplete => :off} %>
+          </div>
+          <div class="inline clearfix">
+            <div class="f f3">
+              <%= f.input :votes_by_1200, :label => '3ა (12:00)', :as => :string, :input_html => {:autocomplete => :off} %>
+            </div>
+            <div class="f f4">
+              <%= f.input :votes_by_1700, :label => '3ბ (17:00)', :as => :string, :input_html => {:autocomplete => :off} %>
+            </div>
+          </div>
+          <div class="f f5">
+            <%= f.input :ballots_signed_for, :label => '4', :as => :string, :input_html => {:autocomplete => :off} %>
+          </div>
+          <div class="f f6">
+            <%= f.input :ballots_available, :label => '5', :as => :string, :input_html => {:autocomplete => :off} %>
+          </div>
+        </div>
+
+        <div class="party-box">
+          <%
+            style = ''
+            if @election.protocol_party_top_margin > 0
+              style = "margin-top: #{@election.protocol_party_top_margin}px"
+            end
+          %>
+          <% @party_numbers.each do |number| %>
+            <div class="f" style='<%= style %>'>
+              <%= f.input :"party_#{number}", :label => number.to_s, :as => :string, :input_html => {:autocomplete => :off} %>
             </div>
           <% end %>
+        </div>
 
-
-          <div class="m m<%= i + 1 %>">
-            <%= f.input x[1], :label => x[0].to_s, :as => :string, :input_html => {:autocomplete => :off} %>
+        <%
+          style = ''
+          if !@election.parties_same_for_all_districts? && @election.max_party_in_district > 0 && @election.max_party_in_district != @party_numbers.length
+            # have to calculate how high the party box should be
+            # and subtract from the # of parties in the box
+            # - 22.5 is the default height for each field
+            party_height = 22.5 + @election.protocol_party_top_margin
+            total_height = @election.max_party_in_district * party_height
+            total_party_height = @party_numbers.length * (party_height)
+            empty_space = total_height - total_party_height
+            logger.debug "parties = #{@party_numbers.length}; party height = #{party_height}; total party height = #{total_party_height}; total = #{total_height}; empty = #{empty_space}"
+            style = "margin-top: #{empty_space}px"
+          end
+        %>
+        <div class="bottom-box" style='<%= style %>'>
+          <div class="f f7">
+            <%= f.input :invalid_ballots_submitted, :label => '6', :as => :string, :input_html => {:autocomplete => :off} %>
           </div>
-        <% end %>
-
-
+        </div>
 
       <% end %>
 

@@ -23,6 +23,15 @@ class Party < ActiveRecord::Base
     where(election_id: election_id)
   end
 
+  def self.by_election_district(election_id, district_id)
+    p = where(election_id: election_id)
+    if !Election.are_parties_same_for_all_districts?(election_id)
+      p = p.where(number: DistrictParty.by_election_district(election_id, district_id).pluck(:party_id))
+    end
+
+    return p
+  end
+
   def self.party_numbers
     pluck(:number)
   end

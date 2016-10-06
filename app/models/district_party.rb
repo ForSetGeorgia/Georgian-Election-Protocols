@@ -2,7 +2,6 @@ class DistrictParty < ActiveRecord::Base
   #######################################
   ## RELATIONSHIPS
   belongs_to :election
-  belongs_to :party
 
   #######################################
   ## ATTRIBUTES
@@ -15,6 +14,7 @@ class DistrictParty < ActiveRecord::Base
 
   #######################################
   ## SCOPES
+
   def self.by_election_district(election_id, district_id)
     where(election_id: election_id, district_id: district_id)
   end

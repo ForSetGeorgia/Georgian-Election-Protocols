@@ -227,6 +227,15 @@ if ENV['load_test_data'].present? && !Rails.env.production?
     major.users << u1
     major.users << u2
 
+    admins = User.where(role: 99)
+    if admins.present?
+      puts '- assign admin users to party list and major'
+      admins.each do |admin|
+        prop.users << admin
+        major.users << admin
+      end
+    end
+
 
     puts '- load data for party list'
     csv_data = CSV.read(csv_path + '2012_party_list_data.csv')

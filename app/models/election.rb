@@ -22,7 +22,8 @@ class Election < ActiveRecord::Base
   #######################################
   ## ATTRIBUTES
   attr_accessible :parties_same_for_all_districts, :can_enter_data, :is_local_majoritarian,
-                  :has_regions, :has_district_names, :election_app_event_id, :election_at, :election_translations_attributes
+                  :has_regions, :has_district_names, :election_app_event_id, :election_at, :election_translations_attributes,
+                  :max_party_in_district, :protocol_top_box_margin, :protocol_party_top_margin
 
   #######################################
   ## VALIDATIONS
@@ -49,7 +50,7 @@ class Election < ActiveRecord::Base
   scope :can_enter, where(can_enter_data: true)
 
   def self.by_election(election_id)
-    where(election_id: election_id)
+    where(id: election_id)
   end
 
   def self.by_election_district(election_id, district_id)
@@ -72,6 +73,11 @@ class Election < ActiveRecord::Base
   # - -1 is because the election data is usually not available until the day after
   def self.coming_up
     where('can_enter_data = 0 and election_at >= ?', (Time.now-1.day).to_date)
+  end
+
+  # determine if this election has same parties for all districts
+  def self.are_parties_same_for_all_districts?(election_id)
+    by_election(election_id).pluck(:parties_same_for_all_districts).first
   end
 
   #######################################
