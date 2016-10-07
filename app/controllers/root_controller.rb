@@ -38,8 +38,17 @@ class RootController < ApplicationController
     if request.post?
      #CrowdDatum.numerical_values_provided(params[:crowd_datum])
       params[:crowd_datum] = CrowdDatum.extract_numbers(params[:crowd_datum])
-      @crowd_datum = CrowdDatum.new(params[:crowd_datum])
-      valid = @crowd_datum.save
+
+      # in case users are refreshing page, look to see if the record already exists
+      # if so, ignore it, else create it
+      @crowd_datum = CrowdDatum.by_ids(params[:crowd_datum][:election_id], params[:crowd_datum][:district_id], params[:crowd_datum][:precinct_id], params[:crowd_datum][:user_id]).first
+      if @crowd_datum.nil?
+        @crowd_datum = CrowdDatum.new(params[:crowd_datum])
+        valid = @crowd_datum.save
+      else
+        puts "!!!!!! record already exists, so ignoring submission"
+        valid = true
+      end
   		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id, @election_ids)
     end
 
