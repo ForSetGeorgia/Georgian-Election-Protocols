@@ -17,10 +17,9 @@ class Admin::ElectionDataController < ApplicationController
   end
 
   def edit
+    election = Election.find(params[:election_id])
 
-    @record = President2013.where(:district_id => params[:district_id], :precinct_id => params[:precinct_id])
-
-    @record = @record.first if @record.present?
+    @record = election.get_analysis_record(:district_id => params[:district_id], :precinct_id => params[:precinct_id])
 
     if @record.present? && params[:president2013].present? && request.put?
 logger.debug "******************************** form is put"

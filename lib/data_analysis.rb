@@ -81,6 +81,19 @@ module DataAnalysis
   ################################################
 
   # process an election
+  def get_analysis_record(district_id, precinct_id)
+
+    sql = "select * from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw`
+            where district_id = ? and precinct_id = ?"
+
+    #@@client.exec_query(sql, [district_id, precinct_id])
+    @@client.exec_query([sql, [district_id, precinct_id]])
+
+  end
+
+  ################################################
+
+  # process an election
   def completed_precinct_count
 
     sql = "select count(*) from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw`"
