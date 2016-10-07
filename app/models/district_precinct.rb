@@ -20,11 +20,11 @@ class DistrictPrecinct < ActiveRecord::Base
   end
 
   def self.with_protocols
-    where(:has_protocol => true).order("district_id, precinct_id")
+    where(:has_protocol => true).order("election_id, district_id, precinct_id")
   end
 
   def self.awaiting_protocols
-    where(:has_protocol => false).order("district_id, precinct_id")
+    where(:has_protocol => false).order("election_id, district_id, precinct_id")
   end
 
   def self.district_count_by_election(election_id)
@@ -62,67 +62,24 @@ class DistrictPrecinct < ActiveRecord::Base
   end
 
   # creates array of districts/precincts that have protocols
-  #format: [ {district_id => x, precincts => [ {id => x }, ...  ] }, .... ]
+  #format: [ {election_id => a, districts => [ { district_id => [ precinct_id, precinct_id,   ] } ] } ]
   def self.found_protocols
-    records = []
-    x = with_protocols
+    # records = []
+    e_ids = Election.can_enter.pluck(:id)
+    records = with_protocols.by_election(e_ids)
 
-    if x.present?
-      district_ids = x.map{|x| x.district_id}.uniq
-      if district_ids.present?
-        district_ids.each do |district_id|
-          district = Hash.new
-          records << district
-          district['district_id'] = district_id
-          district['precincts'] = []
-          precinct_ids = x.select{|x| x.district_id == district_id}.map{|x| x.precinct_id}.sort
-
-          if precinct_ids.present?
-            precinct_ids.each do |precinct_id|
-              precinct = Hash.new
-              district['precincts'] << precinct
-              precinct['id'] = precinct_id
-            end
-          end
-
-        end
-      end
-    end
-
-    return records
+    return build_api_request(e_ids, records)
   end
 
 
   # creates array of districts/precincts that are missing protocols
-  #format: [ {district_id => x, precincts => [ {id => x, found => false }, ...  ] }, .... ]
+  #format: [ {election_id => a, districts => [ { district_id => [ precinct_id, precinct_id,   ] } ] } ]
   def self.missing_protocols
-    records = []
-    x = awaiting_protocols
+    # records = []
+    e_ids = Election.can_enter.pluck(:id)
+    records = awaiting_protocols.by_election(e_ids)
 
-    if x.present?
-      district_ids = x.map{|x| x.district_id}.uniq
-      if district_ids.present?
-        district_ids.each do |district_id|
-          district = Hash.new
-          records << district
-          district['district_id'] = district_id
-          district['precincts'] = []
-          precinct_ids = x.select{|x| x.district_id == district_id}.map{|x| x.precinct_id}.sort
-
-          if precinct_ids.present?
-            precinct_ids.each do |precinct_id|
-              precinct = Hash.new
-              district['precincts'] << precinct
-              precinct['id'] = precinct_id
-#              precinct['found'] = false
-            end
-          end
-
-        end
-      end
-    end
-
-    return records
+    return build_api_request(e_ids, records)
   end
 
 
@@ -358,6 +315,37 @@ class DistrictPrecinct < ActiveRecord::Base
 
   def self.format_percent(number)
     ActionController::Base.helpers.number_to_percentage(ActionController::Base.helpers.number_with_precision(number))
+  end
+
+
+  #format: [ {election_id => a, districts => [ { district_id => [ precinct_id, precinct_id,   ] } ] } ]
+  def self.build_api_request(e_ids, data)
+    records = []
+    if data.present?
+      e_ids.each do |e_id|
+        election = {election_id: e_id, districts: []}
+
+        records << election
+
+        district_ids = data.select{|x| x.election_id == e_id}.map{|x| x.district_id}.uniq
+
+        if district_ids.present?
+          district_ids.each do |district_id|
+            district = Hash.new
+            election[:districts] << district
+            district[district_id] = []
+            precinct_ids = data.select{|x| x.election_id == e_id && x.district_id == district_id}.map{|x| x.precinct_id}.uniq.sort
+
+            if precinct_ids.present?
+              district[district_id] << precinct_ids
+            end
+
+          end
+        end
+      end
+    end
+
+    return records
   end
 
 end
