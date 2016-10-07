@@ -34,7 +34,9 @@ class CrowdQueue < ActiveRecord::Base
 
   # mark a queue item as finished
   def self.finished(election_id, district_id, precinct_id, user_id)
+    logger.debug "))) crowd queue finished"
     if election_id.present? && user_id.present? && district_id.present? && precinct_id.present?
+      logger.debug "))) - found match, marking as finished"
       CrowdQueue.where(["election_id = ? and user_id = ? and district_id = ? and precinct_id = ? and is_finished is null", election_id, user_id, district_id, precinct_id]).update_all(:is_finished => true)
     end
   end
