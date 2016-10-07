@@ -52,8 +52,8 @@ $(document).ready(function(){
     }
   });
 
-  col_sort = new Array($('#overall_stats_by_district > thead > tr > th').length);
-  for(var i=0;i<$('#overall_stats_by_district > thead > tr > th').length;i++){
+  col_sort = new Array($('.overall_stats_by_district > thead > tr > th').length);
+  for(var i=0;i<$('.overall_stats_by_district > thead > tr > th').length;i++){
     col_sort[i] = {"sType": "formatted-num" };
   }
 
@@ -63,7 +63,7 @@ $(document).ready(function(){
     "bJQueryUI": true,
     "bProcessing": true,
     "bAutoWidth": true,
-    "aoColumns": col_sort,
+    // "aoColumns": col_sort,
     "oLanguage": {
       "sUrl": gon.datatable_i18n_url
     },

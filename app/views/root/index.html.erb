@@ -32,29 +32,29 @@
                   </div>
                   <div class="span4">
                     <p>
-                      <strong><%= t('.overall_stats.protocols_missing')%>:</strong>
-                      <%= stats[:protocols_missing][:number] %>
-                      (<%= stats[:protocols_missing][:percent] %>)
-                    </p>
-                    <p>
                       <strong><%= t('.overall_stats.protocols_found')%>:</strong>
                       <%= stats[:protocols_found][:number] %>
                       (<%= stats[:protocols_found][:percent] %>)
                     </p>
+                    <p>
+                      <strong><%= t('.overall_stats.protocols_missing')%>:</strong>
+                      <%= stats[:protocols_missing][:number] %>
+                      (<%= stats[:protocols_missing][:percent] %>)
+                    </p>
                   </div>
                   <div class="span4">
-                    <p>
-                      <strong><%= t('.overall_stats.protocols_not_entered')%>:</strong>
-                      <%= stats[:protocols_not_entered][:number] %>
-                      <% if stats[:protocols_not_entered][:number] != I18n.t('app.common.na') %>
-                        (<%= stats[:protocols_not_entered][:percent] %>)
-                      <% end %>
-                    </p>
                     <p>
                       <strong><%= t('.overall_stats.protocols_validated')%>:</strong>
                       <%= stats[:protocols_validated][:number] %>
                       <% if stats[:protocols_validated][:number] != I18n.t('app.common.na') %>
                         (<%= stats[:protocols_validated][:percent] %>)
+                      <% end %>
+                    </p>
+                    <p>
+                      <strong><%= t('.overall_stats.protocols_not_entered')%>:</strong>
+                      <%= stats[:protocols_not_entered][:number] %>
+                      <% if stats[:protocols_not_entered][:number] != I18n.t('app.common.na') %>
+                        (<%= stats[:protocols_not_entered][:percent] %>)
                       <% end %>
                     </p>
                   </div>
@@ -118,7 +118,7 @@
           <ul class="nav nav-tabs">
             <% @elections.each_with_index do |election, index| %>
               <% active = index == 0 ? 'active' : '' %>
-              <li class="<%= active %>"><a href="#district_stats_<%= election.analysis_table_name %>" data-toggle="tab"><%= election.name %></a></li>
+                <li class="<%= active %>"><a href="#district_stats_<%= election.analysis_table_name %>" data-toggle="tab"><%= election.name %></a></li>
             <% end %>
           </ul>
           <div class="tab-content">
@@ -213,8 +213,8 @@
                   </table>
                 <% end %>
               </div>
-            </div>
-          <% end %>
+            <% end %>
+          </div>
         </div>
       <% end %>
 
