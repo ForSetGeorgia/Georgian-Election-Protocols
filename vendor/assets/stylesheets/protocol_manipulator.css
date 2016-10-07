@@ -1,0 +1,81 @@
+/*
+ *= require magnifier
+*/
+#protocol_controls {
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:1001;
+  padding:6px 10px;
+  display:flex;
+  flex-direction:row;
+  align-items: flex-start;
+  background-color: white;
+  border: 1px solid #bdbdbd;
+  border-bottom:0;
+  vertical-align:top;
+}
+#protocol_controls .buttons {
+  display:flex;
+  flex-direction:column;
+  padding:0 0 0 10px;
+}
+#protocol_controls .buttons > div {
+  margin: 3px 0;
+}
+#protocol_controls button {
+  border: 1px solid #bdbdbd;
+  width: 28px;
+  height: 28px;
+  max-width: 28px;
+  max-height: 28px;
+  vertical-align:top;
+  padding:0;
+  box-sizing: border-box;
+  text-align: center;
+  cursor:pointer;
+}
+#protocol_controls.cover .buttons, #protocol_controls.cover .magnifier-preview  {
+  display:none;
+}
+#protocolimg {
+  position:relative;
+}
+.magnifier-preview {
+  border: 1px solid #bdbdbd;
+}
+.magnifier-preview img {
+  max-width:none;
+}
+.magnifier-preview .placeholder {
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#protocol_rotate_ccw { background:transparent url("counterclockwise.svg") no-repeat center center/20px; }
+#protocol_rotate_cw { background:transparent url("clockwise.svg") no-repeat center center/20px; }
+#protocol_flip { background:transparent url("rotate.svg") no-repeat center center/20px; }
+#protocol_rotate_reset { background:transparent url("reset.svg") no-repeat center center/20px; }
+#protocol_move_up { background:transparent url("up.svg") no-repeat center center/20px; }
+#protocol_move_down { background:transparent url("down.svg") no-repeat center center/20px; }
+.protocol_controls_toggle {
+  width:24px;
+  height:24px;
+  position:absolute;
+  right:0;
+  bottom:0;
+  background: white url("shrink.svg") no-repeat center center/16px;
+  cursor:pointer;
+  border:1px solid #bdbdbd;
+  border-bottom:0;
+  border-right:0;
+  margin:0 3px 3px 0;
+}
+.protocol_controls_toggle.expand {
+  background: white url("expand.svg") no-repeat center center/16px;
+  margin:0;
+  border-right:1px;
+}

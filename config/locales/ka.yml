@@ -265,6 +265,15 @@ ka:
       votesum_explanation2: "მარჯვენა რიცხვი: %{label}"
       votesum_explanation3: "ეს რიცხვები დაგეხმარებათ მონაცემთა სეყვანაში."
       votesum_explanation4: "შესაძლოა, რომ ეს რიცხვები არ ემთხვეოდეს."
+      scroll_to_zoom: Scroll protocol to zoom
+      title:
+        toggle: Toggle
+        ccw: Rotate CounterClockwise
+        cw: Rotate Clockwise
+        flip: Rotate by 180 degree
+        up: Move up
+        down: Move down
+        reset: Reset all transformations
     download:
       title: ჩამოტვირთე შეყვანილი მონაცემები
       num_precincts: არსებობს %{total}-დან %{count} საარჩევნო უბანი საარჩევნო მონაცემებით.

@@ -27,7 +27,7 @@ class RootController < ApplicationController
   end
 
   def protocol
-
+    @protocol_manipulator = true
     # if the user has not completed training send them there
     if !current_user.completed_training?
       redirect_to training_path, :notice => I18n.t('root.protocol.no_training')

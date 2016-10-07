@@ -30,6 +30,9 @@
     <![endif]-->
 
     <%= stylesheet_link_tag "application", :media => "all" %>
+    <% if @protocol_manipulator == true %>
+      <%= stylesheet_link_tag "protocol_manipulator" %>
+    <% end %>
 		<!--[if IE 6]><%= stylesheet_link_tag 'ie6' %><![endif]-->
 	  <!--[if IE 7]><%= stylesheet_link_tag 'ie7' %><![endif]-->
 
@@ -205,6 +208,8 @@
 		<% elsif Rails.env.staging? %>
 			<!-- insert google analytics for staging site here -->
 		<% end %>
-
+    <% if @protocol_manipulator == true %>
+      <%= javascript_include_tag "protocol_manipulator" %>
+    <% end %>
   </body>
 </html>

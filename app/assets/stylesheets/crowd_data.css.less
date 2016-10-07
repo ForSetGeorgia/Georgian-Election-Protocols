@@ -90,20 +90,27 @@
   }
 }
 
-
+.protocol-container {
+  display:flex;
+  flex-direction:row;
+}
 #protocolimg {
   width: 800px;
   height: 1100px;
   display: block;
-  float: left;
+}
+.magnifier-thumb-wrapper {
+  // float: left;
+  min-width: 800px;
+  min-height: 1100px;
 }
 
 @h: 21px;
 
-#protocolimg + form {
-  float: left;
+.magnifier-thumb-wrapper + form {
+  // float: left;
   display: block;
-  margin-left: -50px;
+  // margin-left: -50px;
 
   .top-box{
     margin-top: 108px;
@@ -349,7 +356,7 @@
   }
 }
 
-#protocolimg.low + form {
+.magnifier-thumb-wrapper.low + form {
   .top-box{
     margin-top: 136px;
   }

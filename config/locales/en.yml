@@ -265,6 +265,15 @@ en:
       votesum_explanation2: "Right Number: %{label}"
       votesum_explanation3: "These numbers are here to guide you with your data entry."
       votesum_explanation4: "It is possible that these numbers will not match."
+      scroll_to_zoom: Scroll protocol to zoom
+      title:
+        toggle: Toggle
+        ccw: Rotate CounterClockwise
+        cw: Rotate Clockwise
+        flip: Rotate by 180 degree
+        up: Move up
+        down: Move down
+        reset: Reset all transformations
     download:
       title: Download Results of Data Entry
       num_precincts: There are %{count} out of %{total} precincts (%{percent}) with election data.
