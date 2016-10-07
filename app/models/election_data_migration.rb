@@ -6,70 +6,81 @@ class ElectionDataMigration < ActiveRecord::Base
   MIN_PRECINCTS_CHANGE = 50
   FILE_PATH = "#{Rails.root}/public/system/election_data_migrations/"
   URL_PATH = "/system/election_data_migrations/"
-  
+
   PUSH_DATA_URL_PATH = "en/migration/load_data/from_protocols_app"
-   
-  scope :sorted, order("created_at desc")
 
   def file_url_path
-    URL_PATH + self.file_name if self.file_name.present?    
+    URL_PATH + self.file_name if self.file_name.present?
   end
-  
-  def self.last_precinct_count
+
+  #######################################
+  ## SCOPES
+  scope :sorted, order("created_at desc")
+
+  def self.by_election(election_id)
+    where(election_id: election_id)
+  end
+
+  def self.last_precinct_count(election_id)
     count = 0
-    x = select('num_precincts').order('created_at desc').limit(1)
-    count = x.first.num_precincts if x.present?
-    
+    x = select('num_precincts').where(election_id: election_id).order('created_at desc').limit(1).first
+    count = x.num_precincts if x.present?
+
     return count
   end
-  
-  
-  def self.create_record
+
+  #######################################
+  #######################################
+
+
+  def self.create_record(election_id)
 Rails.logger.debug "################## create migration record"
     migration = nil
-    
-    precinct_count = President2013.count
-    
-    if (precinct_count - last_precinct_count) >= MIN_PRECINCTS_CHANGE
-Rails.logger.debug "################## need to send data!"
-      # create record
-      migration = ElectionDataMigration.new(:num_precincts => precinct_count)
 
-      # get the csv data
-      csv = President2013.download_election_map_data    
-      # create directory if not exist
-      FileUtils.mkpath(FILE_PATH)
-      # save file
-  	  filename = clean_filename("#{I18n.t('app.common.file_name')}-#{I18n.l Time.now, :format => :file}") + ".csv"
-      File.open(FILE_PATH + filename, 'w') {|f| f.write(csv) }
+    election = Election.find(election_id)
 
-      migration.file_name = filename
+    precinct_count = election.completed_precinct_count
 
-      migration.save
+    # create record
+    migration = ElectionDataMigration.new(election_id: election_id, num_precincts: precinct_count)
+
+    # get the csv data
+    csv = election.download_election_map_data
+
+    # create directory if not exist
+    FileUtils.mkpath(FILE_PATH)
+
+    # save file
+	  filename = clean_filename("#{election.analysis_table_name}-#{I18n.l Time.now, :format => :file}") + ".csv"
+    File.open(FILE_PATH + filename, 'w') {|f| f.write(csv) }
+
+    migration.file_name = filename
+
+    migration.save
 Rails.logger.debug "################## created migration record: #{migration.inspect}"
-      
-    end
-    
+
 Rails.logger.debug "################## create migration end"
     return migration
   end
 
+  #######################################
+  #######################################
 
-  def self.push_data
+  def self.push_data(election_id)
 puts "################## push data start"
     pushed = false
-    
+
     precinct_count = President2013.count
 
-puts "################## difference value = #{precinct_count - last_precinct_count}; min need = #{MIN_PRECINCTS_CHANGE}"
-    
-    if (precinct_count - last_precinct_count) >= MIN_PRECINCTS_CHANGE
+puts "################## difference value = #{precinct_count - last_precinct_count(election_id)}; min need = #{MIN_PRECINCTS_CHANGE}"
+
+    if (precinct_count - last_precinct_count(election_id)) >= MIN_PRECINCTS_CHANGE
 puts "################## need to send data!"
       # create record
       migration = ElectionDataMigration.new(:num_precincts => precinct_count)
 
       # get the csv data
-      csv = President2013.download_election_map_data    
+      csv = President2013.download_election_map_data
       # create directory if not exist
       FileUtils.mkpath(FILE_PATH)
       # save file
@@ -77,10 +88,10 @@ puts "################## need to send data!"
       File.open(FILE_PATH + filename, 'w') {|f| f.write(csv) }
 
       migration.file_name = filename
-      
+
       migration.save
 puts "################## created migration record: #{migration.inspect}"
-      
+
 puts "################## sending data"
       # push the data to the election site
       uri = URI(site_url + PUSH_DATA_URL_PATH)
@@ -98,10 +109,13 @@ puts "################## recording notification"
         pushed = response['success'].to_s.downcase == 'true' ? true : false
       end
     end
-    
+
 puts "################## push data end"
     return pushed
   end
+
+  #######################################
+  #######################################
 
   def self.record_notification(file_name, success, message)
     x = success.to_s.downcase == 'true' ? true : false
@@ -111,45 +125,45 @@ puts "################## push data end"
 
 
   protected
-  
+
 	# remove bad characters from file name
 	def self.clean_filename(filename)
 		Utf8Converter.convert_ka_to_en(filename.gsub(' ', '_').gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,''))
 	end
-  
+
   def self.site_url
     url = 'http://localhost:3000/'
-    
+
     if Rails.env.production?
       url = 'http://data.electionportal.ge/'
     elsif Rails.env.staging?
       url = 'http://dev-electiondata.jumpstart.ge/'
     end
-    
+
     return url
   end
 
   def self.current_domain
     domain = 'http://localhost:3001'
-    
+
     if Rails.env.production?
       domain = 'http://protocols.jumpstart.ge'
     elsif Rails.env.staging?
       domain = 'http://dev-protocols.jumpstart.ge'
     end
-    
+
     return domain
   end
 
   def self.event_id
     event_id = 42
-    
+
     if Rails.env.production?
       event_id = 38
     elsif Rails.env.staging?
       event_id = 38
     end
-    
+
     return event_id
   end
 end

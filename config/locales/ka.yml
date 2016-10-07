@@ -162,6 +162,7 @@ ka:
         precinct_count: "დამუშავებული უბნების რაოდენობა: %{count}"
         last_precinct_count: "უკანასკნელ მიგრაციაში უბნების რაოდენობა: %{count}"
         min_precinct_change: "უბნების მინიმალური რაოდენობა ახალი მიგრაციის შესაქმნელად: %{count}"
+        precinct_count_difference: "New Precincts That Would Be Added: %{count}"
         no_precincts: არჩევნების მონაცემები ჯერ არ არსებობს!
         push_data: მიგრაციის დაწყება
         no_migrations: მონაცემები ჯერ არ გაგზავნილა არჩევნების მონაცემთა აპლიკაციაში ჯერ
@@ -174,6 +175,8 @@ ka:
         file: CSV ფაილი
         push_success: მონაცემები წარმატებით გაიგზავნა არჩევნების მონაცემთა აპლიკაციაში
         push_fail: არჩევნების მონაცემთა აპლიკაციაში მონაცემების გაგზავნისთვის საკმარისი ახალი უბნები არ არსებობს
+        start_migration: Start A Migration
+        migration_history: Migration History
       edit:
         title: მონაცემების შეყვანა
         p1: "გთხოვთ, შეიყვანოთ მხოლოდ რიცხვები; არ შეიყვანოთ 'X'."

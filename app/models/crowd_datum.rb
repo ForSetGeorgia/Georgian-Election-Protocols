@@ -158,6 +158,8 @@ class CrowdDatum < ActiveRecord::Base
           sql << ")"
           client.execute(sql)
 
+          # if there are enough new records, notify admins that migration can occur
+          election.notify_if_can_migrate
         end
       else
         puts "==> no match, seeing if is extra"

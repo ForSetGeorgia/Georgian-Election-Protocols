@@ -1,99 +1,133 @@
 <% title t('.title') %>
 
-<div id="election_data_links" class="row-fluid">
-  <div class="span3">
-    <p>
-      <%= t('.last_precinct_count', :count => @last_precinct_count) %>
-    </p>
-  </div>
-  <div class="span3">
-    <p>
-      <%= t('.min_precinct_change', :count => (@last_precinct_count + @min_precinct_change)) %>
-    </p>
-  </div>
-  <div class="span3">
-    <p>
-      <%= t('.precinct_count', :count => @current_precinct_count) %>
-    </p>
-  </div>
-  <div class="span3">
-    <% if true #@current_precinct_count >= (@last_precinct_count + @min_precinct_change) %>
-      <p id="create_migration_link">
-        <%= link_to t('.push_data'), admin_election_data_create_migration_path, :id => 'create_migration' %>
-      </p>
-      <p id="create_migration_processing">
-        Migrating Data...
-      </p>
-      <p id="create_migration_success">
-        Migration Successful!
-      </p>
-      <p id="create_migration_error">
-        An error occurred during the migration.
-      </p>
-    <% end %>
-  </div>
-</div>
-<% if @current_precinct_count == 0 %>
+<% if @elections.present? %>
 
-  <p>
-    <%= t('.no_precincts') %>
-  </p>
+  <h2><%= t('.start_migration') %></h2>
+  <div class="tabs">
+    <ul class="nav nav-tabs">
+      <% @elections.each_with_index do |election, index| %>
+        <% active = index == 0 ? 'active' : '' %>
+        <li class="<%= active %>"><a href="#start_<%= election.analysis_table_name %>" data-toggle="tab"><%= election.name %></a></li>
+      <% end %>
+    </ul>
+    <div class="tab-content">
+      <% @elections.each_with_index do |election, index| %>
+        <% active = index == 0 ? 'active' : '' %>
+        <div class="tab-pane fade in <%= active %>" id="start_<%= election.analysis_table_name %>">
+          <div class="row-fluid election_data_links">
+            <div class="span3">
+              <p>
+                <%
+                  latest_count = 0
+                  latest = @current_election_migrations.select{|x| x.election_id == election.id}.first
+                  latest_count = latest.num_precincts if latest.present?
+                %>
+                <%= t('.last_precinct_count', :count => latest_count) %>
+              </p>
+            </div>
+            <div class="span3">
+              <p>
+                <%= t('.precinct_count', :count => election.completed_precinct_count) %>
+              </p>
+            </div>
+            <div class="span3">
+              <p>
+                <%= t('.precinct_count_difference', :count => (election.completed_precinct_count-latest_count)) %>
+              </p>
+            </div>
+            <div class="span3">
+              <p class="create_migration_link">
+                <%= link_to t('.push_data'), admin_election_data_create_migration_path(id: election.id),
+                      :class => 'create_migration', :'data-id' => election.id %>
+              </p>
+              <p class="create_migration_processing">
+                Migrating Data...
+              </p>
+              <p class="create_migration_success">
+                Migration Successful!
+              </p>
+              <p class="create_migration_error">
+                An error occurred during the migration.
+              </p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
 
-<% else %>
 
-  <% if @migrations.present? %>
-      <table id="election_data" class="table table-striped">
-        <thead>
-          <tr>
-            <th>
-              <%= t('.sent_at') %>
-            </th>
-            <th>
-              <%= t('.num_precincts') %>
-            </th>
-            <th>
-              <%= t('.recieved_success_notification_at') %>
-            </th>
-            <th>
-              <%= t('.success') %>
-            </th>
-            <th>
-              <%= t('.notification_msg') %>
-            </th>
-            <th>
-              <%= t('.file') %>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @migrations.each do |migration| %>
-            <tr>
-              <td>
-                <%= l migration.created_at, :format => :file if migration.created_at.present? %>
-              </td>    
-              <td>
-                <%= migration.num_precincts %>
-              </td>    
-              <td>
-                <%= l migration.recieved_success_notification_at, :format => :file if migration.recieved_success_notification_at.present? %>
-              </td>    
-              <td>
-                <%= migration.success %>
-              </td>    
-              <td>
-                <%= migration.notification_msg %>
-              </td>    
-              <td>
-                <%= link_to(t('.view_file'), migration.file_url_path) if migration.file_url_path.present? %>
-              </td>    
-            </tr>
+  <h2><%= t('.migration_history') %></h2>
+  <div class="tabs">
+    <ul class="nav nav-tabs">
+      <% @elections.each_with_index do |election, index| %>
+        <% active = index == 0 ? 'active' : '' %>
+        <li class="<%= active %>"><a href="#history_<%= election.analysis_table_name %>" data-toggle="tab"><%= election.name %></a></li>
+      <% end %>
+    </ul>
+    <div class="tab-content">
+      <% @elections.each_with_index do |election, index| %>
+        <% active = index == 0 ? 'active' : '' %>
+        <div class="tab-pane fade in <%= active %>" id="history_<%= election.analysis_table_name %>">
+          <% migrations = @current_election_migrations.select{|x| x.election_id == election.id} %>
+          <% if migrations.present? %>
+            <table class="table table-striped migration_records">
+              <thead>
+                <tr>
+                  <th>
+                    <%= t('.sent_at') %>
+                  </th>
+                  <th>
+                    <%= t('.num_precincts') %>
+                  </th>
+                  <th>
+                    <%= t('.recieved_success_notification_at') %>
+                  </th>
+                  <th>
+                    <%= t('.success') %>
+                  </th>
+                  <th>
+                    <%= t('.notification_msg') %>
+                  </th>
+                  <th>
+                    <%= t('.file') %>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% migrations.each do |migration| %>
+                  <tr>
+                    <td>
+                      <%= l migration.created_at, :format => :file if migration.created_at.present? %>
+                    </td>
+                    <td>
+                      <%= migration.num_precincts %>
+                    </td>
+                    <td>
+                      <%= l migration.recieved_success_notification_at, :format => :file if migration.recieved_success_notification_at.present? %>
+                    </td>
+                    <td>
+                      <%= migration.success %>
+                    </td>
+                    <td>
+                      <%= migration.notification_msg %>
+                    </td>
+                    <td>
+                      <%= link_to(t('.view_file'), migration.file_url_path) if migration.file_url_path.present? %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <p>
+              <%= t('.no_migrations') %>
+            </p>
           <% end %>
-        </tbody>
-      </table>
-
-  <% else %>
-    <p>
-      <%= t('.no_migrations') %>  
-    </p>
-  <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
 <% end %>
+
+

@@ -162,6 +162,7 @@ en:
         precinct_count: "Current Number of Precincts Procesed: %{count}"
         last_precinct_count: "Number of Precincts in Last Migration: %{count}"
         min_precinct_change: "Minimum Precincts Needed to Create New Migration: %{count}"
+        precinct_count_difference: "New Precincts That Would Be Added: %{count}"
         no_precincts: No election results exist yet!
         push_data: Start a Migration
         no_migrations: No data has been sent to the Election Data application yet.
@@ -174,6 +175,8 @@ en:
         file: CSV File
         push_success: The data was successfully sent to the Election Data application
         push_fail: Not enough new precincts exist to warrant pushing data to the Election Data application
+        start_migration: Start A Migration
+        migration_history: Migration History
       edit:
         title: Edit Data
         p1: "Please only enter numbers; do not enter any 'X'."

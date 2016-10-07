@@ -19,10 +19,10 @@ module DataAnalysis
     'Number of Precincts with Invalid Ballots from 3-5%',
     'Number of Precincts with Invalid Ballots > 5%',
     'Invalid Ballots (%)',
-    'Precincts with Validation Errors (#)',
-    'Precincts with Validation Errors (%)',
-    'Average Number of Validation Errors',
-    'Number of Validation Errors',
+    # 'Precincts with Validation Errors (#)',
+    # 'Precincts with Validation Errors (%)',
+    # 'Average Number of Validation Errors',
+    # 'Number of Validation Errors',
     'Precincts with More Ballots Than Votes (#)',
     'Precincts with More Ballots Than Votes (%)',
     'More Ballots Than Votes (Average)',
@@ -60,6 +60,34 @@ module DataAnalysis
   @@client = ActiveRecord::Base.connection
 
 
+  #####################
+
+  # if there are enough precincts on file since the last migraiton,
+  # send notification
+  def notify_if_can_migrate
+
+    last_precinct_count = ElectionDataMigration.last_precinct_count(self.id)
+
+    if (completed_precinct_count - last_precinct_count) == ElectionDataMigration::MIN_PRECINCTS_CHANGE
+      message = Message.new
+      message.locale = I18n.locale
+      message.subject = I18n.t("mailer.notification.can_migrate.subject", :locale => I18n.locale, :env => Rails.env, :app_name => I18n.t('app.common.app_name'))
+      message.message = I18n.t("mailer.notification.can_migrate.message", :locale => I18n.locale)
+
+      NotificationMailer.can_migrate(message).deliver
+    end
+  end
+
+  ################################################
+
+  # process an election
+  def completed_precinct_count
+
+    sql = "select count(*) from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw`"
+
+    @@client.execute(sql).first[0]
+
+  end
 
   ################################################
 
@@ -113,6 +141,8 @@ module DataAnalysis
     puts "===================="
   end
 
+  ###################################################
+
   # get all of the data in the raw table and format for csv download
   def download_raw_data
     sql = "select * from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw` order by district_id, precinct_id"
@@ -133,6 +163,25 @@ module DataAnalysis
 
     return csv_data
   end
+
+  ###################################################
+
+  # download the data
+  def download_election_map_data
+    data = @@client.exec_query("select * from `#{@@analysis_db}`.`#{self.analysis_table_name} - csv` where common_id != '' && common_name != ''")
+    header = @@common_headers + Party.by_election(self.id).party_names
+    header.flatten!
+    csv_data = CSV.generate(:col_sep=>',') do |csv|
+      csv << header
+
+      data.each do |row|
+        csv << row.values.map{|x| x.class.to_s == 'BigDecimal' ? x.to_f.round(2) : x}
+      end
+    end
+
+    return csv_data
+  end
+
 
   ###################################################
   ###################################################
