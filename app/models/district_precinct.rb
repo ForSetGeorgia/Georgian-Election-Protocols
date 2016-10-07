@@ -224,6 +224,12 @@ class DistrictPrecinct < ActiveRecord::Base
     if election_ids.present?
       election_ids.each do |election_id|
 
+        election = Election.where(id: election_id).first
+
+        if election.has_regions || election.has_district_names
+          regions = RegionDistrictName.sorted
+        end
+
         sql = "select district_id, count(*) as num_precincts, sum(has_protocol) as num_protocols_found, (count(*) - sum(has_protocol)) as num_protocols_missing, "
         sql << "sum(if(has_protocol = 1 and is_validated = 0, 1, 0)) as num_protocols_not_entered, sum(if(has_protocol = 1 and is_validated = 1, 1, 0)) as num_protocols_validated "
         sql << "from district_precincts where election_id = ? group by district_id order by district_id"
@@ -238,8 +244,13 @@ class DistrictPrecinct < ActiveRecord::Base
             district_stats = Hash.new
             stats[:districts] << district_stats
 
-            # district_stats[:region] = index.present? ? names[index].region : nil
-            # district_stats[:district] = index.present? ? names[index].district_name : nil
+            if regions.present?
+              region = regions.select{|x| x.district_id == district[:district_id]}.first
+              if region.present?
+                district_stats[:region] = region.region
+                district_stats[:district] = region.district_name
+              end
+            end
             district_stats[:district_id] = district[:district_id]
             district_stats[:precincts] = format_number(district[:num_precincts])
             district_stats[:protocols_missing] = Hash.new

@@ -52,9 +52,9 @@
             <ul class="nav">
   	          <% if user_signed_in? %>
                 <% if current_user.completed_training? %>
-                  <li><%= link_to t('.enter_data'), protocol_path %></li>
+                  <li><%= link_to t('.enter_data'), protocol_path, class: 'enter-data' %></li>
                 <% else %>
-                  <li><%= link_to t('.training'), training_path %></li>
+                  <li><%= link_to t('.training'), training_path, class: 'enter-data' %></li>
                 <% end %>
               <% end %>
               <li><%= link_to t('.about'), about_path %></li>

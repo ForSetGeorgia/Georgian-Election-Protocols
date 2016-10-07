@@ -50,7 +50,11 @@ module DataAnalysis
     major_district: 'major district',
     major_precinct: 'major precinct',
     major_tbilisi_district: 'major tbilisi district',
-    major_tbilisi_precinct: 'major tbilisi precinct'
+    major_tbilisi_precinct: 'major tbilisi precinct',
+    kutaisi_district: 'kutaisi district',
+    kutaisi_precinct: 'kutaisi precinct',
+    batumi_district: 'batumi district',
+    batumi_precinct: 'batumi precinct'
   }
 
   @@client = ActiveRecord::Base.connection

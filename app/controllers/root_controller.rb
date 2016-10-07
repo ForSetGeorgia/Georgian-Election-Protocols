@@ -63,7 +63,13 @@ class RootController < ApplicationController
 
     if params['protocol'].present?
       # if the user entered a 0, reset to '' so matching works
-      params['protocol'].select{|k,v| v == '0'}.each{|k,v| params['protocol'][k] = ''}
+      # trim the values so there are no leading spaces
+      params['protocol'].each{|k,v|
+        params['protocol'][k] = v.strip
+        if params['protocol'][k] == '0'
+          params['protocol'][k] = ''
+        end
+      }
 
       @next_protocol = params['protocol_number']
       filedata = JSON.parse(File.read('public/training/' + @next_protocol + '.json'))
