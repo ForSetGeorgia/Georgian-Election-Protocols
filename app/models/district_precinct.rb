@@ -65,10 +65,10 @@ class DistrictPrecinct < ActiveRecord::Base
   #format: [ {election_id => a, districts => [ { district_id => [ precinct_id, precinct_id,   ] } ] } ]
   def self.found_protocols
     # records = []
-    e_ids = Election.can_enter.pluck(:id)
-    records = with_protocols.by_election(e_ids)
+    elections = Election.can_enter
+    records = with_protocols.by_election(elections.map{|x| x.id})
 
-    return build_api_request(e_ids, records)
+    return build_api_request(elections, records)
   end
 
 
@@ -76,10 +76,10 @@ class DistrictPrecinct < ActiveRecord::Base
   #format: [ {election_id => a, districts => [ { district_id => [ precinct_id, precinct_id,   ] } ] } ]
   def self.missing_protocols
     # records = []
-    e_ids = Election.can_enter.pluck(:id)
-    records = awaiting_protocols.by_election(e_ids)
+    elections = Election.can_enter
+    records = awaiting_protocols.by_election(elections.map{|x| x.id})
 
-    return build_api_request(e_ids, records)
+    return build_api_request(elections, records)
   end
 
 
@@ -319,22 +319,28 @@ class DistrictPrecinct < ActiveRecord::Base
 
 
   #format: [ {election_id => a, districts => [ { district_id => [ precinct_id, precinct_id,   ] } ] } ]
-  def self.build_api_request(e_ids, data)
+  def self.build_api_request(elections, data)
     records = []
-    if data.present?
-      e_ids.each do |e_id|
-        election = {election_id: e_id, districts: []}
+    if elections.present? && data.present?
+      elections.each do |election|
+        e = {
+          election_id: election.id,
+          scraper_url_base: election.scraper_url_base,
+          scraper_url_folder_to_images: election.scraper_url_folder_to_images,
+          scraper_page_pattern: election.scraper_page_pattern,
+          districts: []
+        }
 
-        records << election
+        records << e
 
-        district_ids = data.select{|x| x.election_id == e_id}.map{|x| x.district_id}.uniq
+        district_ids = data.select{|x| x.election_id == election.id}.map{|x| x.district_id}.uniq
 
         if district_ids.present?
           district_ids.each do |district_id|
             district = Hash.new
-            election[:districts] << district
+            e[:districts] << district
             district[district_id] = []
-            precinct_ids = data.select{|x| x.election_id == e_id && x.district_id == district_id}.map{|x| x.precinct_id}.uniq.sort
+            precinct_ids = data.select{|x| x.election_id == election.id && x.district_id == district_id}.map{|x| x.precinct_id}.uniq.sort
 
             if precinct_ids.present?
               district[district_id] << precinct_ids

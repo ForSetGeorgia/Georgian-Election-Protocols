@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161006124304) do
+ActiveRecord::Schema.define(:version => 20161007121850) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -234,6 +234,9 @@ ActiveRecord::Schema.define(:version => 20161006124304) do
     t.integer  "max_party_in_district",          :default => 0
     t.integer  "protocol_top_box_margin",        :default => 0
     t.integer  "protocol_party_top_margin",      :default => 0
+    t.string   "scraper_url_base"
+    t.string   "scraper_url_folder_to_images"
+    t.string   "scraper_page_pattern"
   end
 
   add_index "elections", ["can_enter_data"], :name => "index_elections_on_can_enter_data"
