@@ -15,7 +15,8 @@ class Create2016Elections < ActiveRecord::Migration
                           scraper_url_base: 'results.cec.gov.ge',
                           scraper_url_folder_to_images: '/prop/',
                           scraper_page_pattern: 'oqmi_{did}_{pid}.html',
-                          district_precinct_separator: '.')
+                          district_precinct_separator: '.',
+                          has_custom_shape_levels: false)
       prop.election_translations.build(locale: 'en', name: '2016 Parliamentary - Party List')
       prop.election_translations.build(locale: 'ka', name: '2016 წლის საპარლამენტო არჩევნები - პარტიული სია')
       prop.save
@@ -27,7 +28,8 @@ class Create2016Elections < ActiveRecord::Migration
                           scraper_url_base: 'results.cec.gov.ge',
                           scraper_url_folder_to_images: '/major/',
                           scraper_page_pattern: 'oqmi_{did}_{pid}.html',
-                          district_precinct_separator: '.')
+                          district_precinct_separator: '.',
+                          has_custom_shape_levels: false)
       major.election_translations.build(locale: 'en', name: '2016 Parliamentary - Majoritarian')
       major.election_translations.build(locale: 'ka', name: '2016 წლის საპარლამენტო არჩევნები - მაჟორიტარული')
       major.save

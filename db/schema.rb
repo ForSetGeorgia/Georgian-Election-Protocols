@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161008135421) do
+ActiveRecord::Schema.define(:version => 20161008105656) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -239,6 +239,7 @@ ActiveRecord::Schema.define(:version => 20161008135421) do
     t.string   "scraper_page_pattern"
     t.boolean  "has_indepenedent_parties",                    :default => false
     t.string   "district_precinct_separator",    :limit => 5, :default => "-"
+    t.boolean  "has_custom_shape_levels",                     :default => true
   end
 
   add_index "elections", ["can_enter_data"], :name => "index_elections_on_can_enter_data"

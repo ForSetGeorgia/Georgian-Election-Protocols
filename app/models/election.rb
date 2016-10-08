@@ -28,7 +28,7 @@ class Election < ActiveRecord::Base
   attr_accessible :parties_same_for_all_districts, :can_enter_data, :is_local_majoritarian, :has_indepenedent_parties,
                   :has_regions, :has_district_names, :election_app_event_id, :election_at, :election_translations_attributes,
                   :max_party_in_district, :protocol_top_box_margin, :protocol_party_top_margin, :district_precinct_separator,
-                  :scraper_url_base, :scraper_url_folder_to_images, :scraper_page_pattern
+                  :scraper_url_base, :scraper_url_folder_to_images, :scraper_page_pattern, :has_custom_shape_levels
 
   #######################################
   ## VALIDATIONS

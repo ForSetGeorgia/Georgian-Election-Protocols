@@ -130,12 +130,16 @@
                   <table class="table table-striped overall_stats_by_district">
                     <thead>
                       <tr>
-                        <th class="hl1">
-                          <%= t('.overall_stats_by_district.region') %>
-                        </th>
-                        <th class="hl1">
-                          <%= t('.overall_stats_by_district.district') %>
-                        </th>
+                        <% if election.has_regions? %>
+                          <th class="hl1">
+                            <%= t('.overall_stats_by_district.region') %>
+                          </th>
+                        <% end %>
+                        <% if election.has_district_names? %>
+                          <th class="hl1">
+                            <%= t('.overall_stats_by_district.district') %>
+                          </th>
+                        <% end %>
                         <th class="hl1">
                           <%= t('.overall_stats_by_district.district_id') %>
                         </th>
@@ -171,12 +175,16 @@
                     <tbody>
                       <% stats[:districts].each do |district| %>
                         <tr>
-                          <td>
-                            <%= district[:region] %>
-                          </td>
-                          <td>
-                            <%= district[:district] %>
-                          </td>
+                          <% if election.has_regions? %>
+                            <td>
+                              <%= district[:region] %>
+                            </td>
+                          <% end %>
+                          <% if election.has_district_names? %>
+                            <td>
+                              <%= district[:district] %>
+                            </td>
+                          <% end %>
                           <td>
                             <%= district[:district_id] %>
                           </td>

@@ -66,8 +66,7 @@ $(document).ready(function(){
     // "aoColumns": col_sort,
     "oLanguage": {
       "sUrl": gon.datatable_i18n_url
-    },
-    "aaSorting": [[2, 'asc']]
+    }
   });
 
 
