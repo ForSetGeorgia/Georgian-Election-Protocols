@@ -35,6 +35,12 @@ module UpdateVolunteers
     create_accounts(new_users, 2, names)
   end
 
+  def send_email(users)
+    users.each do |u|
+      
+    end
+  end
+
   def self.paid_update(url = @@paid_url, names = @@names)
     old_users = get_existing_emails
     new_users = get_paid_users(url, old_users)

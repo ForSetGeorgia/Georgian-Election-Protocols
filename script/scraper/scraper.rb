@@ -16,8 +16,11 @@ logger_info = Logger.new("../../log/scraper_info.log")
 logger_error = Logger.new("../../log/scraper_error.log")
 
 app_base_url = "https://protocols.jumpstart.ge"
+# app_base_url = "http://192.168.2.252:3001"
 app_get_uri = "/en/json/missing_protocols"
-protocol_dir = "/home/protocols/Protocols/shared/system/protocols/"
+
+protocol_dir = "/home/protocols/Protocols/shared/system/protocols"
+#protocol_dir = "/home/eric/projects/js/elections/Crowd-Source-Protocols/public/system/protocols"
 
 start_time = Time.now
 
@@ -52,7 +55,7 @@ else
     edir = "#{protocol_dir}/#{@election_id}/"
     Dir.mkdir(edir) unless File.exists?(edir)
 
-    @url = 'results2012.cec.gov.ge' # election['scraper_url_base']
+    @url = election['scraper_url_base']
     @uri = election ['scraper_url_folder_to_images']
     @filename = election['scraper_page_pattern']
     @districts = election['districts']
@@ -74,11 +77,12 @@ else
         # PRECINCT LEVEL
         ##################
         precincts.each do |precinct|
+          dec = precinct.split('.')[0].to_i.to_s # dec
+          fixed_precinct = precinct.split('.')[1].to_i.to_s # pid
 
-          fixed_precinct = precinct.split('.')[1].to_i.to_s
-
-          fname = @filename.sub('{did}', fixed_did).sub('{pid}', fixed_precinct)
-          page = "http://#{@url}#{@uri}#{fname}"
+          id = "#{dec}_#{did}.#{precinct}"
+          fname = @filename.sub('{id}', id)
+          page = "http://#{@url}#{@uri}#{fname}" # http://results.cec.gov.ge/oqm/7/oqmi_51_52.51.05.html
 
           begin
             logger_info.info("Checking: #{page}")
@@ -146,7 +150,7 @@ else
             next
           end
 
-          sleep(1)
+          sleep(0)
         end # precincts
       end # district hash
     end # districts
