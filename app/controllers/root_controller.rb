@@ -66,6 +66,7 @@ class RootController < ApplicationController
   end
 
   def training
+    @protocol_manipulator = true
     user = User.find(current_user.id)
     trained = user.trained
     @user_trained_num = trained.length
