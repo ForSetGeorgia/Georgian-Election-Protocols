@@ -50,5 +50,9 @@ module BootstrapStarter
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    config.assets.precompile += %w( protocol_manipulator.css magnifier.css )
+    config.assets.precompile += %w( magnifier.js protocol_manipulator.js event.js )
+
   end
 end
