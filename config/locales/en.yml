@@ -273,6 +273,8 @@ en:
         flip: Rotate by 180 degree
         up: Move up
         down: Move down
+        left: Move left
+        right: Move right
         reset: Reset all transformations
     download:
       title: Download Results of Data Entry

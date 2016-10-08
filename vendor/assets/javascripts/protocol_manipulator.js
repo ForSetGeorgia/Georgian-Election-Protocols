@@ -6,7 +6,7 @@
 
 $(document).ready(function () {
   var
-  img_id = "protocolimg", img = $("#" + img_id), img_wrapper = img.parent(), preview, lens, m;
+  img_id = "protocolimg", img = $("#" + img_id), img_wrapper = img.parent(), preview, m;
 
 
   function rotate (deg, set) {
@@ -25,13 +25,13 @@ $(document).ready(function () {
       return;
     }
 
-    lens = $("#" + img_id + "-lens");
     $("#protocol_move_up, #protocol_move_down").click(function () { img_wrapper.css({top: "+=" + (+$(this).attr("data-dir")) }); });
+    $("#protocol_move_left, #protocol_move_right").click(function () { img_wrapper.css({left: "+=" + (+$(this).attr("data-dir")) }); });
     $("#protocol_rotate_cw, #protocol_rotate_ccw").click(function () { rotate(+$(this).attr("data-dir")); }); // * $("#protocol_rotate_value").val();
     $("#protocol_flip").click(function () { rotate(180); });
 
     $("#protocol_rotate_reset").click(function () {
-      img_wrapper.css({ top: 0 });
+      img_wrapper.css({ top: 0, left: 0 });
       rotate(0, true);
     });
     $(".protocol_controls_toggle").click(function () {

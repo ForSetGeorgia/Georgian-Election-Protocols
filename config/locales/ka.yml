@@ -273,6 +273,8 @@ ka:
         flip: Rotate by 180 degree
         up: Move up
         down: Move down
+        left: Move left
+        right: Move right
         reset: Reset all transformations
     download:
       title: ჩამოტვირთე შეყვანილი მონაცემები

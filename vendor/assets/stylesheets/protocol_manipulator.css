@@ -23,6 +23,7 @@
 }
 #protocol_controls .buttons > div {
   margin: 3px 0;
+  text-align:center;
 }
 #protocol_controls button {
   border: 1px solid #bdbdbd;
@@ -60,6 +61,8 @@
 #protocol_flip { background:transparent url("rotate.svg") no-repeat center center/20px; }
 #protocol_rotate_reset { background:transparent url("reset.svg") no-repeat center center/20px; }
 #protocol_move_up { background:transparent url("up.svg") no-repeat center center/20px; }
+#protocol_move_left { background:transparent url("left.svg") no-repeat center center/20px; }
+#protocol_move_right { background:transparent url("right.svg") no-repeat center center/20px; }
 #protocol_move_down { background:transparent url("down.svg") no-repeat center center/20px; }
 .protocol_controls_toggle {
   width:24px;
