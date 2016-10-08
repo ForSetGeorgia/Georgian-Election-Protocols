@@ -71,6 +71,7 @@ en:
       success_updated: "%{obj} was successfully updated."
       no_success_updated: "%{obj} was NOT successfully updated."
       could_not_find_election: "The election could not be found."
+      no_protocols: There are no protocols to enter at this time.
     csv_header:
       region: Region
       district_id: District ID

@@ -71,6 +71,7 @@ ka:
       success_updated: "%{obj} განახლებულია."
       no_success_updated: "%{obj} არ განახლდა წარმატებით."
       could_not_find_election: "არჩევნები არ მოიძებნა."
+      no_protocols: There are no protocols to enter at this time.
     csv_header:
       region: რეგიონი
       district_id: ოლქის ID

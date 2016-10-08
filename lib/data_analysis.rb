@@ -19,10 +19,10 @@ module DataAnalysis
     'Number of Precincts with Invalid Ballots from 3-5%',
     'Number of Precincts with Invalid Ballots > 5%',
     'Invalid Ballots (%)',
-    # 'Precincts with Validation Errors (#)',
-    # 'Precincts with Validation Errors (%)',
-    # 'Average Number of Validation Errors',
-    # 'Number of Validation Errors',
+    'Precincts with Validation Errors (#)',
+    'Precincts with Validation Errors (%)',
+    'Average Number of Validation Errors',
+    'Number of Validation Errors',
     'Precincts with More Ballots Than Votes (#)',
     'Precincts with More Ballots Than Votes (%)',
     'More Ballots Than Votes (Average)',
@@ -84,10 +84,9 @@ module DataAnalysis
   def get_analysis_record(district_id, precinct_id)
 
     sql = "select * from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw`
-            where district_id = ? and precinct_id = ?"
+            where district_id = #{district_id} and precinct_id = #{precinct_id}"
 
-    #@@client.exec_query(sql, [district_id, precinct_id])
-    @@client.exec_query([sql, [district_id, precinct_id]])
+    @@client.exec_query(sql).first
 
   end
 
