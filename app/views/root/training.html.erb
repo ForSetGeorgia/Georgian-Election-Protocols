@@ -10,87 +10,129 @@
     <%= t('.p2') %>
   </p>
 
+  <div class="protocol-container">
+    <div class="magnifier-thumb-wrapper">
+      <%= image_tag '/training/' + @next_protocol.to_s + '.jpg', :id => 'protocolimg' %>
+    </div>
+    <%= form_tag training_path, :class => 'training' do %>
+      <% [
+          [1, :possible_voters],
+          [2, :special_voters],
+          ['12:00', :votes_by_1200],
+          ['17:00', :votes_by_1700],
+          [4, :ballots_signed_for],
+          [5, :ballots_available],
+          [1, :party_1],
+          [4, :party_4],
+          [5, :party_5],
+          [9, :party_9],
+          [10, :party_10],
+          [17, :party_17],
+          [19, :party_19],
+          [23, :party_23],
+          [24, :party_24],
+          [26, :party_26],
+          [30, :party_30],
+          [35, :party_35],
+          [36, :party_36],
+          [38, :party_38],
+          [40, :party_40],
+          [41, :party_41],
+          [6, :invalid_ballots_submitted]
+         ].each_with_index do |f, i| %>
 
-  <%= image_tag '/training/' + @next_protocol.to_s + '.jpg', :id => 'protocolimg' %>
+        <% if i == 2 %>
+          <div class="inline clearfix">
+        <% elsif i == 4 %>
+          </div>
+        <% end %>
 
-  <%= form_tag training_path, :class => 'training' do %>
-    <% [
-        [1, :possible_voters],
-        [2, :special_voters],
-        ['12:00', :votes_by_1200],
-        ['17:00', :votes_by_1700],
-        [4, :ballots_signed_for],
-        [5, :ballots_available],
-        [1, :party_1],
-        [4, :party_4],
-        [5, :party_5],
-        [9, :party_9],
-        [10, :party_10],
-        [17, :party_17],
-        [19, :party_19],
-        [23, :party_23],
-        [24, :party_24],
-        [26, :party_26],
-        [30, :party_30],
-        [35, :party_35],
-        [36, :party_36],
-        [38, :party_38],
-        [40, :party_40],
-        [41, :party_41],
-        [6, :invalid_ballots_submitted]
-       ].each_with_index do |f, i| %>
+        <% field_with_error = !(@errors.nil? || @errors[f[1].to_s].nil?) %>
 
-      <% if i == 2 %>
-        <div class="inline clearfix">
-      <% elsif i == 4 %>
+        <div class="m m<%= (i + 1).to_s %><%= if field_with_error; ' error'; end; %>">
+          <div class="string control-group optional stringish">
+            <label class="control-label" for="protocol_<%= f[1] %>"><%= f[0] %></label>
+            <div class="controls">
+              <input id="protocol_<%= f[1] %>" maxlength="4" name="protocol[<%= f[1] %>]" type="text" autocomplete="off" value="<%= if (!params['protocol'].nil?); params['protocol'][f[1]]; end %>" />
+            </div>
+            <% if field_with_error %>
+              <div class="error-message">
+                <%= @errors[f[1].to_s] %>
+              </div>
+            <% end %>
+          </div>
         </div>
+
       <% end %>
 
-      <% field_with_error = !(@errors.nil? || @errors[f[1].to_s].nil?) %>
+      <input type="hidden" name="protocol_number" value="<%= @next_protocol %>" />
+      <input type="submit" value="<%= t('app.common.submit')%>" />
 
-      <div class="m m<%= (i + 1).to_s %><%= if field_with_error; ' error'; end; %>">
-        <div class="string control-group optional stringish">
-          <label class="control-label" for="protocol_<%= f[1] %>"><%= f[0] %></label>
-          <div class="controls">
-            <input id="protocol_<%= f[1] %>" maxlength="4" name="protocol[<%= f[1] %>]" type="text" autocomplete="off" value="<%= if (!params['protocol'].nil?); params['protocol'][f[1]]; end %>" />
-          </div>
-          <% if field_with_error %>
-            <div class="error-message">
-              <%= @errors[f[1].to_s] %>
-            </div>
-          <% end %>
+        <div id="votesum_explanation">
+          <p>
+            **
+            <%= t('.votesum_explanation1', :label => t('app.csv_header.num_votes')) %>
+          </p>
+          <p>
+            <%= t('.votesum_explanation2', :label => t('.sum_party_votes')) %>
+          </p>
+          <p>
+            <%= t('.votesum_explanation3') %>
+          </p>
+          <p>
+            <%= t('.votesum_explanation4') %>
+          </p>
         </div>
-      </div>
 
     <% end %>
 
-    <input type="hidden" name="protocol_number" value="<%= @next_protocol %>" />
-    <input type="submit" value="<%= t('app.common.submit')%>" />
+    <div id="votesum">
+      <span class="f" title="<%= t('app.csv_header.num_votes') %>">0</span>
+      <span class="e">=</span>
+      <span class="s" title="<%= t('.sum_party_votes')%>">0</span>
+      **
+    </div>
 
-      <div id="votesum_explanation">
-        <p>
-          **
-          <%= t('.votesum_explanation1', :label => t('app.csv_header.num_votes')) %>
-        </p>
-        <p>
-          <%= t('.votesum_explanation2', :label => t('.sum_party_votes')) %>
-        </p>
-        <p>
-          <%= t('.votesum_explanation3') %>
-        </p>
-        <p>
-          <%= t('.votesum_explanation4') %>
-        </p>
-      </div>
-
-  <% end %>
-
-  <div id="votesum">
-    <span class="f" title="<%= t('app.csv_header.num_votes') %>">0</span>
-    <span class="e">=</span>
-    <span class="s" title="<%= t('.sum_party_votes')%>">0</span>
-    **
   </div>
-
-
 </div>
+<div id="protocol_controls">
+  <div class="protocol_controls_toggle" title="<%= t('root.protocol.title.toggle')%>"></div>
+  <div class="magnifier-preview" id="magnifier-preview"><div class="placeholder"><%= t('root.protocol.scroll_to_zoom')%></div></div>
+  <div class="buttons">
+    <div>
+      <button type="button" id="protocol_rotate_ccw" data-dir="-.5" title="<%= t('root.protocol.title.ccw')%>"></button>
+      <button type="button" id="protocol_flip" title="<%= t('root.protocol.title.flip')%>"></button>
+      <button type="button" id="protocol_rotate_cw" data-dir=".5" title="<%= t('root.protocol.title.cw')%>"></button>
+    </div>
+    <div>
+      <button type="button" id="protocol_move_up" data-dir="-1" title="<%= t('root.protocol.title.up')%>"></button>
+      <button type="button" id="protocol_move_left" data-dir="-1" title="<%= t('root.protocol.title.left')%>"></button>
+      <button type="button" id="protocol_move_right" data-dir="1" title="<%= t('root.protocol.title.right')%>"></button>
+      <button type="button" id="protocol_move_down" data-dir="1" title="<%= t('root.protocol.title.down')%>"></button>
+    </div>
+    <div>
+      <button type="button" id="protocol_rotate_reset" title="<%= t('root.protocol.title.reset')%>"></button>
+    </div>
+  </div>
+</div>
+
+  <div id="protocol_controls">
+    <div class="protocol_controls_toggle" title="<%= t('.title.toggle')%>"></div>
+    <div class="magnifier-preview" id="magnifier-preview"><div class="placeholder"><%= t('.scroll_to_zoom')%></div></div>
+    <div class="buttons">
+      <div>
+        <button type="button" id="protocol_rotate_ccw" data-dir="-.5" title="<%= t('.title.ccw')%>"></button>
+        <button type="button" id="protocol_rotate_cw" data-dir=".5" title="<%= t('.title.cw')%>"></button>
+        <button type="button" id="protocol_flip" title="<%= t('.title.flip')%>"></button>
+      </div>
+      <div>
+        <button type="button" id="protocol_move_up" data-dir="-1" title="<%= t('.title.up')%>"></button>
+        <button type="button" id="protocol_move_down" data-dir="1" title="<%= t('.title.down')%>"></button>
+        <button type="button" id="protocol_move_left" data-dir="-1" title="<%= t('.title.left')%>"></button>
+        <button type="button" id="protocol_move_right" data-dir="1" title="<%= t('.title.right')%>"></button>
+      </div>
+      <div>
+        <button type="button" id="protocol_rotate_reset" title="<%= t('.title.reset')%>"></button>
+      </div>
+    </div>
+  </div>

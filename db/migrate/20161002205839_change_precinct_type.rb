@@ -1,7 +1,7 @@
 class ChangePrecinctType < ActiveRecord::Migration
   def self.up
-    # the precinct id was integer, however due to the changes in 2016, the id is now a string
-    # so update all precinct fields to be a string
+    # the district and precinct id were integers, however due to the changes in 2016, the id is now a string
+    # so update all district/precinct fields to be a string
 
     remove_index "crowd_data", :name => "idx_election_location"
     remove_index "crowd_queues", :name => "idx_queue_ids"
@@ -10,6 +10,11 @@ class ChangePrecinctType < ActiveRecord::Migration
     remove_index "district_precincts", :name => "idx_elec_dist_prec"
     remove_index "has_protocols", :name => "idx_hp_ids"
     remove_index "has_protocols", :name => "idx_election_hp_ids"
+
+    change_column :crowd_data, :district_id, 'VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci'
+    change_column :crowd_queues, :district_id, 'VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci'
+    change_column :district_precincts, :district_id, 'VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci'
+    change_column :has_protocols, :district_id, 'VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci'
 
     change_column :crowd_data, :precinct_id, 'VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci'
     change_column :crowd_queues, :precinct_id, 'VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci'
@@ -33,6 +38,11 @@ class ChangePrecinctType < ActiveRecord::Migration
     remove_index "district_precincts", :name => "idx_elec_dist_prec"
     remove_index "has_protocols", :name => "idx_hp_ids"
     remove_index "has_protocols", :name => "idx_election_hp_ids"
+
+    change_column :crowd_data, :district_id, :integer
+    change_column :crowd_queues, :district_id, :integer
+    change_column :district_precincts, :district_id, :integer
+    change_column :has_protocols, :district_id, :integer
 
     change_column :crowd_data, :precinct_id, :integer
     change_column :crowd_queues, :precinct_id, :integer

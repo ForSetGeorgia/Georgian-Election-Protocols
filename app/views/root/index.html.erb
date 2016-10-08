@@ -36,14 +36,14 @@
                       <%= stats[:protocols_found][:number] %>
                       (<%= stats[:protocols_found][:percent] %>)
                     </p>
-                    <p>
+                    <p class="highlight-good">
                       <strong><%= t('.overall_stats.protocols_missing')%>:</strong>
                       <%= stats[:protocols_missing][:number] %>
                       (<%= stats[:protocols_missing][:percent] %>)
                     </p>
                   </div>
                   <div class="span4">
-                    <p class="highlight">
+                    <p class="highlight-bad">
                       <strong><%= t('.overall_stats.protocols_validated')%>:</strong>
                       <%= stats[:protocols_validated][:number] %>
                       <% if stats[:protocols_validated][:number] != I18n.t('app.common.na') %>

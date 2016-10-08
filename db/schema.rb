@@ -11,11 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161007121850) do
+ActiveRecord::Schema.define(:version => 20161008135421) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
-    t.integer  "district_id"
+    t.string   "district_id",               :limit => 10
     t.string   "precinct_id",               :limit => 10
     t.integer  "user_id"
     t.integer  "possible_voters"
@@ -143,7 +143,7 @@ ActiveRecord::Schema.define(:version => 20161007121850) do
 
   create_table "crowd_queues", :force => true do |t|
     t.integer  "user_id"
-    t.integer  "district_id"
+    t.string   "district_id", :limit => 10
     t.string   "precinct_id", :limit => 10
     t.boolean  "is_finished"
     t.datetime "created_at"
@@ -167,7 +167,7 @@ ActiveRecord::Schema.define(:version => 20161007121850) do
   add_index "district_parties", ["election_id", "district_id"], :name => "index_district_parties_on_election_id_and_district_id"
 
   create_table "district_precincts", :force => true do |t|
-    t.integer  "district_id"
+    t.string   "district_id",   :limit => 10
     t.string   "precinct_id",   :limit => 10
     t.boolean  "has_protocol",                :default => false
     t.boolean  "is_validated",                :default => false
@@ -223,26 +223,28 @@ ActiveRecord::Schema.define(:version => 20161007121850) do
   create_table "elections", :force => true do |t|
     t.date     "election_at"
     t.integer  "election_app_event_id"
-    t.boolean  "can_enter_data",                 :default => false
-    t.boolean  "parties_same_for_all_districts", :default => true
-    t.boolean  "is_local_majoritarian",          :default => false
-    t.boolean  "has_regions",                    :default => false
-    t.boolean  "has_district_names",             :default => false
+    t.boolean  "can_enter_data",                              :default => false
+    t.boolean  "parties_same_for_all_districts",              :default => true
+    t.boolean  "is_local_majoritarian",                       :default => false
+    t.boolean  "has_regions",                                 :default => false
+    t.boolean  "has_district_names",                          :default => false
     t.string   "analysis_table_name"
-    t.datetime "created_at",                                        :null => false
-    t.datetime "updated_at",                                        :null => false
-    t.integer  "max_party_in_district",          :default => 0
-    t.integer  "protocol_top_box_margin",        :default => 0
-    t.integer  "protocol_party_top_margin",      :default => 0
+    t.datetime "created_at",                                                     :null => false
+    t.datetime "updated_at",                                                     :null => false
+    t.integer  "max_party_in_district",                       :default => 0
+    t.integer  "protocol_top_box_margin",                     :default => 0
+    t.integer  "protocol_party_top_margin",                   :default => 0
     t.string   "scraper_url_base"
     t.string   "scraper_url_folder_to_images"
     t.string   "scraper_page_pattern"
+    t.boolean  "has_indepenedent_parties",                    :default => false
+    t.string   "district_precinct_separator",    :limit => 5, :default => "-"
   end
 
   add_index "elections", ["can_enter_data"], :name => "index_elections_on_can_enter_data"
 
   create_table "has_protocols", :force => true do |t|
-    t.integer  "district_id"
+    t.string   "district_id", :limit => 10
     t.string   "precinct_id", :limit => 10
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -118,10 +118,20 @@ class CrowdDatum < ActiveRecord::Base
           votes_ballots = valid < sum_parties
           votes_ballots_amount = votes_ballots == true ? logic_diff.abs : 0
 
+          # if the election has indeodent parties, add them all together
+          # for election app can only show this as one result
+          if election.has_indepenedent_parties?
+            ind_parties = parties.select{|x| x.is_independent?}
+            sum_ind_parties = 0
+            ind_parties.each do |p|
+              sum_ind_parties += self["party_#{p.number}"] if self["party_#{p.number}"].present?
+            end
+          end
+
           # insert the record
           client = ActiveRecord::Base.connection
           sql = "insert into `#{ANALYSIS_DB}`.`#{election.analysis_table_name} - raw` ("
-          if election.has_regions
+          if election.has_regions?
             sql << "`region`, "
           end
           sql << "`district_id`, `district_name`, `precinct_id`,
@@ -129,14 +139,19 @@ class CrowdDatum < ActiveRecord::Base
                  `num_invalid_votes`, `num_valid_votes`, `logic_check_fail`, `logic_check_difference`,
                  `more_ballots_than_votes_flag`, `more_ballots_than_votes`, `more_votes_than_ballots_flag`, `more_votes_than_ballots`, "
           sql << parties.map{|x| "`#{x.column_name}`"}.join(', ')
+          if election.has_indepenedent_parties?
+            sql << ", `#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}`"
+          end
           sql << ") values ( "
 
           # create array of values
           sql_values = []
-          if election.has_regions && rd.present?
-            sql_values << rd.region
-          else
-            sql_values << nil
+          if election.has_regions
+            if rd.present?
+              sql_values << rd.region
+            else
+              sql_values << nil
+            end
           end
           sql_values << self.district_id
           if election.has_district_names && rd.present?
@@ -153,9 +168,14 @@ class CrowdDatum < ActiveRecord::Base
             sql_values << self["party_#{p.number}"]
           end
           sql_values.flatten!
+          if election.has_indepenedent_parties?
+            sql_values << sum_ind_parties
+          end
 
           sql << sql_values.map{|x| "'#{x}'"}.join(', ')
           sql << ")"
+
+
           client.execute(sql)
 
           # if there are enough new records, notify admins that migration can occur
@@ -187,7 +207,8 @@ class CrowdDatum < ActiveRecord::Base
     exist = false
 
     if self.election_id.present? && self.district_id.present? && self.precinct_id.present?
-      path = "#{FOLDER_PATH}/#{election_id}/#{district_id}/#{district_id}_#{precinct_id}.jpg"
+      sep = Election.by_election(election_id).pluck(:district_precinct_separator).first
+      path = "#{FOLDER_PATH}/#{election_id}/#{district_id}/#{district_id}#{sep}#{precinct_id}.jpg"
       # puts "path = #{path}"
       # puts "exist = #{File.exist?("#{Rails.root}/public#{path}")}"
       exist = File.exist?("#{Rails.root}/public#{path}")
@@ -236,6 +257,8 @@ class CrowdDatum < ActiveRecord::Base
   end
 
   def self.extract_numbers (pairs)
+    not_convert = ['district_id', 'district_name', 'precinct_id', 'major_district_id']
+
     pairs.each_pair do |key, val|
       val = val.to_s.downcase.strip
       if val.match(/[a-z]/)
@@ -243,7 +266,8 @@ class CrowdDatum < ActiveRecord::Base
       end
       if val == ''
         val = '0'
-      elsif val.start_with?('0') && val.length > 1
+      # if the value starts with 0 but is in the not convert list, keep the 0
+      elsif val.start_with?('0') && val.length > 1 && !not_convert.include?(key)
         val = val.to_i.to_s
       end
       pairs[key] = val

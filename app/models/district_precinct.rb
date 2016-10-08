@@ -368,6 +368,7 @@ class DistrictPrecinct < ActiveRecord::Base
 
             if precinct_ids.present?
               district[district_id] << precinct_ids
+              district[district_id].flatten!
             end
 
           end

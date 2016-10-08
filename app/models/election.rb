@@ -2,6 +2,10 @@ class Election < ActiveRecord::Base
   require 'data_analysis' # script in lib folder that has methods to create analysis tables, run them, and delete them
   include DataAnalysis
 
+  INDEPENDENT_MERGED_ANALYSIS_NAME = 'Independent Merged'
+  INDEPENDENT_MERGED_CSV_NAME = 'Initiative Group'
+
+
   #######################################
   ## TRANSLATIONS
   translates :name
@@ -21,9 +25,10 @@ class Election < ActiveRecord::Base
 
   #######################################
   ## ATTRIBUTES
-  attr_accessible :parties_same_for_all_districts, :can_enter_data, :is_local_majoritarian,
+  attr_accessible :parties_same_for_all_districts, :can_enter_data, :is_local_majoritarian, :has_indepenedent_parties,
                   :has_regions, :has_district_names, :election_app_event_id, :election_at, :election_translations_attributes,
-                  :max_party_in_district, :protocol_top_box_margin, :protocol_party_top_margin
+                  :max_party_in_district, :protocol_top_box_margin, :protocol_party_top_margin, :district_precinct_separator,
+                  :scraper_url_base, :scraper_url_folder_to_images, :scraper_page_pattern
 
   #######################################
   ## VALIDATIONS
