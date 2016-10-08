@@ -17,7 +17,7 @@ logger_error = Logger.new("../../log/scraper_error.log")
 
 app_base_url = "https://protocols.jumpstart.ge"
 app_get_uri = "/en/json/missing_protocols"
-protocol_dir = "~/Protocols/shared/system/protocols/"
+protocol_dir = "/home/protocols/Protocols/shared/system/protocols/"
 
 start_time = Time.now
 
@@ -45,7 +45,7 @@ else
   ##################
   # ELECTION LEVEL
   ##################
-  
+
   elections.each do |election|
 
     # make election directory if it doesn't exist
