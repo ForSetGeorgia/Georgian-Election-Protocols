@@ -153,6 +153,9 @@ else
           sleep(0)
         end # precincts
       end # district hash
+      current_time = Time.now
+      time_elapsed = (current_time - start_time)/60
+      logger_info.info("Time elapsed: #{time_elapsed} minutes")
     end # districts
   end # elections
 
