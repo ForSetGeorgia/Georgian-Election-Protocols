@@ -55,7 +55,7 @@ class Party < ActiveRecord::Base
     if !include_independents
       x = x.no_independents
     end
-    x.map{|x| {id: x.number, name: x.name}}
+    x.map{|x| {id: x.number, name: x.name, is_independent: x.is_independent}}
   end
 
   def column_name

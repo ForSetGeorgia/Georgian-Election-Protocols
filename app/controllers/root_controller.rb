@@ -53,17 +53,13 @@ class RootController < ApplicationController
     end
 
     # get the next record if there were no errors
-#    @crowd_datum = CrowdDatum.new(election_id: 4, district_id: 25, precinct_id: 22) if valid
-    @crowd_datum = CrowdDatum.next_available_record(current_user.id) if valid
-    if @crowd_datum.present?
-      # get the election
-      @election = Election.find(@crowd_datum.election_id)
-      # get the parties for the election
-      @party_numbers = Party.by_election_district(@crowd_datum.election_id, @crowd_datum.district_id).party_numbers
-    else
-      redirect_to root_path, :notice => I18n.t('app.msgs.no_protocols')
-      return
-    end
+   @crowd_datum = CrowdDatum.new(election_id: 3, district_id: '01', precinct_id: "01.02", user_id: current_user.id)
+    # @crowd_datum = CrowdDatum.next_available_record(current_user.id) if valid
+    # get the election
+    @election = Election.find(@crowd_datum.election_id)
+    # get the parties for the election
+    @party_numbers = Party.by_election_district(@crowd_datum.election_id, @crowd_datum.district_id).party_numbers
+
     respond_to do |format|
       format.html # index.html.erb
     end

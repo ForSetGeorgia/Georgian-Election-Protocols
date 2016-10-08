@@ -11,14 +11,23 @@ class Create2016Elections < ActiveRecord::Migration
       # prop
       puts '- party list election'
       prop = Election.new(can_enter_data: false, election_at: '2016-10-08', election_app_event_id: 45,
-                          has_regions: false, has_district_names: false)
+                          has_regions: false, has_district_names: false,
+                          scraper_url_base: 'results.cec.gov.ge',
+                          scraper_url_folder_to_images: '/prop/',
+                          scraper_page_pattern: 'oqmi_{did}_{pid}.html',
+                          district_precinct_separator: '.')
       prop.election_translations.build(locale: 'en', name: '2016 Parliamentary - Party List')
       prop.election_translations.build(locale: 'ka', name: '2016 წლის საპარლამენტო არჩევნები - პარტიული სია')
       prop.save
       # major
       puts '- major election'
       major = Election.new(can_enter_data: false, election_at: '2016-10-08', election_app_event_id: 46,
-                          has_regions: false, has_district_names: false, parties_same_for_all_districts: false)
+                          has_regions: false, has_district_names: false,
+                          parties_same_for_all_districts: false, has_indepenedent_parties: true,
+                          scraper_url_base: 'results.cec.gov.ge',
+                          scraper_url_folder_to_images: '/major/',
+                          scraper_page_pattern: 'oqmi_{did}_{pid}.html',
+                          district_precinct_separator: '.')
       major.election_translations.build(locale: 'en', name: '2016 Parliamentary - Majoritarian')
       major.election_translations.build(locale: 'ka', name: '2016 წლის საპარლამენტო არჩევნები - მაჟორიტარული')
       major.save
@@ -56,7 +65,7 @@ class Create2016Elections < ActiveRecord::Migration
       sql_values = []
       csv_data.each_with_index do |row, i|
         if i > 0
-          sql_values << "(#{major.id}, #{row[0]}, #{row[1]}, '#{now}')"
+          sql_values << "(#{major.id}, '#{row[0]}', '#{row[1]}', '#{now}')"
           # major.district_parties.create(district_id: row[0], party_id: row[1])
         end
       end
@@ -71,8 +80,8 @@ class Create2016Elections < ActiveRecord::Migration
       sql_values = []
       csv_data.each_with_index do |row, i|
         if i > 0
-          sql_values << "(#{prop.id}, #{row[0]}, #{row[1]}, '#{now}')"
-          sql_values << "(#{major.id}, #{row[0]}, #{row[1]}, '#{now}')"
+          sql_values << "(#{prop.id}, '#{row[0]}', '#{row[1]}', '#{now}')"
+          sql_values << "(#{major.id}, '#{row[0]}', '#{row[1]}', '#{now}')"
         end
       end
       client.execute("insert into district_precincts
@@ -88,6 +97,10 @@ class Create2016Elections < ActiveRecord::Migration
       prop.create_analysis_precinct_counts
       puts '- creating major anaylsis precinct count records'
       major.create_analysis_precinct_counts
+
+      # get the 2016 major and add the max value
+      major.max_party_in_district = DistrictParty.where(election_id: major.id).group(:district_id).count.values.max
+      major.save
 
       admins = User.where(role: 99)
       if admins.present?
