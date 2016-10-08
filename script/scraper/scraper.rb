@@ -51,14 +51,15 @@ else
 
   elections.each do |election|
 
-    # make election directory if it doesn't exist
-    edir = "#{protocol_dir}/#{@election_id}/"
-    Dir.mkdir(edir) unless File.exists?(edir)
-
+    @election_id = election['election_id']
     @url = election['scraper_url_base']
     @uri = election ['scraper_url_folder_to_images']
     @filename = election['scraper_page_pattern']
     @districts = election['districts']
+
+    # make election directory if it doesn't exist
+    edir = "#{protocol_dir}/#{@election_id}/"
+    Dir.mkdir(edir) unless File.exists?(edir)
 
     @districts.each do |district|
 
