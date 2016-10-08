@@ -12,8 +12,8 @@ class RootController < ApplicationController
 
     # if there are no current elections, see if there are elections coming up
     if @elections.nil? || @elections.empty?
-    end
       @elections_coming_up = Election.coming_up.sorted
+    end
 
     respond_to do |format|
       format.html # index.html.erb
