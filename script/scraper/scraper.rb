@@ -1,168 +1,160 @@
 #!/usr/bin/env ruby
+# encoding: UTF-8
 
 # scraper for protocol app
-# need to remove the sample methods for production server!!!
 
+require 'logger'
 require 'json'
 require 'net/http'
 require 'nokogiri'
 require 'fileutils'
-require 'open-uri'	
-require './vpn_switcher.rb'
+require 'open-uri'
 
 # main variables
 
-counter_max = 20
+logger_info = Logger.new("../../log/scraper_info.log")
+logger_error = Logger.new("../../log/scraper_error.log")
 
-cec_base_url = "results2012.cec.gov.ge"
-election = "prop"
-
-app_base_url = "protocols.jumpstart.ge"
+app_base_url = "https://protocols.jumpstart.ge"
 app_get_uri = "/en/json/missing_protocols"
-app_post_uri = "/en/json/mark_found_protocols"
-protocol_dir = "/root/protocols/"
-#protocol_dir = "/home/eric/Desktop/cec_scraper/"
-remote_server = "protocols@epsilon.jumpstart.ge"
-remote_dir = "~/Protocols/shared/system/protocols/"
+protocol_dir = "~/Protocols/shared/system/protocols/"
 
-
-# methods
-
-def remote_file_exists?(url)
-  url = URI.parse(url)
-  Net::HTTP.start(url.host, url.port) do |http|
-    return http.head(url.request_uri).code == "200"
-  end
-end
+start_time = Time.now
 
 # check if scraper is already running
 
-start_time = Time.now
 checkfile = "prot_scraper_check"
 
 if File.exist?(protocol_dir + '/' + checkfile)
-  puts "Scraper is already running."
+  logger_info.info("Scraper already running.")
 else
   FileUtils.touch(protocol_dir + checkfile)
+
+  # get list of missing protocols via API
+  begin
+    logger_info.info("Getting list of remaining precincts via API call.")
+    elections = JSON.load(open(app_base_url + app_get_uri))
+  rescue OpenURI::HTTPError => e
+    logger_error.error(e)
+    FileUtils.rm(protocol_dir + checkfile)
+    # Send email!!!
+  end
+
+  logger_info.info("Got list of remaining precincts.")
+
+  ##################
+  # ELECTION LEVEL
+  ##################
   
-  # check if server is accessible
+  elections.each do |election|
 
-  check_target_server("http://" + cec_base_url)
+    # make election directory if it doesn't exist
+    edir = "#{protocol_dir}/#{@election_id}/"
+    Dir.mkdir(edir) unless File.exists?(edir)
 
-  # get list of missing precincts
+    @url = 'results2012.cec.gov.ge' # election['scraper_url_base']
+    @uri = election ['scraper_url_folder_to_images']
+    @filename = election['scraper_page_pattern']
+    @districts = election['districts']
 
-  file = Net::HTTP.get(app_base_url, app_get_uri)
-  districts = JSON.parse(file)
-  
-  counter = 0 
-  
-  districts.each do |district|
+    @districts.each do |district|
 
-    district_id = district["district_id"]
-#    district_id = district
-         
-    # create protocol directory if it doesn't exist
-    
-    district_dir = protocol_dir + district_id.to_s
-    Dir.mkdir(district_dir) unless File.exists?(district_dir)
+      ##################
+      # DISTRICT LEVEL
+      ##################
+      district.each do |did, precincts|
 
-    precincts = district["precincts"]
-#    precincts = ["1", "2", "3", "4", "5", "7", "9", "10", "12", "14", "15", "16", "17", "18", "19", "20"]    
-    precincts.each do |precinct|
-    
-      #precinct_id = precinct
-      precinct_id = precinct["id"]
-      
-      cec_page_uri = "/#{election}/oqmi_" + 
-                 district_id.to_s + "_" + 
-                 precinct_id.to_s + 
-                 ".html"
-      
-      # check if protocol exists on cec server
-      
-      response = Net::HTTP.get_response(URI("http://" + cec_base_url + cec_page_uri))
-    
-      if response.code.to_s == "200"
-        puts "Page http://" + cec_base_url + cec_page_uri + " found."
-        page = Net::HTTP.get(cec_base_url, cec_page_uri)
-        page_contents = Nokogiri::HTML(page)
-        
-        # if protocol and/or amendment exists get protocol
-        
-        if page_contents.css("img").nil?
-          puts "No images exist on #{cec_base_url + cec_page_uri}."
-        else
-          if page_contents.css("img")[0].attribute("src").nil?
-            puts "No protocol image exists."
-          else
-            proto_exist = true
-            puts "Protocol #{district_id}-#{precinct_id} image found."
-            prot_image_uri = page_contents.css("img")[0].attribute("src").to_s.sub("..", "")
-            prot_image_url = "http://" + cec_base_url + prot_image_uri
-            prot_filename = district_id.to_s + "-" + precinct_id.to_s + ".jpg"
+        fixed_did = did.to_i.to_s # remove leading zero
+
+        # make district directory if it doesn't exist
+        ddir = "#{protocol_dir}/#{@election_id}/#{did}/"
+        Dir.mkdir(ddir) unless File.exists?(ddir)
+
+        ##################
+        # PRECINCT LEVEL
+        ##################
+        precincts.each do |precinct|
+
+          fixed_precinct = precinct.split('.')[1].to_i.to_s
+
+          fname = @filename.sub('{did}', fixed_did).sub('{pid}', fixed_precinct)
+          page = "http://#{@url}#{@uri}#{fname}"
+
+          begin
+            logger_info.info("Checking: #{page}")
+            response = Net::HTTP.get_response(URI(page))
+          rescue
+            logger_error.error("Error checking page: #{page}")
+            next
           end
-          
-          if page_contents.css("img")[1].nil?
-            puts "No amended image exists."
-          else
-            amend_exist = true
-            puts "*** Amended #{district_id}-#{precinct_id} image found. ***"
-            amend_image_uri = page_contents.css("img")[1].attribute("src").to_s.sub("..", "")
-            amend_image_url = "http://" + cec_base_url + amend_image_uri
-            amend_filename = district_id.to_s + "-" + precinct_id.to_s + "-amended.jpg"
-          end
-          
-          if remote_server_up?(prot_image_url)
-          
-            if proto_exist
-              open("#{district_dir}/#{prot_filename}", 'wb') do |pfile|
-                pfile << open(prot_image_url).read
-              end # open file
-              puts "Protocol #{district_id}-#{precinct_id} saved to local drive."
-            
-              # copy file to remote server
-              puts "Copying protocol to application server."
-              `scp #{district_dir}/#{prot_filename} #{remote_server}:#{remote_dir}#{district_id}`
-              puts "Copied file to application server."
-              counter += 1
-            else
-              puts "Protocol #{district_id}-#{precinct_id} image not found."
-            end # proto_exist
-            
-            if amend_exist
-              open("#{district_dir}/#{amend_filename}", 'wb') do |afile|
-                afile << open(amend_image_url).read
-              end # open file
-              puts "Amended #{district_id}-#{precinct_id} saved to local drive."
-            
-              # copy file to remote server
-              puts "Copying amended protocol to application server."
-              `scp #{district_dir}/#{amend_filename} #{remote_server}:#{remote_dir}#{district_id}`
-              puts "*** Copied file to application server. ***"
-            else
-              puts "Amended #{district_id}-#{precinct_id} image not found."
-            end # amend_exists
-            
-          else
-            puts "Remote server is not up."
-          end # check if remote server is up
-          
-        end # no images found on page  
-      
-      else
-        puts "#{district_id}-#{precinct_id} page not found."
-      end # if page exists
-    
-    puts "Counter: #{counter}"
-    break if counter > counter_max
-    end # precincts loop
 
-  break if counter > counter_max
-  end # districts loop
+          ######################
+          # CHECK HTML RESPONSE
+          ######################
+          if response.code.to_s == "200"
+            logger_info.info("Page exists: #{page}")
+
+            begin
+              logger_info.info("Retrieving: #{page}")
+              doc = Nokogiri::HTML(open(page))
+            rescue
+              logger_error.error("Unable to retrieve: #{page}")
+              next
+            end
+
+            logger_info.info("Retrieved page: #{page}")
+
+            ##################
+            # GET IMAGES
+            ##################
+            images = doc.css("img")
+            links = images.map { |i| i['src']}
+            amend_count = 1
+
+            links.each_with_index do |value,index|
+
+              img_uri = value.sub('../','')
+              img_url = "http://#{@url}/#{img_uri}"
+              img_bname = "#{did}-#{precinct}"
+
+              if index == 0
+                begin
+                  logger_info.info("Downloading protocol: #{img_bname}")
+                  open("#{ddir}#{"#{img_bname}.jpg"}", 'wb') do |pfile|
+                    pfile << open(img_url).read
+                  end
+                rescue
+                  logger_error.error("Download failed: #{img_bname}")
+                  next
+                end
+              else
+                begin
+                  logger_info.info("Downloading amendment: #{img_bname}")
+                  open("#{ddir}#{img_bname}_amendment_#{amend_count}.jpg", 'wb') do |pfile|
+                    pfile << open(img_url).read
+                  end
+                rescue
+                  logger_error.error("Download failed: #{img_bname}")
+                  next
+                end
+                amend_count += 1
+              end # if response 200
+            end # links
+
+          else
+            logger_error.error("Page doesn't exist: #{page}")
+            next
+          end
+
+          sleep(1)
+        end # precincts
+      end # district hash
+    end # districts
+  end # elections
+
 
   end_time = Time.now
-
   duration =  (end_time - start_time)/60 # in minutes
-  puts "Scraper run time: #{duration} minutes"
+  logger_info.info("Scraper run time: #{duration} minutes")
   FileUtils.rm(protocol_dir + checkfile)
-end
+end # main if

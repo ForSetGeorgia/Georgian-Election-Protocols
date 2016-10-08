@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class Create2016Elections < ActiveRecord::Migration
   def up
     require 'csv'

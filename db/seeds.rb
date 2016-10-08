@@ -97,7 +97,7 @@ end
 ###############################
 if ENV['load_test_data'].present? && !Rails.env.production?
   client = ActiveRecord::Base.connection
-  now = Time.now
+  now = '2014-07-14 20:53:32'
   csv_path = "#{Rails.root}/db/data/2012/"
   analysis_db = 'protocol_analysis'
 
@@ -4090,5 +4090,3 @@ if ENV['old_items'].present?
   sql << "group by rd.region, rd.district_id order by rd.district_id "
   CONN.execute sql
 end
-
-
