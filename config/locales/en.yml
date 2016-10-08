@@ -254,6 +254,17 @@ en:
       votesum_explanation2: "Right Number: %{label}"
       votesum_explanation3: "These numbers are here to guide you with your data entry."
       votesum_explanation4: "It is possible that these numbers will not match."
+      scroll_to_zoom: Scroll protocol to zoom
+      title:
+        toggle: Toggle
+        ccw: Rotate CounterClockwise
+        cw: Rotate Clockwise
+        flip: Rotate by 180 degree
+        up: Move up
+        down: Move down
+        left: Move left
+        right: Move right
+        reset: Reset all transformations
     protocol:
       title: Enter Data
       p1: "Please only enter numbers; do not enter any 'X'."
