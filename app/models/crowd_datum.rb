@@ -208,7 +208,7 @@ class CrowdDatum < ActiveRecord::Base
 
     if self.election_id.present? && self.district_id.present? && self.precinct_id.present?
       sep = Election.by_election(election_id).pluck(:district_precinct_separator).first
-      path = "#{FOLDER_PATH}/#{election_id}/#{district_id}/#{district_id}#{sep}#{precinct_id}.jpg"
+      path = "#{FOLDER_PATH}/#{election_id}/#{district_id}/#{district_id}-#{precinct_id}.jpg"
       # puts "path = #{path}"
       # puts "exist = #{File.exist?("#{Rails.root}/public#{path}")}"
       exist = File.exist?("#{Rails.root}/public#{path}")

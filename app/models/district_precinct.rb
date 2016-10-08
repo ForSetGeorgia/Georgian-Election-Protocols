@@ -235,9 +235,10 @@ class DistrictPrecinct < ActiveRecord::Base
 
   ############################################
   ############################################
-  # folder format: /election_id/district_id/district_id-precinct_id[-amended].jpg
+  # folder format: /election_id/district_id/majorid-precinct_id[-amended].jpg
   def self.new_image_search
     files = Dir.glob("#{Rails.root}/public/system/protocols/**/*.jpg")
+    puts "==> there are #{files.length} protocol images"
     if files.present?
       ids = []
       # get the ids
@@ -246,7 +247,7 @@ class DistrictPrecinct < ActiveRecord::Base
         # -2 = district
         # -3 = election
         parts = f.split('/')
-        file_name_parts = parts[-1].split('_').gsub('.jpg', '')
+        file_name_parts = parts[-1].gsub('.jpg', '').split('-')
         precinct_id = file_name_parts[1]
         amended = file_name_parts.length == 3
         ids << {election_id: parts[-3], district_id: parts[-2], precinct_id: precinct_id, amended: amended}
@@ -264,7 +265,7 @@ class DistrictPrecinct < ActiveRecord::Base
 
           # load all districts/precincts that exist
           sql = "insert into has_protocols (election_id, district_id, precinct_id) values "
-          sql << ids.map{|x| "(#{x[:election_id]}, #{x[:district_id]}, #{x[:precinct_id]})"}.uniq.join(", ")
+          sql << ids.map{|x| "(#{x[:election_id]}, '#{x[:district_id]}', '#{x[:precinct_id]}')"}.uniq.join(", ")
           client.execute(sql)
 
           # update district precint table to mark these as existing
@@ -279,10 +280,12 @@ class DistrictPrecinct < ActiveRecord::Base
 
           puts "++++++++++ image's with amendment count = #{ids.select{|x| x[:amended] == true}.length}"
 
-          # load all districts/precincts that have amendment
-          sql = "insert into has_protocols (election_id, district_id, precinct_id) values "
-          sql << ids.select{|x| x[:amended] == true}.map{|x| "(#{x[:election_id]}, #{x[:district_id]}, #{x[:precinct_id]})"}.uniq.join(", ")
-          client.execute(sql)
+          if ids.select{|x| x[:amended] == true}.length > 0
+            # load all districts/precincts that have amendment
+            sql = "insert into has_protocols (election_id, district_id, precinct_id) values "
+            sql << ids.select{|x| x[:amended] == true}.map{|x| "(#{x[:election_id]}, '#{x[:district_id]}', '#{x[:precinct_id]}')"}.uniq.join(", ")
+            client.execute(sql)
+          end
 
           # if district/precinct did not have amendment:
           # - update flag
@@ -300,7 +303,7 @@ class DistrictPrecinct < ActiveRecord::Base
 
             # insert the records that have no protocols
             sql = "insert into has_protocols (election_id, district_id, precinct_id) values "
-            sql << precincts.map{|x| "(#{x['election_id']}, #{x['district_id']}, #{x['precinct_id']})"}.uniq.join(", ")
+            sql << precincts.map{|x| "(#{x['election_id']}, '#{x['district_id']}', '#{x['precinct_id']}')"}.uniq.join(", ")
             client.execute(sql)
 
             # mark flag

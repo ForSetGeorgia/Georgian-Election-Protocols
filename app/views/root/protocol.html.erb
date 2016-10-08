@@ -61,7 +61,7 @@
 
           <%
             style = ''
-            if @election.protocol_top_box_margin > 0
+            if @election.protocol_top_box_margin.to_f > 0
               style = "margin-top: #{@election.protocol_top_box_margin}px"
             end
           %>
@@ -91,10 +91,8 @@
 
           <div class="party-box">
             <%
-              style = ''
-              if @election.protocol_party_top_margin > 0
-                style = "margin-top: #{@election.protocol_party_top_margin}px"
-              end
+              style = "margin-top: #{@election.protocol_party_top_margin}px"
+              logger.debug "========== #{@election.protocol_party_top_margin}"
             %>
             <% @party_numbers.each do |number| %>
               <div class="f" style='<%= style %>'>

@@ -53,8 +53,8 @@ class RootController < ApplicationController
     end
 
     # get the next record if there were no errors
-   @crowd_datum = CrowdDatum.new(election_id: 3, district_id: '01', precinct_id: "01.03", user_id: current_user.id)
-    # @crowd_datum = CrowdDatum.next_available_record(current_user.id) if valid
+   # @crowd_datum = CrowdDatum.new(election_id: 2, district_id: '17', precinct_id: "09.04", user_id: current_user.id)
+    @crowd_datum = CrowdDatum.next_available_record(current_user.id) if valid
     # get the election
     @election = Election.find(@crowd_datum.election_id)
     # get the parties for the election
