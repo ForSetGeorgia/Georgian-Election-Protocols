@@ -36,7 +36,7 @@ module UpdateVolunteers
     elections = Election.can_enter
     new_users.each do |u|
       nu = User.create(:email => u[2], :password => pwd)
-      nu << elections
+      nu.elections << elections
     end
   end
 
@@ -47,7 +47,7 @@ module UpdateVolunteers
     elections = Election.can_enter
     new_users.each do |u|
       nu = User.create(:email => u[0], :password => pwd)
-      nu << elections
+      nu.elections << elections
     end
   end
 end
