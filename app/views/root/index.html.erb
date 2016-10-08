@@ -4,7 +4,7 @@
     <% if @overall_stats.present? %>
       <h2><%= t('.stats_header') %></h2>
       <div class="tabs">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs nav-tabs-top">
           <% @elections.each_with_index do |election, index| %>
             <% active = index == 0 ? 'active' : '' %>
             <li class="<%= active %>"><a href="#overall_stats_<%= election.analysis_table_name %>" data-toggle="tab"><%= election.name %></a></li>
@@ -13,7 +13,7 @@
             <li><a href="#overall_stats_users" data-toggle="tab"><%= t('.users')  %></a></li>
           <% end %>
         </ul>
-        <div class="tab-content">
+        <div class="tab-content tab-content-top">
           <% @elections.each_with_index do |election, index| %>
             <% active = index == 0 ? 'active' : '' %>
             <div class="tab-pane fade in <%= active %>" id="overall_stats_<%= election.analysis_table_name %>">
@@ -43,7 +43,7 @@
                     </p>
                   </div>
                   <div class="span4">
-                    <p>
+                    <p class="highlight">
                       <strong><%= t('.overall_stats.protocols_validated')%>:</strong>
                       <%= stats[:protocols_validated][:number] %>
                       <% if stats[:protocols_validated][:number] != I18n.t('app.common.na') %>
@@ -130,16 +130,16 @@
                   <table class="table table-striped overall_stats_by_district">
                     <thead>
                       <tr>
-                        <th>
+                        <th class="hl1">
                           <%= t('.overall_stats_by_district.region') %>
                         </th>
-                        <th>
+                        <th class="hl1">
                           <%= t('.overall_stats_by_district.district') %>
                         </th>
-                        <th>
+                        <th class="hl1">
                           <%= t('.overall_stats_by_district.district_id') %>
                         </th>
-                        <th>
+                        <th class="hl1">
                           <%= t('.overall_stats_by_district.precincts') %> (#)
                         </th>
                         <th>
@@ -151,7 +151,7 @@
                         <th>
                           <%= t('.overall_stats_by_district.protocols_not_entered') %> (#)
                         </th>
-                        <th>
+                        <th class="hl2">
                           <%= t('.overall_stats_by_district.protocols_validated') %> (#)
                         </th>
                         <th>
@@ -163,7 +163,7 @@
                         <th>
                           <%= t('.overall_stats_by_district.protocols_not_entered') %> (%)
                         </th>
-                        <th>
+                        <th class="hl2">
                           <%= t('.overall_stats_by_district.protocols_validated') %> (%)
                         </th>
                       </tr>

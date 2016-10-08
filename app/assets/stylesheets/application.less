@@ -209,13 +209,57 @@ footer .row-fluid .js-logo {
   margin-right: 30px;
 }
 
-/* about page */
-#about-page img{
-  width: 45%;
-  margin-left: 20px;
+#about-page {
+  display:flex;
+  flex-direction:column;
+  ._row {
+    display:flex;
+    flex-direction:column;
+    > a, > div {
+      width:100%;
+    }
+    > div {
+      padding: 15px;
+    }
+  }
+  .recent-text {
+    padding:40px 15px 15px !important;
+    span {
+      display:block;
+      &.hl1 {
+        color:#8A0A15;
+      }
+      &.hl2 {
+        padding-top:10px;
+        font-size:20px;
+        font-weight:bold;
+      }
+      &:first-of-type {
+        margin-top:30px;
+      }
+    }
+  }
+  a {
+    color:#8A0A15;
+    text-decoration:underline;
+  }
+  p{
+    font-size: 15px;
+    line-height: 20px;
+    margin-bottom: 20px;
+  }
 }
-#about-page p{
-  font-size: 15px;
-  line-height: 20px;
-  margin-bottom: 20px;
+
+@media (min-width: 992px) {
+  #about-page {
+    ._row {
+      flex-direction:row;
+       > a, > div {
+        width:50%;
+      }
+    }
+    .recent-text {
+      padding:40px 15px 15px 40px !important;
+    }
+  }
 }
