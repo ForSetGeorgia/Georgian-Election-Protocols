@@ -294,3 +294,37 @@ ka:
         protocols_validated: დამოწმებული ოქმები
     about:
       title: შესახებ
+  mailer:
+    new_user:
+      subject: Are you ready to help JumpStart digitize some election protocols?!
+      message: |
+        Dear volunteer,
+
+        The time is come to help JumpStart make Georgian Parliamentary election data transparent! We appreciate you efforts to digitize the protocols, making the analysis of the election data more interesting.
+
+        Below are some instructions to get you started.
+
+        First you will need to go to the website:
+
+        <a href="https://protocols.jumpstart.ge">https://protocols.jumpstart.ge</a>
+
+        Your login information is as follows:
+
+        username: %{email}
+        password: %{password}
+
+        Once you log in, you should click on the blue button "Training". This will help you familiarize yourself with how the protocols look and how to fill out the form. You must complete 5 protocols successfully before you can start digitizing real protocols. Don't worry, it is really easy.
+
+        Once you have completed the training, you will be able to start digitizing real protocols. There are a lot of them, but that is what we are here for.
+
+        Take your time at first, you will eventually speed up. There are several helpful controls at the bottom of the page that allow you to adjust the protocol image to align with the form fields such as rotate, move up, and move sideways.
+
+        If you do have questions or ideas to improve the form, please contact us so we can improve it. Please send us a message on our Facebook page at:
+
+        <a href="https://www.facebook.com/JumpStartGeorgia/">https://www.facebook.com/JumpStartGeorgia/</a>
+
+        And again, thank you!
+
+        Sincerely,
+
+        The JumpStart Team

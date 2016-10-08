@@ -32,22 +32,29 @@ module UpdateVolunteers
   def self.vol_update(url = @@url, names = @@names)
     old_users = get_existing_emails
     new_users = get_vol_users(url, old_users)
-    pwd = fun_pwd(names)
-    elections = Election.can_enter
-    new_users.each do |u|
-      nu = User.create(:email => u[2], :password => pwd)
-      nu.elections << elections
-    end
+    create_accounts(new_users, 2, names)
   end
 
   def self.paid_update(url = @@paid_url, names = @@names)
     old_users = get_existing_emails
     new_users = get_paid_users(url, old_users)
-    pwd = fun_pwd(names)
+    create_accounts(new_users, 0, names)
+  end
+
+  def self.create_accounts(users, email_index, names)
     elections = Election.can_enter
-    new_users.each do |u|
-      nu = User.create(:email => u[0], :password => pwd)
+    users.each do |u|
+      pwd = fun_pwd(names)
+      nu = User.create(:email => u[email_index], :password => pwd)
       nu.elections << elections
+
+      message = Message.new
+      message.to = nu.email
+      message.locale = I18n.locale
+      message.subject = I18n.t("mailer.new_user.subject", :locale => I18n.locale)
+      message.message = I18n.t("mailer.new_user.message", :locale => I18n.locale, email: nu.email, password: pwd)
+      NotificationMailer.new_user(message).deliver if !Rails.env.staging?
     end
   end
+
 end
