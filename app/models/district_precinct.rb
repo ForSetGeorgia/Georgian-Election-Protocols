@@ -1,4 +1,5 @@
 class DistrictPrecinct < ActiveRecord::Base
+  @@analysis_db = 'protocol_analysis'
 
   #######################################
   ## ATTRIBUTES
@@ -20,11 +21,11 @@ class DistrictPrecinct < ActiveRecord::Base
   end
 
   def self.with_protocols
-    where(:has_protocol => true).order("district_id, precinct_id")
+    where(:has_protocol => true).order("election_id, district_id, precinct_id")
   end
 
   def self.awaiting_protocols
-    where(:has_protocol => false).order("district_id, precinct_id")
+    where(:has_protocol => false).order("election_id, district_id, precinct_id")
   end
 
   def self.district_count_by_election(election_id)
@@ -62,67 +63,24 @@ class DistrictPrecinct < ActiveRecord::Base
   end
 
   # creates array of districts/precincts that have protocols
-  #format: [ {district_id => x, precincts => [ {id => x }, ...  ] }, .... ]
+  #format: [ {election_id => a, districts => [ { district_id => [ precinct_id, precinct_id,   ] } ] } ]
   def self.found_protocols
-    records = []
-    x = with_protocols
+    # records = []
+    elections = Election.can_enter
+    records = with_protocols.by_election(elections.map{|x| x.id})
 
-    if x.present?
-      district_ids = x.map{|x| x.district_id}.uniq
-      if district_ids.present?
-        district_ids.each do |district_id|
-          district = Hash.new
-          records << district
-          district['district_id'] = district_id
-          district['precincts'] = []
-          precinct_ids = x.select{|x| x.district_id == district_id}.map{|x| x.precinct_id}.sort
-
-          if precinct_ids.present?
-            precinct_ids.each do |precinct_id|
-              precinct = Hash.new
-              district['precincts'] << precinct
-              precinct['id'] = precinct_id
-            end
-          end
-
-        end
-      end
-    end
-
-    return records
+    return build_api_request(elections, records)
   end
 
 
   # creates array of districts/precincts that are missing protocols
-  #format: [ {district_id => x, precincts => [ {id => x, found => false }, ...  ] }, .... ]
+  #format: [ {election_id => a, districts => [ { district_id => [ precinct_id, precinct_id,   ] } ] } ]
   def self.missing_protocols
-    records = []
-    x = awaiting_protocols
+    # records = []
+    elections = Election.can_enter
+    records = awaiting_protocols.by_election(elections.map{|x| x.id})
 
-    if x.present?
-      district_ids = x.map{|x| x.district_id}.uniq
-      if district_ids.present?
-        district_ids.each do |district_id|
-          district = Hash.new
-          records << district
-          district['district_id'] = district_id
-          district['precincts'] = []
-          precinct_ids = x.select{|x| x.district_id == district_id}.map{|x| x.precinct_id}.sort
-
-          if precinct_ids.present?
-            precinct_ids.each do |precinct_id|
-              precinct = Hash.new
-              district['precincts'] << precinct
-              precinct['id'] = precinct_id
-#              precinct['found'] = false
-            end
-          end
-
-        end
-      end
-    end
-
-    return records
+    return build_api_request(elections, records)
   end
 
 
@@ -224,6 +182,12 @@ class DistrictPrecinct < ActiveRecord::Base
     if election_ids.present?
       election_ids.each do |election_id|
 
+        election = Election.where(id: election_id).first
+
+        if election.has_regions || election.has_district_names
+          regions = RegionDistrictName.sorted
+        end
+
         sql = "select district_id, count(*) as num_precincts, sum(has_protocol) as num_protocols_found, (count(*) - sum(has_protocol)) as num_protocols_missing, "
         sql << "sum(if(has_protocol = 1 and is_validated = 0, 1, 0)) as num_protocols_not_entered, sum(if(has_protocol = 1 and is_validated = 1, 1, 0)) as num_protocols_validated "
         sql << "from district_precincts where election_id = ? group by district_id order by district_id"
@@ -238,8 +202,13 @@ class DistrictPrecinct < ActiveRecord::Base
             district_stats = Hash.new
             stats[:districts] << district_stats
 
-            # district_stats[:region] = index.present? ? names[index].region : nil
-            # district_stats[:district] = index.present? ? names[index].district_name : nil
+            if regions.present?
+              region = regions.select{|x| x.district_id == district[:district_id]}.first
+              if region.present?
+                district_stats[:region] = region.region
+                district_stats[:district] = region.district_name
+              end
+            end
             district_stats[:district_id] = district[:district_id]
             district_stats[:precincts] = format_number(district[:num_precincts])
             district_stats[:protocols_missing] = Hash.new
@@ -266,47 +235,63 @@ class DistrictPrecinct < ActiveRecord::Base
 
   ############################################
   ############################################
+  # folder format: /election_id/district_id/district_id-precinct_id[-amended].jpg
   def self.new_image_search
     files = Dir.glob("#{Rails.root}/public/system/protocols/**/*.jpg")
     if files.present?
-      ids = files.map{|x| x.split('/').last.gsub('.jpg', '').split('-')}
+      ids = []
+      # get the ids
+      files.each do |f|
+        # -1 = district-precinct[-amended]
+        # -2 = district
+        # -3 = election
+        parts = f.split('/')
+        file_name_parts = parts[-1].split('_').gsub('.jpg', '')
+        precinct_id = file_name_parts[1]
+        amended = file_name_parts.length == 3
+        ids << {election_id: parts[-3], district_id: parts[-2], precinct_id: precinct_id, amended: amended}
+      end
+
       if ids.present?
         DistrictPrecinct.transaction do
+          client = ActiveRecord::Base.connection
+          now = Time.now
+
           # remove anything that was there
           HasProtocol.delete_all
 
           puts "++++++++++ image count = #{ids.length}"
 
           # load all districts/precincts that exist
-          sql = "insert into has_protocols (district_id, precinct_id) values "
-          sql << ids.map{|x| "(#{x[0]}, #{x[1]})"}.uniq.join(", ")
-          ActiveRecord::Base.connection.execute(sql)
+          sql = "insert into has_protocols (election_id, district_id, precinct_id) values "
+          sql << ids.map{|x| "(#{x[:election_id]}, #{x[:district_id]}, #{x[:precinct_id]})"}.uniq.join(", ")
+          client.execute(sql)
 
           # update district precint table to mark these as existing
-          now = Time.now
-          sql = "update district_precincts as dp left join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
-          sql << "set dp.has_protocol = if(hp.id is null, 0, 1), dp.updated_at = '#{now}' "
-          ActiveRecord::Base.connection.execute(sql)
+          sql = "update district_precincts as dp left join has_protocols as hp on
+                  hp.election_id = dp.election_id and hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id
+                  set dp.has_protocol = if(hp.id is null, 0, 1), dp.updated_at = '#{now}' "
+          client.execute(sql)
 
           # if an amendment has been found for a protocol that has already been entered, the protocol needs to be re-entered
-          # -> mark the crowd data records as invalid and delete the pres2013 record.
+          # -> mark the crowd data records as invalid and delete the analysis record.
           HasProtocol.delete_all
 
-          puts "++++++++++ image's with amendment count = #{ids.select{|x| x.length == 3}.length}"
+          puts "++++++++++ image's with amendment count = #{ids.select{|x| x[:amended] == true}.length}"
 
           # load all districts/precincts that have amendment
-          sql = "insert into has_protocols (district_id, precinct_id) values "
-          sql << ids.select{|x| x.length == 3}.map{|x| "(#{x[0]}, #{x[1]})"}.uniq.join(", ")
-          ActiveRecord::Base.connection.execute(sql)
+          sql = "insert into has_protocols (election_id, district_id, precinct_id) values "
+          sql << ids.select{|x| x[:amended] == true}.map{|x| "(#{x[:election_id]}, #{x[:district_id]}, #{x[:precinct_id]})"}.uniq.join(", ")
+          client.execute(sql)
 
           # if district/precinct did not have amendment:
           # - update flag
           # - mark crowd datum as invalid
-          # - delete pres2013
-          sql = "select dp.district_id, dp.precinct_id from district_precincts as dp "
-          sql << "inner join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
+          # - delete analysis
+          sql = "select dp.election_id, dp.district_id, dp.precinct_id from district_precincts as dp "
+          sql << "inner join has_protocols as hp on hp.election_id = dp.election_id and hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
           sql << "where dp.has_amendment = 0"
-          precincts = ActiveRecord::Base.connection.select_all(sql)
+          precincts = client.select_all(sql)
           puts "++++++++++ found #{precincts.present? ? precincts.length : 0} new amendments"
 
           if precincts.present?
@@ -314,25 +299,32 @@ class DistrictPrecinct < ActiveRecord::Base
             HasProtocol.delete_all
 
             # insert the records that have no protocols
-            sql = "insert into has_protocols (district_id, precinct_id) values "
-            sql << precincts.map{|x| "(#{x['district_id']}, #{x['precinct_id']})"}.uniq.join(", ")
-            ActiveRecord::Base.connection.execute(sql)
+            sql = "insert into has_protocols (election_id, district_id, precinct_id) values "
+            sql << precincts.map{|x| "(#{x['election_id']}, #{x['district_id']}, #{x['precinct_id']})"}.uniq.join(", ")
+            client.execute(sql)
 
             # mark flag
-            sql = "update district_precincts as dp inner join has_protocols as hp on hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
-            sql << "set dp.has_amendment = 1, dp.is_validated = 0, dp.updated_at = '#{now}' "
-            ActiveRecord::Base.connection.execute(sql)
+            sql = "update district_precincts as dp inner join has_protocols as hp on
+                    hp.election_id = dp.election_id and hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id
+                    set dp.has_amendment = 1, dp.is_validated = 0, dp.updated_at = '#{now}' "
+            client.execute(sql)
 
             # mark crowd datum as invalid
-            sql = "update crowd_data as cd inner join has_protocols as hp on hp.district_id = cd.district_id and hp.precinct_id = cd.precinct_id "
-            sql << "set cd.is_valid = 0, cd.updated_at = '#{now}' where cd.is_valid = 1"
-            ActiveRecord::Base.connection.execute(sql)
+            sql = "update crowd_data as cd inner join has_protocols as hp on
+                  hp.election_id = cd.election_id and hp.district_id = cd.district_id and hp.precinct_id = cd.precinct_id
+                  set cd.is_valid = 0, cd.updated_at = '#{now}' where cd.is_valid = 1"
+            client.execute(sql)
 
-            # delete pres record
-            sql = "delete p from president2013s as p inner join has_protocols as hp on hp.district_id = p.district_id and hp.precinct_id = p.precinct_id "
-            ActiveRecord::Base.connection.execute(sql)
+            # delete analysis record
+            elections = Election.where(id: precincts.map{|x| x['election_id']}).uniq
+            if elections.present?
+              elections.each do |election|
+                sql = "delete p from `#{@@analysis_db}`.`#{election.analysis_table_name} - raw` as p
+                        inner join has_protocols as hp on hp.election_id = p.election_id and hp.district_id = p.district_id and hp.precinct_id = p.precinct_id "
+                client.execute(sql)
+              end
+            end
           end
-
         end
       end
     end
@@ -347,6 +339,43 @@ class DistrictPrecinct < ActiveRecord::Base
 
   def self.format_percent(number)
     ActionController::Base.helpers.number_to_percentage(ActionController::Base.helpers.number_with_precision(number))
+  end
+
+
+  #format: [ {election_id => a, districts => [ { district_id => [ precinct_id, precinct_id,   ] } ] } ]
+  def self.build_api_request(elections, data)
+    records = []
+    if elections.present? && data.present?
+      elections.each do |election|
+        e = {
+          election_id: election.id,
+          scraper_url_base: election.scraper_url_base,
+          scraper_url_folder_to_images: election.scraper_url_folder_to_images,
+          scraper_page_pattern: election.scraper_page_pattern,
+          districts: []
+        }
+
+        records << e
+
+        district_ids = data.select{|x| x.election_id == election.id}.map{|x| x.district_id}.uniq
+
+        if district_ids.present?
+          district_ids.each do |district_id|
+            district = Hash.new
+            e[:districts] << district
+            district[district_id] = []
+            precinct_ids = data.select{|x| x.election_id == election.id && x.district_id == district_id}.map{|x| x.precinct_id}.uniq.sort
+
+            if precinct_ids.present?
+              district[district_id] << precinct_ids
+            end
+
+          end
+        end
+      end
+    end
+
+    return records
   end
 
 end

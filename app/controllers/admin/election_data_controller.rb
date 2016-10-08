@@ -5,11 +5,9 @@ class Admin::ElectionDataController < ApplicationController
   end
 
   def index
-    
-    @current_precinct_count = President2013.count
-    @migrations = ElectionDataMigration.sorted
-    @min_precinct_change = ElectionDataMigration::MIN_PRECINCTS_CHANGE
-    @last_precinct_count = ElectionDataMigration.last_precinct_count
+
+    @current_election_migrations = ElectionDataMigration.sorted.by_election(@election_ids)
+
 
     gon.notification_url = admin_election_data_notification_url
 
@@ -17,45 +15,45 @@ class Admin::ElectionDataController < ApplicationController
       format.html # index.html.erb
     end
   end
-  
-  def edit
 
-    @record = President2013.where(:district_id => params[:district_id], :precinct_id => params[:precinct_id])
-    
-    @record = @record.first if @record.present?
-  
+  def edit
+    election = Election.find(params[:election_id])
+
+    @record = election.get_analysis_record(:district_id => params[:district_id], :precinct_id => params[:precinct_id])
+
     if @record.present? && params[:president2013].present? && request.put?
-logger.debug "******************************** form is put"      
+logger.debug "******************************** form is put"
       if @record.update_attributes(params[:president2013])
         flash[:notice] = t('app.msgs.success_updated', :obj => t('activerecord.models.president2013'))
       else
         flash[:error] = t('app.msgs.no_success_updated', :obj => t('activerecord.models.president2013'))
       end
-    
+
     end
-    
+
     respond_to do |format|
       format.html # index.html.erb
     end
   end
 
   def create_migration
-    Rails.logger.debug "$$$$$$$$$$$$$$$$ create_migration start"
+    Rails.logger.debug "$$$$$$$$$$$$$$$$ create_migration start for #{params[:id]}"
     msg = ''
     success = false
     data = {}
 
-    migration = ElectionDataMigration.create_record
-    
+    election = Election.find(params[:id])
+    migration = ElectionDataMigration.create_record(params[:id])
+
     if migration.present?
       success = true
       data['migration_url'] = site_url + ElectionDataMigration::PUSH_DATA_URL_PATH
       data['file_url'] = "#{request.protocol}#{request.host_with_port}#{migration.file_url_path}"
       data['precincts_completed'] = migration.num_precincts
-      data['precincts_total'] = DistrictPrecinct.count
-      data['event_id'] = event_id
+      data['precincts_total'] = DistrictPrecinct.by_election(params[:id]).count
+      data['event_id'] = election.election_app_event_id
     end
-    
+
     if success
     Rails.logger.debug "$$$$$$$$$$$$$$$$ success!"
       msg = I18n.t('admin.election_data.index.push_success')
@@ -84,7 +82,7 @@ Rails.logger.debug "+++++++++++ params success and file_url present"
 
       file_name = params[:file_url].split('/').last
 Rails.logger.debug "+++++++++++ file_name = #{file_name}"
-  
+
       ElectionDataMigration.record_notification(file_name, params[:success], params[:msg])
     end
 
@@ -94,30 +92,18 @@ Rails.logger.debug "+++++++++++ file_name = #{file_name}"
 
 
   protected
-  
+
   def site_url
     url = 'http://localhost:3000/'
-    
+
     if Rails.env.production?
-      url = 'http://data.electionportal.ge/'
+      url = 'https://elections.jumpstart.ge/'
     elsif Rails.env.staging?
       url = 'http://dev-electiondata.jumpstart.ge/'
     end
-    
+
     return url
   end
 
-
-  def event_id
-    event_id = 42
-    
-    if Rails.env.production?
-      event_id = 38
-    elsif Rails.env.staging?
-      event_id = 38
-    end
-    
-    return event_id
-  end
 
 end

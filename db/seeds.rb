@@ -130,14 +130,20 @@ if ENV['load_test_data'].present? && !Rails.env.production?
     # prop
     puts '- party list election'
     prop = Election.new(can_enter_data: true, election_at: '2012-10-01', election_app_event_id: 1,
-                        has_regions: true, has_district_names: true)
+                        has_regions: true, has_district_names: true,
+                        scraper_url_base: 'results2012.cec.gov.ge',
+                        scraper_url_folder_to_images: '/prop/',
+                        scraper_page_pattern: 'oqmi_{did}_{pid}.html')
     prop.election_translations.build(locale: 'en', name: '2012 Parliamentary - Party List')
     prop.election_translations.build(locale: 'ka', name: '2012 წლის საპარლამენტო არჩევნები - პარტიული სია')
     prop.save
     # major
     puts '- major election'
     major = Election.new(can_enter_data: true, election_at: '2012-10-01', election_app_event_id: 1,
-                        has_regions: true, has_district_names: true, parties_same_for_all_districts: false)
+                        has_regions: true, has_district_names: true, parties_same_for_all_districts: false,
+                        scraper_url_base: 'results2012.cec.gov.ge',
+                        scraper_url_folder_to_images: '/major/',
+                        scraper_page_pattern: 'oqmi_{did}_{pid}.html'))
     major.election_translations.build(locale: 'en', name: '2012 Parliamentary - Majoritarian')
     major.election_translations.build(locale: 'ka', name: '2012 წლის საპარლამენტო არჩევნები - მაჟორიტარული')
     major.save

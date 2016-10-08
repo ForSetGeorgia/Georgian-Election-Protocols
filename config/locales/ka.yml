@@ -71,6 +71,7 @@ ka:
       success_updated: "%{obj} განახლებულია."
       no_success_updated: "%{obj} არ განახლდა წარმატებით."
       could_not_find_election: "არჩევნები არ მოიძებნა."
+      no_protocols: There are no protocols to enter at this time.
     csv_header:
       region: რეგიონი
       district_id: ოლქის ID
@@ -162,6 +163,7 @@ ka:
         precinct_count: "დამუშავებული უბნების რაოდენობა: %{count}"
         last_precinct_count: "უკანასკნელ მიგრაციაში უბნების რაოდენობა: %{count}"
         min_precinct_change: "უბნების მინიმალური რაოდენობა ახალი მიგრაციის შესაქმნელად: %{count}"
+        precinct_count_difference: "New Precincts That Would Be Added: %{count}"
         no_precincts: არჩევნების მონაცემები ჯერ არ არსებობს!
         push_data: მიგრაციის დაწყება
         no_migrations: მონაცემები ჯერ არ გაგზავნილა არჩევნების მონაცემთა აპლიკაციაში ჯერ
@@ -174,6 +176,8 @@ ka:
         file: CSV ფაილი
         push_success: მონაცემები წარმატებით გაიგზავნა არჩევნების მონაცემთა აპლიკაციაში
         push_fail: არჩევნების მონაცემთა აპლიკაციაში მონაცემების გაგზავნისთვის საკმარისი ახალი უბნები არ არსებობს
+        start_migration: Start A Migration
+        migration_history: Migration History
       edit:
         title: მონაცემების შეყვანა
         p1: "გთხოვთ, შეიყვანოთ მხოლოდ რიცხვები; არ შეიყვანოთ 'X'."
@@ -265,6 +269,17 @@ ka:
       votesum_explanation2: "მარჯვენა რიცხვი: %{label}"
       votesum_explanation3: "ეს რიცხვები დაგეხმარებათ მონაცემთა სეყვანაში."
       votesum_explanation4: "შესაძლოა, რომ ეს რიცხვები არ ემთხვეოდეს."
+      scroll_to_zoom: Scroll protocol to zoom
+      title:
+        toggle: Toggle
+        ccw: Rotate CounterClockwise
+        cw: Rotate Clockwise
+        flip: Rotate by 180 degree
+        up: Move up
+        down: Move down
+        left: Move left
+        right: Move right
+        reset: Reset all transformations
     download:
       title: ჩამოტვირთე შეყვანილი მონაცემები
       num_precincts: არსებობს %{total}-დან %{count} საარჩევნო უბანი საარჩევნო მონაცემებით.

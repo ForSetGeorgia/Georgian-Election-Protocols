@@ -4,7 +4,7 @@
     <% if @overall_stats.present? %>
       <h2><%= t('.stats_header') %></h2>
       <div class="tabs">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs nav-tabs-top">
           <% @elections.each_with_index do |election, index| %>
             <% active = index == 0 ? 'active' : '' %>
             <li class="<%= active %>"><a href="#overall_stats_<%= election.analysis_table_name %>" data-toggle="tab"><%= election.name %></a></li>
@@ -13,7 +13,7 @@
             <li><a href="#overall_stats_users" data-toggle="tab"><%= t('.users')  %></a></li>
           <% end %>
         </ul>
-        <div class="tab-content">
+        <div class="tab-content tab-content-top">
           <% @elections.each_with_index do |election, index| %>
             <% active = index == 0 ? 'active' : '' %>
             <div class="tab-pane fade in <%= active %>" id="overall_stats_<%= election.analysis_table_name %>">
@@ -43,7 +43,7 @@
                     </p>
                   </div>
                   <div class="span4">
-                    <p>
+                    <p class="highlight">
                       <strong><%= t('.overall_stats.protocols_validated')%>:</strong>
                       <%= stats[:protocols_validated][:number] %>
                       <% if stats[:protocols_validated][:number] != I18n.t('app.common.na') %>
@@ -130,16 +130,16 @@
                   <table class="table table-striped overall_stats_by_district">
                     <thead>
                       <tr>
-                        <th>
+                        <th class="hl1">
                           <%= t('.overall_stats_by_district.region') %>
                         </th>
-                        <th>
+                        <th class="hl1">
                           <%= t('.overall_stats_by_district.district') %>
                         </th>
-                        <th>
+                        <th class="hl1">
                           <%= t('.overall_stats_by_district.district_id') %>
                         </th>
-                        <th>
+                        <th class="hl1">
                           <%= t('.overall_stats_by_district.precincts') %> (#)
                         </th>
                         <th>
@@ -151,7 +151,7 @@
                         <th>
                           <%= t('.overall_stats_by_district.protocols_not_entered') %> (#)
                         </th>
-                        <th>
+                        <th class="hl2">
                           <%= t('.overall_stats_by_district.protocols_validated') %> (#)
                         </th>
                         <th>
@@ -163,7 +163,7 @@
                         <th>
                           <%= t('.overall_stats_by_district.protocols_not_entered') %> (%)
                         </th>
-                        <th>
+                        <th class="hl2">
                           <%= t('.overall_stats_by_district.protocols_validated') %> (%)
                         </th>
                       </tr>
@@ -221,25 +221,26 @@
   <% elsif @elections_coming_up.present? %>
 
     <div class="row-fluid elections-coming-up">
-      <div class="span4">
+      <div class="span6">
+        <%= link_to(image_tag('share_2016.png'), @bitly_url, target: :blank) %>
+      </div>
+      <div class="span6">
         <h2><%= t('.stay_tuned.header') %></h2>
 
         <p><%= t('.stay_tuned.text') %></p>
-        <ul>
+        <ul class="">
           <% @elections_coming_up.each do |election| %>
             <li><%= "#{election.name} (#{l election.election_at})" %></li>
           <% end %>
         </ul>
       </div>
-      <div class="span4">
-        <h2><%= t('.want_help.header') %></h2>
+    </div>
+    <div class="row-fluid">
+      <div class="span6">
+        <h3><%= t('.want_help.header') %></h3>
         <%= simple_format(t('.want_help.text')) %>
       </div>
-      <div class="span4">
-        <%= link_to(image_tag('share_2016.png'), @bitly_url, target: :blank) %>
-      </div>
     </div>
-
   <% else %>
 
     <h2><%= t('.no_elections.header') %></h2>

@@ -27,7 +27,7 @@ class RootController < ApplicationController
   end
 
   def protocol
-
+    @protocol_manipulator = true
     # if the user has not completed training send them there
     if !current_user.completed_training?
       redirect_to training_path, :notice => I18n.t('root.protocol.no_training')
@@ -38,19 +38,32 @@ class RootController < ApplicationController
     if request.post?
      #CrowdDatum.numerical_values_provided(params[:crowd_datum])
       params[:crowd_datum] = CrowdDatum.extract_numbers(params[:crowd_datum])
-      @crowd_datum = CrowdDatum.new(params[:crowd_datum])
-      valid = @crowd_datum.save
+
+      # in case users are refreshing page, look to see if the record already exists
+      # if so, ignore it, else create it
+      @crowd_datum = CrowdDatum.by_ids(params[:crowd_datum][:election_id], params[:crowd_datum][:district_id], params[:crowd_datum][:precinct_id], params[:crowd_datum][:user_id]).first
+      if @crowd_datum.nil?
+        @crowd_datum = CrowdDatum.new(params[:crowd_datum])
+        valid = @crowd_datum.save
+      else
+        puts "!!!!!! record already exists, so ignoring submission"
+        valid = true
+      end
   		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id, @election_ids)
     end
 
     # get the next record if there were no errors
 #    @crowd_datum = CrowdDatum.new(election_id: 4, district_id: 25, precinct_id: 22) if valid
     @crowd_datum = CrowdDatum.next_available_record(current_user.id) if valid
-    # get the election
-    @election = Election.find(@crowd_datum.election_id)
-    # get the parties for the election
-    @party_numbers = Party.by_election_district(@crowd_datum.election_id, @crowd_datum.district_id).party_numbers
-
+    if @crowd_datum.present?
+      # get the election
+      @election = Election.find(@crowd_datum.election_id)
+      # get the parties for the election
+      @party_numbers = Party.by_election_district(@crowd_datum.election_id, @crowd_datum.district_id).party_numbers
+    else
+      redirect_to root_path, :notice => I18n.t('app.msgs.no_protocols')
+      return
+    end
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -63,7 +76,13 @@ class RootController < ApplicationController
 
     if params['protocol'].present?
       # if the user entered a 0, reset to '' so matching works
-      params['protocol'].select{|k,v| v == '0'}.each{|k,v| params['protocol'][k] = ''}
+      # trim the values so there are no leading spaces
+      params['protocol'].each{|k,v|
+        params['protocol'][k] = v.strip
+        if params['protocol'][k] == '0'
+          params['protocol'][k] = ''
+        end
+      }
 
       @next_protocol = params['protocol_number']
       filedata = JSON.parse(File.read('public/training/' + @next_protocol + '.json'))

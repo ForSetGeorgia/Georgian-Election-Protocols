@@ -71,6 +71,7 @@ en:
       success_updated: "%{obj} was successfully updated."
       no_success_updated: "%{obj} was NOT successfully updated."
       could_not_find_election: "The election could not be found."
+      no_protocols: There are no protocols to enter at this time.
     csv_header:
       region: Region
       district_id: District ID
@@ -162,6 +163,7 @@ en:
         precinct_count: "Current Number of Precincts Procesed: %{count}"
         last_precinct_count: "Number of Precincts in Last Migration: %{count}"
         min_precinct_change: "Minimum Precincts Needed to Create New Migration: %{count}"
+        precinct_count_difference: "New Precincts That Would Be Added: %{count}"
         no_precincts: No election results exist yet!
         push_data: Start a Migration
         no_migrations: No data has been sent to the Election Data application yet.
@@ -174,6 +176,8 @@ en:
         file: CSV File
         push_success: The data was successfully sent to the Election Data application
         push_fail: Not enough new precincts exist to warrant pushing data to the Election Data application
+        start_migration: Start A Migration
+        migration_history: Migration History
       edit:
         title: Edit Data
         p1: "Please only enter numbers; do not enter any 'X'."
@@ -265,6 +269,17 @@ en:
       votesum_explanation2: "Right Number: %{label}"
       votesum_explanation3: "These numbers are here to guide you with your data entry."
       votesum_explanation4: "It is possible that these numbers will not match."
+      scroll_to_zoom: Scroll protocol to zoom
+      title:
+        toggle: Toggle
+        ccw: Rotate CounterClockwise
+        cw: Rotate Clockwise
+        flip: Rotate by 180 degree
+        up: Move up
+        down: Move down
+        left: Move left
+        right: Move right
+        reset: Reset all transformations
     download:
       title: Download Results of Data Entry
       num_precincts: There are %{count} out of %{total} precincts (%{percent}) with election data.

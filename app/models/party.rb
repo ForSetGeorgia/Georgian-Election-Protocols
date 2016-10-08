@@ -32,6 +32,10 @@ class Party < ActiveRecord::Base
     return p
   end
 
+  def self.party_names
+    with_translations(I18n.locale).map{|x| x.name}
+  end
+
   def self.party_numbers
     pluck(:number)
   end

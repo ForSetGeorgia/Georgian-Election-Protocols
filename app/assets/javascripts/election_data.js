@@ -43,23 +43,29 @@ $(document).ready(function(){
     }
   }
 
-  
-  $('#create_migration').click(function(){
-    console.log('create_migration click'); 
+
+  $('.create_migration').click(function(){
+    console.log('create_migration click');
+    var ths = this;
+    var link = $(ths).closest('.create_migration_link');
+    var processing = $(link).next('.create_migration_processing');
+    var success = $(processing).next('.create_migration_success');
+    var error = $(success).next('.create_migration_error');
+
     $.ajax({
-      url: "/en/admin/election_data/create_migration",
+      url: "/en/admin/election_data/create_migration/" + $(this).data('id')
     }).done(function(resp) {
       //resp = {success, msg, data}
       console.log(resp);
-      
+
       if (resp.success){
         // show processing message
-        $('#create_migration_link').hide(300, function(){
-          $('#create_migration_processing').show(300);
+        $(link).hide(300, function(){
+          $(processing).show(300);
         })
 
         // start push
-        console.log('posting to election map site'); 
+        console.log('posting to election map site');
         $.ajax({
           url: resp.data.migration_url,
           data: {
@@ -70,16 +76,18 @@ $(document).ready(function(){
             respond_to_url: resp.data.respond_to_url
           }
         }).done(function(resp){
-          console.log('back from map site'); 
+          console.log('back from map site');
           if (resp.success){
+            console.log('success');
             // show success message
-            $('#create_migration_processing').hide(300, function(){
-              $('#create_migration_success').show(300);
+            $(processing).hide(300, function(){
+              $(success).show(300);
             })
           } else {
-            // show success message
-            $('#create_migration_processing').hide(300, function(){
-              $('#create_migration_error').show(300);
+            console.log('error');
+            // show error message
+            $(processing).hide(300, function(){
+              $(error).show(300);
             })
           }
           // save the migration notification
@@ -96,7 +104,7 @@ $(document).ready(function(){
         });
       }
     });
-  
+
     return false;
   });
 
