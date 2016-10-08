@@ -1,5 +1,5 @@
 <div id="landing_page">
-  <% if @elections.present? %>
+  <% if false && @elections.present? %>
 
     <% if @overall_stats.present? %>
       <h2><%= t('.stats_header') %></h2>
@@ -218,10 +218,13 @@
         </div>
       <% end %>
 
-  <% elsif @elections_coming_up.present? %>
+  <% elsif true || @elections_coming_up.present? %>
 
     <div class="row-fluid elections-coming-up">
-      <div class="span4">
+      <div class="span6">
+        <%= link_to(image_tag('share_2016.png'), @bitly_url, target: :blank) %>
+      </div>
+      <div class="span6">
         <h2><%= t('.stay_tuned.header') %></h2>
 
         <p><%= t('.stay_tuned.text') %></p>
@@ -231,15 +234,16 @@
           <% end %>
         </ul>
       </div>
-      <div class="span4">
+
+
+
+    </div>
+    <div class="row-fluid">
+      <div class="span6">
         <h2><%= t('.want_help.header') %></h2>
         <%= simple_format(t('.want_help.text')) %>
       </div>
-      <div class="span4">
-        <%= link_to(image_tag('share_2016.png'), @bitly_url, target: :blank) %>
-      </div>
     </div>
-
   <% else %>
 
     <h2><%= t('.no_elections.header') %></h2>

@@ -1,59 +1,33 @@
-<%# title t('.title') %>
+<% title t('.title') %>
 
 <div id="about-page">
-  <div class="_row">
-    <%= link_to(image_tag('share_2016.png'), @bitly_url, target: :blank) %>
-    <div class="recent-text">
-      <% if I18n.locale == :ka %>
-        <h2>Stay Tuned !</h2>
-        <p>The following elections will soon have protocols for us to enter
-          <span class="hl1">2016 Parliamentary - Majoritarian</span>
-          <span class="hl1">2016 Parliamentary - Party List</span>
-          <span class="hl2">2016-10-08</span>
-        </p>
-      <% else %>
-        <h2>Stay Tuned !</h2>
-        <p>The following elections will soon have protocols for us to enter
-          <span class="hl1">2016 Parliamentary - Majoritarian</span>
-          <span class="hl1">2016 Parliamentary - Party List</span>
-          <span class="hl2">2016-10-08</span>
-        </p>
-      <% end %>
-    </div>
-  </div>
-  <div class="_row">
-    <div>
-      <% if I18n.locale == :ka %>
-        <h3>გინდა დაგვეხმარო?</h3>
-        <p>არჩევნების დროს, ხალხი ტელევიზიით იგებს, რომელმა კანდიდატმა გაიმარჯვა თითოეულ ოლქში, ხოლო ცესკო ამ ინფორმაციის რეგულარულ განახლებას უზრუნველყოფს მას შემდეგ, რაც უბნები დაიხურება. ამისათვის ცესკო თითოეული ოლქის ყველა უბნის მონაცემებს აჯამებს. თუმცა, ცესკო უბნების მონაცემებს არჩევნების დასრულებიდან მხოლოდ 20 დღის შემდეგ აქვეყნებს, მას შემდეგ, რაც არჩევნების შედეგები უკვე გადაწყვეტილია.</p>
+  <%= link_to(image_tag('share_2016.png', class: 'pull-right'), @bitly_url, target: :blank) %>
+  <% if I18n.locale == :ka %>
+    <p>არჩევნების დროს, ხალხი ტელევიზიით იგებს, რომელმა კანდიდატმა გაიმარჯვა თითოეულ ოლქში, ხოლო ცესკო ამ ინფორმაციის რეგულარულ განახლებას უზრუნველყოფს მას შემდეგ, რაც უბნები დაიხურება. ამისათვის ცესკო თითოეული ოლქის ყველა უბნის მონაცემებს აჯამებს. თუმცა, ცესკო უბნების მონაცემებს არჩევნების დასრულებიდან მხოლოდ 20 დღის შემდეგ აქვეყნებს, მას შემდეგ, რაც არჩევნების შედეგები უკვე გადაწყვეტილია.</p>
 
-        <p>მთავარი გამოწვევა სადამკვირვებლო ორგანიზაციებისთვის ისეთი კვლევების ჩატარებაა, რომლებიც ხაზს გაუსვამენ პრობლემურ სფეროებს, ამისათვის ოლქების ინფორმაცია არ გამოდგება, საჭიროა უბნების მონაცემები. </p>
+    <p>მთავარი გამოწვევა სადამკვირვებლო ორგანიზაციებისთვის ისეთი კვლევების ჩატარებაა, რომლებიც ხაზს გაუსვამენ პრობლემურ სფეროებს, ამისათვის ოლქების ინფორმაცია არ გამოდგება, საჭიროა უბნების მონაცემები. </p>
 
-        <p>მაგალითად, თუ გინდათ, იცოდეთ, არსებობს თუ არა უბნები, სადაც ხმების რაოდენობა ბიულეტენების რაოდენობაზე მეტია, რაც დარღვევაა და არ უნდა ხდებოდეს, თქვენ დაგჭირდებათ საუბნო კომისიის მონაცემები, არა - ოლქის. ორგანიზაციები სხვა მიმართულებებსაც ამოწმებენ იმისათვის, რომ გამოკვეთონ სფეროები, რომლებიც გამოძიებას საჭიროებენ და აღმოაჩინონ, სად არ არის გაყალბების მაღალი რისკი. მათ ყველა უბნის მონაცემები სჭირდებათ და არა ოლქის. </p>
+    <p>მაგალითად, თუ გინდათ, იცოდეთ, არსებობს თუ არა უბნები, სადაც ხმების რაოდენობა ბიულეტენების რაოდენობაზე მეტია, რაც დარღვევაა და არ უნდა ხდებოდეს, თქვენ დაგჭირდებათ საუბნო კომისიის მონაცემები, არა - ოლქის. ორგანიზაციები სხვა მიმართულებებსაც ამოწმებენ იმისათვის, რომ გამოკვეთონ სფეროები, რომლებიც გამოძიებას საჭიროებენ და აღმოაჩინონ, სად არ არის გაყალბების მაღალი რისკი. მათ ყველა უბნის მონაცემები სჭირდებათ და არა ოლქის. </p>
 
-        <p>როგორც სამოქალაქო ორგანიზაცია, ჯამპსტარტი ხშირად ცდილობს, იპოვოს გზები, ამ სახის გამჭვირვალობის ხარვეზების აღმოსაფხვრელად. ამისათვის ჩვენ ტექნოლოგიებს ვიყენებთ. წელს ჯამპსტარტი ქმნის ინსტრუმენტს, რომელიც საშუალებას მისცემს ყველა მსურველს, დაგვეხმაროს უბნების მონაცემების შეგროვებაში. ეს მონაცემები ატვირთულია ცესკო-ს ვებ გვერდზე, როგორც დასკანერებული დოკუმენტები, ჩვენ კი ისე გარდავქმნით მას, რომ ორგანიზაციებს შეეძლოთ ინფორმაციის დროულად გაანალიზება - სანამ არჩევნების შედეგები გადაწყდება. ეროვნულ-დემოკრატიული ინსტიტუტისა და მოხალისეების მხარდაჭერით, როგორც საქართველოდან, ასევე, მთელი მსოფლიოდან, ჯამპსტარტი გეგმავს, გააციფრულოს ყველა უბნის მონაცემი ხმის მიცემის დასრულებიდან 48 საათის განმავლობაში. მონაცემების გაციფრულება ოქმში დაფიქსირებული ციფრების წაკითხვასა და მათ სპეციალურ ფორმაში გადატანას გულისხმობს. </p>
+    <p>როგორც სამოქალაქო ორგანიზაცია, ჯამპსტარტი ხშირად ცდილობს, იპოვოს გზები, ამ სახის გამჭვირვალობის ხარვეზების აღმოსაფხვრელად. ამისათვის ჩვენ ტექნოლოგიებს ვიყენებთ. წელს ჯამპსტარტი ქმნის ინსტრუმენტს, რომელიც საშუალებას მისცემს ყველა მსურველს, დაგვეხმაროს უბნების მონაცემების შეგროვებაში. ეს მონაცემები ატვირთულია ცესკო-ს ვებ გვერდზე, როგორც დასკანერებული დოკუმენტები, ჩვენ კი ისე გარდავქმნით მას, რომ ორგანიზაციებს შეეძლოთ ინფორმაციის დროულად გაანალიზება - სანამ არჩევნების შედეგები გადაწყდება. ეროვნულ-დემოკრატიული ინსტიტუტისა და მოხალისეების მხარდაჭერით, როგორც საქართველოდან, ასევე, მთელი მსოფლიოდან, ჯამპსტარტი გეგმავს, გააციფრულოს ყველა უბნის მონაცემი ხმის მიცემის დასრულებიდან 48 საათის განმავლობაში. მონაცემების გაციფრულება ოქმში დაფიქსირებული ციფრების წაკითხვასა და მათ სპეციალურ ფორმაში გადატანას გულისხმობს. </p>
 
-        <p>ჯამპსტრატისთვის მნიშვნელოვანია ნებისმიერი სახის მხარდაჭერა ამ საქმეში. თქვენი დროის დათმობით და თუნდაც მცირე რაოდენობით საუბნო საარჩევნო ოქმების გაციფრულებით მიზნის მიღწევაში დაგვეხმარებით. არჩევნების ღამეს მონაცემების ჩამოტვირთვა შესაძლებელი იქნება ნებისმიერისთვის და რეგულარულად განახლდება საარჩევნო პორტალი, (<a href="http://elections.jumpstart.ge/ka" target="_blank">http://elections.jumpstart.ge/ka</a>) რომელიც მოსახლეობას მარტივი ვიზუალით აჩვენებს, რას ნიშნავს მონაცემები.</p>
+    <p>ჯამპსტრატისთვის მნიშვნელოვანია ნებისმიერი სახის მხარდაჭერა ამ საქმეში. თქვენი დროის დათმობით და თუნდაც მცირე რაოდენობით საუბნო საარჩევნო ოქმების გაციფრულებით მიზნის მიღწევაში დაგვეხმარებით. არჩევნების ღამეს მონაცემების ჩამოტვირთვა შესაძლებელი იქნება ნებისმიერისთვის და რეგულარულად განახლდება საარჩევნო პორტალი, (<a href="http://elections.jumpstart.ge/ka" target="_blank">http://elections.jumpstart.ge/ka</a>) რომელიც მოსახლეობას მარტივი ვიზუალით აჩვენებს, რას ნიშნავს მონაცემები.</p>
 
-        <p>დაგვეხმარე, დავრწმუნდეთ, რომ შენი ხმა ჩიათვალა. დაგვეხმარე დათვლაში! </p>
-        <p>ღონისძიებაში მონაწილეების მსურველებმა გაიარეთ რეგისტრაცია:<a href="<%= @bitly_url %>" target="_blank">bit.ly/Icounted</a></p>
-      <% else %>
-        <h3>Want to Help Us?</h3>
-        <p>During elections, most people watch on TV how candidates do in each district, and the CEC provides this information with regular updates after the polling stations close. To do this, the CEC adds up all the values in each precinct in each district. However, the CEC does not make the information from each precinct public until 20 days after the elections take place, well after the outcome has been decided.</p>
+    <p>დაგვეხმარე, დავრწმუნდეთ, რომ შენი ხმა ჩიათვალა. დაგვეხმარე დათვლაში! </p>
+    <p>ღონისძიებაში მონაწილეების მსურველებმა გაიარეთ რეგისტრაცია:<a href="<%= @bitly_url %>" target="_blank">bit.ly/Icounted</a></p>
+  <% else %>
+    <p>During elections, most people watch on TV how candidates do in each district, and the CEC provides this information with regular updates after the polling stations close. To do this, the CEC adds up all the values in each precinct in each district. However, the CEC does not make the information from each precinct public until 20 days after the elections take place, well after the outcome has been decided.</p>
 
-        <p>The main challenge for monitoring organizations is that, to perform the types of checks that highlight problematic areas during an election, the district information isn't helpful. The precinct information, however, is.</p>
+    <p>The main challenge for monitoring organizations is that, to perform the types of checks that highlight problematic areas during an election, the district information isn't helpful. The precinct information, however, is.</p>
 
-        <p>For example, if you want to know whether or not in a precinct there are more votes than ballots, which should definitely not happen, you need precinct information, not district. There are several other checks that organizations perform during an election that indicate areas that need investigation and detect where there is a high risk of fraudulent activity and they all rely on precinct information, not district.</p>
+    <p>For example, if you want to know whether or not in a precinct there are more votes than ballots, which should definitely not happen, you need precinct information, not district. There are several other checks that organizations perform during an election that indicate areas that need investigation and detect where there is a high risk of fraudulent activity and they all rely on precinct information, not district.</p>
 
-        <p>As a civic tech organization, JumpStart often tries to find solutions to these sorts of transparency shortcomings and we often use technology to do it. This year, JumpStart is building a web-based tool that enables anyone to help us take the precinct information, which is uploaded to the CEC's website in the form of scanned documents, and digitize it so that organizations can then analyze it in time to have an impact - before the outcome of the elections has been decided. With the support of the National Democratic Institute and volunteers in Georgia and all over the world, JumpStart is spearheading a massive effort to digitize all the precinct information within 48 hours after polling stations close.</p>
+    <p>As a civic tech organization, JumpStart often tries to find solutions to these sorts of transparency shortcomings and we often use technology to do it. This year, JumpStart is building a web-based tool that enables anyone to help us take the precinct information, which is uploaded to the CEC's website in the form of scanned documents, and digitize it so that organizations can then analyze it in time to have an impact - before the outcome of the elections has been decided. With the support of the National Democratic Institute and volunteers in Georgia and all over the world, JumpStart is spearheading a massive effort to digitize all the precinct information within 48 hours after polling stations close.</p>
 
-        <p>JumpStart welcomes any and all support for this effort, including YOUR time. By volunteering your time to digitize even a small number of precinct ballot protocols, you will help us achieve our goal. The data will be available to everyone for download throughout the night in spreadsheet format and will regularly feed into the Georgian Election Data Portal (<a href="http://elections.jumpstart.ge/" target="_blank">http://elections.jumpstart.ge/</a>) to make it easy for people to explore, visually, what the data means.</p>
+    <p>JumpStart welcomes any and all support for this effort, including YOUR time. By volunteering your time to digitize even a small number of precinct ballot protocols, you will help us achieve our goal. The data will be available to everyone for download throughout the night in spreadsheet format and will regularly feed into the Georgian Election Data Portal (<a href="http://elections.jumpstart.ge/" target="_blank">http://elections.jumpstart.ge/</a>) to make it easy for people to explore, visually, what the data means.</p>
 
-        <p>To help us ensure your vote counts, help us count.</p>
+    <p>To help us ensure your vote counts, help us count.</p>
 
-        <p>If you want to help us, sign up using our registration form: <a href="<%= @bitly_url %>" target="_blank">bit.ly/Icounted</a></p>
-      <% end %>
-    </div>
-    <div></div>
-  </div>
+    <p>If you want to help us, sign up using our registration form: <a href="<%= @bitly_url %>" target="_blank">bit.ly/Icounted</a></p>
+  <% end %>
 </div>
