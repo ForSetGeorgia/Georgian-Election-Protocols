@@ -89,8 +89,8 @@ else
           begin
             logger_info.info("Checking: #{page}")
             response = Net::HTTP.get_response(URI(page))
-          rescue
-            logger_error.error("Error checking page: #{page}")
+          rescue => e
+            logger_error.error("Error checking page: #{page} | #{e}")
             next
           end
 
@@ -103,8 +103,8 @@ else
             begin
               logger_info.info("Retrieving: #{page}")
               doc = Nokogiri::HTML(open(page))
-            rescue
-              logger_error.error("Unable to retrieve: #{page}")
+            rescue => e
+              logger_error.error("Unable to retrieve: #{page} | #{e}")
               next
             end
 
