@@ -570,7 +570,10 @@ def self.next_available_record(user_id)
                           x.precinct_id == user_record.precinct_id}
       end
 
+      found_matches.flatten!
+
       if found_matches.present?
+
         logger.info "!!!!!! found #{found_matches.length} matches out of #{needs_matches.length} records"
 
         found_matches.each do |found_match|
