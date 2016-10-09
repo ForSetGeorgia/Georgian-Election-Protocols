@@ -235,7 +235,7 @@ class DistrictPrecinct < ActiveRecord::Base
 
   ############################################
   ############################################
-  # folder format: /election_id/district_id/majorid-precinct_id[-amended].jpg
+  # folder format: /election_id/district_id/majorid-precinct_id[_amendment_*].jpg
   def self.new_image_search
     files = Dir.glob("#{Rails.root}/public/system/protocols/**/*.jpg")
     puts "==> there are #{files.length} protocol images"
@@ -284,26 +284,6 @@ class DistrictPrecinct < ActiveRecord::Base
             # load all districts/precincts that have amendment
             sql = "insert into has_protocols (election_id, district_id, precinct_id) values "
             sql << ids.select{|x| x[:amended] == true}.map{|x| "(#{x[:election_id]}, '#{x[:district_id]}', '#{x[:precinct_id]}')"}.uniq.join(", ")
-            client.execute(sql)
-          end
-
-          # if district/precinct did not have amendment:
-          # - update flag
-          # - mark crowd datum as invalid
-          # - delete analysis
-          sql = "select dp.election_id, dp.district_id, dp.precinct_id from district_precincts as dp "
-          sql << "inner join has_protocols as hp on hp.election_id = dp.election_id and hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
-          sql << "where dp.has_amendment = 0"
-          precincts = client.select_all(sql)
-          puts "++++++++++ found #{precincts.present? ? precincts.length : 0} new amendments"
-
-          if precincts.present?
-            # clear out temp table
-            HasProtocol.delete_all
-
-            # insert the records that have no protocols
-            sql = "insert into has_protocols (election_id, district_id, precinct_id) values "
-            sql << precincts.map{|x| "(#{x['election_id']}, '#{x['district_id']}', '#{x['precinct_id']}')"}.uniq.join(", ")
             client.execute(sql)
 
             # mark flag

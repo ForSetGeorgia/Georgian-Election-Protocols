@@ -55,9 +55,9 @@ class RootController < ApplicationController
     end
 
     # get the next record if there were no errors
-   # @crowd_datum = CrowdDatum.new(election_id: 3, district_id: '11', precinct_id: "06.15", user_id: current_user.id)
+   @crowd_datum = CrowdDatum.new(election_id: 3, district_id: '11', precinct_id: "06.15", user_id: current_user.id)
     logger.info "%%%%%%%%%%%% - calling next available"
-    @crowd_datum = CrowdDatum.next_available_record(current_user.id) if valid
+    # @crowd_datum = CrowdDatum.next_available_record(current_user.id) if valid
     if @crowd_datum.present?
       logger.info "%%%%%%%%%%%% - record found, getting matching election and parties"
       # get the election
@@ -65,7 +65,7 @@ class RootController < ApplicationController
       # get the parties for the election
       @party_numbers = Party.by_election_district(@crowd_datum.election_id, @crowd_datum.district_id).party_numbers
     else
-      redirect_to root_path, :notice => I18n.t('msgs.no_protocols')
+      redirect_to root_path, :notice => I18n.t('app.msgs.no_protocols')
       return
     end
     respond_to do |format|

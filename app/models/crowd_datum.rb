@@ -223,18 +223,22 @@ class CrowdDatum < ActiveRecord::Base
     return path
   end
 
-  # get the path to the protocol amendment image
+  # get the path to the protocol amendment image(s)
   # if the file does not exist, return nil
-  def amendment_image_path
+  def amendment_image_paths
     path = nil
-    exist = false
 
     if self.election_id.present? && self.district_id.present? && self.precinct_id.present?
-      path = "#{FOLDER_PATH}/#{election_id}/#{district_id}/#{district_id}_#{precinct_id}-amended.jpg"
-      exist = File.exist?("#{Rails.root}/public#{path}")
+      test_path = "#{FOLDER_PATH}/#{election_id}/#{district_id}/#{district_id}-#{precinct_id}_amendment_*.jpg"
+      root = "#{Rails.root}/public"
+      files = Dir.glob("#{root}#{test_path}")
+      if files.present?
+        path = []
+        files.sort.each do |file|
+          path << file.gsub(root, '')
+        end
+      end
     end
-
-    path = nil if !exist
 
     return path
   end
