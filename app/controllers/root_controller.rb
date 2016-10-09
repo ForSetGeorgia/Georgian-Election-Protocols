@@ -27,6 +27,7 @@ class RootController < ApplicationController
   end
 
   def protocol
+    logger.info "%%%%%%%%%%%% protocol start"
     @protocol_manipulator = true
     # if the user has not completed training send them there
     if !current_user.completed_training?
@@ -36,6 +37,7 @@ class RootController < ApplicationController
 
     valid = true
     if request.post?
+      logger.info "%%%%%%%%%%%% - request is post"
      #CrowdDatum.numerical_values_provided(params[:crowd_datum])
       params[:crowd_datum] = CrowdDatum.extract_numbers(params[:crowd_datum])
 
@@ -46,7 +48,7 @@ class RootController < ApplicationController
         @crowd_datum = CrowdDatum.new(params[:crowd_datum])
         valid = @crowd_datum.save
       else
-        puts "!!!!!! record already exists, so ignoring submission"
+        logger.info "!!!!!! record already exists, so ignoring submission"
         valid = true
       end
   		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id, @election_ids)
@@ -54,8 +56,10 @@ class RootController < ApplicationController
 
     # get the next record if there were no errors
    # @crowd_datum = CrowdDatum.new(election_id: 3, district_id: '11', precinct_id: "06.15", user_id: current_user.id)
+    logger.info "%%%%%%%%%%%% - calling next available"
     @crowd_datum = CrowdDatum.next_available_record(current_user.id) if valid
     if @crowd_datum.present?
+      logger.info "%%%%%%%%%%%% - record found, getting matching election and parties"
       # get the election
       @election = Election.find(@crowd_datum.election_id)
       # get the parties for the election
