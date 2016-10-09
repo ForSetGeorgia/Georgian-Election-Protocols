@@ -56,6 +56,7 @@ else
     @uri = election ['scraper_url_folder_to_images']
     @filename = election['scraper_page_pattern']
     @districts = election['districts']
+    @proto_counter = 0 # for counting how many protos downloaded / scrape
 
     # make election directory if it doesn't exist
     edir = "#{protocol_dir}/#{@election_id}/"
@@ -130,6 +131,7 @@ else
                   open("#{ddir}#{"#{img_bname}.jpg"}", 'wb') do |pfile|
                     pfile << open(img_url).read
                   end
+                  @proto_counter += 1
                 rescue => e
                   logger_error.error("Download failed: #{img_bname} | #{e}")
                   next
@@ -149,7 +151,7 @@ else
             end # links
 
           else
-            logger_error.error("Page doesn't exist: #{page}")
+            logger_info.info("Page doesn't exist: #{page}")
             next
           end
 
@@ -158,6 +160,7 @@ else
       end # district hash
       current_time = Time.now
       time_elapsed = (current_time - start_time)/60
+      logger_info.info("Protos Downloaded: #{proto_counter}")
       logger_info.info("Time elapsed: #{time_elapsed} minutes")
     end # districts
   end # elections
@@ -165,6 +168,7 @@ else
 
   end_time = Time.now
   duration =  (end_time - start_time)/60 # in minutes
+  logger_info.info("Protos Downloaded: #{proto_counter}")
   logger_info.info("Scraper run time: #{duration} minutes")
   FileUtils.rm(protocol_dir + checkfile)
 end # main if
