@@ -52,6 +52,14 @@ class Admin::UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
+
+        message = Message.new
+        message.to = @user.email
+        message.locale = I18n.locale
+        message.subject = I18n.t("mailer.new_user.subject", :locale => I18n.locale)
+        message.message = I18n.t("mailer.new_user.message", :locale => I18n.locale, email: @user.email, password: '')
+        NotificationMailer.new_user(message).deliver if !Rails.env.staging?
+
         format.html { redirect_to admin_users_path, notice: t('app.msgs.success_created', :obj => t('activerecord.models.user')) }
         format.json { render json: @user, status: :created, location: @user }
       else

@@ -2,7 +2,6 @@
 
 <% if @elections.present? %>
 
-  <h2><%= t('.start_migration') %></h2>
   <div class="tabs">
     <ul class="nav nav-tabs">
       <% @elections.each_with_index do |election, index| %>
@@ -51,24 +50,8 @@
               </p>
             </div>
           </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
 
-
-  <h2><%= t('.migration_history') %></h2>
-  <div class="tabs">
-    <ul class="nav nav-tabs">
-      <% @elections.each_with_index do |election, index| %>
-        <% active = index == 0 ? 'active' : '' %>
-        <li class="<%= active %>"><a href="#history_<%= election.analysis_table_name %>" data-toggle="tab"><%= election.name %></a></li>
-      <% end %>
-    </ul>
-    <div class="tab-content">
-      <% @elections.each_with_index do |election, index| %>
-        <% active = index == 0 ? 'active' : '' %>
-        <div class="tab-pane fade in <%= active %>" id="history_<%= election.analysis_table_name %>">
+          <h3><%= t('.migration_history') %></h3>
           <% migrations = @current_election_migrations.select{|x| x.election_id == election.id} %>
           <% if migrations.present? %>
             <table class="table table-striped migration_records">
@@ -128,6 +111,7 @@
       <% end %>
     </div>
   </div>
+
 <% end %>
 
 
