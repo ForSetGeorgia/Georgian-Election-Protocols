@@ -47,7 +47,8 @@
       <% logger.debug "!!!!!!!!!!! election #{@crowd_datum.election_id}; dist: #{@crowd_datum.district_id}; prec: #{@crowd_datum.precinct_id}; user: #{@crowd_datum.user_id}" %>
 
       <div class="magnifier-thumb-wrapper">
-        <%= image_tag @crowd_datum.image_path, :id => 'protocolimg', :class => (FastImage.size(full_url(@crowd_datum.image_path))[1] < 1100 ? 'low' : '') %>
+        <%= image_tag @crowd_datum.image_path, :id => 'protocolimg' %>
+        <%#= image_tag @crowd_datum.image_path, :id => 'protocolimg', :class => (FastImage.size(full_url(@crowd_datum.image_path))[1] < 1100 ? 'low' : '') %>
       </div>
       <%#= image_tag 'http://localhost:3000/system/protocols/53/53-29.jpg', :id => 'protocolimg', :class => (FastImage.size("/system/protocols/53/53-29.jpg")[1] < 1100 ? 'low' : '') %>
 
@@ -61,7 +62,7 @@
 
           <%
             style = ''
-            if @election.protocol_top_box_margin > 0
+            if @election.protocol_top_box_margin.to_f > 0
               style = "margin-top: #{@election.protocol_top_box_margin}px"
             end
           %>
@@ -91,10 +92,8 @@
 
           <div class="party-box">
             <%
-              style = ''
-              if @election.protocol_party_top_margin > 0
-                style = "margin-top: #{@election.protocol_party_top_margin}px"
-              end
+              style = "margin-top: #{@election.protocol_party_top_margin}px"
+              logger.debug "========== #{@election.protocol_party_top_margin}"
             %>
             <% @party_numbers.each do |number| %>
               <div class="f" style='<%= style %>'>
@@ -109,7 +108,7 @@
               # have to calculate how high the party box should be
               # and subtract from the # of parties in the box
               # - 22.5 is the default height for each field
-              party_height = 22.5 + @election.protocol_party_top_margin
+              party_height = 22.5 + @election.protocol_party_top_margin.to_f
               total_height = @election.max_party_in_district * party_height
               total_party_height = @party_numbers.length * (party_height)
               empty_space = total_height - total_party_height

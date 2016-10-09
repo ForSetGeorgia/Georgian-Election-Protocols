@@ -10,6 +10,7 @@ class Message
 	attribute :url
 	attribute :url_id
 	attribute :bcc
+  attribute :to
 	attribute :locale, :default => I18n.locale
 
 	# attr_accessible :name, :email, :message, :message2, :subject, :url, :bcc, :url_id, :locale

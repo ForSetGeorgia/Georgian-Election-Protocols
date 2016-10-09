@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161008105656) do
+ActiveRecord::Schema.define(:version => 20161009053941) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -158,13 +158,13 @@ ActiveRecord::Schema.define(:version => 20161008105656) do
 
   create_table "district_parties", :force => true do |t|
     t.integer  "election_id"
-    t.integer  "district_id"
+    t.string   "district_id",  :limit => 10
     t.integer  "party_number"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
-  add_index "district_parties", ["election_id", "district_id"], :name => "index_district_parties_on_election_id_and_district_id"
+  add_index "district_parties", ["election_id", "district_id"], :name => "index_district_parties_elec_id_dist_id"
 
   create_table "district_precincts", :force => true do |t|
     t.string   "district_id",   :limit => 10
@@ -223,23 +223,23 @@ ActiveRecord::Schema.define(:version => 20161008105656) do
   create_table "elections", :force => true do |t|
     t.date     "election_at"
     t.integer  "election_app_event_id"
-    t.boolean  "can_enter_data",                              :default => false
-    t.boolean  "parties_same_for_all_districts",              :default => true
-    t.boolean  "is_local_majoritarian",                       :default => false
-    t.boolean  "has_regions",                                 :default => false
-    t.boolean  "has_district_names",                          :default => false
+    t.boolean  "can_enter_data",                               :default => false
+    t.boolean  "parties_same_for_all_districts",               :default => true
+    t.boolean  "is_local_majoritarian",                        :default => false
+    t.boolean  "has_regions",                                  :default => false
+    t.boolean  "has_district_names",                           :default => false
     t.string   "analysis_table_name"
-    t.datetime "created_at",                                                     :null => false
-    t.datetime "updated_at",                                                     :null => false
-    t.integer  "max_party_in_district",                       :default => 0
-    t.integer  "protocol_top_box_margin",                     :default => 0
-    t.integer  "protocol_party_top_margin",                   :default => 0
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
+    t.integer  "max_party_in_district",                        :default => 0
+    t.string   "protocol_top_box_margin",        :limit => 10, :default => "0"
+    t.string   "protocol_party_top_margin",      :limit => 10, :default => "0"
     t.string   "scraper_url_base"
     t.string   "scraper_url_folder_to_images"
     t.string   "scraper_page_pattern"
-    t.boolean  "has_indepenedent_parties",                    :default => false
-    t.string   "district_precinct_separator",    :limit => 5, :default => "-"
-    t.boolean  "has_custom_shape_levels",                     :default => true
+    t.boolean  "has_indepenedent_parties",                     :default => false
+    t.string   "district_precinct_separator",    :limit => 5,  :default => "-"
+    t.boolean  "has_custom_shape_levels",                      :default => true
   end
 
   add_index "elections", ["can_enter_data"], :name => "index_elections_on_can_enter_data"

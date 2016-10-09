@@ -35,6 +35,8 @@ gem "fastimage" # get image size without downloading the image
 
 gem 'test-unit', '~> 3.0' # needed for rails console
 
+gem 'whenever', '~> 0.9.7' # schedule cron jobs
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do

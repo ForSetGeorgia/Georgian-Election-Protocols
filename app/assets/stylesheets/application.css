@@ -190,13 +190,22 @@ footer .row-fluid .js-logo {
 }
 
 /* help us button in header */
+.nav > li > a.training{
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-image: linear-gradient(to bottom, #0088cc, #0044cc);
+  background-repeat: repeat-x;
+  font-size: 17px;
+  padding: 10px;
+  margin-left: 20px;
+}
 .nav > li > a.enter-data{
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-image: linear-gradient(to bottom, #62c462, #51a351);
   background-repeat: repeat-x;
   font-size: 17px;
-  padding: 10px 25px;
+  padding: 10px;
   margin-left: 20px;
 }
 .nav > li > a.help-us{
@@ -205,8 +214,7 @@ footer .row-fluid .js-logo {
   background-image: linear-gradient(to bottom, #62c462, #51a351);
   background-repeat: repeat-x;
   font-size: 17px;
-  padding: 10px 25px;
-  margin-right: 30px;
+  padding: 10px;
 }
 
 /* about page */

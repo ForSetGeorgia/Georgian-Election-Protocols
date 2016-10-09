@@ -71,7 +71,7 @@ ka:
       success_updated: "%{obj} განახლებულია."
       no_success_updated: "%{obj} არ განახლდა წარმატებით."
       could_not_find_election: "არჩევნები არ მოიძებნა."
-      no_protocols: There are no protocols to enter at this time.
+      no_protocols: ამ დროისთვის შესაყვანი ოქმები არ არის.
     csv_header:
       region: რეგიონი
       district_id: ოლქის ID
@@ -163,7 +163,7 @@ ka:
         precinct_count: "დამუშავებული უბნების რაოდენობა: %{count}"
         last_precinct_count: "უკანასკნელ მიგრაციაში უბნების რაოდენობა: %{count}"
         min_precinct_change: "უბნების მინიმალური რაოდენობა ახალი მიგრაციის შესაქმნელად: %{count}"
-        precinct_count_difference: "New Precincts That Would Be Added: %{count}"
+        precinct_count_difference: "ახალი ოქმები დაემატება: %{count}"
         no_precincts: არჩევნების მონაცემები ჯერ არ არსებობს!
         push_data: მიგრაციის დაწყება
         no_migrations: მონაცემები ჯერ არ გაგზავნილა არჩევნების მონაცემთა აპლიკაციაში ჯერ
@@ -176,8 +176,8 @@ ka:
         file: CSV ფაილი
         push_success: მონაცემები წარმატებით გაიგზავნა არჩევნების მონაცემთა აპლიკაციაში
         push_fail: არჩევნების მონაცემთა აპლიკაციაში მონაცემების გაგზავნისთვის საკმარისი ახალი უბნები არ არსებობს
-        start_migration: Start A Migration
-        migration_history: Migration History
+        start_migration: დაიწყე გადატანა
+        migration_history: გადატანის (მიგრაციის) ისტორია
       edit:
         title: მონაცემების შეყვანა
         p1: "გთხოვთ, შეიყვანოთ მხოლოდ რიცხვები; არ შეიყვანოთ 'X'."
@@ -254,6 +254,17 @@ ka:
       votesum_explanation2: "მარჯვენა რიცხვი: %{label}"
       votesum_explanation3: "ეს რიცხვები დაგეხმარებათ მონაცემთა სეყვანაში."
       votesum_explanation4: "შესაძლოა, რომ ეს რიცხვები არ ემთხვეოდეს."
+      scroll_to_zoom: გასადიდებლად დასქროლე ოქმი
+      title:
+        toggle: გადართე
+        ccw: შეაბრუნე მთვლელი საათის ისრის მიმართულებით
+        cw: შეაბრუნე საათის ისრის მიმართულებით
+        flip: შეაბრუნე 180 გრადუსით
+        up: აწიე ზევით
+        down: ჩამოწიე ქვევით
+        left: გაწიე მარცხნივ
+        right: გაწიე მარჯვნივ
+        reset: ყველა მოქმედების გაუქმება
     protocol:
       title: მონაცემების შეყვანა
       p1: "გთხოვთ, შეიყვანოთ მხოლოდ რიცხვები; არ შეიყვანოთ 'X'."
@@ -269,17 +280,17 @@ ka:
       votesum_explanation2: "მარჯვენა რიცხვი: %{label}"
       votesum_explanation3: "ეს რიცხვები დაგეხმარებათ მონაცემთა სეყვანაში."
       votesum_explanation4: "შესაძლოა, რომ ეს რიცხვები არ ემთხვეოდეს."
-      scroll_to_zoom: Scroll protocol to zoom
+      scroll_to_zoom: გასადიდებლად დასქროლე ოქმი
       title:
-        toggle: Toggle
-        ccw: Rotate CounterClockwise
-        cw: Rotate Clockwise
-        flip: Rotate by 180 degree
-        up: Move up
-        down: Move down
-        left: Move left
-        right: Move right
-        reset: Reset all transformations
+        toggle: გადართე
+        ccw: შეაბრუნე მთვლელი საათის ისრის მიმართულებით
+        cw: შეაბრუნე საათის ისრის მიმართულებით
+        flip: შეაბრუნე 180 გრადუსით
+        up: აწიე ზევით
+        down: ჩამოწიე ქვევით
+        left: გაწიე მარცხნივ
+        right: გაწიე მარჯვნივ
+        reset: ყველა მოქმედების გაუქმება
     download:
       title: ჩამოტვირთე შეყვანილი მონაცემები
       num_precincts: არსებობს %{total}-დან %{count} საარჩევნო უბანი საარჩევნო მონაცემებით.
@@ -294,3 +305,37 @@ ka:
         protocols_validated: დამოწმებული ოქმები
     about:
       title: შესახებ
+  mailer:
+    new_user:
+      subject: Are you ready to help JumpStart digitize some election protocols?!
+      message: |
+        Dear volunteer,
+
+        The time is come to help JumpStart make Georgian Parliamentary election data transparent! We appreciate you efforts to digitize the protocols, making the analysis of the election data more interesting.
+
+        Below are some instructions to get you started.
+
+        First you will need to go to the website:
+
+        <a href="https://protocols.jumpstart.ge">https://protocols.jumpstart.ge</a>
+
+        Your login information is as follows:
+
+        username: %{email}
+        password: %{password}
+
+        Once you log in, you should click on the blue button "Training". This will help you familiarize yourself with how the protocols look and how to fill out the form. You must complete 5 protocols successfully before you can start digitizing real protocols. Don't worry, it is really easy.
+
+        Once you have completed the training, you will be able to start digitizing real protocols. There are a lot of them, but that is what we are here for.
+
+        Take your time at first, you will eventually speed up. There are several helpful controls at the bottom of the page that allow you to adjust the protocol image to align with the form fields such as rotate, move up, and move sideways.
+
+        If you do have questions or ideas to improve the form, please contact us so we can improve it. Please send us a message on our Facebook page at:
+
+        <a href="https://www.facebook.com/JumpStartGeorgia/">https://www.facebook.com/JumpStartGeorgia/</a>
+
+        And again, thank you!
+
+        Sincerely,
+
+        The JumpStart Team
