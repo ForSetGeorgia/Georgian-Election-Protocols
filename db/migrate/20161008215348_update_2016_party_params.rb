@@ -6,8 +6,6 @@ class Update2016PartyParams < ActiveRecord::Migration
     election.scraper_page_pattern = 'oqmi_{id}.html'
     election.protocol_top_box_margin = '95'
     election.protocol_party_top_margin = '0.5'
-    puts election.valid?
-    puts election.errors
     election.save
   end
 

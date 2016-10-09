@@ -53,7 +53,7 @@ class RootController < ApplicationController
     end
 
     # get the next record if there were no errors
-   # @crowd_datum = CrowdDatum.new(election_id: 2, district_id: '17', precinct_id: "09.04", user_id: current_user.id)
+   # @crowd_datum = CrowdDatum.new(election_id: 3, district_id: '11', precinct_id: "06.15", user_id: current_user.id)
     @crowd_datum = CrowdDatum.next_available_record(current_user.id) if valid
     if @crowd_datum.present?
       # get the election

@@ -108,7 +108,7 @@
               # have to calculate how high the party box should be
               # and subtract from the # of parties in the box
               # - 22.5 is the default height for each field
-              party_height = 22.5 + @election.protocol_party_top_margin
+              party_height = 22.5 + @election.protocol_party_top_margin.to_f
               total_height = @election.max_party_in_district * party_height
               total_party_height = @party_numbers.length * (party_height)
               empty_space = total_height - total_party_height
