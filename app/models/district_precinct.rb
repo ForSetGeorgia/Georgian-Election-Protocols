@@ -303,7 +303,10 @@ class DistrictPrecinct < ActiveRecord::Base
             if elections.present?
               elections.each do |election|
                 sql = "delete p from `#{@@analysis_db}`.`#{election.analysis_table_name} - raw` as p
-                        inner join has_protocols as hp on hp.election_id = p.election_id and hp.district_id = p.district_id and hp.precinct_id = p.precinct_id "
+                        inner join has_protocols as hp on
+                        hp.district_id = p.district_id  COLLATE utf8_unicode_ci
+                        and hp.precinct_id = p.precinct_id  COLLATE utf8_unicode_ci
+                        where hp.election_id = #{election.id}"
                 client.execute(sql)
               end
             end
