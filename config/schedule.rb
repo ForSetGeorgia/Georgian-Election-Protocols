@@ -18,3 +18,9 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
+
+
+every 5.minutes do
+  rake "scrape:register_new_images"
+  rake "scrape:register_volunteers"
+end
