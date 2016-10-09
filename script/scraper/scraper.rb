@@ -118,8 +118,10 @@ else
 
             links.each_with_index do |value,index|
 
-              img_uri = value.sub('../','')
-              img_url = "http://#{@url}/#{img_uri}"
+              img_uri = value.sub('../../','')
+              img_url = "http://#{@url}/#{img_uri}" # http://results.cec.gov.ge/../oqmebi/16/52174/59640.jpg
+                                                    # http://results.cec.gov.ge/oqmebi/16/52336/58306.jpg
+                                                    # http://results.cec.gov.ge/oqm/7/oqmi_3_04.03.55.html
               img_bname = "#{did}-#{precinct}"
 
               if index == 0
@@ -128,8 +130,8 @@ else
                   open("#{ddir}#{"#{img_bname}.jpg"}", 'wb') do |pfile|
                     pfile << open(img_url).read
                   end
-                rescue
-                  logger_error.error("Download failed: #{img_bname}")
+                rescue => e
+                  logger_error.error("Download failed: #{img_bname} | #{e}")
                   next
                 end
               else
@@ -138,8 +140,8 @@ else
                   open("#{ddir}#{img_bname}_amendment_#{amend_count}.jpg", 'wb') do |pfile|
                     pfile << open(img_url).read
                   end
-                rescue
-                  logger_error.error("Download failed: #{img_bname}")
+                rescue => e
+                  logger_error.error("Download failed: #{img_bname} | #{e}")
                   next
                 end
                 amend_count += 1
