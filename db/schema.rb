@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161009031331) do
+ActiveRecord::Schema.define(:version => 20161009053941) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -158,13 +158,13 @@ ActiveRecord::Schema.define(:version => 20161009031331) do
 
   create_table "district_parties", :force => true do |t|
     t.integer  "election_id"
-    t.integer  "district_id"
+    t.string   "district_id",  :limit => 10
     t.integer  "party_number"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
-  add_index "district_parties", ["election_id", "district_id"], :name => "index_district_parties_on_election_id_and_district_id"
+  add_index "district_parties", ["election_id", "district_id"], :name => "index_district_parties_elec_id_dist_id"
 
   create_table "district_precincts", :force => true do |t|
     t.string   "district_id",   :limit => 10
