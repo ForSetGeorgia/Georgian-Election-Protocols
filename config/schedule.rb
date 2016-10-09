@@ -20,7 +20,10 @@
 # Learn more: http://github.com/javan/whenever
 
 
-every 5.minutes do
+every 3.minutes do
   rake "scrape:register_new_images"
+end
+
+every 10.minutes do
   rake "scrape:register_volunteers"
 end
