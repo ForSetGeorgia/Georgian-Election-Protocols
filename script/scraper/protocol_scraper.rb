@@ -32,7 +32,7 @@ checkfile = "prot_scraper_check"
 if File.exist?(protocol_dir + '/' + checkfile)
   logger_info.info("Scraper already running.")
 else
-  FileUtils.touch(protocol_dir + checkfile)
+  FileUtils.touch(protocol_dir + '/' + checkfile)
 
   # get list of missing protocols via API
   begin
