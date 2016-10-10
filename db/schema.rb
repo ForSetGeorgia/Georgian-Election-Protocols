@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161009185803) do
+ActiveRecord::Schema.define(:version => 20161010071033) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
