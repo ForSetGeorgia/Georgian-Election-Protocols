@@ -83,6 +83,16 @@ class DistrictPrecinct < ActiveRecord::Base
     return build_api_request(elections, records)
   end
 
+  # creates array of all districts/precincts (for search for amendments)
+  #format: [ {election_id => a, districts => [ { district_id => [ precinct_id, precinct_id,   ] } ] } ]
+  def self.all_protocols
+    # records = []
+    elections = Election.can_enter
+    records = by_election(elections.map{|x| x.id})
+
+    return build_api_request(elections, records)
+  end
+
 
   # for each precinct in a district, if it is marked as found, update the table record
   def self.mark_found_protocols(json)

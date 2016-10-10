@@ -12,6 +12,12 @@ class JsonController < ApplicationController
     end
   end
 
+  def all_protocols
+    respond_to do |format|
+      format.json { render json: DistrictPrecinct.all_protocols}
+    end
+  end
+
   # def mark_found_protocols
   #   success = false
   #   if params[:data].present?
