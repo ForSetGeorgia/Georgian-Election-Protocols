@@ -6,9 +6,10 @@
 require 'logger'
 require 'json'
 require 'net/http'
-require 'nokogiri'
 require 'fileutils'
 require 'open-uri'
+require 'nokogiri'
+require 'mechanize'
 
 # main variables
 
@@ -16,11 +17,11 @@ logger_info = Logger.new("../../log/scraper_info.log")
 logger_error = Logger.new("../../log/scraper_error.log")
 
 app_base_url = "https://protocols.jumpstart.ge"
-# app_base_url = "http://192.168.2.252:3001"
+#app_base_url = "http://192.168.2.252:3001"
 app_get_uri = "/en/json/missing_protocols"
 
-protocol_dir = "/home/protocols/Protocols/shared/system/protocols"
-#protocol_dir = "/home/eric/projects/js/elections/Crowd-Source-Protocols/public/system/protocols"
+#protocol_dir = "/home/protocols/Protocols/shared/system/protocols"
+protocol_dir = "/home/eric/projects/js/elections/Crowd-Source-Protocols/public/system/protocols"
 
 start_time = Time.now
 
@@ -57,6 +58,7 @@ else
     @filename = election['scraper_page_pattern']
     @districts = election['districts']
     @proto_counter = 0 # for counting how many protos downloaded / scrape
+    @amend_counter = 0 # for counting how many protos downloaded / scrape
 
     # make election directory if it doesn't exist
     edir = "#{protocol_dir}/#{@election_id}/"
@@ -84,76 +86,51 @@ else
 
           id = "#{dec}_#{did}.#{precinct}"
           fname = @filename.sub('{id}', id)
-          page = "http://#{@url}#{@uri}#{fname}" # http://results.cec.gov.ge/oqm/7/oqmi_51_52.51.05.html
+          page = "http://#{@url}#{@uri}#{fname}"
 
+
+          ##################
+          # GET HTML PAGE
+          ##################
           begin
-            logger_info.info("Checking: #{page}")
-            response = Net::HTTP.get_response(URI(page))
+            logger_info.info("Retrieving: #{page}")
+            agent = Mechanize.new { |agent| agent.user_agent_alias = "Mac Firefox" }
+            html = agent.get(page).body
+            logger_info.info("Retrieved page: #{page}")
           rescue => e
-            logger_error.error("Error checking page: #{page} | #{e}")
+            logger_error.error("Unable to retrieve: #{page} | #{e}")
             next
           end
 
-          ######################
-          # CHECK HTML RESPONSE
-          ######################
-          if response.code.to_s == "200"
-            logger_info.info("Page exists: #{page}")
+          ##################
+          # GET IMAGES
+          ##################
+          doc = Nokogiri::HTML(html)
+          images = doc.css("img")
+          links = images.map { |i| i['src']}
 
-            begin
-              logger_info.info("Retrieving: #{page}")
-              doc = Nokogiri::HTML(open(page))
-            rescue => e
-              logger_error.error("Unable to retrieve: #{page} | #{e}")
-              next
-            end
+          links.each_with_index do |value,index|
 
-            logger_info.info("Retrieved page: #{page}")
-
-            ##################
-            # GET IMAGES
-            ##################
-            images = doc.css("img")
-            links = images.map { |i| i['src']}
+            img_uri = value.sub('../../','')
+            img_url = "http://#{@url}/#{img_uri}"
+            img_bname = "#{did}-#{precinct}"
             amend_count = 1
 
-            links.each_with_index do |value,index|
-
-              img_uri = value.sub('../../','')
-              img_url = "http://#{@url}/#{img_uri}" # http://results.cec.gov.ge/../oqmebi/16/52174/59640.jpg
-                                                    # http://results.cec.gov.ge/oqmebi/16/52336/58306.jpg
-                                                    # http://results.cec.gov.ge/oqm/7/oqmi_3_04.03.55.html
-              img_bname = "#{did}-#{precinct}"
-
-              if index == 0
-                begin
-                  logger_info.info("Downloading protocol: #{img_bname}")
-                  open("#{ddir}#{"#{img_bname}.jpg"}", 'wb') do |pfile|
-                    pfile << open(img_url).read
-                  end
-                  @proto_counter += 1
-                rescue => e
-                  logger_error.error("Download failed: #{img_bname} | #{e}")
-                  next
+            unless index == 0
+              begin
+                logger_info.info("Downloading amendment: #{img_bname}")
+                open("#{ddir}#{img_bname}_amendment_#{amend_count}.jpg", 'wb') do |pfile|
+                  pfile << open(img_url).read
                 end
-              else
-                begin
-                  logger_info.info("Downloading amendment: #{img_bname}")
-                  open("#{ddir}#{img_bname}_amendment_#{amend_count}.jpg", 'wb') do |pfile|
-                    pfile << open(img_url).read
-                  end
-                rescue => e
-                  logger_error.error("Download failed: #{img_bname} | #{e}")
-                  next
-                end
+                logger_info.info("Downloaded amendment: #{img_bname}")
                 amend_count += 1
-              end # if response 200
-            end # links
-
-          else
-            logger_info.info("Page doesn't exist: #{page}")
-            next
-          end
+                @amend_counter += 1
+              rescue => e
+                logger_error.error("Download failed: #{img_bname} | #{e}")
+                next
+              end
+            end # unless protocol
+          end # links
 
           sleep(0)
         end # precincts
@@ -161,6 +138,7 @@ else
       current_time = Time.now
       time_elapsed = (current_time - start_time)/60
       logger_info.info("Protos Downloaded: #{@proto_counter}")
+      logger_info.info("Protos Downloaded: #{@amend_counter}")
       logger_info.info("Time elapsed: #{time_elapsed} minutes")
     end # districts
   end # elections
