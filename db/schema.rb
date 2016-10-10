@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161010084559) do
+ActiveRecord::Schema.define(:version => 20161010102356) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -167,15 +167,16 @@ ActiveRecord::Schema.define(:version => 20161010084559) do
   add_index "district_parties", ["election_id", "district_id"], :name => "index_district_parties_elec_id_dist_id"
 
   create_table "district_precincts", :force => true do |t|
-    t.string   "district_id",   :limit => 10
-    t.string   "precinct_id",   :limit => 10
-    t.boolean  "has_protocol",                :default => false
-    t.boolean  "is_validated",                :default => false
+    t.string   "district_id",     :limit => 10
+    t.string   "precinct_id",     :limit => 10
+    t.boolean  "has_protocol",                  :default => false
+    t.boolean  "is_validated",                  :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "has_amendment",               :default => false
+    t.boolean  "has_amendment",                 :default => false
     t.integer  "election_id"
     t.string   "region"
+    t.integer  "amendment_count",               :default => 0
   end
 
   add_index "district_precincts", ["district_id", "precinct_id"], :name => "idx_dp_location"
@@ -245,11 +246,12 @@ ActiveRecord::Schema.define(:version => 20161010084559) do
   add_index "elections", ["can_enter_data"], :name => "index_elections_on_can_enter_data"
 
   create_table "has_protocols", :force => true do |t|
-    t.string   "district_id", :limit => 10
-    t.string   "precinct_id", :limit => 10
+    t.string   "district_id",     :limit => 10
+    t.string   "precinct_id",     :limit => 10
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "election_id"
+    t.integer  "amendment_count",               :default => 0
   end
 
   add_index "has_protocols", ["district_id", "precinct_id"], :name => "idx_hp_ids"
