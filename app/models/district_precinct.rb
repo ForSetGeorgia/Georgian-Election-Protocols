@@ -242,6 +242,28 @@ class DistrictPrecinct < ActiveRecord::Base
     return election_stats
   end
 
+  ############################################
+  ############################################
+  def self.reset_bad_data(election_id, district_id, precinct_id)
+    record_count = 0
+    DistrictPrecinct.transaction do
+      client = ActiveRecord::Base.connection
+      election = Election.find(election_id)
+
+      if election.present?
+        record_count += DistrictPrecinct.by_ids(election_id, district_id, precinct_id).update_all(is_validated: false)
+        record_count += CrowdDatum.by_ids(election_id, district_id, precinct_id).update_all(is_valid: false)
+
+        # delete analysis record
+        sql = "delete from `#{@@analysis_db}`.`#{election.analysis_table_name} - raw`
+                where district_id = '#{district_id}'
+                and precinct_id = '#{precinct_id}'"
+        client.execute(sql)
+      end
+    end
+
+    return record_count > 0
+  end
 
   ############################################
   ############################################

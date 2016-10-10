@@ -43,7 +43,8 @@ class RootController < ApplicationController
 
       # in case users are refreshing page, look to see if the record already exists
       # if so, ignore it, else create it
-      @crowd_datum = CrowdDatum.by_ids(params[:crowd_datum][:election_id], params[:crowd_datum][:district_id], params[:crowd_datum][:precinct_id], params[:crowd_datum][:user_id]).first
+      @crowd_datum = CrowdDatum.by_ids(params[:crowd_datum][:election_id], params[:crowd_datum][:district_id], params[:crowd_datum][:precinct_id])
+                      .by_user(params[:crowd_datum][:user_id]).first
       if @crowd_datum.nil?
         @crowd_datum = CrowdDatum.new(params[:crowd_datum])
         valid = @crowd_datum.save

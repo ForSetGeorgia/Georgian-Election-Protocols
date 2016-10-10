@@ -72,6 +72,10 @@ ka:
       no_success_updated: "%{obj} არ განახლდა წარმატებით."
       could_not_find_election: "არჩევნები არ მოიძებნა."
       no_protocols: ამ დროისთვის შესაყვანი ოქმები არ არის.
+      no_current_elections: There are no elections that are available for data entry at this time.
+      provide_all_params: Please provide values for all fields.
+      data_reset: The protocol data was reset and will have to be re-entered.
+      could_not_rest: Sorry, the protocol data could not be reset.
     csv_header:
       region: რეგიონი
       district_id: ოლქის ID
@@ -119,6 +123,7 @@ ka:
       admin: ადმინისტრატო
       users: მომხმარებლების მართვა
       election_data: არჩევნების მონაცემების მიგრაცია
+      reset_bad_data: Delete Data for Protocol
       sign_in: სისტემაში შესვლა
       training: ტრენინგი
       enter_data: მონაცემთა შეყვანა
@@ -193,6 +198,11 @@ ka:
         votesum_explanation2: "მარჯვენა რიცხვი: %{label}"
         votesum_explanation3: "ეს რიცხვები დაგეხმარებათ მონაცემთა სეყვანაში."
         votesum_explanation4: "შესაძლოა, რომ ეს რიცხვები არ ემთხვეოდეს."
+      reset_bad_protocol_data:
+        title: Delete data for wrongly entered protocol
+        election: Election
+        district: District (i.e., 01, 02)
+        precinct: Precinct (i.e., 10.05, 05.90)
   root:
     index:
       stats_header: მონაცემთა შეყვანის სტატისტიკა

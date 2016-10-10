@@ -72,6 +72,10 @@ en:
       no_success_updated: "%{obj} was NOT successfully updated."
       could_not_find_election: "The election could not be found."
       no_protocols: There are no protocols to enter at this time.
+      no_current_elections: There are no elections that are available for data entry at this time.
+      provide_all_params: Please provide values for all fields.
+      data_reset: The protocol data was reset and will have to be re-entered.
+      could_not_rest: Sorry, the protocol data could not be reset.
     csv_header:
       region: Region
       district_id: District ID
@@ -119,6 +123,7 @@ en:
       admin: Admin
       users: Manage Users
       election_data: Election Data Migration
+      reset_bad_data: Delete Data for Protocol
       sign_out: Sign Out
       sign_in: Sign In
       training: Training
@@ -193,6 +198,11 @@ en:
         votesum_explanation2: "Right Number: %{label}"
         votesum_explanation3: "These numbers are here to guide you with your data entry."
         votesum_explanation4: "It is possible that these numbers will not match."
+      reset_bad_protocol_data:
+        title: Delete data for wrongly entered protocol
+        election: Election
+        district: District (i.e., 01, 02)
+        precinct: Precinct (i.e., 10.05, 05.90)
   root:
     index:
       stats_header: Data Entry Statistics

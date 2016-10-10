@@ -1,0 +1,18 @@
+<% title t('.title') %>
+
+
+<%= form_tag(admin_election_data_reset_bad_protocol_data_path, method: "put") do %>
+  <%= label_tag(:election_id, t('.election')) %>
+  <%= select_tag(:election_id, options_for_select(@elections.map{|x| [x.name, x.id]}, params[:election_id])) %>
+
+  <%= label_tag(:district_id, t('.district')) %>
+  <%= text_field_tag(:district_id, params[:district_id]) %>
+
+  <%= label_tag(:precinct_id, t('.precinct')) %>
+  <%= text_field_tag(:precinct_id, params[:precinct_id]) %>
+
+  <div class="form-actions">
+    <%= submit_tag(t('app.common.submit'), class: 'btn btn-primary',
+        :data => { :confirm => I18n.t("helpers.links.confirm") }) %>
+  </div>
+<% end %>

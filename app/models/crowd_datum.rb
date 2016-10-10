@@ -41,8 +41,8 @@ class CrowdDatum < ActiveRecord::Base
       election_id, district_id, precinct_id, user_id])
   end
 
-  def self.by_ids(election_id, district_id, precinct_id, user_id)
-    where(election_id: election_id, district_id: district_id, precinct_id: precinct_id, user_id: user_id)
+  def self.by_ids(election_id, district_id, precinct_id)
+    where(election_id: election_id, district_id: district_id, precinct_id: precinct_id)
   end
 
   def self.election_ids_with_valid_data
