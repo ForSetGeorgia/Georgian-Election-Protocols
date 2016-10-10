@@ -99,13 +99,26 @@ module DataAnalysis
 
   ################################################
 
-  # process an election
+  # create views for analysis
+  def create_analysis_views
+    puts "===================="
+    puts "creating analysis views for #{self.name}"
+    puts "===================="
+
+    run_analysis_views
+
+    puts "> done"
+    puts "===================="
+  end
+
+  # create tables/views for analysis
   def create_analysis_tables_and_views
     puts "===================="
     puts "creating analysis tables and views for #{self.name}"
     puts "===================="
 
-    run_analysis_tables_and_views
+    run_analysis_tables
+    run_analysis_views
 
     puts "> done"
     puts "===================="
@@ -113,13 +126,14 @@ module DataAnalysis
 
   ################################################
 
-  # process an election
+  # delete all analysis items
   def delete_analysis_tables_and_views
     puts "===================="
     puts "deleting analysis tables and views for #{self.name}"
     puts "===================="
 
-    run_analysis_tables_and_views(true)
+    run_analysis_tables(true)
+    run_analysis_views(true)
 
     puts "> done"
     puts "===================="
@@ -183,7 +197,8 @@ module DataAnalysis
   # download the data
   def download_election_map_data
     data = @@client.exec_query("select * from `#{@@analysis_db}`.`#{self.analysis_table_name} - csv` where common_id != '' && common_name != ''")
-    header = @@common_headers
+    header = []
+    header << @@common_headers
     header.flatten!
     parties = Party.by_election(self.id).with_translations(:en)
     if parties.present?
@@ -218,9 +233,9 @@ module DataAnalysis
 
   ###################################################
 
-  def run_analysis_tables_and_views(delete_only=false)
+  def run_analysis_tables(delete_only=false)
     puts "===================="
-    puts "running analysis tables and views for #{self.name}; delete only = #{delete_only}"
+    puts "running analysis tables for #{self.name}; delete only = #{delete_only}"
     puts "===================="
 
     # get parties formatted as hash
@@ -240,6 +255,28 @@ module DataAnalysis
 
     # run precinct counts
     run_precinct_counts(delete_only)
+
+    puts "> done"
+    puts "===================="
+  end
+
+  ###################################################
+
+  def run_analysis_views(delete_only=false)
+    puts "===================="
+    puts "running analysis views for #{self.name}; delete only = #{delete_only}"
+    puts "===================="
+
+    # get parties formatted as hash
+    parties = Party.hash_for_analysis(self.id, true) if !delete_only
+
+    # if there are no parties, we cannot continue
+    if parties.nil? && !delete_only
+      puts "!!!!!!!!!!!!!!!!!!!!!!"
+      puts "WARNING - ANALYSIS TABLES/VIEWS NOT CREATED BECAUSE PARTIES COULD NOT BE FOUND"
+      puts "!!!!!!!!!!!!!!!!!!!!!!"
+      return
+    end
 
     # run invalid ballots views
     puts " - invalid ballots"
@@ -812,8 +849,8 @@ module DataAnalysis
       end
       sql << party_sql.join(', ')
       if self.has_indepenedent_parties?
-        sql << ", sum(`raw`.`#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}`) AS `#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME} count`,
-                     (100 * (`raw`.`#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}` / `raw`.`num_valid_votes`)) AS `#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}` "
+        sql <<  ", `raw`.`#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}` AS `#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME} count`,
+                 (100 * (`raw`.`#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}` / `raw`.`num_valid_votes`)) AS `#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}` "
       end
 
       sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw` `raw` "
@@ -961,7 +998,7 @@ module DataAnalysis
       end
       sql << party_sql.join(', ')
       if self.has_indepenedent_parties?
-        sql << ", sum(`raw`.`#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}`) AS `#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME} count`,
+        sql << ", `raw`.`#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}` AS `#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME} count`,
                      (100 * (`raw`.`#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}` / `raw`.`num_valid_votes`)) AS `#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}`"
       end
       sql << "from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw` `raw`
