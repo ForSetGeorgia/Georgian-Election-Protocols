@@ -153,7 +153,13 @@ module DataAnalysis
 
   # get all of the data in the raw table and format for csv download
   def download_raw_data
-    sql = "select * from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw` order by district_id, precinct_id"
+    sql = "select raw.*, dp.amendment_count
+            from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw` as raw
+            inner join district_precincts as dp on
+              raw.district_id = dp.district_id COLLATE utf8_unicode_ci
+              and raw.precinct_id = dp.precinct_id COLLATE utf8_unicode_ci
+            where dp.election_id = #{self.id}
+            order by raw.district_id, raw.precinct_id"
     results = @@client.exec_query(sql)
 
     if results.present?
