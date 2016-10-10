@@ -32,7 +32,7 @@ checkfile = "prot_scraper_check"
 if File.exist?(protocol_dir + '/' + checkfile)
   logger_info.info("Scraper already running.")
 else
-  FileUtils.touch(protocol_dir + checkfile)
+  FileUtils.touch(protocol_dir + '/' + checkfile)
 
   # get list of missing protocols via API
   begin
@@ -49,6 +49,9 @@ else
   ##################
   # ELECTION LEVEL
   ##################
+
+  @proto_counter = 0 # for counting how many protos downloaded / scrape
+  @amend_counter = 0 # for counting how many protos downloaded / scrape
 
   elections.each do |election|
 
@@ -148,7 +151,7 @@ else
       current_time = Time.now
       time_elapsed = (current_time - start_time)/60
       logger_info.info("Protos Downloaded: #{@proto_counter}")
-      logger_info.info("Protos Downloaded: #{@amend_counter}")
+      logger_info.info("Amends Downloaded: #{@amend_counter}")
       logger_info.info("Time elapsed: #{time_elapsed} minutes")
     end # districts
   end # elections
