@@ -157,7 +157,7 @@ module DataAnalysis
     results = @@client.exec_query(sql)
 
     if results.present?
-      csv_data = CSV.generate(:col_sep=>',') do |csv|
+      csv_data = CSV.generate(col_sep: ',', force_quotes: true) do |csv|
         # add header
         csv << results.columns
 
