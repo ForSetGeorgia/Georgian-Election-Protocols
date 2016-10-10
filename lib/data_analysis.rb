@@ -144,6 +144,9 @@ module DataAnalysis
     puts "load precinct counts table for #{self.name}"
     puts "===================="
 
+    sql = "delete from `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count`"
+    @@client.execute(sql)
+
     sql = "insert into `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count`
             select region, district_id, "
     if self.is_local_majoritarian
