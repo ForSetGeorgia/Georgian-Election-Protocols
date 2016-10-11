@@ -111,7 +111,6 @@ else
             doc = Nokogiri::HTML(html)
             images = doc.css("img")
             links = images.map { |i| i['src']}
-            puts "MID: #{did}, DEC: #{dec}, PEC: #{precinct} || Length: #{links.length}"
             amend_count = 1
 
             links.each_with_index do |value,index|
@@ -123,16 +122,16 @@ else
 
               if index > 0
                 begin
-                  logger_info.info("Downloading amendment: #{img_bname}")
                   unless File.exists?("#{ddir}#{img_bname}_amendment_#{amend_count}.jpg")
+                    logger_info.info("Downloading amendment: #{img_bname}")
                     open("#{ddir}#{img_bname}_amendment_#{amend_count}.jpg", 'wb') do |pfile|
                       puts "Downloading: #{ddir}#{img_bname}_amendment_#{amend_count}.jpg"
                       pfile << open(img_url).read
                     end
+                    logger_info.info("Downloaded amendment: #{img_bname}")
+                    amend_count += 1
+                    @amend_counter += 1
                   end
-                  logger_info.info("Downloaded amendment: #{img_bname}")
-                  amend_count += 1
-                  @amend_counter += 1
                 rescue => e
                   logger_error.error("Download failed: #{img_bname} | #{e}")
                   next
