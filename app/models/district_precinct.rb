@@ -70,7 +70,7 @@ class DistrictPrecinct < ActiveRecord::Base
     records = with_protocols.by_election(elections.map{|x| x.id})
     all_districts = by_election(elections.map{|x| x.id})
 
-    return build_api_request(elections, records)
+    return build_api_request(elections, records, all_districts)
   end
 
 
@@ -93,7 +93,7 @@ class DistrictPrecinct < ActiveRecord::Base
     records = by_election(elections.map{|x| x.id})
     all_districts = by_election(elections.map{|x| x.id})
 
-    return build_api_request(elections, records)
+    return build_api_request(elections, records, all_districts)
   end
 
 
