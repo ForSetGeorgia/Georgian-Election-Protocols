@@ -124,9 +124,11 @@ else
               if index > 0
                 begin
                   logger_info.info("Downloading amendment: #{img_bname}")
-                  open("#{ddir}#{img_bname}_amendment_#{amend_count}.jpg", 'wb') do |pfile|
-                    puts "Downloading: #{ddir}#{img_bname}_amendment_#{amend_count}.jpg"
-                    pfile << open(img_url).read
+                  unless File.exists?("#{ddir}#{img_bname}_amendment_#{amend_count}.jpg")
+                    open("#{ddir}#{img_bname}_amendment_#{amend_count}.jpg", 'wb') do |pfile|
+                      puts "Downloading: #{ddir}#{img_bname}_amendment_#{amend_count}.jpg"
+                      pfile << open(img_url).read
+                    end
                   end
                   logger_info.info("Downloaded amendment: #{img_bname}")
                   amend_count += 1
