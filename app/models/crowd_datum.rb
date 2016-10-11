@@ -115,11 +115,11 @@ class CrowdDatum < ActiveRecord::Base
           parties.each do |p|
             sum_parties += self["party_#{p.number}"] if self["party_#{p.number}"].present?
           end
-          logic_fail = valid == sum_parties
+          logic_fail = valid != sum_parties ? 1 : 0
           logic_diff = valid -sum_parties
-          ballots_votes = valid > sum_parties
+          ballots_votes = valid > sum_parties ? 1 : 0
           ballots_votes_amount = ballots_votes == true ? logic_diff : 0
-          votes_ballots = valid < sum_parties
+          votes_ballots = valid < sum_parties ? 1 : 0
           votes_ballots_amount = votes_ballots == true ? logic_diff.abs : 0
 
           # if the election has indeodent parties, add them all together
