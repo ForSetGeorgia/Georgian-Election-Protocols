@@ -254,7 +254,7 @@ class DistrictPrecinct < ActiveRecord::Base
       election = Election.find(election_id)
 
       if election.present?
-        record_count += DistrictPrecinct.by_ids(election_id, district_id, precinct_id).update_all(is_validated: false)
+        record_count += DistrictPrecinct.by_ids(election_id, district_id, precinct_id).update_all(is_validated: false, has_amendment: false, amendment_count: 0)
         record_count += CrowdDatum.by_ids(election_id, district_id, precinct_id).update_all(is_valid: false)
 
         # delete analysis record
