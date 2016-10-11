@@ -111,18 +111,21 @@ else
             doc = Nokogiri::HTML(html)
             images = doc.css("img")
             links = images.map { |i| i['src']}
+            puts "MID: #{did}, DEC: #{dec}, PEC: #{precinct} || Length: #{links.length}"
+            amend_count = 1
 
             links.each_with_index do |value,index|
 
               img_uri = value.sub('../../','')
               img_url = "http://#{@url}/#{img_uri}"
               img_bname = "#{did}-#{precinct}"
-              amend_count = 1
 
-              unless index == 0
+
+              if index > 0
                 begin
                   logger_info.info("Downloading amendment: #{img_bname}")
                   open("#{ddir}#{img_bname}_amendment_#{amend_count}.jpg", 'wb') do |pfile|
+                    puts "Downloading: #{ddir}#{img_bname}_amendment_#{amend_count}.jpg"
                     pfile << open(img_url).read
                   end
                   logger_info.info("Downloaded amendment: #{img_bname}")
@@ -133,6 +136,7 @@ else
                   next
                 end
               end # unless protocol
+
             end # links
 
             sleep(0)
@@ -141,7 +145,6 @@ else
       end # district hash
       current_time = Time.now
       time_elapsed = (current_time - start_time)/60
-      logger_info.info("Protos Downloaded: #{@proto_counter}")
       logger_info.info("Amends Downloaded: #{@amend_counter}")
       logger_info.info("Time elapsed: #{time_elapsed} minutes")
     end # districts
@@ -150,7 +153,6 @@ else
 
   end_time = Time.now
   duration =  (end_time - start_time)/60 # in minutes
-  logger_info.info("Protos Downloaded: #{@proto_counter}")
   logger_info.info("Scraper run time: #{duration} minutes")
   FileUtils.rm(protocol_dir + '/' + checkfile)
 end # main if
