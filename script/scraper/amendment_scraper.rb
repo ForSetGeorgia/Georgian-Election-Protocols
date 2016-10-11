@@ -79,65 +79,70 @@ else
         ##################
         # PRECINCT LEVEL
         ##################
+        @decs = election['district_decs'].select { |d| d[did] }.first.values.flatten # fix cec error of mismatched dec numbers
+
         precincts.each do |precinct|
-          dec = precinct.split('.')[0].to_i.to_s # dec
+          #dec = precinct.split('.')[0].to_i.to_s # dec
           fixed_precinct = precinct.split('.')[1].to_i.to_s # pid
 
-          id = "#{dec}_#{did}.#{precinct}"
-          fname = @filename.sub('{id}', id)
-          page = "http://#{@url}#{@uri}#{fname}"
+          @decs.each do |dec|
+            id = "#{dec.to_i}_#{did}.#{precinct}"
+
+            fname = @filename.sub('{id}', id)
+            page = "http://#{@url}#{@uri}#{fname}"
 
 
-          ##################
-          # GET HTML PAGE
-          ##################
-          begin
-            logger_info.info("Retrieving: #{page}")
-            agent = Mechanize.new { |agent| agent.user_agent_alias = "Mac Firefox" }
-            html = agent.get(page).body
-            logger_info.info("Retrieved page: #{page}")
-          rescue => e
-            logger_error.error("Unable to retrieve: #{page} | #{e}")
-            next
-          end
+            ##################
+            # GET HTML PAGE
+            ##################
+            begin
+              logger_info.info("Retrieving: #{page}")
+              agent = Mechanize.new { |agent| agent.user_agent_alias = "Mac Firefox" }
+              html = agent.get(page).body
+              logger_info.info("Retrieved page: #{page}")
+            rescue => e
+              logger_error.error("Unable to retrieve: #{page} | #{e}")
+              next
+            end
 
-          ##################
-          # GET IMAGES
-          ##################
-          doc = Nokogiri::HTML(html)
-          images = doc.css("img")
-          links = images.map { |i| i['src']}
+            ##################
+            # GET IMAGES
+            ##################
+            doc = Nokogiri::HTML(html)
+            images = doc.css("img")
+            links = images.map { |i| i['src']}
 
-          links.each_with_index do |value,index|
+            links.each_with_index do |value,index|
 
-            img_uri = value.sub('../../','')
-            img_url = "http://#{@url}/#{img_uri}"
-            img_bname = "#{did}-#{precinct}"
-            amend_count = 1
+              img_uri = value.sub('../../','')
+              img_url = "http://#{@url}/#{img_uri}"
+              img_bname = "#{did}-#{precinct}"
+              amend_count = 1
 
-            unless index == 0
-              begin
-                logger_info.info("Downloading amendment: #{img_bname}")
-                open("#{ddir}#{img_bname}_amendment_#{amend_count}.jpg", 'wb') do |pfile|
-                  pfile << open(img_url).read
+              unless index == 0
+                begin
+                  logger_info.info("Downloading amendment: #{img_bname}")
+                  open("#{ddir}#{img_bname}_amendment_#{amend_count}.jpg", 'wb') do |pfile|
+                    pfile << open(img_url).read
+                  end
+                  logger_info.info("Downloaded amendment: #{img_bname}")
+                  amend_count += 1
+                  @amend_counter += 1
+                rescue => e
+                  logger_error.error("Download failed: #{img_bname} | #{e}")
+                  next
                 end
-                logger_info.info("Downloaded amendment: #{img_bname}")
-                amend_count += 1
-                @amend_counter += 1
-              rescue => e
-                logger_error.error("Download failed: #{img_bname} | #{e}")
-                next
-              end
-            end # unless protocol
-          end # links
+              end # unless protocol
+            end # links
 
-          sleep(0)
+            sleep(0)
+          end # @decs
         end # precincts
       end # district hash
       current_time = Time.now
       time_elapsed = (current_time - start_time)/60
       logger_info.info("Protos Downloaded: #{@proto_counter}")
-      logger_info.info("Protos Downloaded: #{@amend_counter}")
+      logger_info.info("Amends Downloaded: #{@amend_counter}")
       logger_info.info("Time elapsed: #{time_elapsed} minutes")
     end # districts
   end # elections
@@ -147,5 +152,5 @@ else
   duration =  (end_time - start_time)/60 # in minutes
   logger_info.info("Protos Downloaded: #{@proto_counter}")
   logger_info.info("Scraper run time: #{duration} minutes")
-  FileUtils.rm(protocol_dir + checkfile)
+  FileUtils.rm(protocol_dir + '/' + checkfile)
 end # main if
