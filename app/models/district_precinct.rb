@@ -68,6 +68,7 @@ class DistrictPrecinct < ActiveRecord::Base
     # records = []
     elections = Election.can_enter
     records = with_protocols.by_election(elections.map{|x| x.id})
+    all_districts = by_election(elections.map{|x| x.id})
 
     return build_api_request(elections, records)
   end
@@ -79,8 +80,9 @@ class DistrictPrecinct < ActiveRecord::Base
     # records = []
     elections = Election.can_enter
     records = awaiting_protocols.by_election(elections.map{|x| x.id})
+    all_districts = by_election(elections.map{|x| x.id})
 
-    return build_api_request(elections, records)
+    return build_api_request(elections, records, all_districts)
   end
 
   # creates array of all districts/precincts (for search for amendments)
@@ -89,6 +91,7 @@ class DistrictPrecinct < ActiveRecord::Base
     # records = []
     elections = Election.can_enter
     records = by_election(elections.map{|x| x.id})
+    all_districts = by_election(elections.map{|x| x.id})
 
     return build_api_request(elections, records)
   end
@@ -421,7 +424,7 @@ class DistrictPrecinct < ActiveRecord::Base
 
 
   #format: [ {election_id => a, districts => [ { district_id => [ precinct_id, precinct_id,   ] } ] } ]
-  def self.build_api_request(elections, data)
+  def self.build_api_request(elections, data, all_districts=nil)
     records = []
     if elections.present? && data.present?
       elections.each do |election|
@@ -430,7 +433,8 @@ class DistrictPrecinct < ActiveRecord::Base
           scraper_url_base: election.scraper_url_base,
           scraper_url_folder_to_images: election.scraper_url_folder_to_images,
           scraper_page_pattern: election.scraper_page_pattern,
-          districts: []
+          districts: [],
+          district_decs: []
         }
 
         records << e
@@ -449,6 +453,25 @@ class DistrictPrecinct < ActiveRecord::Base
               district[district_id].flatten!
             end
 
+          end
+        end
+
+        # get dec #s for all districts
+        if all_districts.present?
+          district_ids = all_districts.select{|x| x.election_id == election.id}.map{|x| x.district_id}.uniq
+
+          if district_ids.present?
+            district_ids.each do |district_id|
+              district = Hash.new
+              e[:district_decs] << district
+              district[district_id] = []
+              dec_ids = all_districts.select{|x| x.election_id == election.id && x.district_id == district_id}.map{|x| x.precinct_id.split(election.district_precinct_separator).first}.uniq.sort
+
+              if dec_ids.present?
+                district[district_id] << dec_ids
+                district[district_id].flatten!
+              end
+            end
           end
         end
       end
