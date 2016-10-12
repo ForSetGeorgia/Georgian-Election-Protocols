@@ -242,7 +242,84 @@
 
 
         <div class="tab-pane fade in <%= @current_election.can_enter_data? ? '' : 'active' %>" id="summary">
-
+          <% if @district_summaries.present? %>
+            <table class="table table-striped district_summaries">
+              <thead>
+                <tr>
+                  <th class="hl1">
+                    <%= t('.amendments.headers.district') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.vote_num') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.vote_percent') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.invalid5') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.more_ballots_percent') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.more_ballots_avg') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.more_votes_percent') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.more_votes_avg') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.amendments_percent') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.amendments_avg') %>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @district_summaries.each do |district_summary| %>
+                  <tr>
+                    <td>
+                      <%= district_summary['district_id'] %>
+                    </td>
+                    <td>
+                      <%= number_with_delimiter(district_summary['total valid ballots cast']) %>
+                    </td>
+                    <td>
+                      <%= number_to_percentage(district_summary['percent voters voting']) %>
+                    </td>
+                    <td>
+                      <%= number_with_delimiter(district_summary['num invalid ballots >5%']) %>
+                    </td>
+                    <td>
+                      <%= number_to_percentage(district_summary['percent precincts more ballots than votes']) %>
+                    </td>
+                    <td>
+                      <%= number_with_delimiter(number_with_precision(district_summary['avg precinct difference more ballots than votes'])) %>
+                    </td>
+                    <td>
+                      <%= number_to_percentage(district_summary['percent precincts more votes than ballots']) %>
+                    </td>
+                    <td>
+                      <%= number_with_delimiter(number_with_precision(district_summary['avg precinct difference more votes than ballots'])) %>
+                    </td>
+                    <td>
+                      <%= number_to_percentage(district_summary['percent precincts with amendments']) %>
+                    </td>
+                    <td>
+                      <%= number_with_delimiter(number_with_precision(district_summary['avg precinct amendment count'])) %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <div class="alert alert-success">
+              <%= t('.district_summaries.no_data') %>
+            </div>
+          <% end %>
         </div>
 
 
@@ -304,19 +381,19 @@
                       <%= amendment['num_invalid_votes'] %>
                     </td>
                     <td>
-                      <%= amendment['logic_check_fail'] %>
+                      <%= convert_boolean_answer(amendment['logic_check_fail']) %>
                     </td>
                     <td>
                       <%= amendment['logic_check_difference'] %>
                     </td>
                     <td>
-                      <%= amendment['more_ballots_than_votes_flag'] %>
+                      <%= convert_boolean_answer(amendment['more_ballots_than_votes_flag']) %>
                     </td>
                     <td>
                       <%= amendment['more_ballots_than_votes'] %>
                     </td>
                     <td>
-                      <%= amendment['more_votes_than_ballots_flag'] %>
+                      <%= convert_boolean_answer(amendment['more_votes_than_ballots_flag']) %>
                     </td>
                     <td>
                       <%= amendment['more_votes_than_ballots'] %>
@@ -436,19 +513,6 @@
       </div>
     </div>
 
-
-
-      <% if @overall_stats_by_district.present? %>
-            <% @elections.each_with_index do |election, index| %>
-              <% active = index == 0 ? 'active' : '' %>
-              <div class="tab-pane fade in <%= active %>" id="district_stats_<%= election.analysis_table_name %>">
-                <% stats = @overall_stats_by_district.select{|x| x[:election_id] == election.id}.first %>
-
-              </div>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
 
   <% elsif @elections_coming_up.present? %>
 

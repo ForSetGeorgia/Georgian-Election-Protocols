@@ -37,6 +37,18 @@ module ApplicationHelper
 		"#{request.protocol}#{request.host_with_port}#{path}"
 	end
 
+  # if 1/true => yes
+  # if 0/false => no
+  def convert_boolean_answer(value)
+    if value.present?
+      if value.to_s == '1' || value.to_s == 'true'
+        return I18n.t('formtastic.yes')
+      elsif value.to_s == '0' || value.to_s == 'false'
+        return I18n.t('formtastic.no')
+      end
+    end
+  end
+
 
 	# Based on https://gist.github.com/1182136
   class BootstrapLinkRenderer < ::WillPaginate::ActionView::LinkRenderer

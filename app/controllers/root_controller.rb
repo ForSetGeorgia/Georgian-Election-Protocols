@@ -16,6 +16,7 @@ class RootController < ApplicationController
       @overall_user_stats = CrowdDatum.overall_user_stats(@current_election.id)
       @annulled = DistrictPrecinct.by_election(@current_election.id).has_been_annulled
       @amendments = @current_election.raw_with_amendments
+      @district_summaries = @current_election.district_summary
 
     # if there are no current elections, see if there are elections coming up
     elsif @elections.nil? || @elections.empty?

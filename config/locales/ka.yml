@@ -206,7 +206,6 @@ ka:
   root:
     index:
       choose: Switch Election
-      no_annulled: Hooray! No precincts have had their protocols annulled!
       flags:
         active: actively entering
         coming_up: coming soon
@@ -236,6 +235,19 @@ ka:
           more_ballots_than_votes: How Many More Ballots Than Votes (#)
           more_votes_than_ballots_flag: More Votes Than Ballots?
           more_votes_than_ballots: How Many More Ballots Than Votes (#)
+      district_summaries:
+        no_data: No data has been submitted yet.
+        headers:
+          district: District
+          vote_num: Total Voter Turnout (#)
+          vote_percent: Total Voter Turnout (%)
+          invalid5: Number of Precincts with Invalid Ballots > 5%
+          more_ballots_percent: Precincts with More Ballots Than Votes (%)
+          more_ballots_avg: More Ballots Than Votes (Average)
+          more_votes_percent: Precincts with More Votes than Ballots (%)
+          more_votes_avg: More Votes than Ballots (Average)
+          amendments_percent: Precincts with Amendments (%)
+          amendments_avg: Amendments (Average)
       status:
         headers:
           data_entry: Election Status

@@ -276,6 +276,16 @@ module DataAnalysis
   end
 
   ###################################################
+
+  # get all raw data that has amendments
+  def district_summary
+    sql = "select * from `#{@@analysis_db}`.`#{self.analysis_table_name} - district`
+           order by district_id"
+    results = @@client.exec_query(sql)
+    return results.present? ? results.to_a : nil
+  end
+
+  ###################################################
   ###################################################
   ###################################################
   ###################################################
