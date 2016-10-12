@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161011084825) do
+ActiveRecord::Schema.define(:version => 20161012095316) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -177,12 +177,14 @@ ActiveRecord::Schema.define(:version => 20161011084825) do
     t.integer  "election_id"
     t.string   "region"
     t.integer  "amendment_count",               :default => 0
+    t.boolean  "is_annulled",                   :default => false
   end
 
   add_index "district_precincts", ["district_id", "precinct_id"], :name => "idx_dp_location"
   add_index "district_precincts", ["election_id", "region", "district_id", "precinct_id"], :name => "idx_elec_dist_prec"
   add_index "district_precincts", ["has_amendment"], :name => "index_district_precincts_on_has_amendment"
   add_index "district_precincts", ["has_protocol"], :name => "index_district_precincts_on_has_protocol"
+  add_index "district_precincts", ["is_annulled"], :name => "index_district_precincts_on_is_annulled"
   add_index "district_precincts", ["is_validated"], :name => "index_district_precincts_on_is_validated"
 
   create_table "election_data_migrations", :force => true do |t|

@@ -252,7 +252,41 @@
 
 
         <div class="tab-pane fade in" id="annulled">
-
+          <% if @annulled.present? %>
+            <table class="table table-striped annulled">
+              <thead>
+                <tr>
+                  <th>
+                  </th>
+                  <th class="hl1">
+                    <%= t('.annulled.headers.district') %>
+                  </th>
+                  <th class="hl1">
+                    <%= t('.annulled.headers.precinct') %>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @annulled.each do |annull| %>
+                  <tr>
+                    <td>
+                      <%= link_to t('helpers.links.view'), '#', class: 'btn btn-default', title: t('.annulled.view_title') %>
+                    </td>
+                    <td>
+                      <%= annull.district_id %>
+                    </td>
+                    <td>
+                      <%= annull.precinct_id %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <div class="alert alert-success">
+              <%= t('.annulled.no_data') %>
+            </div>
+          <% end %>
         </div>
 
         <div class="tab-pane fade in" id="download">

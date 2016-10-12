@@ -367,7 +367,8 @@ module DataAnalysis
         `more_ballots_than_votes_flag` INT(11) NULL DEFAULT NULL,
         `more_ballots_than_votes` INT(11) NULL DEFAULT NULL,
         `more_votes_than_ballots_flag` INT(11) NULL DEFAULT NULL,
-        `more_votes_than_ballots` INT(11) NULL DEFAULT NULL,"
+        `more_votes_than_ballots` INT(11) NULL DEFAULT NULL,
+        `is_annulled` INT(1) NOT NULL DEFAULT 0, "
       party_sql = []
       parties.each do |party|
         party_sql << "`#{party[:id]} - #{party[:name]}` INT(11) NULL DEFAULT NULL"
@@ -545,7 +546,7 @@ module DataAnalysis
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`)))))
-              "
+              where `raw`.`is_annulled` = 0"
 
       @@client.execute(sql)
     end
@@ -628,6 +629,7 @@ module DataAnalysis
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`))))
+              where `raw`.`is_annulled` = 0
               group by `raw`.`region`"
 
       @@client.execute(sql)
@@ -715,9 +717,10 @@ module DataAnalysis
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`))))
-              "
+              where `raw`.`is_annulled` = 0"
+
       if self.has_custom_shape_levels?
-        sql << " where (`raw`.`district_id` not between 1 and 10) "
+        sql << " and (`raw`.`district_id` not between 1 and 10) "
       end
       sql << " group by `raw`.`region`, `raw`.`district_name`, `raw`.`district_id`"
 
@@ -795,7 +798,8 @@ module DataAnalysis
                 left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
                 left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
                 left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`))))
-                where (`raw`.`district_id` between 1 and 10)
+                where `raw`.`is_annulled` = 0
+                and (`raw`.`district_id` between 1 and 10)
                 group by `raw`.`region`"
       end
 
@@ -858,7 +862,8 @@ module DataAnalysis
 
       sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw` `raw` "
       if self.has_custom_shape_levels?
-        sql << " where (`raw`.`district_id` not between 1 and 10) "
+        sql << " where `raw`.`is_annulled` = 0
+                  and (`raw`.`district_id` not between 1 and 10) "
       end
 
       @@client.execute(sql)
@@ -944,7 +949,8 @@ module DataAnalysis
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`))))
-              where (`raw`.`district_id` between 1 and 10)
+              where `raw`.`is_annulled` = 0
+              and (`raw`.`district_id` between 1 and 10)
               group by `raw`.`region`, `raw`.`district_name`, `raw`.`district_id`"
 
       @@client.execute(sql)
@@ -1005,7 +1011,8 @@ module DataAnalysis
                      (100 * (`raw`.`#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}` / `raw`.`num_valid_votes`)) AS `#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}`"
       end
       sql << "from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw` `raw`
-              where (`raw`.`district_id` between 1 and 10)"
+              where `raw`.`is_annulled` = 0
+              and (`raw`.`district_id` between 1 and 10)"
 
       @@client.execute(sql)
     end
@@ -1094,7 +1101,8 @@ module DataAnalysis
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id` and (`raw`.`major_district_id` = `invalid_ballots_13`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_35`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_>5`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`)))))
-              where (`raw`.`district_id` not between 1 and 10)
+              where `raw`.`is_annulled` = 0
+              and (`raw`.`district_id` not between 1 and 10)
               group by `raw`.`region`, `raw`.`district_name`, `raw`.`district_id`, `raw`.`major_district_id`"
 
       @@client.execute(sql)
@@ -1184,7 +1192,8 @@ module DataAnalysis
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 1-3` `invalid_ballots_13` on(((`raw`.`region` = `invalid_ballots_13`.`region`) and (`raw`.`district_id` = `invalid_ballots_13`.`district_id` and (`raw`.`major_district_id` = `invalid_ballots_13`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_13`.`precinct_id`))))
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots 3-5` `invalid_ballots_35` on(((`raw`.`region` = `invalid_ballots_35`.`region`) and (`raw`.`district_id` = `invalid_ballots_35`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_35`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_35`.`precinct_id`))))
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` = `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_>5`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`)))))
-              where (`raw`.`district_id` between 1 and 10)
+              where `raw`.`is_annulled` = 0
+              and (`raw`.`district_id` between 1 and 10)
               group by `raw`.`region`, `raw`.`district_name`, `raw`.`district_id`, `raw`.`major_district_id`"
 
       @@client.execute(sql)

@@ -206,6 +206,7 @@ ka:
   root:
     index:
       choose: Switch Election
+      no_annulled: Hooray! No precincts have had their protocols annulled!
       flags:
         active: actively entering
         coming_up: coming soon

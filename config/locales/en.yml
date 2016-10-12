@@ -215,6 +215,12 @@ en:
         amendments: Amendments
         annulled: Annulled
         download: Download Data
+      annulled:
+        no_data: Hooray! No precincts have had their protocols annulled!
+        view_title: View Protocol and Amendment(s)
+        headers:
+          district: District
+          precinct: Precinct
       status:
         headers:
           data_entry: Election Status
