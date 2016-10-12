@@ -205,33 +205,47 @@ ka:
         precinct: Precinct (i.e., 10.05, 05.90)
   root:
     index:
-      stats_header: მონაცემთა შეყვანის სტატისტიკა
-      overall_stats:
-        header: სრული სტატისტიკა
-        districts: ოლქები
-        precincts: უბნები
-        protocols_missing: დაკარგული ოქმები
-        protocols_found: ნაპოვნი ოქმები
-        protocols_not_entered: შსაყვანი ოქმები
-        protocols_validated: დამოწმებული ოქმები
-      overall_user_stats:
-        header: მომხმარებლების სტატისტიკა
-        users: მომხმარებლები
-        submitted: შეყვანილი ჩანაწერები
-        pending: ჩანაწერები ელოდება წყვილს
-        valid: ჩანაწერები სწორი წყვილებით
-        invalid: ჩანაწერები არასწორი წყვილებით
-        extra: დუბლიკატი
-      overall_stats_by_district:
-        header: არჩევნების შედეგები ოქლების მიხედვით
-        region: რეგიონი
-        district: ოლქი
-        district_id: ოლქის ID
-        precincts: უბნები
-        protocols_missing: დაკარგული ოქმები
-        protocols_found: ნაპოვნი ოქმები
-        protocols_not_entered: შესაყვანი ოქმები
-        protocols_validated: დამოწმებული ოქმები
+      choose: Switch Election
+      flags:
+        active: actively entering
+        coming_up: coming soon
+      tabs:
+        status: Status
+        summary: Summary
+        amendments: Amendments
+        annulled: Annulled
+        download: Download Data
+      status:
+        headers:
+          data_entry: Election Status
+          users: User Status
+          districts: Election District Status
+        overall_stats:
+          header: სრული სტატისტიკა
+          districts: ოლქები
+          precincts: უბნები
+          protocols_missing: დაკარგული ოქმები
+          protocols_found: ნაპოვნი ოქმები
+          protocols_not_entered: შსაყვანი ოქმები
+          protocols_validated: დამოწმებული ოქმები
+        overall_user_stats:
+          header: მომხმარებლების სტატისტიკა
+          users: მომხმარებლები
+          submitted: შეყვანილი ჩანაწერები
+          pending: ჩანაწერები ელოდება წყვილს
+          valid: ჩანაწერები სწორი წყვილებით
+          invalid: ჩანაწერები არასწორი წყვილებით
+          extra: დუბლიკატი
+        overall_stats_by_district:
+          header: არჩევნების შედეგები ოქლების მიხედვით
+          region: რეგიონი
+          district: ოლქი
+          district_id: ოლქის ID
+          precincts: უბნები
+          protocols_missing: დაკარგული ოქმები
+          protocols_found: ნაპოვნი ოქმები
+          protocols_not_entered: შესაყვანი ოქმები
+          protocols_validated: დამოწმებული ოქმები
       stay_tuned:
         header: თვალი ადევნეთ!
         text: მიმდინარე არჩევნების ოქმების შეყვანას მალევე შევძლებთ.
@@ -313,6 +327,31 @@ ka:
         protocols_found: ნაპოვნი ოქმები
         protocols_not_entered: შსაყვანი ოქმები
         protocols_validated: დამოწმებული ოქმები
+      tabs:
+        download: Download Data
+        definitions: Explanation of Columns in Data
+      column_header: Column Header
+      explanation: Explanation
+      explanations:
+        region: The name of the region. Before 2016, the election districts matched the geographic districts and so it was possible to know what region the district was in. However, in 2016, election districts were merged and split, so now the election districts do not follow the region boundaries and so it is not possible to assign a region name any more.
+        district_id: The ID of the district. In the new naming scheme introduced in 2016 (i.e., 01.23.45), the first two numbers are the district ID (i.e., 01), also known as the majoritarian district ID.
+        district_name: The name of the district. Before 2016, the election districts matched the geographic districts in the country and the names were used to identify these districts. However, in 2016, election districts were merged and split so now the district name is the same as the district ID.
+        precinct_id: The ID of the precinct. In the new naming scheme introduced in 2016 (i.e., 01.23.45), the last two set of numbers are the precinct ID (i.e., 23.45).
+        attached_precinct_id: ''
+        num_possible_voters: 'The number of registered voters in the precinct. This number comes from item #1 in the protocol.'
+        num_special_voters: 'The number of registered special voters in the precinct. This number comes from item #2 in the protocol.'
+        num_at_12: 'The number of people that voted by 12:00 in the precinct. This number comes from item #3ა in the protocol.'
+        num_at_17: 'The number of people that voted by 17:00 in the precinct. This number comes from item #3ბ in the protocol.'
+        num_votes: 'The number of ballots submitted by voters in the precinct. This number comes from item #4 in the protocol.'
+        num_ballots: 'The number of ballots the precincts were given. This number comes from item #5 in the protocol.'
+        num_invalid_votes: 'The number of ballots that were marked as invalid by the precinct staff. This number comes from item #6 in the protocol.'
+        num_valid_votes: This number is calculated by adding all of the party votes and subtracting 'num_invalid_votes'.
+        logic_check_fail: This is a flag that indicates whether the 'num_votes' = 'num_valid_votes'. Ideally, these values should match. 0 = they do match. 1 = they do not match.
+        logic_check_difference: This is a calculation of 'num_votes' - 'num_valid_votes'. Ideally, this should be 0.
+        more_ballots_than_votes_flag: This is a flag that indicates whether there are more ballots submitted then votes for parties. The calculation is 'num_valid_votes' > sum of the party votes. Ideally, these values should match. 0 = they do match. 1 = they do not match.
+        more_ballots_than_votes: This is a calculation of 'num_valid_votes' - sum of the party votes. Ideally, this should be 0.
+        more_votes_than_ballots_flag: This is a flag that indicates whether there are more votes for parties than ballots submitted. The calculation is sum of the party votes > 'num_valid_votes'. Ideally, these values should match. 0 = they do match. 1 = they do not match.
+        more_votes_than_ballots: This is a calculation of sum of the party votes - 'num_valid_votes'. Ideally, this should be 0.
     about:
       title: შესახებ
   mailer:

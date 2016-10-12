@@ -130,3 +130,21 @@ th.hl1 {
 th.hl2 {
   background-color: #da6969;
 }
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+  color: #222;
+}
+
+.download-indicator-explanation{
+  dt{
+    font-weight: bold;
+    display: inline-block;
+    min-width: 200px;
+  }
+  dd{
+    display: inline;
+    &:after{
+      display: block;
+      content: '';
+    }
+  }
+}

@@ -143,7 +143,7 @@ class DistrictPrecinct < ActiveRecord::Base
   def self.overall_stats(election_ids)
     election_stats = []
 
-    election_ids = [election_ids] if election_ids.class.name == 'Fixnum'
+    election_ids = [election_ids] if election_ids.class.name != 'Array'
 
     # only continue if there are elections running
     if election_ids.present?
@@ -189,7 +189,7 @@ class DistrictPrecinct < ActiveRecord::Base
   def self.overall_stats_by_district(election_ids)
     election_stats = []
 
-    election_ids = [election_ids] if election_ids.class.name == 'Fixnum'
+    election_ids = [election_ids] if election_ids.class.name != 'Array'
 
     # only continue if there are elections running
     if election_ids.present?

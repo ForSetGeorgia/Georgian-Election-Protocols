@@ -2,7 +2,7 @@
   p{
     font-size: 15px;
     line-height: 20px;
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
   }
   li{
     font-size: 15px;
@@ -10,6 +10,18 @@
   }
   h2, h3{
     margin-top: 25px;
+    padding-bottom: 10px;
+  }
+  h2 > .switch-to{
+    display: inline-block;
+    margin-left: 20px;
+    font-size: 13px;
+  }
+  h3{
+    font-size: 16pt;
+    &.underline{
+      border-bottom: solid 2px #ebebeb;
+    }
   }
   a {
     color:#8A0A15;
@@ -20,5 +32,8 @@
       color:#8A0A15;
       font-weight:bold;
     }
+  }
+  .data-downloads li{
+    margin-top: 10px;
   }
 }

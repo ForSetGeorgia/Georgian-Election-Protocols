@@ -5,6 +5,27 @@ class RootController < ApplicationController
   PROTOCOL_NUMBERS = (1..5).to_a
 
   def index
+
+    if @elections.present?
+      params[:election] = @elections.first.analysis_table_name if params[:election].nil?
+      @current_election = @elections.select{|x| x.analysis_table_name == params[:election]}.first
+
+      # get the events that are currently open for data entry
+      @overall_stats = DistrictPrecinct.overall_stats(@current_election.id)
+      @overall_stats_by_district = DistrictPrecinct.overall_stats_by_district(@current_election.id)
+      @overall_user_stats = CrowdDatum.overall_user_stats(@current_election.id)
+
+    # if there are no current elections, see if there are elections coming up
+    elsif @elections.nil? || @elections.empty?
+      @elections_coming_up = Election.coming_up.sorted
+    end
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
+
+  def index_old
     # get the events that are currently open for data entry
     @overall_stats = DistrictPrecinct.overall_stats(@election_ids)
     @overall_stats_by_district = DistrictPrecinct.overall_stats_by_district(@election_ids)
