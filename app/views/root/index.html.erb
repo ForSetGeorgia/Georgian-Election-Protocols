@@ -247,7 +247,89 @@
 
 
         <div class="tab-pane fade in" id="amendments">
-
+          <% if @amendments.present? %>
+            <table class="table table-striped amendments">
+              <thead>
+                <tr>
+                  <th>
+                  </th>
+                  <th class="hl1">
+                    <%= t('.amendments.headers.district') %>
+                  </th>
+                  <th class="hl1">
+                    <%= t('.amendments.headers.precinct') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.count') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.invalid_ballots') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.logic_check_fail') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.logic_check_difference') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.more_ballots_than_votes_flag') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.more_ballots_than_votes') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.more_votes_than_ballots_flag') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.more_votes_than_ballots') %>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @amendments.each do |amendment| %>
+                  <tr>
+                    <td>
+                      <%= link_to t('helpers.links.view'), '#', class: 'btn btn-default', title: t('.amendments.view_title') %>
+                    </td>
+                    <td>
+                      <%= amendment['district_id'] %>
+                    </td>
+                    <td>
+                      <%= amendment['precinct_id'] %>
+                    </td>
+                    <td>
+                      <%= amendment['amendment_count'] %>
+                    </td>
+                    <td>
+                      <%= amendment['num_invalid_votes'] %>
+                    </td>
+                    <td>
+                      <%= amendment['logic_check_fail'] %>
+                    </td>
+                    <td>
+                      <%= amendment['logic_check_difference'] %>
+                    </td>
+                    <td>
+                      <%= amendment['more_ballots_than_votes_flag'] %>
+                    </td>
+                    <td>
+                      <%= amendment['more_ballots_than_votes'] %>
+                    </td>
+                    <td>
+                      <%= amendment['more_votes_than_ballots_flag'] %>
+                    </td>
+                    <td>
+                      <%= amendment['more_votes_than_ballots'] %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <div class="alert alert-success">
+              <%= t('.amendment.no_data') %>
+            </div>
+          <% end %>
         </div>
 
 

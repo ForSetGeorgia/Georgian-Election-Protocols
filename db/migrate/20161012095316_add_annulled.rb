@@ -80,6 +80,10 @@ class AddAnnulled < ActiveRecord::Migration
     prop.create_analysis_precinct_counts
     major.create_analysis_precinct_counts
 
+    # recreate the views to work without the annulled field
+    prop.create_analysis_views
+    major.create_analysis_views
+
 
   end
 end

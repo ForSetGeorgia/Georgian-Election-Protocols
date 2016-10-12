@@ -22,10 +22,16 @@ module DataAnalysis
     'Precincts with More Ballots Than Votes (#)',
     'Precincts with More Ballots Than Votes (%)',
     'More Ballots Than Votes (Average)',
-    'More Ballots Than Votes (#)','Precincts with More Votes than Ballots (#)',
+    'More Ballots Than Votes (#)',
+    'Precincts with More Votes than Ballots (#)',
     'Precincts with More Votes than Ballots (%)',
     'More Votes than Ballots (Average)',
-    'More Votes than Ballots (#)','Average votes per minute (08:00-12:00)',
+    'More Votes than Ballots (#)',
+    'Precincts with Amendments (#)',
+    'Precincts with Amendments (%)',
+    'Amendments (Average)',
+    'Amendments (#)',
+    'Average votes per minute (08:00-12:00)',
     'Average votes per minute (12:00-17:00)',
     'Average votes per minute (17:00-20:00)',
     "Number of Precincts with votes per minute > #{@@vpm_limit} (08:00-12:00)",
@@ -170,13 +176,8 @@ module DataAnalysis
 
   # get all of the data in the raw table and format for csv download
   def download_raw_data
-    sql = "select raw.*, dp.amendment_count
-            from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw` as raw
-            inner join district_precincts as dp on
-              raw.district_id = dp.district_id COLLATE utf8_unicode_ci
-              and raw.precinct_id = dp.precinct_id COLLATE utf8_unicode_ci
-            where dp.election_id = #{self.id}
-            order by raw.district_id, raw.precinct_id"
+    sql = "select * from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw`
+            order by district_id, precinct_id"
     results = @@client.exec_query(sql)
 
     if results.present?
@@ -194,6 +195,43 @@ module DataAnalysis
 
     return csv_data
   end
+
+  # def download_raw_data
+  #   double_quotes = %w(region district_id district_name major_district_id precinct_id attached_precinct_id)
+  #   sql = "select raw.*, dp.amendment_count
+  #           from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw` as raw
+  #           inner join district_precincts as dp on
+  #             raw.district_id = dp.district_id COLLATE utf8_unicode_ci
+  #             and raw.precinct_id = dp.precinct_id COLLATE utf8_unicode_ci
+  #           where dp.election_id = #{self.id}
+  #           order by raw.district_id, raw.precinct_id"
+  #   results = @@client.exec_query(sql)
+
+  #   if results.present?
+  #     csv_data = CSV.generate(col_sep: ',') do |csv|
+  #       # add header
+  #       csv << results.columns
+
+  #       # data
+  #       # - each row is a hash so just need to get values
+  #       results.each do |row|
+  #         new_row = []
+
+  #         row.values.each_with_index do |cell, index|
+  #           if double_quotes.include? results.columns[index]
+  #             new_row << "'#{cell}'"
+  #           else
+  #             new_row << cell
+  #           end
+  #         end
+
+  #         csv << new_row
+  #       end
+  #     end
+  #   end
+
+  #   return csv_data
+  # end
 
   ###################################################
 
@@ -226,6 +264,16 @@ module DataAnalysis
     return csv_data
   end
 
+  ###################################################
+
+  # get all raw data that has amendments
+  def raw_with_amendments
+    sql = "select * from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw`
+           where amendments_flag = 1
+           order by district_id, precinct_id"
+    results = @@client.exec_query(sql)
+    return results.present? ? results.to_a : nil
+  end
 
   ###################################################
   ###################################################
@@ -368,6 +416,8 @@ module DataAnalysis
         `more_ballots_than_votes` INT(11) NULL DEFAULT NULL,
         `more_votes_than_ballots_flag` INT(11) NULL DEFAULT NULL,
         `more_votes_than_ballots` INT(11) NULL DEFAULT NULL,
+        `amendments_flag` INT(11) NULL DEFAULT NULL,
+        `amendment_count` INT(11) NULL DEFAULT NULL,
         `is_annulled` INT(1) NOT NULL DEFAULT 0, "
       party_sql = []
       parties.each do |party|
@@ -499,6 +549,9 @@ module DataAnalysis
             sum(`raw`.`more_votes_than_ballots_flag`) AS `num precincts more votes than ballots`,
             (100 * (sum(`raw`.`more_votes_than_ballots_flag`) / count(0))) AS `percent precincts more votes than ballots`,
             (sum(`raw`.`more_votes_than_ballots`) / sum(`raw`.`more_votes_than_ballots_flag`)) AS `avg precinct difference more votes than ballots`,
+            sum(`raw`.`amendments_flag`) AS `num precincts with amendments`,
+            (100 * (sum(`raw`.`amendments_flag`) / count(0))) AS `percent precincts with amendments`,
+            (sum(`raw`.`amendment_count`) / sum(`raw`.`amendments_flag`)) AS `avg precinct amendment count`,
             sum(`raw`.`num_at_12`) AS `votes 8-12`,
             sum((`raw`.`num_at_17` - `raw`.`num_at_12`)) AS `votes 12-17`,
             sum((`raw`.`num_votes` - `raw`.`num_at_17`)) AS `votes 17-20`,
@@ -582,6 +635,9 @@ module DataAnalysis
             sum(`raw`.`more_votes_than_ballots_flag`) AS `num precincts more votes than ballots`,
             (100 * (sum(`raw`.`more_votes_than_ballots_flag`) / count(0))) AS `percent precincts more votes than ballots`,
             (sum(`raw`.`more_votes_than_ballots`) / sum(`raw`.`more_votes_than_ballots_flag`)) AS `avg precinct difference more votes than ballots`,
+            sum(`raw`.`amendments_flag`) AS `num precincts with amendments`,
+            (100 * (sum(`raw`.`amendments_flag`) / count(0))) AS `percent precincts with amendments`,
+            (sum(`raw`.`amendment_count`) / sum(`raw`.`amendments_flag`)) AS `avg precinct amendment count`,
             sum(`raw`.`num_at_12`) AS `votes 8-12`,
             sum((`raw`.`num_at_17` - `raw`.`num_at_12`)) AS `votes 12-17`,
             sum((`raw`.`num_votes` - `raw`.`num_at_17`)) AS `votes 17-20`,
@@ -670,6 +726,9 @@ module DataAnalysis
               sum(`raw`.`more_votes_than_ballots_flag`) AS `num precincts more votes than ballots`,
               (100 * (sum(`raw`.`more_votes_than_ballots_flag`) / count(0))) AS `percent precincts more votes than ballots`,
               (sum(`raw`.`more_votes_than_ballots`) / sum(`raw`.`more_votes_than_ballots_flag`)) AS `avg precinct difference more votes than ballots`,
+              sum(`raw`.`amendments_flag`) AS `num precincts with amendments`,
+              (100 * (sum(`raw`.`amendments_flag`) / count(0))) AS `percent precincts with amendments`,
+              (sum(`raw`.`amendment_count`) / sum(`raw`.`amendments_flag`)) AS `avg precinct amendment count`,
               sum(`raw`.`num_at_12`) AS `votes 8-12`,
               sum((`raw`.`num_at_17` - `raw`.`num_at_12`)) AS `votes 12-17`,
               sum((`raw`.`num_votes` - `raw`.`num_at_17`)) AS `votes 17-20`,
@@ -751,6 +810,9 @@ module DataAnalysis
                 sum(`raw`.`more_votes_than_ballots_flag`) AS `num precincts more votes than ballots`,
                 (100 * (sum(`raw`.`more_votes_than_ballots_flag`) / count(0))) AS `percent precincts more votes than ballots`,
                 (sum(`raw`.`more_votes_than_ballots`) / sum(`raw`.`more_votes_than_ballots_flag`)) AS `avg precinct difference more votes than ballots`,
+                sum(`raw`.`amendments_flag`) AS `num precincts with amendments`,
+                (100 * (sum(`raw`.`amendments_flag`) / count(0))) AS `percent precincts with amendments`,
+                (sum(`raw`.`amendment_count`) / sum(`raw`.`amendments_flag`)) AS `avg precinct amendment count`,
                 sum(`raw`.`num_at_12`) AS `votes 8-12`,
                 sum((`raw`.`num_at_17` - `raw`.`num_at_12`)) AS `votes 12-17`,
                 sum((`raw`.`num_votes` - `raw`.`num_at_17`)) AS `votes 17-20`,
@@ -841,6 +903,8 @@ module DataAnalysis
             `raw`.`more_ballots_than_votes` as `more_ballots_than_votes`,
             `raw`.`more_votes_than_ballots_flag` as `more_votes_than_ballots_flag`,
             `raw`.`more_votes_than_ballots` as `more_votes_than_ballots`,
+            `raw`.`amendments_flag` as `amendments_flag`,
+            `raw`.`amendment_count` as `amendment_count`,
             `raw`.`num_at_12` AS `votes 8-12`,
             (`raw`.`num_at_17` - `raw`.`num_at_12`) AS `votes 12-17`,
             (`raw`.`num_votes` - `raw`.`num_at_17`) AS `votes 17-20`,
@@ -902,6 +966,9 @@ module DataAnalysis
             sum(`raw`.`more_votes_than_ballots_flag`) AS `num precincts more votes than ballots`,
             (100 * (sum(`raw`.`more_votes_than_ballots_flag`) / count(0))) AS `percent precincts more votes than ballots`,
             (sum(`raw`.`more_votes_than_ballots`) / sum(`raw`.`more_votes_than_ballots_flag`)) AS `avg precinct difference more votes than ballots`,
+            sum(`raw`.`amendments_flag`) AS `num precincts with amendments`,
+            (100 * (sum(`raw`.`amendments_flag`) / count(0))) AS `percent precincts with amendments`,
+            (sum(`raw`.`amendment_count`) / sum(`raw`.`amendments_flag`)) AS `avg precinct amendment count`,
             sum(`raw`.`num_at_12`) AS `votes 8-12`,
             sum((`raw`.`num_at_17` - `raw`.`num_at_12`)) AS `votes 12-17`,
             sum((`raw`.`num_votes` - `raw`.`num_at_17`)) AS `votes 17-20`,
@@ -992,6 +1059,8 @@ module DataAnalysis
               `raw`.`more_ballots_than_votes` as `more_ballots_than_votes`,
               `raw`.`more_votes_than_ballots_flag` as `more_votes_than_ballots_flag`,
               `raw`.`more_votes_than_ballots` as `more_votes_than_ballots`,
+              `raw`.`amendments_flag` as `amendments_flag`,
+              `raw`.`amendment_count` as `amendment_count`,
               `raw`.`num_at_12` AS `votes 8-12`,
               (`raw`.`num_at_17` - `raw`.`num_at_12`) AS `votes 12-17`,
               (`raw`.`num_votes` - `raw`.`num_at_17`) AS `votes 17-20`,
@@ -1054,6 +1123,9 @@ module DataAnalysis
               sum(`raw`.`more_votes_than_ballots_flag`) AS `num precincts more votes than ballots`,
               (100 * (sum(`raw`.`more_votes_than_ballots_flag`) / count(0))) AS `percent precincts more votes than ballots`,
               (sum(`raw`.`more_votes_than_ballots`) / sum(`raw`.`more_votes_than_ballots_flag`)) AS `avg precinct difference more votes than ballots`,
+              sum(`raw`.`amendments_flag`) AS `num precincts with amendments`,
+              (100 * (sum(`raw`.`amendments_flag`) / count(0))) AS `percent precincts with amendments`,
+              (sum(`raw`.`amendment_count`) / sum(`raw`.`amendments_flag`)) AS `avg precinct amendment count`,
               sum(`raw`.`num_at_12`) AS `votes 8-12`,
               sum((`raw`.`num_at_17` - `raw`.`num_at_12`)) AS `votes 12-17`,
               sum((`raw`.`num_votes` - `raw`.`num_at_17`)) AS `votes 17-20`,
@@ -1145,6 +1217,9 @@ module DataAnalysis
               sum(`raw`.`more_votes_than_ballots_flag`) AS `num precincts more votes than ballots`,
               (100 * (sum(`raw`.`more_votes_than_ballots_flag`) / count(0))) AS `percent precincts more votes than ballots`,
               (sum(`raw`.`more_votes_than_ballots`) / sum(`raw`.`more_votes_than_ballots_flag`)) AS `avg precinct difference more votes than ballots`,
+              sum(`raw`.`amendments_flag`) AS `num precincts with amendments`,
+              (100 * (sum(`raw`.`amendments_flag`) / count(0))) AS `percent precincts with amendments`,
+              (sum(`raw`.`amendment_count`) / sum(`raw`.`amendments_flag`)) AS `avg precinct amendment count`,
               sum(`raw`.`num_at_12`) AS `votes 8-12`,
               sum((`raw`.`num_at_17` - `raw`.`num_at_12`)) AS `votes 12-17`,
               sum((`raw`.`num_votes` - `raw`.`num_at_17`)) AS `votes 17-20`,
@@ -1244,15 +1319,19 @@ module DataAnalysis
               `#{self.analysis_table_name} - #{@@shapes[:country]}`.`percent precincts more votes than ballots` AS `#{@@common_headers[15]}`,
               `#{self.analysis_table_name} - #{@@shapes[:country]}`.`avg precinct difference more votes than ballots` AS `#{@@common_headers[16]}`,
               NULL AS `#{@@common_headers[17]}`,
-              NULL AS `#{@@common_headers[18]}`,
-              NULL AS `#{@@common_headers[19]}`,
-              NULL AS `#{@@common_headers[20]}`,
-              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `#{@@common_headers[21]}`,
-              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `#{@@common_headers[22]}`,
-              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `#{@@common_headers[23]}`,
-              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num precincts vpm > #{@@vpm_limit}` AS `#{@@common_headers[24]}`,
-              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num_precincts_reported_number` AS `#{@@common_headers[25]}`,
-              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num_precincts_reported_percent` AS `#{@@common_headers[26]}`,
+              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num precincts with amendments` AS `#{@@common_headers[18]}`,
+              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`percent precincts with amendments` AS `#{@@common_headers[19]}`,
+              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`avg precinct amendment count` AS `#{@@common_headers[20]}`,
+              NULL AS `#{@@common_headers[21]}`,
+              NULL AS `#{@@common_headers[22]}`,
+              NULL AS `#{@@common_headers[23]}`,
+              NULL AS `#{@@common_headers[24]}`,
+              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `#{@@common_headers[25]}`,
+              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `#{@@common_headers[26]}`,
+              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `#{@@common_headers[27]}`,
+              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num precincts vpm > #{@@vpm_limit}` AS `#{@@common_headers[28]}`,
+              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num_precincts_reported_number` AS `#{@@common_headers[29]}`,
+              `#{self.analysis_table_name} - #{@@shapes[:country]}`.`num_precincts_reported_percent` AS `#{@@common_headers[30]}`,
       "
       sql << create_csv_party_names(parties, @@shapes[:country])
       sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{@@shapes[:country]}`)"
@@ -1280,15 +1359,19 @@ module DataAnalysis
                 `#{self.analysis_table_name} - #{@@shapes[:region]}`.`percent precincts more votes than ballots` AS `#{@@common_headers[15]}`,
                 `#{self.analysis_table_name} - #{@@shapes[:region]}`.`avg precinct difference more votes than ballots` AS `#{@@common_headers[16]}`,
                 NULL AS `#{@@common_headers[17]}`,
-                NULL AS `#{@@common_headers[18]}`,
-                NULL AS `#{@@common_headers[19]}`,
-                NULL AS `#{@@common_headers[20]}`,
-                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `#{@@common_headers[21]}`,
-                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `#{@@common_headers[22]}`,
-                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `#{@@common_headers[23]}`,
-                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num precincts vpm > #{@@vpm_limit}` AS `#{@@common_headers[24]}`,
-                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num_precincts_reported_number` AS `#{@@common_headers[25]}`,
-                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num_precincts_reported_percent` AS `#{@@common_headers[26]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num precincts with amendments` AS `#{@@common_headers[18]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`percent precincts with amendments` AS `#{@@common_headers[19]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`avg precinct amendment count` AS `#{@@common_headers[20]}`,
+                NULL AS `#{@@common_headers[21]}`,
+                NULL AS `#{@@common_headers[22]}`,
+                NULL AS `#{@@common_headers[23]}`,
+                NULL AS `#{@@common_headers[24]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `#{@@common_headers[25]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `#{@@common_headers[26]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `#{@@common_headers[27]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num precincts vpm > #{@@vpm_limit}` AS `#{@@common_headers[28]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num_precincts_reported_number` AS `#{@@common_headers[29]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:region]}`.`num_precincts_reported_percent` AS `#{@@common_headers[30]}`,
                 "
         sql << create_csv_party_names(parties, @@shapes[:region])
         sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{@@shapes[:region]}`)"
@@ -1315,15 +1398,19 @@ module DataAnalysis
             `#{self.analysis_table_name} - #{@@shapes[:district]}`.`percent precincts more votes than ballots` AS `#{@@common_headers[15]}`,
             `#{self.analysis_table_name} - #{@@shapes[:district]}`.`avg precinct difference more votes than ballots` AS `#{@@common_headers[16]}`,
             NULL AS `#{@@common_headers[17]}`,
-            NULL AS `#{@@common_headers[18]}`,
-            NULL AS `#{@@common_headers[19]}`,
-            NULL AS `#{@@common_headers[20]}`,
-            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `#{@@common_headers[21]}`,
-            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `#{@@common_headers[22]}`,
-            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `#{@@common_headers[23]}`,
-            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`num precincts vpm > #{@@vpm_limit}` AS `#{@@common_headers[24]}`,
-            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`num_precincts_reported_number` AS `#{@@common_headers[25]}`,
-            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`num_precincts_reported_percent` AS `#{@@common_headers[26]}`,
+            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`num precincts with amendments` AS `#{@@common_headers[18]}`,
+            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`percent precincts with amendments` AS `#{@@common_headers[19]}`,
+            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`avg precinct amendment count` AS `#{@@common_headers[20]}`,
+            NULL AS `#{@@common_headers[21]}`,
+            NULL AS `#{@@common_headers[22]}`,
+            NULL AS `#{@@common_headers[23]}`,
+            NULL AS `#{@@common_headers[24]}`,
+            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `#{@@common_headers[25]}`,
+            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `#{@@common_headers[26]}`,
+            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `#{@@common_headers[27]}`,
+            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`num precincts vpm > #{@@vpm_limit}` AS `#{@@common_headers[28]}`,
+            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`num_precincts_reported_number` AS `#{@@common_headers[29]}`,
+            `#{self.analysis_table_name} - #{@@shapes[:district]}`.`num_precincts_reported_percent` AS `#{@@common_headers[30]}`,
       "
 
       sql << create_csv_party_names(parties, @@shapes[:district])
@@ -1335,33 +1422,37 @@ module DataAnalysis
       # major district
       if self.is_local_majoritarian
 
-        sql << "(select 'Majoritarian District' AS `@@common_headers[0]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`major_district_id` AS `@@common_headers[1]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`major_district_Name` AS `@@common_headers[2]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`total valid ballots cast` AS `@@common_headers[3]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`percent voters voting` AS `@@common_headers[4]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num invalid ballots from 0-1%` AS `@@common_headers[5]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num invalid ballots from 1-3%` AS `@@common_headers[6]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num invalid ballots from 3-5%` AS `@@common_headers[7]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num invalid ballots >5%` AS `@@common_headers[8]`,
-                NULL AS `@@common_headers[9]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num precincts more ballots than votes` AS `@@common_headers[10]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`percent precincts more ballots than votes` AS `@@common_headers[11]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`avg precinct difference more ballots than votes` AS `@@common_headers[12]`,
-                NULL AS `@@common_headers[13]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num precincts more votes than ballots` AS `@@common_headers[14]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`percent precincts more votes than ballots` AS `@@common_headers[15]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`avg precinct difference more votes than ballots` AS `@@common_headers[16]`,
-                NULL AS `@@common_headers[17]`,
-                NULL AS `@@common_headers[18]`,
-                NULL AS `@@common_headers[19]`,
-                NULL AS `@@common_headers[20]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `@@common_headers[21]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `@@common_headers[22]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `@@common_headers[23]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num precincts vpm > #{@@vpm_limit}` AS `@@common_headers[24]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num_precincts_reported_number` AS `@@common_headers[25]`,
-                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num_precincts_reported_percent` AS `@@common_headers[26]`,
+        sql << "(select 'Majoritarian District' AS `#{@@common_headers[0]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`major_district_id` AS `#{@@common_headers[1]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`major_district_Name` AS `#{@@common_headers[2]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`total valid ballots cast` AS `#{@@common_headers[3]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`percent voters voting` AS `#{@@common_headers[4]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num invalid ballots from 0-1%` AS `#{@@common_headers[5]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num invalid ballots from 1-3%` AS `#{@@common_headers[6]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num invalid ballots from 3-5%` AS `#{@@common_headers[7]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num invalid ballots >5%` AS `#{@@common_headers[8]}`,
+                NULL AS `#{@@common_headers[9]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num precincts more ballots than votes` AS `#{@@common_headers[10]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`percent precincts more ballots than votes` AS `#{@@common_headers[11]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`avg precinct difference more ballots than votes` AS `#{@@common_headers[12]}`,
+                NULL AS `#{@@common_headers[13]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num precincts more votes than ballots` AS `#{@@common_headers[14]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`percent precincts more votes than ballots` AS `#{@@common_headers[15]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`avg precinct difference more votes than ballots` AS `#{@@common_headers[16]}`,
+                NULL AS `#{@@common_headers[17]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num precincts with amendments` AS `#{@@common_headers[18]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`percent precincts with amendments` AS `#{@@common_headers[19]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`avg precinct amendment count` AS `#{@@common_headers[20]}`,
+                NULL AS `#{@@common_headers[21]}`,
+                NULL AS `#{@@common_headers[22]}`,
+                NULL AS `#{@@common_headers[23]}`,
+                NULL AS `#{@@common_headers[24]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `#{@@common_headers[25]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `#{@@common_headers[26]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `#{@@common_headers[27]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num precincts vpm > #{@@vpm_limit}` AS `#{@@common_headers[28]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num_precincts_reported_number` AS `#{@@common_headers[29]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`num_precincts_reported_percent` AS `#{@@common_headers[30]}`,
         "
         sql << create_csv_party_names(parties, @@shapes[:major_district])
         sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{@@shapes[:major_district]}`)"
@@ -1398,15 +1489,19 @@ module DataAnalysis
               null AS `#{@@common_headers[15]}`,
               null AS `#{@@common_headers[16]}`,
               `#{self.analysis_table_name} - #{shape}`.`more_votes_than_ballots` AS `#{@@common_headers[17]}`,
-              `#{self.analysis_table_name} - #{shape}`.`vpm 8-12` AS `#{@@common_headers[18]}`,
-              `#{self.analysis_table_name} - #{shape}`.`vpm 12-17` AS `#{@@common_headers[19]}`,
-              `#{self.analysis_table_name} - #{shape}`.`vpm 17-20` AS `#{@@common_headers[20]}`,
-              NULL AS `#{@@common_headers[21]}`,
-              NULL AS `#{@@common_headers[22]}`,
-              NULL AS `#{@@common_headers[23]}`,
-              NULL AS `#{@@common_headers[24]}`,
+              null AS `#{@@common_headers[18]}`,
+              null AS `#{@@common_headers[19]}`,
+              null AS `#{@@common_headers[20]}`,
+              `#{self.analysis_table_name} - #{shape}`.`amendment_count` AS `#{@@common_headers[21]}`,
+              `#{self.analysis_table_name} - #{shape}`.`vpm 8-12` AS `#{@@common_headers[22]}`,
+              `#{self.analysis_table_name} - #{shape}`.`vpm 12-17` AS `#{@@common_headers[23]}`,
+              `#{self.analysis_table_name} - #{shape}`.`vpm 17-20` AS `#{@@common_headers[24]}`,
               NULL AS `#{@@common_headers[25]}`,
               NULL AS `#{@@common_headers[26]}`,
+              NULL AS `#{@@common_headers[27]}`,
+              NULL AS `#{@@common_headers[28]}`,
+              NULL AS `#{@@common_headers[29]}`,
+              NULL AS `#{@@common_headers[30]}`,
       "
       sql << create_csv_party_names(parties, shape)
       sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{shape}`)"
@@ -1435,15 +1530,19 @@ module DataAnalysis
                 `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`percent precincts more votes than ballots` AS `#{@@common_headers[15]}`,
                 `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`avg precinct difference more votes than ballots` AS `#{@@common_headers[16]}`,
                 NULL AS `#{@@common_headers[17]}`,
-                NULL AS `#{@@common_headers[18]}`,
-                NULL AS `#{@@common_headers[19]}`,
-                NULL AS `#{@@common_headers[20]}`,
-                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `#{@@common_headers[21]}`,
-                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `#{@@common_headers[22]}`,
-                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `#{@@common_headers[23]}`,
-                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num precincts vpm > #{@@vpm_limit}` AS `#{@@common_headers[24]}`,
-                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num_precincts_reported_number` AS `#{@@common_headers[25]}`,
-                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num_precincts_reported_percent` AS `#{@@common_headers[26]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num precincts with amendments` AS `#{@@common_headers[18]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`percent precincts with amendments` AS `#{@@common_headers[19]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`avg precinct amendment count` AS `#{@@common_headers[20]}`,
+                NULL AS `#{@@common_headers[21]}`,
+                NULL AS `#{@@common_headers[22]}`,
+                NULL AS `#{@@common_headers[23]}`,
+                NULL AS `#{@@common_headers[24]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `#{@@common_headers[25]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `#{@@common_headers[26]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `#{@@common_headers[27]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num precincts vpm > #{@@vpm_limit}` AS `#{@@common_headers[28]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num_precincts_reported_number` AS `#{@@common_headers[29]}`,
+                `#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`.`num_precincts_reported_percent` AS `#{@@common_headers[30]}`,
         "
         sql << create_csv_party_names(parties, @@shapes[:tbilisi_district])
         sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{@@shapes[:tbilisi_district]}`)"
@@ -1453,33 +1552,37 @@ module DataAnalysis
 
         # major tbilisi district
         if self.is_local_majoritarian
-          sql << "(select 'Majoritarian Tbilisi District' AS `@@common_headers[0]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`major_district_id` AS `@@common_headers[1]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`major_district_Name` AS `@@common_headers[2]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`total valid ballots cast` AS `@@common_headers[3]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`percent voters voting` AS `@@common_headers[4]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num invalid ballots from 0-1%` AS `@@common_headers[5]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num invalid ballots from 1-3%` AS `@@common_headers[6]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num invalid ballots from 3-5%` AS `@@common_headers[7]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num invalid ballots >5%` AS `@@common_headers[8]`,
-                  NULL AS `@@common_headers[9]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts more ballots than votes` AS `@@common_headers[10]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`percent precincts more ballots than votes` AS `@@common_headers[11]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`avg precinct difference more ballots than votes` AS `@@common_headers[12]`,
-                  NULL AS `@@common_headers[13]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts more votes than ballots` AS `@@common_headers[14]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`percent precincts more votes than ballots` AS `@@common_headers[15]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`avg precinct difference more votes than ballots` AS `@@common_headers[16]`,
-                  NULL AS `@@common_headers[17]`,
-                  NULL AS `@@common_headers[18]`,
-                  NULL AS `@@common_headers[19]`,
-                  NULL AS `@@common_headers[20]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `@@common_headers[21]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `@@common_headers[22]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `@@common_headers[23]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts vpm > #{@@vpm_limit}` AS `@@common_headers[24]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num_precincts_reported_number` AS `@@common_headers[25]`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num_precincts_reported_percent` AS `@@common_headers[26]`,
+          sql << "(select 'Majoritarian Tbilisi District' AS `#{@@common_headers[0]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`major_district_id` AS `#{@@common_headers[1]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`major_district_Name` AS `#{@@common_headers[2]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`total valid ballots cast` AS `#{@@common_headers[3]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`percent voters voting` AS `#{@@common_headers[4]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num invalid ballots from 0-1%` AS `#{@@common_headers[5]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num invalid ballots from 1-3%` AS `#{@@common_headers[6]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num invalid ballots from 3-5%` AS `#{@@common_headers[7]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num invalid ballots >5%` AS `#{@@common_headers[8]}`,
+                  NULL AS `#{@@common_headers[9]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts more ballots than votes` AS `#{@@common_headers[10]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`percent precincts more ballots than votes` AS `#{@@common_headers[11]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`avg precinct difference more ballots than votes` AS `#{@@common_headers[12]}`,
+                  NULL AS `#{@@common_headers[13]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts more votes than ballots` AS `#{@@common_headers[14]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`percent precincts more votes than ballots` AS `#{@@common_headers[15]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`avg precinct difference more votes than ballots` AS `#{@@common_headers[16]}`,
+                  NULL AS `#{@@common_headers[17]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts with amendments` AS `#{@@common_headers[18]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`percent precincts with amendments` AS `#{@@common_headers[19]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`avg precinct amendment count` AS `#{@@common_headers[20]}`,
+                  NULL AS `#{@@common_headers[21]}`,
+                  NULL AS `#{@@common_headers[22]}`,
+                  NULL AS `#{@@common_headers[23]}`,
+                  NULL AS `#{@@common_headers[24]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `#{@@common_headers[25]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `#{@@common_headers[26]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `#{@@common_headers[27]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts vpm > #{@@vpm_limit}` AS `#{@@common_headers[28]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num_precincts_reported_number` AS `#{@@common_headers[29]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num_precincts_reported_percent` AS `#{@@common_headers[30]}`,
           "
 
           sql << create_csv_party_names(parties, @@shapes[:major_tbilisi_district])
@@ -1517,15 +1620,19 @@ module DataAnalysis
                 null AS `#{@@common_headers[15]}`,
                 null AS `#{@@common_headers[16]}`,
                 `#{self.analysis_table_name} - #{shape}`.`more_votes_than_ballots` AS `#{@@common_headers[17]}`,
-                `#{self.analysis_table_name} - #{shape}`.`vpm 8-12` AS `#{@@common_headers[18]}`,
-                `#{self.analysis_table_name} - #{shape}`.`vpm 12-17` AS `#{@@common_headers[19]}`,
-                `#{self.analysis_table_name} - #{shape}`.`vpm 17-20` AS `#{@@common_headers[20]}`,
-                NULL AS `#{@@common_headers[21]}`,
-                NULL AS `#{@@common_headers[22]}`,
-                NULL AS `#{@@common_headers[23]}`,
-                NULL AS `#{@@common_headers[24]}`,
+                null AS `#{@@common_headers[18]}`,
+                null AS `#{@@common_headers[19]}`,
+                null AS `#{@@common_headers[20]}`,
+                `#{self.analysis_table_name} - #{shape}`.`amendment_count` AS `#{@@common_headers[21]}`,
+                `#{self.analysis_table_name} - #{shape}`.`vpm 8-12` AS `#{@@common_headers[22]}`,
+                `#{self.analysis_table_name} - #{shape}`.`vpm 12-17` AS `#{@@common_headers[23]}`,
+                `#{self.analysis_table_name} - #{shape}`.`vpm 17-20` AS `#{@@common_headers[24]}`,
                 NULL AS `#{@@common_headers[25]}`,
                 NULL AS `#{@@common_headers[26]}`,
+                NULL AS `#{@@common_headers[27]}`,
+                NULL AS `#{@@common_headers[28]}`,
+                NULL AS `#{@@common_headers[29]}`,
+                NULL AS `#{@@common_headers[30]}`,
         "
         sql << create_csv_party_names(parties, shape)
         sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{shape}`)"

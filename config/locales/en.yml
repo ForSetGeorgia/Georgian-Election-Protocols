@@ -221,6 +221,20 @@ en:
         headers:
           district: District
           precinct: Precinct
+      amendments:
+        no_data: Hooray! No precincts have had their protocols amended!
+        view_title: View Protocol and Amendment(s)
+        headers:
+          district: District
+          precinct: Precinct
+          count: Amendments (#)
+          invalid_ballots: Invalid Ballots (#)
+          logic_check_fail: 'Fail Logic Check (Party Sum - Invalid = Ballots Submitted)? (#)'
+          logic_check_difference:  Logic Check Difference (#)
+          more_ballots_than_votes_flag: More Ballots Than Votes?
+          more_ballots_than_votes: How Many More Ballots Than Votes (#)
+          more_votes_than_ballots_flag: More Votes Than Ballots?
+          more_votes_than_ballots: How Many More Ballots Than Votes (#)
       status:
         headers:
           data_entry: Election Status
@@ -358,6 +372,9 @@ en:
         more_ballots_than_votes: This is a calculation of 'num_valid_votes' - sum of the party votes. Ideally, this should be 0.
         more_votes_than_ballots_flag: This is a flag that indicates whether there are more votes for parties than ballots submitted. The calculation is sum of the party votes > 'num_valid_votes'. Ideally, these values should match. 0 = they do match. 1 = they do not match.
         more_votes_than_ballots: This is a calculation of sum of the party votes - 'num_valid_votes'. Ideally, this should be 0.
+        amendments_flag: This a flag that indicates whether amendments have been submitted to the original protocol. 0 = no. 1 = yes.
+        amendment_count: This number shows how many amendments have been submitted.
+        is_annulled: This is a flag that indicates whether the votes in this precinct have been annulled. View the protocol amendment to learn why. 0 = no. 1 = yes.
     about:
       title: About
   mailer:
