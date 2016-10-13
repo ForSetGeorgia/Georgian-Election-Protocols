@@ -21,7 +21,6 @@ app_base_url = "https://protocols.jumpstart.ge"
 app_get_uri = "/en/json/missing_protocols"
 
 protocol_dir = "/home/protocols/Protocols/shared/system/protocols"
-
 #protocol_dir = "/home/eric/projects/js/elections/Crowd-Source-Protocols/public/system/protocols"
 
 start_time = Time.now
@@ -125,10 +124,23 @@ else
               img_bname = "#{did}-#{precinct}"
               amend_count = 1
 
+              logger_info.info("Deleting existing protocol and amendments")
+              del_files = Dir.glob("#{ddir}#{img_bname}*")
+
+              del_files.each do |f|
+                begin
+                  logger_info.info("Deleting: #{f}")
+                  FileUtils.rm(f)
+                rescue => e
+                  logger_error.error("Failed to delete: #{f}")
+                end
+              end
+
               if index == 0
                 begin
                   logger_info.info("Downloading protocol: #{img_bname}")
-                  open("#{ddir}#{"#{img_bname}.jpg"}", 'wb') do |pfile|
+                  puts "Getting file: #{img_bname}"
+                  open("#{ddir}#{img_bname}.jpg", 'wb') do |pfile|
                     pfile << open(img_url).read
                   end
                   @proto_counter += 1
