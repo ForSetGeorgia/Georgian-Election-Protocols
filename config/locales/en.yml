@@ -76,6 +76,7 @@ en:
       provide_all_params: Please provide values for all fields.
       data_reset: The protocol data was reset and will have to be re-entered.
       could_not_rest: Sorry, the protocol data could not be reset.
+      no_protocol: Sorry, the selected protocol could not be found.
     csv_header:
       region: Region
       district_id: District ID
@@ -296,6 +297,9 @@ en:
           At this time, no data entry of election protocols is occurring or is planned for the near future.
 
           Don't fret! You can <a href="/en/download">download the data from existing elections</a>.
+    view_protocol:
+      title: 'Protocol for: %{election} - %{precinct}'
+      not_found: Sorry, the protocol you requested could not be found.
     training:
       title: Training Center
       p1: You must successfully complete 5 training protocols before you can enter data for real protocols.  So far you have completed %{count}.

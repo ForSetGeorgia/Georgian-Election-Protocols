@@ -366,7 +366,12 @@
                 <% @amendments.each do |amendment| %>
                   <tr>
                     <td>
-                      <%= link_to t('helpers.links.view'), '#', class: 'btn btn-default', title: t('.amendments.view_title') %>
+                      <%= link_to t('helpers.links.view'),
+                              view_protocol_path(election_id: @current_election.analysis_table_name,
+                                                  district_id: amendment['district_id'],
+                                                  precinct_id: amendment['precinct_id']),
+                              class: 'btn btn-default', title: t('.amendments.view_title'),
+                              target: :blank %>
                     </td>
                     <td>
                       <%= amendment['district_id'] %>
@@ -429,7 +434,12 @@
                 <% @annulled.each do |annull| %>
                   <tr>
                     <td>
-                      <%= link_to t('helpers.links.view'), '#', class: 'btn btn-default', title: t('.annulled.view_title') %>
+                      <%= link_to t('helpers.links.view'),
+                          view_protocol_path(election_id: @current_election.analysis_table_name,
+                                              district_id: annull.district_id,
+                                              precinct_id: annull.precinct_id),
+                          class: 'btn btn-default', title: t('.annulled.view_title'),
+                          target: :blank %>
                     </td>
                     <td>
                       <%= annull.district_id %>

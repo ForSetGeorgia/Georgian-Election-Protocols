@@ -50,6 +50,22 @@ class RootController < ApplicationController
     end
   end
 
+  def view_protocol
+    @election = Election.find_by_analysis_table_name(params[:election_id])
+    if @election.present?
+      dp = DistrictPrecinct.by_ids(@election.id, params[:district_id], params[:precinct_id]).first
+
+      if dp.present? && dp.has_protocol?
+        @crowd_datum = CrowdDatum.new(election_id: dp.election_id, district_id: dp.district_id, precinct_id: dp.precinct_id)
+      end
+    end
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+
+  end
+
   def protocol
     logger.info "%%%%%%%%%%%% protocol start"
     @protocol_manipulator = true

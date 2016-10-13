@@ -76,6 +76,7 @@ ka:
       provide_all_params: Please provide values for all fields.
       data_reset: The protocol data was reset and will have to be re-entered.
       could_not_rest: Sorry, the protocol data could not be reset.
+      no_protocol: Sorry, the selected protocol could not be found.
     csv_header:
       region: რეგიონი
       district_id: ოლქის ID
@@ -296,6 +297,9 @@ ka:
           ამ დროისთვის, საარჩევნო ოქმების შეყვანა არ ხდება და არც უახლოეს მომავალშია დაგეგმილი.
 
           არ ნერვიულობენ! თქვენ შეგიძლიათ <a href="/ka/download">ჩამოტვირთოთ არჩევნების არსებული მონაცემები</a>.
+    view_protocol:
+      title: 'Protocol for: %{election} - %{precinct}'
+      not_found: Sorry, the protocol you requested could not be found.
     training:
       title: ტრენინგ ცენტრი
       p1: თქვენ წარმატებით უნდა შეავსოთ ტრენინგის 5 ოქმი, სანამ ნამდვილი ოქმების მონაცემების შეყვანას დაიწყებთ. ამჟამად შევსებული გაქვთ %{count} ოქმი.

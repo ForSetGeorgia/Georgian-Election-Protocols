@@ -1,0 +1,21 @@
+<% title t('.title', election: @election.name,
+        precinct: "#{params[:district_id]}#{@election.district_precinct_separator}#{params[:precinct_id]}") %>
+
+<% if @crowd_datum.present? && @crowd_datum.image_path.present? %>
+  <%= image_tag @crowd_datum.image_path %>
+  <br />
+
+  <% if @crowd_datum.amendment_image_paths.present? %>
+    <% @crowd_datum.amendment_image_paths.each do |img_path| %>
+      <%= image_tag img_path %>
+      <br />
+    <% end %>
+  <% end %>
+
+<% else %>
+
+  <div class="alert alert-warning">
+    <%= t('.not_found') %>
+  </div>
+
+<% end %>
