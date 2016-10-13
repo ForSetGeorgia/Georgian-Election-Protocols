@@ -41,9 +41,9 @@ class AddAnnulled < ActiveRecord::Migration
       client.execute(sql)
     end
 
-    # recreate the views to work with the annulled field
-    prop.create_analysis_views
-    major.create_analysis_views
+    # # recreate the views to work with the annulled field
+    # prop.create_analysis_views
+    # major.create_analysis_views
 
     # fix the precinct count since we added a precinct
     prop.create_analysis_precinct_counts
@@ -76,9 +76,9 @@ class AddAnnulled < ActiveRecord::Migration
     sql = "ALTER TABLE `protocol_analysis`.`2016_parliamentary_majoritarian - raw` drop column is_annulled;"
     client.execute(sql)
 
-    # fix the precinct count since we delete a precinct
-    prop.create_analysis_precinct_counts
-    major.create_analysis_precinct_counts
+    # # fix the precinct count since we delete a precinct
+    # prop.create_analysis_precinct_counts
+    # major.create_analysis_precinct_counts
 
     # recreate the views to work without the annulled field
     prop.create_analysis_views

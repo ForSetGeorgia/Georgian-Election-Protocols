@@ -72,10 +72,10 @@ ka:
       no_success_updated: "%{obj} არ განახლდა წარმატებით."
       could_not_find_election: "არჩევნები არ მოიძებნა."
       no_protocols: ამ დროისთვის შესაყვანი ოქმები არ არის.
-      no_current_elections: There are no elections that are available for data entry at this time.
-      provide_all_params: Please provide values for all fields.
-      data_reset: The protocol data was reset and will have to be re-entered.
-      could_not_rest: Sorry, the protocol data could not be reset.
+      no_current_elections: ამ დროისთვსი არ არის არჩევნები, რომლის მონაცემებიც შესაყვანია.
+      provide_all_params: გთხოვთ ყველა ველს მიუთითოთ მაჩვენებელი
+      data_reset: ოქმების ბაზა განახლდა და საჭიროა მათი თავიდან შეყვანა.
+      could_not_rest: ბოდიში, ოქმების ბაზის განახლება შეუძლებელია
       no_protocol: Sorry, the selected protocol could not be found.
     csv_header:
       region: რეგიონი
@@ -200,60 +200,60 @@ ka:
         votesum_explanation3: "ეს რიცხვები დაგეხმარებათ მონაცემთა სეყვანაში."
         votesum_explanation4: "შესაძლოა, რომ ეს რიცხვები არ ემთხვეოდეს."
       reset_bad_protocol_data:
-        title: Delete data for wrongly entered protocol
-        election: Election
-        district: District (i.e., 01, 02)
-        precinct: Precinct (i.e., 10.05, 05.90)
+        title: წაშალე არასწორად შეყვანილი ოქმები
+        election: არჩევნები
+        district: ოლქი (მაგ. 01,02)
+        precinct: უბანი (მაგ.10.05, 05.90)
   root:
     index:
-      choose: Switch Election
+      choose: გადადი არჩევნებზე
       flags:
-        active: actively entering
-        coming_up: coming soon
+        active: აქტიურად შედის
+        coming_up: მალე
       tabs:
-        status: Status
-        summary: Summary
-        amendments: Amendments
-        annulled: Annulled
-        download: Download Data
+        status: სტატუსი
+        summary: შეჯამება
+        amendments: შესწორებები
+        annulled: გაუქმებული
+        download: მონაცემების ჩამოტვირთვა
       annulled:
-        no_data: Hooray! No precincts have had their protocols annulled!
-        view_title: View Protocol and Amendment(s)
+        no_data: არცერთ საარჩევნო უბანს ოქმი არ გაუუქმებია!
+        view_title: ილიხეთ ოქმი და შესწორებები
         headers:
-          district: District
-          precinct: Precinct
+          district: ოლქი
+          precinct: საარჩევნო უბანი
       amendments:
-        no_data: Hooray! No precincts have had their protocols amended!
-        view_title: View Protocol and Amendment(s)
+        no_data: არცერთს საარჩევნო უბანს არ შესწორება არ შეუტანია !
+        view_title: იხილეთ ოქმები და შესწორებები
         headers:
-          district: District
-          precinct: Precinct
-          count: Amendments (#)
-          invalid_ballots: Invalid Ballots (#)
-          logic_check_fail: 'Fail Logic Check (Party Sum - Invalid = Ballots Submitted)? (#)'
-          logic_check_difference:  Logic Check Difference (#)
-          more_ballots_than_votes_flag: More Ballots Than Votes?
-          more_ballots_than_votes: How Many More Ballots Than Votes (#)
-          more_votes_than_ballots_flag: More Votes Than Ballots?
-          more_votes_than_ballots: How Many More Ballots Than Votes (#)
+          district: ოლქი
+          precinct: საარჩევნო უბანი
+          count: შესწორებები (#)
+          invalid_ballots: ბათილი ბიულეტინები (#)
+          logic_check_fail: 'ლოგიკური შემოწმება ვერ გაიარა (პარტიების ხმების რაოდენობას - ბათილი ბიულეტინები = მიღებულ ხმებს)? (#) '
+          logic_check_difference:  სხვაობა ლოგიკურ შემოწმებაში (#)
+          more_ballots_than_votes_flag: მეტი ბიულეტინი ვიდრე ხმა?
+          more_ballots_than_votes: რამდენით მეტი ბიულეტინია ვიდრე ხმა (#)
+          more_votes_than_ballots_flag: მეტი ხმა ვიდრე ბიულეტინი?
+          more_votes_than_ballots: რამდენით მეტი ბიულეტინია ვიდრე ხმა (#)
       district_summaries:
-        no_data: No data has been submitted yet.
+        no_data: ამ დროისთვის მონაცემები არ არის დამატებული .
         headers:
-          district: District
-          vote_num: Total Voter Turnout (#)
-          vote_percent: Total Voter Turnout (%)
-          invalid5: Number of Precincts with Invalid Ballots > 5%
-          more_ballots_percent: Precincts with More Ballots Than Votes (%)
-          more_ballots_avg: More Ballots Than Votes (Average)
-          more_votes_percent: Precincts with More Votes than Ballots (%)
-          more_votes_avg: More Votes than Ballots (Average)
-          amendments_percent: Precincts with Amendments (%)
-          amendments_avg: Amendments (Average)
+          district: ოლქი
+          vote_num: ხმების საერთო რაოდენობა (#)
+          vote_percent: ხმების საერთო რაოდენობა (%)
+          invalid5: საარჩევნო უბნების რაოდენობა, რომლებშიც ბათილი ბიულეტინებია  > 5%
+          more_ballots_percent: საარჩევნო უნაბი სადაც მეტი ბიულეტინია ვიდრე ხმა (%)
+          more_ballots_avg: მეტი ბიულეტინი ვიდრე ხმა (საშუალო)
+          more_votes_percent: საარჩევნო უბნები სადაც მეტი ხმაა ვიდრე ბიულეტინი (%)
+          more_votes_avg: მეტი ხმა ვიდრე ბიულეტინი (საშუალოდ)
+          amendments_percent: საარჩევნო უბნები შესწორებებით (%
+          amendments_avg: შესწორებები (საშუალოდ)
       status:
         headers:
-          data_entry: Election Status
-          users: User Status
-          districts: Election District Status
+          data_entry: არჩევნების სტატუსი
+          users: მომხმარებლის სტატუსი
+          districts: საარჩევნო ოლქის სტატუსი
         overall_stats:
           header: სრული სტატისტიკა
           districts: ოლქები
@@ -365,33 +365,33 @@ ka:
         protocols_not_entered: შსაყვანი ოქმები
         protocols_validated: დამოწმებული ოქმები
       tabs:
-        download: Download Data
-        definitions: Explanation of Columns in Data
-      column_header: Column Header
-      explanation: Explanation
+        download: მონაცემების ჩამოტვირთვა
+        definitions: მონაცემებში სვეტების ახსნა
+      column_header: სვეტების სათაურები
+      explanation: ახსნა
       explanations:
-        region: The name of the region. Before 2016, the election districts matched the geographic districts and so it was possible to know what region the district was in. However, in 2016, election districts were merged and split, so now the election districts do not follow the region boundaries and so it is not possible to assign a region name any more.
-        district_id: The ID of the district. In the new naming scheme introduced in 2016 (i.e., 01.23.45), the first two numbers are the district ID (i.e., 01), also known as the majoritarian district ID.
-        district_name: The name of the district. Before 2016, the election districts matched the geographic districts in the country and the names were used to identify these districts. However, in 2016, election districts were merged and split so now the district name is the same as the district ID.
-        precinct_id: The ID of the precinct. In the new naming scheme introduced in 2016 (i.e., 01.23.45), the last two set of numbers are the precinct ID (i.e., 23.45).
+        region: რეგიონის სახელი. 2016 წლამდე სარჩევნო ოლქები გეოგრაფიულ დაყოფას ემთხვეოდა და შესაძლებელი იყო იმის გაგება, რომელ რეგიონში იყო ოლქი. თუმცა 2016 წელს საარჩევნო ოლქები შეერთდა და გაიყო, ასე რომ ახლა საარჩევნო ოლქები რეგიონის საზღვრებს აღარ ემთხვევა და შეუძლებელია რეგიონის სახელის მინიჭება.
+        district_id: ოლქის ნომერი. 2016 წელს წარმოდგენილი ახალი სქემით (მაგ. 01.23.45) პირველი ორი რიცხვი არის ოლქის ნომერი (მაგ. 01), ასევე მაჟორიტარული ოლქის ნომერი.
+        district_name: 2016 წლამდე სარჩევნო ოლქები გეოგრაფიულ დაყოფას ემთხვეოდა და შესაძლებელი იყო იმის გაგება, რომელ რეგიონში იყო ოლქი. თუმცა 2016 წელს საარჩევნო ოლქები შეერთდა და გაიყო, ასე რომ ახლა საარჩევნო ოლქების ნომერი მათი სახელი გახდა.
+        precinct_id: საარჩევნო უბნის ნომერი. 2016 წელს წარმოდგენილი ახალი სქემით (მაგ. 01.23.45) საარჩევნო უბნის ნომერი ბოლო ორი რიცხვია (მაგ. 23.45).
         attached_precinct_id: ''
-        num_possible_voters: 'The number of registered voters in the precinct. This number comes from item #1 in the protocol.'
-        num_special_voters: 'The number of registered special voters in the precinct. This number comes from item #2 in the protocol.'
-        num_at_12: 'The number of people that voted by 12:00 in the precinct. This number comes from item #3ა in the protocol.'
-        num_at_17: 'The number of people that voted by 17:00 in the precinct. This number comes from item #3ბ in the protocol.'
-        num_votes: 'The number of ballots submitted by voters in the precinct. This number comes from item #4 in the protocol.'
-        num_ballots: 'The number of ballots the precincts were given. This number comes from item #5 in the protocol.'
-        num_invalid_votes: 'The number of ballots that were marked as invalid by the precinct staff. This number comes from item #6 in the protocol.'
-        num_valid_votes: This number is calculated by adding all of the party votes and subtracting 'num_invalid_votes'.
-        logic_check_fail: This is a flag that indicates whether the 'num_votes' = 'num_valid_votes'. Ideally, these values should match. 0 = they do match. 1 = they do not match.
-        logic_check_difference: This is a calculation of 'num_votes' - 'num_valid_votes'. Ideally, this should be 0.
-        more_ballots_than_votes_flag: This is a flag that indicates whether there are more ballots submitted then votes for parties. The calculation is 'num_valid_votes' > sum of the party votes. Ideally, these values should match. 0 = they do match. 1 = they do not match.
-        more_ballots_than_votes: This is a calculation of 'num_valid_votes' - sum of the party votes. Ideally, this should be 0.
-        more_votes_than_ballots_flag: This is a flag that indicates whether there are more votes for parties than ballots submitted. The calculation is sum of the party votes > 'num_valid_votes'. Ideally, these values should match. 0 = they do match. 1 = they do not match.
-        more_votes_than_ballots: This is a calculation of sum of the party votes - 'num_valid_votes'. Ideally, this should be 0.
-        amendments_flag: This a flag that indicates whether amendments have been submitted to the original protocol. 0 = no. 1 = yes.
-        amendment_count: This number shows how many amendments have been submitted.
-        is_annulled: This is a flag that indicates whether the votes in this precinct have been annulled. View the protocol amendment to learn why. 0 = no. 1 = yes.
+        num_possible_voters: 'ეს არის საარცევნო უბანზე დარეგისტრირებული ამომრჩევლის რაოდენობა. ეს რიცხვი ოქმში შეყვანილია, როგორც #1. '
+        num_special_voters: 'ეს არის საარჩევნო უბანზე დაფიქსირებული სპეციალურ სიაში შემავალი ამომრჩევლის რაოდენობა. მისი ნომერი ოქმში არის #2.'
+        num_at_12: 'ადამიანების რაოდენობა, რომლებმაც ხმა 12 საათამდე მისცეს. ეს რიცხვი ოქმში #3ა გრაფაში იწერება. '
+        num_at_17: 'ადამიანების რაოდენობა, რომლებმაც ხმა 17 საათამდე მისცეს. ეს რიცხვი ოქმში #3ბ გრაფაში იწერება. '
+        num_votes: 'არჩევნებში მონაწილე ამომრჩეველთა საერთო რაოდენობა. ეს რიცხვი #4 გრაფაში იწერება. '
+        num_ballots: 'ბიულეტინების რაოდენობა, რომელიც საარჩევნო უბანს გადაეცა. ეს რიცხვი #5 გრაფაში იწერება. '
+        num_invalid_votes: 'ბიულეტინების რაოდენობა, რომლებიც საარჩევნო უბნის გადაწყვეტილებით ბათილად ჩაითვალა. ეს რიცხვი #6 გრაფაში იწერება.'
+        num_valid_votes: ეს რიცხვი მიირება ყველა პარტიის ხმებისა და ბათილი ბიულეტინების შეჯამების შედეგად.
+        logic_check_fail: ეს არის დროშა, რომელიც უჩვენებს “ხმების რაოდენობა” = “ჩათვლილი ხმების რაოდებას”. იდეალურ შემთხვევაში ეს მონაცემები ერთმანეთს ემთხვევა. 0= ემთხვევა. 1= არ ემთხვევა
+        logic_check_difference: ეს დაიანგარიშება “ხმების რაოდენობას” - “ჩათვლილი ცმების რაოდენობა”. იდეალურ შემთხვევაში ეს 0 უნდა იყოს.
+        more_ballots_than_votes_flag: ეს დროშა უჩვენებს, რომ სად დაფიქსირდა ხმებზე მეტი ბიულეტინი. რიცხვი გამოითვლება “ჩათვლილი ხმების რაოდენობა” >  პარტიების მიერ მიღებული ხმების რაოდენობაზე. იდეალურ შემთხვევაში ეს რიცხვები ერთმანეთს უნდა დაემთხვეს. 0 = ემთხვევა. 1 = არ ემთხვევა.
+        more_ballots_than_votes: ეს გამოითვლება “ჩათვლილი ხმების რაოდენობა” - პარტიების მიერ მიღებული ხმების რაოდენობა. იდეალურ შემთხვევაში, უნდა იყოს 0.
+        more_votes_than_ballots_flag: ეს დროშა აღნიშნავს სად დაფიქსირდა მეტი ხმა, ვიდრე ბიულეტინების რაოდენობა იყო. პარტიების მიერ მიღებული ხმების რაოდენობის ჯამი > ჩათვლილი ხმების რაოდენობაზე. იდეალურ შემთხვევაში, ეს მონაცემები ერთმანეთს უნდა ემთხვეოდეს. 0 = ემთხვევა. 1 = არ ემთხვევა.
+        more_votes_than_ballots: ეს გამოითვლება პარტიების მიერ მიღებული ხმების საერთო რაოდენობა - ჩათვლილი ხმების რაოდენობა. იდეალურ შემთხვევაში, უნდა იყოს 0.
+        amendments_flag: ეს დროშა აღნიშნავს დაემატა თუ არა შესწორება ოქმს. 0 = არა. 1 = კი.
+        amendment_count: ეს რიცხვი უჩვენებს რამდენი შესწორება აიტვირთა.
+        is_annulled: ეს დროშა უჩვენებს გაბათილდა თუ არა ხმები საარჩევნო უბანზე. იხილეთ ოქმების შესწორებები და გაიგეთ რატომ. 0 = არა. 1 = კი.
     about:
       title: შესახებ
   mailer:
