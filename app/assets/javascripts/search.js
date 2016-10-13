@@ -63,7 +63,7 @@ $(document).ready(function(){
     "bJQueryUI": true,
     "bProcessing": true,
     "bAutoWidth": true,
-    // "aoColumns": col_sort,
+    "aoColumns": col_sort,
     "oLanguage": {
       "sUrl": gon.datatable_i18n_url
     }
@@ -89,8 +89,7 @@ $(document).ready(function(){
   });
 
 
-
-  $('.migration_records').dataTable({
+  $('table.migration_records').dataTable({
     "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
     "sPaginationType": "bootstrap",
     "bJQueryUI": true,
@@ -100,6 +99,65 @@ $(document).ready(function(){
       "sUrl": gon.datatable_i18n_url
     },
     "aaSorting": [[0, 'desc']]
+  });
+
+
+  $('table.annulled').dataTable({
+    "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+    "sPaginationType": "bootstrap",
+    "bJQueryUI": true,
+    "bProcessing": true,
+    "bAutoWidth": true,
+    "oLanguage": {
+      "sUrl": gon.datatable_i18n_url
+    },
+    "aaSorting": [[1, 'asc']],
+    "aoColumnDefs": [
+      {
+         "bSortable": false,
+         "aTargets": [ 0 ]
+      }
+    ]
+  });
+
+  $('table.amendments').dataTable({
+    "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+    "sPaginationType": "bootstrap",
+    "bJQueryUI": true,
+    "bProcessing": true,
+    "bAutoWidth": true,
+    // "aoColumns": col_sort,
+    "aoColumnDefs": [
+      { "sType": "formatted-num", "aTargets": [ 1,2,3,4,6,8,10 ] }
+    ],
+    "oLanguage": {
+      "sUrl": gon.datatable_i18n_url
+    },
+    "aaSorting": [[1, 'asc']],
+    "aoColumnDefs": [
+      {
+         "bSortable": false,
+         "aTargets": [ 0 ]
+      }
+    ]
+  });
+
+  col_sort = new Array($('table.district_summaries > thead > tr > th').length);
+  for(var i=0;i<$('table.district_summaries > thead > tr > th').length;i++){
+    col_sort[i] = {"sType": "formatted-num" };
+  }
+
+  $('table.district_summaries').dataTable({
+    "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+    "sPaginationType": "bootstrap",
+    "bJQueryUI": true,
+    "bProcessing": true,
+    "bAutoWidth": true,
+    "aoColumns": col_sort,
+    "oLanguage": {
+      "sUrl": gon.datatable_i18n_url
+    },
+    "aaSorting": [[0, 'asc']]
   });
 
 

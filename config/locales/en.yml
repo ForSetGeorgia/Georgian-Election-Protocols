@@ -76,6 +76,7 @@ en:
       provide_all_params: Please provide values for all fields.
       data_reset: The protocol data was reset and will have to be re-entered.
       could_not_rest: Sorry, the protocol data could not be reset.
+      no_protocol: Sorry, the selected protocol could not be found.
     csv_header:
       region: Region
       district_id: District ID
@@ -205,33 +206,80 @@ en:
         precinct: Precinct (i.e., 10.05, 05.90)
   root:
     index:
-      stats_header: Data Entry Statistics
-      overall_stats:
-        header: Overall Statistics
-        districts: Districts
-        precincts: Precincts
-        protocols_missing: Protocols Missing
-        protocols_found: Protocols Found
-        protocols_not_entered: Protocols Not Entered
-        protocols_validated: Protocols Validated
-      overall_user_stats:
-        header: User Statistics
-        users: Users
-        submitted: Records Submitted
-        pending: Records Waiting for Match
-        valid: Records with Valid Match
-        invalid: Records with Invalid Match
-        extra: Duplicate Submission
-      overall_stats_by_district:
-        header: Election Standings by District
-        region: Region
-        district: District
-        district_id: District ID
-        precincts: Precincts
-        protocols_missing: Protocols Missing
-        protocols_found: Protocols Found
-        protocols_not_entered: Protocols Not Entered
-        protocols_validated: Protocols Validated
+      choose: Switch Election
+      flags:
+        active: actively entering
+        coming_up: coming soon
+      tabs:
+        status: Status
+        summary: Summary
+        amendments: Amendments
+        annulled: Annulled
+        download: Download Data
+      annulled:
+        no_data: Hooray! No precincts have had their protocols annulled!
+        view_title: View Protocol and Amendment(s)
+        headers:
+          district: District
+          precinct: Precinct
+      amendments:
+        no_data: Hooray! No precincts have had their protocols amended!
+        view_title: View Protocol and Amendment(s)
+        headers:
+          district: District
+          precinct: Precinct
+          count: Amendments (#)
+          invalid_ballots: Invalid Ballots (#)
+          logic_check_fail: 'Logic Check Fail (Party Sum - Invalid != Ballots Submitted)? (#)'
+          logic_check_difference:  Logic Check Difference (#)
+          more_ballots_than_votes_flag: More Ballots Than Votes?
+          more_ballots_than_votes: How Many More Ballots Than Votes (#)
+          more_votes_than_ballots_flag: More Votes Than Ballots?
+          more_votes_than_ballots: How Many More Ballots Than Votes (#)
+      district_summaries:
+        no_data: No data has been submitted yet.
+        headers:
+          district: District
+          vote_num: Total Voter Turnout (#)
+          vote_percent: Total Voter Turnout (%)
+          invalid5: Number of Precincts with Invalid Ballots > 5%
+          more_ballots_percent: Precincts with More Ballots Than Votes (%)
+          more_ballots_avg: More Ballots Than Votes (Average)
+          more_votes_percent: Precincts with More Votes than Ballots (%)
+          more_votes_avg: More Votes than Ballots (Average)
+          amendments_percent: Precincts with Amendments (%)
+          amendments_avg: Amendments (Average)
+      status:
+        headers:
+          data_entry: Election Status
+          users: User Status
+          districts: Election District Status
+        overall_stats:
+          header: Overall Statistics
+          districts: Districts
+          precincts: Precincts
+          protocols_missing: Protocols Missing
+          protocols_found: Protocols Found
+          protocols_not_entered: Protocols Not Entered
+          protocols_validated: Protocols Validated
+        overall_user_stats:
+          header: User Statistics
+          users: Users
+          submitted: Records Submitted
+          pending: Records Waiting for Match
+          valid: Records with Valid Match
+          invalid: Records with Invalid Match
+          extra: Duplicate Submission
+        overall_stats_by_district:
+          header: Election Standings by District
+          region: Region
+          district: District
+          district_id: District ID
+          precincts: Precincts
+          protocols_missing: Protocols Missing
+          protocols_found: Protocols Found
+          protocols_not_entered: Protocols Not Entered
+          protocols_validated: Protocols Validated
       stay_tuned:
         header: Stay Tuned!
         text: The following elections will soon have protocols for us to enter.
@@ -249,6 +297,9 @@ en:
           At this time, no data entry of election protocols is occurring or is planned for the near future.
 
           Don't fret! You can <a href="/en/download">download the data from existing elections</a>.
+    view_protocol:
+      title: 'Protocol for: %{election} - %{precinct}'
+      not_found: Sorry, the protocol you requested could not be found.
     training:
       title: Training Center
       p1: You must successfully complete 5 training protocols before you can enter data for real protocols.  So far you have completed %{count}.
@@ -313,6 +364,34 @@ en:
         protocols_found: Protocols Found
         protocols_not_entered: Protocols Not Entered
         protocols_validated: Protocols Validated
+      tabs:
+        download: Download Data
+        definitions: Explanation of Columns in Data
+      column_header: Column Header
+      explanation: Explanation
+      explanations:
+        region: The name of the region. Before 2016, the election districts matched the geographic districts and so it was possible to know what region the district was in. However, in 2016, election districts were merged and split, so now the election districts do not follow the region boundaries and so it is not possible to assign a region name any more.
+        district_id: The ID of the district. In the new naming scheme introduced in 2016 (i.e., 01.23.45), the first two numbers are the district ID (i.e., 01), also known as the majoritarian district ID.
+        district_name: The name of the district. Before 2016, the election districts matched the geographic districts in the country and the names were used to identify these districts. However, in 2016, election districts were merged and split so now the district name is the same as the district ID.
+        precinct_id: The ID of the precinct. In the new naming scheme introduced in 2016 (i.e., 01.23.45), the last two set of numbers are the precinct ID (i.e., 23.45).
+        attached_precinct_id: ''
+        num_possible_voters: 'The number of registered voters in the precinct. This number comes from item #1 in the protocol.'
+        num_special_voters: 'The number of registered special voters in the precinct. This number comes from item #2 in the protocol.'
+        num_at_12: 'The number of people that voted by 12:00 in the precinct. This number comes from item #3ა in the protocol.'
+        num_at_17: 'The number of people that voted by 17:00 in the precinct. This number comes from item #3ბ in the protocol.'
+        num_votes: 'The number of ballots submitted by voters in the precinct. This number comes from item #4 in the protocol.'
+        num_ballots: 'The number of ballots the precincts were given. This number comes from item #5 in the protocol.'
+        num_invalid_votes: 'The number of ballots that were marked as invalid by the precinct staff. This number comes from item #6 in the protocol.'
+        num_valid_votes: This number is calculated by adding all of the party votes and subtracting 'num_invalid_votes'.
+        logic_check_fail: This is a flag that indicates whether the 'num_votes' = 'num_valid_votes'. Ideally, these values should match. 0 = they do match. 1 = they do not match.
+        logic_check_difference: This is a calculation of 'num_votes' - 'num_valid_votes'. Ideally, this should be 0.
+        more_ballots_than_votes_flag: This is a flag that indicates whether there are more ballots submitted then votes for parties. The calculation is 'num_valid_votes' > sum of the party votes. Ideally, these values should match. 0 = they do match. 1 = they do not match.
+        more_ballots_than_votes: This is a calculation of 'num_valid_votes' - sum of the party votes. Ideally, this should be 0.
+        more_votes_than_ballots_flag: This is a flag that indicates whether there are more votes for parties than ballots submitted. The calculation is sum of the party votes > 'num_valid_votes'. Ideally, these values should match. 0 = they do match. 1 = they do not match.
+        more_votes_than_ballots: This is a calculation of sum of the party votes - 'num_valid_votes'. Ideally, this should be 0.
+        amendments_flag: This a flag that indicates whether amendments have been submitted to the original protocol. 0 = no. 1 = yes.
+        amendment_count: This number shows how many amendments have been submitted.
+        is_annulled: This is a flag that indicates whether the votes in this precinct have been annulled. View the protocol amendment to learn why. 0 = no. 1 = yes.
     about:
       title: About
   mailer:

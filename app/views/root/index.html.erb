@@ -1,57 +1,89 @@
 <div id="landing_page">
   <% if @elections.present? %>
 
-    <% if @overall_stats.present? %>
-      <h2><%= t('.stats_header') %></h2>
-      <div class="tabs">
-        <ul class="nav nav-tabs nav-tabs-top">
-          <% @elections.each_with_index do |election, index| %>
-            <% active = index == 0 ? 'active' : '' %>
-            <li class="<%= active %>"><a href="#overall_stats_<%= election.analysis_table_name %>" data-toggle="tab"><%= election.name %></a></li>
-          <% end %>
-          <% if @overall_user_stats.present? %>
-            <li><a href="#overall_stats_users" data-toggle="tab"><%= t('.users')  %></a></li>
+
+    <h2>
+      <%= @current_election.name %>
+      |
+      <%= l @current_election.election_at %>
+      <% if @current_election.can_enter_data? %>
+        | <i class="icon-edit" title='<%= t('.flags.active') %>'></i>
+      <% elsif @current_election.election_at >= (Time.now-1.day).to_date %>
+        | <i class="icon-time" title='<%= t('.flags.coming_up') %>'></i>
+      <% end %>
+
+      <div class="switch-to dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <%= t('.choose') %>
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <% @elections.each do |election| %>
+
+            <li>
+              <%= link_to params.merge(election: election.analysis_table_name) do %>
+                <% flag = election.can_enter_data? ?
+                            "#{t('.flags.active')}" : election.election_at >= (Time.now-1.day).to_date ?
+                            "#{t('.flags.coming_up')}" : '' %>
+                <%= "#{election.name} | #{l election.election_at} | #{flag}" %>
+              <% end %>
+            </li>
           <% end %>
         </ul>
-        <div class="tab-content tab-content-top">
-          <% @elections.each_with_index do |election, index| %>
-            <% active = index == 0 ? 'active' : '' %>
-            <div class="tab-pane fade in <%= active %>" id="overall_stats_<%= election.analysis_table_name %>">
-              <% stats = @overall_stats.select{|x| x[:election_id] == election.id}.first %>
+      </div>
+    </h2>
+
+    <div class="tabs">
+      <ul class="nav nav-tabs">
+        <% if @current_election.can_enter_data? %>
+          <li class="active"><a href="#status" data-toggle="tab"><%= t('.tabs.status') %></a></li>
+        <% end %>
+        <li class="<%= @current_election.can_enter_data? ? '' : 'active' %>"><a href="#summary" data-toggle="tab"><%= t('.tabs.summary') %></a></li>
+        <li><a href="#amendments" data-toggle="tab"><%= t('.tabs.amendments') %></a></li>
+        <li><a href="#annulled" data-toggle="tab"><%= t('.tabs.annulled') %></a></li>
+        <li><a href="#download" data-toggle="tab"><%= t('.tabs.download') %></a></li>
+        <% if !@current_election.can_enter_data? %>
+          <li><a href="#status" data-toggle="tab"><%= t('.tabs.status') %></a></li>
+        <% end %>
+      </ul>
+      <div class="tab-content tab-content">
+        <div class="tab-pane fade in <%= @current_election.can_enter_data? ? 'active' : '' %>" id="status">
+          <div class="row-fluid">
+            <div class="span6">
+              <h3 class="underline"><%= t('.status.headers.data_entry') %></h3>
+              <% stats = @overall_stats.select{|x| x[:election_id] == @current_election.id}.first %>
               <% if stats.present? %>
                 <div class="row-fluid">
-                  <div class="span4">
+                  <div class="span6">
                     <p>
-                      <strong><%= t('.overall_stats.districts')%>:</strong>
+                      <strong><%= t('.status.overall_stats.districts')%>:</strong>
                       <%= stats[:districts] %>
                     </p>
                     <p>
-                      <strong><%= t('.overall_stats.precincts')%>:</strong>
+                      <strong><%= t('.status.overall_stats.precincts')%>:</strong>
                       <%= stats[:precincts] %>
                     </p>
-                  </div>
-                  <div class="span4">
                     <p>
-                      <strong><%= t('.overall_stats.protocols_found')%>:</strong>
+                      <strong><%= t('.status.overall_stats.protocols_found')%>:</strong>
                       <%= stats[:protocols_found][:number] %>
                       (<%= stats[:protocols_found][:percent] %>)
                     </p>
-                    <p class="highlight-good">
-                      <strong><%= t('.overall_stats.protocols_missing')%>:</strong>
+                  </div>
+                  <div class="span6">
+                    <p class="highlight-bad">
+                      <strong><%= t('.status.overall_stats.protocols_missing')%>:</strong>
                       <%= stats[:protocols_missing][:number] %>
                       (<%= stats[:protocols_missing][:percent] %>)
                     </p>
-                  </div>
-                  <div class="span4">
-                    <p class="highlight-bad">
-                      <strong><%= t('.overall_stats.protocols_validated')%>:</strong>
+                    <p class="highlight-good">
+                      <strong><%= t('.status.overall_stats.protocols_validated')%>:</strong>
                       <%= stats[:protocols_validated][:number] %>
                       <% if stats[:protocols_validated][:number] != I18n.t('app.common.na') %>
                         (<%= stats[:protocols_validated][:percent] %>)
                       <% end %>
                     </p>
                     <p>
-                      <strong><%= t('.overall_stats.protocols_not_entered')%>:</strong>
+                      <strong><%= t('.status.overall_stats.protocols_not_entered')%>:</strong>
                       <%= stats[:protocols_not_entered][:number] %>
                       <% if stats[:protocols_not_entered][:number] != I18n.t('app.common.na') %>
                         (<%= stats[:protocols_not_entered][:percent] %>)
@@ -61,44 +93,44 @@
                 </div>
               <% end %>
             </div>
-          <% end %>
-          <% if @overall_user_stats.present? %>
-            <div class="tab-pane fade in" id="overall_stats_users">
+
+            <div class="span6">
+              <h3 class="underline"><%= t('.status.headers.users') %></h3>
               <div class="row-fluid">
-                <div class="span4 offset2">
+                <div class="span6">
                   <p>
-                    <strong><%= t('.overall_user_stats.users')%>:</strong>
+                    <strong><%= t('.status.overall_user_stats.users')%>:</strong>
                     <%= @overall_user_stats[:users] %>
                   </p>
                   <p>
-                    <strong><%= t('.overall_user_stats.submitted')%>:</strong>
+                    <strong><%= t('.status.overall_user_stats.submitted')%>:</strong>
                     <%= @overall_user_stats[:submitted] %>
                   </p>
                   <p>
-                    <strong><%= t('.overall_user_stats.pending')%>:</strong>
+                    <strong><%= t('.status.overall_user_stats.pending')%>:</strong>
                     <%= @overall_user_stats[:pending][:number] %>
                     <% if @overall_user_stats[:pending][:number] != I18n.t('app.common.na') %>
                       (<%= @overall_user_stats[:pending][:percent] %>)
                     <% end %>
                   </p>
                 </div>
-                <div class="span4">
-                  <p>
-                    <strong><%= t('.overall_user_stats.valid')%>:</strong>
+                <div class="span6">
+                  <p class="highlight-good">
+                    <strong><%= t('.status.overall_user_stats.valid')%>:</strong>
                     <%= @overall_user_stats[:valid][:number] %>
                     <% if @overall_user_stats[:valid][:number] != I18n.t('app.common.na') %>
                       (<%= @overall_user_stats[:valid][:percent] %>)
                     <% end %>
                   </p>
-                  <p>
-                    <strong><%= t('.overall_user_stats.invalid')%>:</strong>
+                  <p class="highlight-bad">
+                    <strong><%= t('.status.overall_user_stats.invalid')%>:</strong>
                     <%= @overall_user_stats[:invalid][:number] %>
                     <% if @overall_user_stats[:invalid][:number] != I18n.t('app.common.na') %>
                       (<%= @overall_user_stats[:invalid][:percent] %>)
                     <% end %>
                   </p>
                   <p>
-                    <strong><%= t('.overall_user_stats.extra')%>:</strong>
+                    <strong><%= t('.status.overall_user_stats.extra')%>:</strong>
                     <%= @overall_user_stats[:extra][:number] %>
                     <% if @overall_user_stats[:extra][:number] != I18n.t('app.common.na') %>
                       (<%= @overall_user_stats[:extra][:percent] %>)
@@ -107,124 +139,390 @@
                 </div>
               </div>
             </div>
+          </div>
+
+
+          <h3><%= t('.status.headers.districts') %></h3>
+          <% stats = @overall_stats_by_district.select{|x| x[:election_id] == @current_election.id}.first %>
+          <% if stats.present? %>
+            <table class="table table-striped overall_stats_by_district">
+              <thead>
+                <tr>
+                  <% if @current_election.has_regions? %>
+                    <th class="hl1">
+                      <%= t('.status.overall_stats_by_district.region') %>
+                    </th>
+                  <% end %>
+                  <% if @current_election.has_district_names? %>
+                    <th class="hl1">
+                      <%= t('.status.overall_stats_by_district.district') %>
+                    </th>
+                  <% end %>
+                  <th class="hl1">
+                    <%= t('.status.overall_stats_by_district.district_id') %>
+                  </th>
+                  <th class="hl1">
+                    <%= t('.status.overall_stats_by_district.precincts') %> (#)
+                  </th>
+                  <th>
+                    <%= t('.status.overall_stats_by_district.protocols_missing') %> (#)
+                  </th>
+                  <th>
+                    <%= t('.status.overall_stats_by_district.protocols_found') %> (#)
+                  </th>
+                  <th>
+                    <%= t('.status.overall_stats_by_district.protocols_not_entered') %> (#)
+                  </th>
+                  <th class="hl2">
+                    <%= t('.status.overall_stats_by_district.protocols_validated') %> (#)
+                  </th>
+                  <th>
+                    <%= t('.status.overall_stats_by_district.protocols_missing') %> (%)
+                  </th>
+                  <th>
+                    <%= t('.status.overall_stats_by_district.protocols_found') %> (%)
+                  </th>
+                  <th>
+                    <%= t('.status.overall_stats_by_district.protocols_not_entered') %> (%)
+                  </th>
+                  <th class="hl2">
+                    <%= t('.status.overall_stats_by_district.protocols_validated') %> (%)
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% stats[:districts].each do |district| %>
+                  <tr>
+                    <% if @current_election.has_regions? %>
+                      <td>
+                        <%= district[:region] %>
+                      </td>
+                    <% end %>
+                    <% if @current_election.has_district_names? %>
+                      <td>
+                        <%= district[:district] %>
+                      </td>
+                    <% end %>
+                    <td>
+                      <%= district[:district_id] %>
+                    </td>
+                    <td>
+                      <%= district[:precincts] %>
+                    </td>
+                    <td>
+                      <%= district[:protocols_missing][:number] %>
+                    </td>
+                    <td>
+                      <%= district[:protocols_found][:number] %>
+                    </td>
+                    <td>
+                      <%= district[:protocols_not_entered][:number] %>
+                    </td>
+                    <td>
+                      <%= district[:protocols_validated][:number] %>
+                    </td>
+                    <td>
+                      <%= district[:protocols_missing][:percent] %>
+                    </td>
+                    <td>
+                      <%= district[:protocols_found][:percent] %>
+                    </td>
+                    <td>
+                      <%= district[:protocols_not_entered][:percent] %>
+                    </td>
+                    <td>
+                      <%= district[:protocols_validated][:percent] %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
           <% end %>
         </div>
-      <% end %>
 
 
-      <% if @overall_stats_by_district.present? %>
-        <h2><%= t('.overall_stats_by_district.header') %></h2>
-        <div class="tabs">
-          <ul class="nav nav-tabs">
-            <% @elections.each_with_index do |election, index| %>
-              <% active = index == 0 ? 'active' : '' %>
-                <li class="<%= active %>"><a href="#district_stats_<%= election.analysis_table_name %>" data-toggle="tab"><%= election.name %></a></li>
-            <% end %>
-          </ul>
-          <div class="tab-content">
-            <% @elections.each_with_index do |election, index| %>
-              <% active = index == 0 ? 'active' : '' %>
-              <div class="tab-pane fade in <%= active %>" id="district_stats_<%= election.analysis_table_name %>">
-                <% stats = @overall_stats_by_district.select{|x| x[:election_id] == election.id}.first %>
-                <% if stats.present? %>
-                  <table class="table table-striped overall_stats_by_district">
-                    <thead>
-                      <tr>
-                        <% if election.has_regions? %>
-                          <th class="hl1">
-                            <%= t('.overall_stats_by_district.region') %>
-                          </th>
-                        <% end %>
-                        <% if election.has_district_names? %>
-                          <th class="hl1">
-                            <%= t('.overall_stats_by_district.district') %>
-                          </th>
-                        <% end %>
-                        <th class="hl1">
-                          <%= t('.overall_stats_by_district.district_id') %>
-                        </th>
-                        <th class="hl1">
-                          <%= t('.overall_stats_by_district.precincts') %> (#)
-                        </th>
-                        <th>
-                          <%= t('.overall_stats_by_district.protocols_missing') %> (#)
-                        </th>
-                        <th>
-                          <%= t('.overall_stats_by_district.protocols_found') %> (#)
-                        </th>
-                        <th>
-                          <%= t('.overall_stats_by_district.protocols_not_entered') %> (#)
-                        </th>
-                        <th class="hl2">
-                          <%= t('.overall_stats_by_district.protocols_validated') %> (#)
-                        </th>
-                        <th>
-                          <%= t('.overall_stats_by_district.protocols_missing') %> (%)
-                        </th>
-                        <th>
-                          <%= t('.overall_stats_by_district.protocols_found') %> (%)
-                        </th>
-                        <th>
-                          <%= t('.overall_stats_by_district.protocols_not_entered') %> (%)
-                        </th>
-                        <th class="hl2">
-                          <%= t('.overall_stats_by_district.protocols_validated') %> (%)
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% stats[:districts].each do |district| %>
-                        <tr>
-                          <% if election.has_regions? %>
-                            <td>
-                              <%= district[:region] %>
-                            </td>
-                          <% end %>
-                          <% if election.has_district_names? %>
-                            <td>
-                              <%= district[:district] %>
-                            </td>
-                          <% end %>
-                          <td>
-                            <%= district[:district_id] %>
-                          </td>
-                          <td>
-                            <%= district[:precincts] %>
-                          </td>
-                          <td>
-                            <%= district[:protocols_missing][:number] %>
-                          </td>
-                          <td>
-                            <%= district[:protocols_found][:number] %>
-                          </td>
-                          <td>
-                            <%= district[:protocols_not_entered][:number] %>
-                          </td>
-                          <td>
-                            <%= district[:protocols_validated][:number] %>
-                          </td>
-                          <td>
-                            <%= district[:protocols_missing][:percent] %>
-                          </td>
-                          <td>
-                            <%= district[:protocols_found][:percent] %>
-                          </td>
-                          <td>
-                            <%= district[:protocols_not_entered][:percent] %>
-                          </td>
-                          <td>
-                            <%= district[:protocols_validated][:percent] %>
-                          </td>
-                        </tr>
-                      <% end %>
-                    </tbody>
-                  </table>
+        <div class="tab-pane fade in <%= @current_election.can_enter_data? ? '' : 'active' %>" id="summary">
+          <% if @district_summaries.present? %>
+            <table class="table table-striped district_summaries">
+              <thead>
+                <tr>
+                  <th class="hl1">
+                    <%= t('.amendments.headers.district') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.vote_num') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.vote_percent') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.invalid5') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.more_ballots_percent') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.more_ballots_avg') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.more_votes_percent') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.more_votes_avg') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.amendments_percent') %>
+                  </th>
+                  <th>
+                    <%= t('.district_summaries.headers.amendments_avg') %>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @district_summaries.each do |district_summary| %>
+                  <tr>
+                    <td>
+                      <%= district_summary['district_id'] %>
+                    </td>
+                    <td>
+                      <%= number_with_delimiter(district_summary['total valid ballots cast']) %>
+                    </td>
+                    <td>
+                      <%= number_to_percentage(district_summary['percent voters voting']) %>
+                    </td>
+                    <td>
+                      <%= number_with_delimiter(district_summary['num invalid ballots >5%']) %>
+                    </td>
+                    <td>
+                      <%= number_to_percentage(district_summary['percent precincts more ballots than votes']) %>
+                    </td>
+                    <td>
+                      <%= number_with_delimiter(number_with_precision(district_summary['avg precinct difference more ballots than votes'])) %>
+                    </td>
+                    <td>
+                      <%= number_to_percentage(district_summary['percent precincts more votes than ballots']) %>
+                    </td>
+                    <td>
+                      <%= number_with_delimiter(number_with_precision(district_summary['avg precinct difference more votes than ballots'])) %>
+                    </td>
+                    <td>
+                      <%= number_to_percentage(district_summary['percent precincts with amendments']) %>
+                    </td>
+                    <td>
+                      <%= number_with_delimiter(number_with_precision(district_summary['avg precinct amendment count'])) %>
+                    </td>
+                  </tr>
                 <% end %>
-              </div>
-            <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <div class="alert alert-success">
+              <%= t('.district_summaries.no_data') %>
+            </div>
+          <% end %>
+        </div>
+
+
+        <div class="tab-pane fade in" id="amendments">
+          <% if @amendments.present? %>
+            <table class="table table-striped amendments">
+              <thead>
+                <tr>
+                  <th>
+                  </th>
+                  <th class="hl1">
+                    <%= t('.amendments.headers.district') %>
+                  </th>
+                  <th class="hl1">
+                    <%= t('.amendments.headers.precinct') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.count') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.invalid_ballots') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.logic_check_fail') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.logic_check_difference') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.more_ballots_than_votes_flag') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.more_ballots_than_votes') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.more_votes_than_ballots_flag') %>
+                  </th>
+                  <th>
+                    <%= t('.amendments.headers.more_votes_than_ballots') %>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @amendments.each do |amendment| %>
+                  <tr>
+                    <td>
+                      <%= link_to t('helpers.links.view'),
+                              view_protocol_path(election_id: @current_election.analysis_table_name,
+                                                  district_id: amendment['district_id'],
+                                                  precinct_id: amendment['precinct_id']),
+                              class: 'btn btn-default', title: t('.amendments.view_title'),
+                              target: :blank %>
+                    </td>
+                    <td>
+                      <%= amendment['district_id'] %>
+                    </td>
+                    <td>
+                      <%= amendment['precinct_id'] %>
+                    </td>
+                    <td>
+                      <%= amendment['amendment_count'] %>
+                    </td>
+                    <td>
+                      <%= amendment['num_invalid_votes'] %>
+                    </td>
+                    <td>
+                      <%= convert_boolean_answer(amendment['logic_check_fail']) %>
+                    </td>
+                    <td>
+                      <%= amendment['logic_check_difference'] %>
+                    </td>
+                    <td>
+                      <%= convert_boolean_answer(amendment['more_ballots_than_votes_flag']) %>
+                    </td>
+                    <td>
+                      <%= amendment['more_ballots_than_votes'] %>
+                    </td>
+                    <td>
+                      <%= convert_boolean_answer(amendment['more_votes_than_ballots_flag']) %>
+                    </td>
+                    <td>
+                      <%= amendment['more_votes_than_ballots'] %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <div class="alert alert-success">
+              <%= t('.amendment.no_data') %>
+            </div>
+          <% end %>
+        </div>
+
+
+        <div class="tab-pane fade in" id="annulled">
+          <% if @annulled.present? %>
+            <table class="table table-striped annulled">
+              <thead>
+                <tr>
+                  <th>
+                  </th>
+                  <th class="hl1">
+                    <%= t('.annulled.headers.district') %>
+                  </th>
+                  <th class="hl1">
+                    <%= t('.annulled.headers.precinct') %>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @annulled.each do |annull| %>
+                  <tr>
+                    <td>
+                      <%= link_to t('helpers.links.view'),
+                          view_protocol_path(election_id: @current_election.analysis_table_name,
+                                              district_id: annull.district_id,
+                                              precinct_id: annull.precinct_id),
+                          class: 'btn btn-default', title: t('.annulled.view_title'),
+                          target: :blank %>
+                    </td>
+                    <td>
+                      <%= annull.district_id %>
+                    </td>
+                    <td>
+                      <%= annull.precinct_id %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <div class="alert alert-success">
+              <%= t('.annulled.no_data') %>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="tab-pane fade in" id="download">
+          <div class="row-fluid">
+            <div class="span6">
+              <h3 class="underline"><%= t('.status.headers.data_entry') %></h3>
+              <% stats = @overall_stats.select{|x| x[:election_id] == @current_election.id}.first %>
+              <% if stats.present? %>
+                <div class="row-fluid">
+                  <div class="span6">
+                    <p>
+                      <strong><%= t('.status.overall_stats.districts')%>:</strong>
+                      <%= stats[:districts] %>
+                    </p>
+                    <p>
+                      <strong><%= t('.status.overall_stats.precincts')%>:</strong>
+                      <%= stats[:precincts] %>
+                    </p>
+                    <p>
+                      <strong><%= t('.status.overall_stats.protocols_found')%>:</strong>
+                      <%= stats[:protocols_found][:number] %>
+                      (<%= stats[:protocols_found][:percent] %>)
+                    </p>
+                  </div>
+                  <div class="span6">
+                    <p class="highlight-bad">
+                      <strong><%= t('.status.overall_stats.protocols_missing')%>:</strong>
+                      <%= stats[:protocols_missing][:number] %>
+                      (<%= stats[:protocols_missing][:percent] %>)
+                    </p>
+                    <p class="highlight-good">
+                      <strong><%= t('.status.overall_stats.protocols_validated')%>:</strong>
+                      <%= stats[:protocols_validated][:number] %>
+                      <% if stats[:protocols_validated][:number] != I18n.t('app.common.na') %>
+                        (<%= stats[:protocols_validated][:percent] %>)
+                      <% end %>
+                    </p>
+                    <p>
+                      <strong><%= t('.status.overall_stats.protocols_not_entered')%>:</strong>
+                      <%= stats[:protocols_not_entered][:number] %>
+                      <% if stats[:protocols_not_entered][:number] != I18n.t('app.common.na') %>
+                        (<%= stats[:protocols_not_entered][:percent] %>)
+                      <% end %>
+                    </p>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="span6">
+              <h3 class="underline"><%= t('.download.headers.download') %></h3>
+              <ul class="data-downloads">
+                <li>
+                  <%= link_to 'CSV', generate_spreadsheet_path(id: @current_election.analysis_table_name, :format => :csv), class: 'btn btn-success' %>
+
+                </li>
+                <li>
+                  <%= link_to 'XLS', generate_spreadsheet_path(id: @current_election.analysis_table_name, :format => :xls), class: 'btn btn-success' %>
+                </li>
+            </div>
           </div>
         </div>
-      <% end %>
+
+
+      </div>
+    </div>
+
 
   <% elsif @elections_coming_up.present? %>
 

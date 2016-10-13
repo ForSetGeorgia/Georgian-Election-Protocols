@@ -3,7 +3,8 @@ class DistrictPrecinct < ActiveRecord::Base
 
   #######################################
   ## ATTRIBUTES
-  attr_accessible :election_id, :district_id, :precinct_id, :has_protocol, :is_validated, :has_amendment, :amendment_count
+  attr_accessible :election_id, :district_id, :precinct_id,
+                  :has_protocol, :is_validated, :has_amendment, :amendment_count, :is_annulled
   attr_accessor :num_precincts, :num_protocols_found, :num_protocols_missing, :num_protocols_not_entered, :num_protocols_validated
 
   #######################################
@@ -32,6 +33,10 @@ class DistrictPrecinct < ActiveRecord::Base
     select('distinct district_id').by_election(election_id).count
   end
 
+  def self.has_been_annulled
+    where(is_annulled: true)
+  end
+
   #######################
   # flag descriptions
   #######################
@@ -42,6 +47,10 @@ class DistrictPrecinct < ActiveRecord::Base
   # is_validated
   # - 0 = default value
   # - 1 = set to true two crowd datum records have matched and the data has been moved to raw table
+
+  # is_annulled (protocol no longer valid)
+  # - 0 = default value
+  # - 1 = set to true when find amemendment that indicates the protocol is annulled
 
   #######################
 
@@ -143,7 +152,7 @@ class DistrictPrecinct < ActiveRecord::Base
   def self.overall_stats(election_ids)
     election_stats = []
 
-    election_ids = [election_ids] if election_ids.class.name == 'Fixnum'
+    election_ids = [election_ids] if election_ids.class.name != 'Array'
 
     # only continue if there are elections running
     if election_ids.present?
@@ -189,7 +198,7 @@ class DistrictPrecinct < ActiveRecord::Base
   def self.overall_stats_by_district(election_ids)
     election_stats = []
 
-    election_ids = [election_ids] if election_ids.class.name == 'Fixnum'
+    election_ids = [election_ids] if election_ids.class.name != 'Array'
 
     # only continue if there are elections running
     if election_ids.present?

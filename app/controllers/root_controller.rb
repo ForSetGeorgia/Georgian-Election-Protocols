@@ -5,6 +5,30 @@ class RootController < ApplicationController
   PROTOCOL_NUMBERS = (1..5).to_a
 
   def index
+
+    if @elections.present?
+      params[:election] = @elections.first.analysis_table_name if params[:election].nil?
+      @current_election = @elections.select{|x| x.analysis_table_name == params[:election]}.first
+
+      # get the events that are currently open for data entry
+      @overall_stats = DistrictPrecinct.overall_stats(@current_election.id)
+      @overall_stats_by_district = DistrictPrecinct.overall_stats_by_district(@current_election.id)
+      @overall_user_stats = CrowdDatum.overall_user_stats(@current_election.id)
+      @annulled = DistrictPrecinct.by_election(@current_election.id).has_been_annulled
+      @amendments = @current_election.raw_with_amendments
+      @district_summaries = @current_election.district_summary
+
+    # if there are no current elections, see if there are elections coming up
+    elsif @elections.nil? || @elections.empty?
+      @elections_coming_up = Election.coming_up.sorted
+    end
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
+
+  def index_old
     # get the events that are currently open for data entry
     @overall_stats = DistrictPrecinct.overall_stats(@election_ids)
     @overall_stats_by_district = DistrictPrecinct.overall_stats_by_district(@election_ids)
@@ -24,6 +48,22 @@ class RootController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
     end
+  end
+
+  def view_protocol
+    @election = Election.find_by_analysis_table_name(params[:election_id])
+    if @election.present?
+      dp = DistrictPrecinct.by_ids(@election.id, params[:district_id], params[:precinct_id]).first
+
+      if dp.present? && dp.has_protocol?
+        @crowd_datum = CrowdDatum.new(election_id: dp.election_id, district_id: dp.district_id, precinct_id: dp.precinct_id)
+      end
+    end
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+
   end
 
   def protocol
