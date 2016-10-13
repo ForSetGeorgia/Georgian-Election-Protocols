@@ -1,5 +1,5 @@
 class RootController < ApplicationController
-  before_filter :authenticate_user!, :except => [:index, :download, :generate_spreadsheet, :about]
+  before_filter :authenticate_user!, :except => [:index, :download, :generate_spreadsheet, :about, :view_protocol]
   require 'utf8_converter'
 
   PROTOCOL_NUMBERS = (1..5).to_a

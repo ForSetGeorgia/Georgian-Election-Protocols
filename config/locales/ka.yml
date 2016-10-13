@@ -73,10 +73,10 @@ ka:
       could_not_find_election: "არჩევნები არ მოიძებნა."
       no_protocols: ამ დროისთვის შესაყვანი ოქმები არ არის.
       no_current_elections: ამ დროისთვსი არ არის არჩევნები, რომლის მონაცემებიც შესაყვანია.
-      provide_all_params: გთხოვთ ყველა ველს მიუთითოთ მაჩვენებელი
+      provide_all_params: გთხოვთ ყველა ველს მიუთითოთ მაჩვენებელი.
       data_reset: ოქმების ბაზა განახლდა და საჭიროა მათი თავიდან შეყვანა.
-      could_not_rest: ბოდიში, ოქმების ბაზის განახლება შეუძლებელია
-      no_protocol: Sorry, the selected protocol could not be found.
+      could_not_rest: ბოდიში, ოქმების ბაზის განახლება შეუძლებელია.
+      no_protocol: ბოდიში, აღნიშნული ოქმი არ მოიძებნა.
     csv_header:
       region: რეგიონი
       district_id: ოლქის ID
@@ -124,7 +124,7 @@ ka:
       admin: ადმინისტრატო
       users: მომხმარებლების მართვა
       election_data: არჩევნების მონაცემების მიგრაცია
-      reset_bad_data: Delete Data for Protocol
+      reset_bad_data: ოქმის მონაცემების წაშლა
       sign_in: სისტემაში შესვლა
       training: ტრენინგი
       enter_data: მონაცემთა შეყვანა
@@ -298,8 +298,8 @@ ka:
 
           არ ნერვიულობენ! თქვენ შეგიძლიათ <a href="/ka/download">ჩამოტვირთოთ არჩევნების არსებული მონაცემები</a>.
     view_protocol:
-      title: 'Protocol for: %{election} - %{precinct}'
-      not_found: Sorry, the protocol you requested could not be found.
+      title: 'ოქმი: %{election} - %{precinct}'
+      not_found: ბოდიში, თქვენ მიერ მოთხოვნილი ოქმი ვერ მოიძებნა.
     training:
       title: ტრენინგ ცენტრი
       p1: თქვენ წარმატებით უნდა შეავსოთ ტრენინგის 5 ოქმი, სანამ ნამდვილი ოქმების მონაცემების შეყვანას დაიწყებთ. ამჟამად შევსებული გაქვთ %{count} ოქმი.
