@@ -304,7 +304,7 @@ class DistrictPrecinct < ActiveRecord::Base
           exists[:amended] = true
           exists[:amendment_count] += 1
         else
-          ids << {election_id: parts[-3], district_id: parts[-2], precinct_id: precinct_id, amended: amended, amendment_count: amendment_count}
+          ids << {election_id: election_id, district_id: district_id, precinct_id: precinct_id, amended: amended, amendment_count: amendment_count}
         end
 
       end

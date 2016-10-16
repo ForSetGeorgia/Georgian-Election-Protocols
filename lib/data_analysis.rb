@@ -1664,10 +1664,10 @@ module DataAnalysis
     if !delete_only
       sql = "CREATE TABLE `#{@@analysis_db}`.`#{self.analysis_table_name} - precinct count` (
           `region` VARCHAR(255) NULL DEFAULT NULL,
-          `district_id` INT(10) NOT NULL DEFAULT '0',"
+          `district_id` varchar(10) NOT NULL,"
 
       if self.is_local_majoritarian
-        sql << "`major_district_id` INT(10) NOT NULL DEFAULT '0',"
+        sql << "`major_district_id` INT(10) NOT NULL,"
       end
 
       sql << "`num_precincts` INT(11) NULL DEFAULT NULL,
