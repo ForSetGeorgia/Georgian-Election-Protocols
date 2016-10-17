@@ -259,6 +259,9 @@
                     <%= t('.district_summaries.headers.invalid5') %>
                   </th>
                   <th>
+                    <%= t('.district_summaries.headers.vpm') %>
+                  </th>
+                  <th>
                     <%= t('.district_summaries.headers.more_ballots_percent') %>
                   </th>
                   <th>
@@ -292,6 +295,9 @@
                     </td>
                     <td>
                       <%= number_with_delimiter(district_summary['num invalid ballots >5%']) %>
+                    </td>
+                    <td>
+                      <%= number_with_delimiter(district_summary['num precincts vpm > 2']) %>
                     </td>
                     <td>
                       <%= number_to_percentage(district_summary['percent precincts more ballots than votes']) %>

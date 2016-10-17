@@ -249,6 +249,7 @@ en:
           more_votes_avg: More Votes than Ballots (Average)
           amendments_percent: Precincts with Amendments (%)
           amendments_avg: Amendments (Average)
+          vpm: Number of Precincts with votes per minute > 2
       status:
         headers:
           data_entry: Election Status
