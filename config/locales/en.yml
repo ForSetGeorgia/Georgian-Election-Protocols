@@ -81,6 +81,7 @@ en:
       region: Region
       district_id: District ID
       district_name: District Name
+      major_district_id: Majoritarian District ID
       precinct_id: Precinct ID
       attached_precinct_id: Special Precincts
       num_possible_voters: Possible Voters
@@ -374,8 +375,8 @@ en:
         region: The name of the region. Before 2016, the election districts matched the geographic districts and so it was possible to know what region the district was in. However, in 2016, election districts were merged and split, so now the election districts do not follow the region boundaries and so it is not possible to assign a region name any more.
         district_id: The ID of the district. In the new naming scheme introduced in 2016 (i.e., 01.23.45), the first two numbers are the district ID (i.e., 01), also known as the majoritarian district ID.
         district_name: The name of the district. Before 2016, the election districts matched the geographic districts in the country and the names were used to identify these districts. However, in 2016, election districts were merged and split so now the district name is the same as the district ID.
+        major_district_id: The ID of the majoritarian district.
         precinct_id: The ID of the precinct. In the new naming scheme introduced in 2016 (i.e., 01.23.45), the last two set of numbers are the precinct ID (i.e., 23.45).
-        attached_precinct_id: ''
         num_possible_voters: 'The number of registered voters in the precinct. This number comes from item #1 in the protocol.'
         num_special_voters: 'The number of registered special voters in the precinct. This number comes from item #2 in the protocol.'
         num_at_12: 'The number of people that voted by 12:00 in the precinct. This number comes from item #3ა in the protocol.'

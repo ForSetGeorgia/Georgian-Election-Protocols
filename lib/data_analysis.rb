@@ -176,8 +176,47 @@ module DataAnalysis
 
   # get all of the data in the raw table and format for csv download
   def download_raw_data
-    sql = "select * from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw`
-            order by district_id, precinct_id"
+    sql = "select "
+    if self.has_regions?
+      sql << "`region`,"
+    end
+    sql << " `district_id`,"
+    if self.has_district_names?
+      sql << "`district_name`,"
+    end
+    if self.is_local_majoritarian?
+      sql << "`major_district_id`, "
+    end
+
+    sql << "`precinct_id`,
+      `num_possible_voters`,
+      `num_special_voters`,
+      `num_at_12`,
+      `num_at_17`,
+      `num_votes`,
+      `num_ballots`,
+      `num_invalid_votes`,
+      `num_valid_votes`,
+      `logic_check_fail`,
+      `logic_check_difference`,
+      `more_ballots_than_votes_flag`,
+      `more_ballots_than_votes`,
+      `more_votes_than_ballots_flag`,
+      `more_votes_than_ballots`,
+      `amendments_flag`,
+      `amendment_count`,
+      `is_annulled`, "
+
+    parties = Party.hash_for_analysis(self.id, true)
+    if parties.present?
+      party_sql = []
+      parties.each do |party|
+        party_sql << "`#{party[:id]} - #{party[:name]}`"
+      end
+    end
+    sql << party_sql.join(', ')
+    sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw`
+            order by district_id, precinct_id "
     results = @@client.exec_query(sql)
 
     if results.present?

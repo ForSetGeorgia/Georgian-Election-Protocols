@@ -537,25 +537,31 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>region</td>
-                <td><%= t('root.download.explanations.region') %></td>
-              </tr>
+              <% if @current_election.has_regions? %>
+                <tr>
+                  <td>region</td>
+                  <td><%= t('root.download.explanations.region') %></td>
+                </tr>
+                <% end %>
               <tr>
                 <td>district_id</td>
                 <td><%= t('root.download.explanations.district_id') %></td>
               </tr>
-              <tr>
-                <td>district_name</td>
-                <td><%= t('root.download.explanations.district_name') %></td>
-              </tr>
+              <% if @current_election.has_district_names? %>
+                <tr>
+                  <td>district_name</td>
+                  <td><%= t('root.download.explanations.district_name') %></td>
+                </tr>
+              <% end %>
+              <% if @current_election.is_local_majoritarian? %>
+                <tr>
+                  <td>major_district_id</td>
+                  <td><%= t('root.download.explanations.major_district_id') %></td>
+                </tr>
+              <% end %>
               <tr>
                 <td>precinct_id</td>
                 <td><%= t('root.download.explanations.precinct_id') %></td>
-              </tr>
-              <tr>
-                <td>attached_precinct_id</td>
-                <td><%= t('root.download.explanations.attached_precinct_id') %></td>
               </tr>
               <tr>
                 <td>num_possible_voters</td>
