@@ -52,10 +52,10 @@ $(document).ready(function(){
     }
   });
 
-  col_sort = new Array($('.overall_stats_by_district > thead > tr > th').length);
-  for(var i=0;i<$('.overall_stats_by_district > thead > tr > th').length;i++){
-    col_sort[i] = {"sType": "formatted-num" };
-  }
+  // col_sort = new Array($('.overall_stats_by_district > thead > tr > th').length);
+  // for(var i=0;i<$('.overall_stats_by_district > thead > tr > th').length;i++){
+  //   col_sort[i] = {"sType": "formatted-num" };
+  // }
 
   $('.overall_stats_by_district').dataTable({
     "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
@@ -63,7 +63,10 @@ $(document).ready(function(){
     "bJQueryUI": true,
     "bProcessing": true,
     "bAutoWidth": true,
-    "aoColumns": col_sort,
+    // "aoColumns": col_sort,
+    "aoColumnDefs": [
+      { "sType": "formatted-num", "aTargets": 'num-sort' }
+    ],
     "oLanguage": {
       "sUrl": gon.datatable_i18n_url
     }

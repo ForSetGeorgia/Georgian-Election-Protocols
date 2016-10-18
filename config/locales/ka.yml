@@ -240,7 +240,8 @@ ka:
       district_summaries:
         no_data: ამ დროისთვის მონაცემები არ არის დამატებული .
         headers:
-          district: ოლქი
+          district: ოლქის სახელი
+          district_id: ოლქი ID
           vote_num: ხმების საერთო რაოდენობა (#)
           vote_percent: ხმების საერთო რაოდენობა (%)
           invalid5: საარჩევნო უბნების რაოდენობა, რომლებშიც ბათილი ბიულეტინებია  > 5%
@@ -284,7 +285,7 @@ ka:
           protocols_validated: დამოწმებული ოქმები
       stay_tuned:
         header: თვალი ადევნეთ!
-        text: მიმდინარე არჩევნების ოქმების შეყვანას მალევე შევძლებთ.
+        text: "The '%{name}' will soon have protocols for us to enter. Please check back on %{date}."
       want_help:
         header: გინდა დაგვეხმარო?
         text: |

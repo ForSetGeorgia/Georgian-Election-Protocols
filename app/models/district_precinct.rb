@@ -225,7 +225,7 @@ class DistrictPrecinct < ActiveRecord::Base
             stats[:districts] << district_stats
 
             if regions.present?
-              region = regions.select{|x| x.district_id == district[:district_id]}.first
+              region = regions.select{|x| x.district_id.to_s == district[:district_id]}.first
               if region.present?
                 district_stats[:region] = region.region
                 district_stats[:district] = region.district_name

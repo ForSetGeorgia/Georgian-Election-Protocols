@@ -6,9 +6,9 @@ class RootController < ApplicationController
 
   def index
 
-    if @elections.present?
-      params[:election] = @elections.first.analysis_table_name if params[:election].nil?
-      @current_election = @elections.select{|x| x.analysis_table_name == params[:election]}.first
+    if @all_elections.present?
+      params[:election] = @all_elections.first.analysis_table_name if params[:election].nil?
+      @current_election = @all_elections.select{|x| x.analysis_table_name == params[:election]}.first
 
       # get the events that are currently open for data entry
       @overall_stats = DistrictPrecinct.overall_stats(@current_election.id)
@@ -17,10 +17,6 @@ class RootController < ApplicationController
       @annulled = DistrictPrecinct.by_election(@current_election.id).has_been_annulled
       @amendments = @current_election.raw_with_amendments
       @district_summaries = @current_election.district_summary
-
-    # if there are no current elections, see if there are elections coming up
-    elsif @elections.nil? || @elections.empty?
-      @elections_coming_up = Election.coming_up.sorted
     end
 
     respond_to do |format|
@@ -174,7 +170,6 @@ class RootController < ApplicationController
   end
 
   def download
-    @all_elections = Election.with_data.sorted
     @overall_stats = DistrictPrecinct.overall_stats(@all_elections.map{|x| x.id})
 
     respond_to do |format|
@@ -184,7 +179,7 @@ class RootController < ApplicationController
 
   def generate_spreadsheet
 
-    election = Election.with_data.by_analysis_table_name(params[:id])
+    election = Election.by_analysis_table_name(params[:id])
 
     if election.nil?
       redirect_to download_path, alert: I18n.t('app.msgs.could_not_find_election')

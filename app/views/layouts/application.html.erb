@@ -127,9 +127,11 @@
                   </ul>
                 </li>
 			        <% else %>
-                <li>
-                  <%= link_to t('app.common.help_us'), @bitly_url, target: :blank, class: 'help-us' %>
-                </li>
+                <% if @elections.present? %>
+                  <li>
+                    <%= link_to t('app.common.help_us'), @bitly_url, target: :blank, class: 'help-us' %>
+                  </li>
+                <% end %>
                 <li>
                  <%= link_to t('.sign_in'), new_user_session_path %>
                 </li>

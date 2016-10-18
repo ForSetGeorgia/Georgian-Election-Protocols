@@ -334,6 +334,13 @@ header.delete_at(18)
     return results.present? ? results.to_a : nil
   end
 
+  # indicate if there is data in the raw table
+  def has_analysis_data?
+    sql = "select count(*) as c from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw`"
+    results = @@client.exec_query(sql)
+    return results.present? && results.first['c'] > 0
+  end
+
   ###################################################
   ###################################################
   ###################################################

@@ -63,6 +63,9 @@ logger.debug "////////////////////////// BROWSER NOT SUPPORTED"
     @elections = Election.can_enter
     @election_ids = @elections.map{|x| x.id}
 
+    # get a list of all elections
+    @all_elections = Election.sorted
+
 	  # the user stats are updated after a protocol is saved so do not need to call twice
 	  if user_signed_in? && !(params[:contorller] == "root" && params[:action] == "protocol")
   		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id, @election_ids)

@@ -240,7 +240,8 @@ en:
       district_summaries:
         no_data: No data has been submitted yet.
         headers:
-          district: District
+          district: District Name
+          district_id: District ID
           vote_num: Total Voter Turnout (#)
           vote_percent: Total Voter Turnout (%)
           invalid5: Number of Precincts with Invalid Ballots > 5%
@@ -284,7 +285,7 @@ en:
           protocols_validated: Protocols Validated
       stay_tuned:
         header: Stay Tuned!
-        text: The following elections will soon have protocols for us to enter.
+        text: "The '%{name}' will soon have protocols for us to enter. Please check back on %{date}."
       want_help:
         header: Want to Help Us?
         text: |

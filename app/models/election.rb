@@ -92,6 +92,10 @@ class Election < ActiveRecord::Base
     self.election_at.present? ? self.election_at.year : nil
   end
 
+  def is_coming_up?
+    self.election_at >= (Time.now-1.day).to_date
+  end
+
   # create the analysis tables and views for this election
   def create_analysis_items
     if self.analysis_table_name.empty?
