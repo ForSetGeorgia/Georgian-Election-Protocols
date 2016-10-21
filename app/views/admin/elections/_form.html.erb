@@ -17,6 +17,11 @@
       <% end %>
     <% end %>
 
+    <% if @election.id.nil? %>
+      <%= f.input :tmp_analysis_table_name, as: :string, :input_html => {:size =>40, maxlength: 32} %>
+      <hr />
+    <% end %>
+
     <div class="row-fluid">
       <div class="span4">
         <%= f.input :election_at, as: :string, :input_html => {:size =>10} %>

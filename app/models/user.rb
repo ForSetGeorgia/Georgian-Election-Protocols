@@ -10,6 +10,11 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role
 
+  # use role inheritence
+  # - a role with a larger number can do everything that smaller numbers can do
+  ROLES = {:user => 0, :moderator => 50, :admin => 99}
+
+
   validates :role, :presence => true
 
   #######################################
@@ -21,6 +26,10 @@ class User < ActiveRecord::Base
   ## SCOPES
   def self.in_election(election_ids)
     joins(:election_users).where(election_users: {election_id: election_ids})
+  end
+
+  def self.with_role(role)
+    where(['role >= ?', role])
   end
 
   #######################################
@@ -44,9 +53,6 @@ class User < ActiveRecord::Base
 		self.role = ROLES[:user] if self.role.nil?
 	end
 
-  # use role inheritence
-  # - a role with a larger number can do everything that smaller numbers can do
-  ROLES = {:user => 0, :admin => 99}
   def role?(base_role)
     if base_role && ROLES.values.index(base_role)
       return base_role <= self.role

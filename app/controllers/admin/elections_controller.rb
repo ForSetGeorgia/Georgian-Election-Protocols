@@ -55,6 +55,10 @@ class Admin::ElectionsController < ApplicationController
   # POST /admin/elections
   # POST /admin/elections.json
   def create
+    params[:election][:party_file] = nil if params[:election][:party_file] = ''
+    params[:election][:district_precinct_file] = nil if params[:election][:district_precinct_file] = ''
+    params[:election][:party_district_file] = nil if params[:election][:party_district_file] = ''
+
     @election = Election.new(params[:election])
 
     respond_to do |format|
@@ -77,7 +81,9 @@ class Admin::ElectionsController < ApplicationController
   def update
     @election = Election.find(params[:id])
 
-    # @election.assign_attributes(params[:election])
+    params[:election][:party_file] = nil if params[:election][:party_file] = ''
+    params[:election][:district_precinct_file] = nil if params[:election][:district_precinct_file] = ''
+    params[:election][:party_district_file] = nil if params[:election][:party_district_file] = ''
 
     respond_to do |format|
       if @election.update_attributes(params[:election])

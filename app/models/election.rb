@@ -42,15 +42,17 @@ class Election < ActiveRecord::Base
                   :has_regions, :has_district_names, :election_app_event_id, :election_at, :election_translations_attributes,
                   :max_party_in_district, :protocol_top_box_margin, :protocol_party_top_margin, :district_precinct_separator,
                   :scraper_url_base, :scraper_url_folder_to_images, :scraper_page_pattern, :has_custom_shape_levels,
-                  :party_file, :party_file_file_name, :party_file_content_type, :party_file_file_size, :party_file_updated_at,
-                  :district_precinct_file, :district_precinct_file_content_type, :district_precinct_file_file_size, :district_precinct_file_updated_at,
-                  :party_district_file, :party_district_file_content_type, :party_district_file_file_size, :party_district_file_updated_at
-  attr_accessor :reset_max_party_num
+                  :party_file, #:party_file_file_name, :party_file_content_type, :party_file_file_size, :party_file_updated_at,
+                  :district_precinct_file, #:district_precinct_file_content_type, :district_precinct_file_file_size, :district_precinct_file_updated_at,
+                  :party_district_file, #:party_district_file_content_type, :party_district_file_file_size, :party_district_file_updated_at,
+                  :tmp_analysis_table_name
+  attr_accessor :reset_max_party_num, :tmp_analysis_table_name
 
   #######################################
   ## VALIDATIONS
   validates :election_at, :presence => true
   validates :election_app_event_id, :presence => true, if: 'can_enter_data == true'
+  validates :tmp_analysis_table_name, length: { maximum: 32 }
   validates_attachment_content_type :party_file, :content_type => 'text/csv'
   validates_attachment_content_type :district_precinct_file, :content_type => 'text/csv'
   validates_attachment_content_type :party_district_file, :content_type => 'text/csv'
@@ -64,6 +66,12 @@ class Election < ActiveRecord::Base
   after_destroy :delete_analysis_items
   after_commit :reset_max_party_in_district
   before_save :check_if_can_enter_data
+  after_create :add_moderators
+
+  # when an election is created, automatically add moderators/admins
+  def add_moderators
+    self.users << User.with_role(User::ROLES[:moderator])
+  end
 
   # check if the election is setup properly so can enter data
   # the following must exist to enter data
@@ -131,9 +139,12 @@ class Election < ActiveRecord::Base
     return true
   end
 
+  # there is a limit on table name characters
+  # - have to limit the total length to 32 characters in order for the analysis view to be generated properly
   def set_analysis_name
-    en_name = self.election_translations.select{|x| x.locale == 'en'}.first
-    self.analysis_table_name = en_name.nil? ? nil : en_name.name.downcase.gsub(' ', '_').gsub('-', '').gsub('__', '_')
+    if self.tmp_analysis_table_name.present? && self.analysis_table_name.nil?
+      self.analysis_table_name = self.tmp_analysis_table_name.downcase.gsub(' ', '_').gsub('-', '').gsub('__', '_')
+    end
     return true
   end
 
@@ -154,7 +165,7 @@ class Election < ActiveRecord::Base
       puts "- changed!"
 
       parties = self.parties.with_translations(I18n.locale)
-      puts "- there are #{parties.length} parties"
+      puts "- there were #{parties.length} parties in db"
 
       puts '- only add new parties'
       csv_data = CSV.read(self.party_file.path)
@@ -170,6 +181,7 @@ class Election < ActiveRecord::Base
           end
         end
       end
+      puts "  - added #{self.parties.length} parties"
 
       puts "- now see if we have parties that are no longer needed"
       ids_to_delete = []
@@ -202,7 +214,7 @@ class Election < ActiveRecord::Base
 
       puts '- getting existing districts/precincts'
       dps = self.district_precincts
-      puts "- there are #{dps.length} existing district precincts"
+      puts "- there were #{dps.length} district precincts in db"
 
       puts '- load precincts/districts'
       csv_data = CSV.read(self.district_precinct_file.path)
@@ -211,7 +223,7 @@ class Election < ActiveRecord::Base
         if i > 0
           # if the district/precint does not exist, add it
           if dps.select{|x| x.district_id == row[0] && x.precinct_id == row[1]}.empty?
-            sql_values << "(#{election.id}, '#{row[0]}', '#{row[1]}', '#{now}')"
+            sql_values << "(#{self.id}, '#{row[0]}', '#{row[1]}', '#{now}')"
           end
         end
       end
@@ -259,7 +271,7 @@ class Election < ActiveRecord::Base
       now = Time.now
 
       dps = self.district_parties
-      puts "- there are #{dps.length} existing district parties"
+      puts "- there were #{dps.length} district parties in db"
 
       puts '- only add new parties'
       csv_data = CSV.read(self.party_district_file.path)

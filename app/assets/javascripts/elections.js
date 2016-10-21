@@ -24,4 +24,17 @@ $(document).ready(function(){
     }
   }
 
+
+  // if this is a new form, copy the english name into this field
+  if($('form.election input#election_tmp_analysis_table_name').length > 0){
+
+    $('#election_election_translations_attributes_0_name').on('change', function(){
+      $('#election_tmp_analysis_table_name').val($(this).val().substring(0,31));
+    });
+
+    // in case there is a value in the name when the form loads
+    $('#election_tmp_analysis_table_name').val($('#election_election_translations_attributes_0_name').val().substring(0,31));
+  }
+
+
 });
