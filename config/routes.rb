@@ -9,6 +9,7 @@ BootstrapStarter::Application.routes.draw do
 		devise_for :users, :path_names => {:sign_in => 'login', :sign_out => 'logout'}
 
 		namespace :admin do
+      resources :elections
 			resources :users
   		match '/election_data', :to => 'election_data#index', :as => :election_data, :via => :get
   		match '/election_data/create_migration/:id', :to => 'election_data#create_migration', :as => :election_data_create_migration, :via => :get, :defaults => {:format => 'json'}

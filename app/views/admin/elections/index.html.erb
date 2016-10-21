@@ -1,0 +1,75 @@
+<%- model_class = Election -%>
+<%- model_class_t = ElectionTranslation -%>
+<% title t '.title', :default => model_class.model_name.human.pluralize %>
+
+<div class="form-actions">
+<%= link_to t('helpers.links.new'),
+            new_admin_election_path,
+            :class => 'btn btn-primary' %>
+<%= link_to t('helpers.links.admin'), admin_path,
+:class => 'btn' %>
+
+</div>
+
+
+<table class="table table-striped display" id="elections-datatable">
+  <thead>
+    <tr>
+      <th><%= model_class_t.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:election_at) %></th>
+      <th><%= model_class.human_attribute_name(:status) %></th>
+      <th><%= model_class.human_attribute_name(:can_enter_data) %></th>
+      <th><%= model_class.human_attribute_name(:scraper_url) %></th>
+      <th><%= model_class.human_attribute_name(:election_app_event_id) %></th>
+      <th><%= model_class.human_attribute_name(:has_parties) %></th>
+      <th><%= model_class.human_attribute_name(:has_districts) %></th>
+      <th><%= model_class.human_attribute_name(:has_party_districts) %></th>
+
+      <th><%= t('app.common.actions') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @elections.each do |election| %>
+      <tr>
+        <td>
+          <%= election.name %>
+        </td>
+        <td>
+          <%= l election.election_at %>
+        </td>
+        <td>
+          <%= format_election_status(election.status) %>
+        </td>
+        <td>
+          <%= format_boolean_flag(election.can_enter_data) %>
+        </td>
+        <td>
+          <%= "#{election.scraper_url_base}#{election.scraper_url_folder_to_images}#{election.scraper_page_pattern}" %>
+        </td>
+        <td>
+          <%= election.election_app_event_id %>
+        </td>
+        <td>
+          <%= format_boolean_flag(election.has_parties?) %>
+        </td>
+        <td>
+          <%= format_boolean_flag(election.has_district_precincts?) %>
+        </td>
+        <td>
+          <%= format_boolean_flag(election.has_party_districts?) if !election.has_party_districts?.nil? %>
+        </td>
+
+        <td>
+          <%= link_to(I18n.t("helpers.links.edit"), edit_admin_election_path(election, :locale => I18n.locale), :class => 'btn btn-mini') %>
+          <%= link_to(I18n.t("helpers.links.destroy"),
+                      admin_election_path(election, :locale => I18n.locale),
+                      :method => :delete,
+                      :data => { :confirm => I18n.t("helpers.links.confirm") },
+                      :class => 'btn btn-mini btn-danger') %>
+          <br /><br />
+          <%= I18n.t('app.common.added_on', :date => I18n.l(election.created_at, :format => :short)) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

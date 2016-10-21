@@ -325,11 +325,27 @@ module DataAnalysis
     return results.present? ? results.to_a : nil
   end
 
+  ###################################################
+
   # indicate if there is data in the raw table
   def has_analysis_data?
     sql = "select count(*) as c from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw`"
     results = @@client.exec_query(sql)
     return results.present? && results.first['c'] > 0
+  end
+
+  ###################################################
+
+  # delete raw data for the provided district/precincts
+  # - ids is in format of [ [district_id, precinct_id] ]
+  def delete_raw_data(ids)
+    if ids.present?
+      sql = "delete from `#{@@analysis_db}`.`#{self.analysis_table_name} - raw` where district_id = '[district_id]' and precinct_id = '[precinct_id]'"
+
+      ids.each do |id|
+        @@client.execute(sql.gsub('[district_id]', id[0]).gsub('[precinct_id]', id[1]))
+      end
+    end
   end
 
   ###################################################

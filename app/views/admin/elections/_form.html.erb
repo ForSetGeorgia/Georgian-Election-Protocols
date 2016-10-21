@@ -1,0 +1,151 @@
+<%- model_class = Election -%>
+<%= semantic_form_for([:admin,@election], :multipart => true) do |f| %>
+  <%= f.error_messages %>
+
+  <%= f.inputs do %>
+
+    <% @election.election_translations.sort{|x,y| x.locale <=> y.locale}.each do |trans| %>
+      <%= f.fields_for :election_translations, trans do |translation| %>
+
+        <div id="form-<%= trans.locale %>" class="multilanguage">
+          <h3><%= t("app.language.#{trans.locale}") %></h3>
+
+          <%= translation.input :name %>
+          <%= translation.hidden_field :locale , :value => trans.locale %>
+        </div>
+
+      <% end %>
+    <% end %>
+
+    <div class="row-fluid">
+      <div class="span4">
+        <%= f.input :election_at, as: :string, :input_html => {:size =>10} %>
+      </div>
+      <div class="span4">
+        <%= f.input :election_app_event_id, as: :string, :input_html => {:size =>10} %>
+      </div>
+      <div class="span4">
+        <%= f.input :can_enter_data, :as => :radio %>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row-fluid">
+      <div class="span4">
+        <%= f.input :scraper_url_base, as: :string, :input_html => {:size =>25} %>
+      </div>
+      <div class="span4">
+        <%= f.input :scraper_url_folder_to_images, as: :string, :input_html => {:size =>25} %>
+      </div>
+      <div class="span4">
+        <%= f.input :scraper_page_pattern, as: :string, :input_html => {:size =>25} %>
+      </div>
+    </div>
+
+    <div class="row-fluid">
+      <div class="span4">
+        <%= f.input :district_precinct_separator, as: :string, :input_html => {:size =>2} %>
+      </div>
+      <div class="span4">
+        <%= f.input :protocol_top_box_margin, as: :string, :input_html => {:size =>10} %>
+      </div>
+      <div class="span4">
+        <%= f.input :protocol_party_top_margin, as: :string, :input_html => {:size =>10} %>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row-fluid">
+      <div class="span4">
+        <%= f.input :parties_same_for_all_districts, :as => :radio %>
+      </div>
+      <div class="span4">
+        <%= f.input :has_regions, :as => :radio %>
+      </div>
+      <div class="span4">
+        <%= f.input :has_district_names, :as => :radio %>
+      </div>
+    </div>
+
+    <div class="row-fluid">
+      <div class="span4">
+        <%= f.input :has_custom_shape_levels, :as => :radio %>
+      </div>
+      <div class="span4">
+        <%= f.input :has_indepenedent_parties, :as => :radio %>
+      </div>
+      <div class="span4">
+        <%= f.input :is_local_majoritarian, :as => :radio %>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row-fluid">
+      <div class="span4">
+        <% error = @election.errors.messages[:party_file].present? ? 'error' : '' %>
+        <div class="file control-group <%= error %> optional" id="election_party_file_input">
+          <label class=" control-label" for="election_party_file"><%= model_class.human_attribute_name(:party_file) %></label>
+          <p><%= t('.party_file_explanation') %></p>
+          <p class="alert alert-warning"><%= t('.party_file_warning') %></p>
+          <% if @election.party_file.exists? %>
+            <div><%= link_to t('helpers.links.download_file'), @election.party_file.url, class: 'btn btn-small' %></div>
+          <% end %>
+          <div class="controls">
+            <input id="election_party_file" name="election[party_file]" type="file">
+            <% if @election.errors.messages[:party_file].present? %>
+              <%= image_tag "/assets/exclamation.png", class: 'error-icon', alt: "error",
+                  :'data-message' => @election.errors.messages[:party_file] %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="span4">
+        <% error = @election.errors.messages[:district_precinct_file].present? ? 'error' : '' %>
+        <div class="file control-group <%= error %> optional" id="election_district_precinct_file_input">
+          <label class=" control-label" for="election_district_precinct_file"><%= model_class.human_attribute_name(:district_precinct_file) %></label>
+          <p><%= t('.district_precinct_file_explanation') %></p>
+          <p class="alert alert-warning"><%= t('.district_precinct_file_warning') %></p>
+          <% if @election.district_precinct_file.exists? %>
+            <div><%= link_to t('helpers.links.download_file'), @election.district_precinct_file.url, class: 'btn btn-small' %></div>
+          <% end %>
+          <div class="controls">
+            <input id="election_district_precinct_file" name="election[district_precinct_file]" type="file">
+            <% if @election.errors.messages[:district_precinct_file].present? %>
+              <%= image_tag "/assets/exclamation.png", class: 'error-icon', alt: "error",
+                  :'data-message' => @election.errors.messages[:district_precinct_file] %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="span4">
+        <% style = @election.parties_same_for_all_districts? ? 'display: none;' : '' %>
+        <% error = @election.errors.messages[:party_district_file].present? ? 'error' : '' %>
+        <div class="file control-group <%= error %> optional" id="election_party_district_file_input" style="<%= style %>">
+          <label class=" control-label" for="election_party_district_file"><%= model_class.human_attribute_name(:party_district_file) %></label>
+          <p><%= t('.party_district_file_explanation') %></p>
+          <% if @election.party_district_file.exists? %>
+            <div><%= link_to t('helpers.links.download_file'), @election.party_district_file.url, class: 'btn btn-small' %></div>
+          <% end %>
+          <div class="controls">
+            <input id="election_party_district_file" name="election[party_district_file]" type="file">
+            <% if @election.errors.messages[:party_district_file].present? %>
+              <%= image_tag "/assets/exclamation.png", class: 'error-icon', alt: "error",
+                  :'data-message' => @election.errors.messages[:party_district_file] %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <% end %>
+
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= f.submit nil, :class => 'btn btn-warning', :type => :reset, :value => t('helpers.links.reset'), :name => :reset %>
+    <%= link_to t('helpers.links.cancel'), admin_elections_path, :class => 'btn btn-mini btn-warning' %>
+  </div>
+<% end %>

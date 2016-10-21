@@ -51,7 +51,7 @@ class Party < ActiveRecord::Base
   #######################################
   ## METHODS
   def self.hash_for_analysis(election_id, include_independents=false)
-    x = by_election(election_id)
+    x = by_election(election_id).with_translations(I18n.locale)
     if !include_independents
       x = x.no_independents
     end

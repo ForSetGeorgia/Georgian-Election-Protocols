@@ -7,11 +7,17 @@
  *= require formtastic-bootstrap
  *= require jquery-ui/core
  *= require jquery-ui/theme
+ *= require jquery-ui/datepicker
  *= require dataTables/jquery.dataTables.bootstrap
  *= require_tree .
  *= require vendor
  *= require_self
 */
+
+@color-green: #6df252;
+@color-yellow: #bdf352;
+@color-red: #d95d6a;
+
 
 /* clear floats */
 .clearfix:after, .clear:after {
@@ -227,3 +233,47 @@ footer .row-fluid .js-logo {
   line-height: 20px;
   margin-bottom: 20px;
 }
+
+
+/* style boolean flags status */
+.boolean-flag{
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 5px;
+  &.true{
+    background-color: @color-green;
+    color: #000;
+  }
+  &.false{
+    background-color: @color-red;
+    color: #fff;
+  }
+  &.small-status{
+    font-size: 12px;
+    padding: 2px 4px;
+  }
+}
+
+/* style election status */
+.election-status{
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 5px;
+  &.green{
+    background-color: @color-green;
+    color: #000;
+  }
+  &.yellow{
+    background-color: @color-yellow;
+    color: #000;
+  }
+  &.red{
+    background-color: @color-red;
+    color: #fff;
+  }
+  &.small-status{
+    font-size: 12px;
+    padding: 2px 4px;
+  }
+}
+

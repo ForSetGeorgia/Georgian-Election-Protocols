@@ -4,6 +4,7 @@ ka:
     models:
       user: მომხმარებელი
       president2013: President 2013
+      election: Election
     attributes:
       user:
         email: ელ.ფოსტა
@@ -11,11 +12,60 @@ ka:
         password_confirmation: გაიმეორეთ პაროლი
         role: როლი
         remember_me: დამიმახსოვრე
+      election:
+        election_app_event_id: Election Portal Event ID
+        election_at: Election Date
+        can_enter_data: Can Enter Data?
+        parties_same_for_all_districts: Same Parties For All Districts?
+        is_local_majoritarian: Is Local Majoritarian Election?
+        has_indepenedent_parties: Has Independent Parties?
+        has_regions: Has Regions?
+        has_district_names: Has District Names?
+        has_custom_shape_levels: Has Custom Shape Levels (Tbilisi)?
+        max_party_in_district: Max Parties in District
+        protocol_top_box_margin: Protocol Top Box Margin Top
+        protocol_party_top_margin: Protocol Party Box Margin Top
+        district_precinct_separator: Character Between District / Precinct ('.', '-')
+        scraper_url: Scraper URL
+        scraper_url_base: Domain for CEC Results Site
+        scraper_url_folder_to_images: Folder to Election in CEC Results Site
+        scraper_page_pattern: Page Pattern for CEC Results Page
+        party_file: Party CSV
+        district_precinct_file: District/Precinct CSV
+        party_district_file: District/Party CSV
+        status: Status
+        status_types:
+          ongoing: On Going
+          coming_up: Coming Soon
+          completed: Completed
+        has_parties: Has Parties?
+        has_districts: Has Districts/Precincts?
+        has_party_districts: Has Parties per District?
+      election_translation:
+        name: Election Name
     errors:
       messages:
         required_field: "სავალდებულოა"
         already_exists: 'უკვე არსებობს მონაცემთა ბაზაში'
         required_party_votes: "სულ მცირე ერთ კანდიდატს/პარტიას უნდა ჰქონდეს ხმა."
+  formtastic:
+    hints:
+      election:
+        election_app_event_id: ID of the event in the Election Portal app that is need for data migation to work
+        parties_same_for_all_districts: Are the parties the same for every district or do they vary (i.e., majoritarian). This is needed to determine which parties to show in the protocol form.
+        is_local_majoritarian: For analysis - Local Majoritarian has an extra level of majoritarian districts
+        has_regions: For analysis - do regions need to be included in the analysis
+        has_district_names: For analysis - do district names need to be included in the analysis
+        has_custom_shape_levels: For analysis - is Tbilisi, or other shapes, merged into custom shapes
+        max_party_in_district: This determines how many party fields need to be shown in the protocol form. This is filled in when loading the districts/precincts.
+        protocol_top_box_margin: Protocol form margin top for the top section to align the fields properly
+        protocol_party_top_margin: Protocol form margin top for the party section to align the fields properly
+        has_indepenedent_parties: For analysis - are there independent parties that are different for each district and need to be merged into one general independent part
+        scraper_url_base: 'example: results.cec.gov.ge'
+        scraper_url_folder_to_images: 'example: /oqm/7/'
+        scraper_page_pattern: 'example: oqmi_{id}.html'
+        district_precinct_separator: 'example: xx.yy.zz or xx-yy'
+        can_enter_data: When Yes, users will be able to enter data. When No, the data will still be available on the site, but no one can enter data.
   mailer:
     notification:
       can_migrate:
@@ -34,6 +84,7 @@ ka:
       cancel: გაუქმება
       reset: საწყის კონფიგურაციაზე დაბრუნება
       view: ნახვა
+      download_file: Download Existing File
     titles:
       new: "ახალი %{model}"
       edit: "შეცვლა %{model}"
@@ -69,6 +120,7 @@ ka:
       not_authorized: თქვენ არ გაქვთ უფლება იხილოთ ეს გვერდი.
       success_created: "%{obj} შექმნილია."
       success_updated: "%{obj} განახლებულია."
+      success_destroyed: "%{obj} წარმატებით გაუქმდა."
       no_success_updated: "%{obj} არ განახლდა წარმატებით."
       could_not_find_election: "არჩევნები არ მოიძებნა."
       no_protocols: ამ დროისთვის შესაყვანი ოქმები არ არის.
@@ -77,6 +129,7 @@ ka:
       data_reset: ოქმების ბაზა განახლდა და საჭიროა მათი თავიდან შეყვანა.
       could_not_rest: ბოდიში, ოქმების ბაზის განახლება შეუძლებელია.
       no_protocol: ბოდიში, აღნიშნული ოქმი არ მოიძებნა.
+      required_for_can_enter_data: 'must be provided before setting Can Enter Data to Yes'
     csv_header:
       region: რეგიონი
       district_id: ოლქის ID
@@ -126,6 +179,7 @@ ka:
       users: მომხმარებლების მართვა
       election_data: არჩევნების მონაცემების მიგრაცია
       reset_bad_data: ოქმის მონაცემების წაშლა
+      elections: Manage Elections
       sign_in: სისტემაში შესვლა
       training: ტრენინგი
       enter_data: მონაცემთა შეყვანა
@@ -164,6 +218,13 @@ ka:
         title: ახალი მომხმარებელი
       show:
         title: მომხმარებლის დეტალები
+    elections:
+      form:
+        party_file_explanation: "The Pary CSV should have three columns: Party Number, Party Name, Is Independent. The party name must match the name of the party in the Election Data Portal. For the last column, you can leave it blank if the party is not independent, otherwise please enter true."
+        party_file_warning: "WARNING - Loading a new file will cause the analysis tables and views to be reloaded and all existing data will be deleted."
+        district_precinct_file_explanation: 'The District/Precinct CSV should have two columns: District, Precinct. For the new xx.yy.zz format, xx is the district and yy.zz is the precinct.'
+        district_precinct_file_warning: "WARNING - Loading a new file that removes precincts will cause the data for those precincts to be deleted."
+        party_district_file_explanation: 'The District/PartyCSV should have two columns: District, Party Number. This file is used to determine which parties to show in the protocol form.'
     election_data:
       index:
         title: მონაცემები გაგზავნილია არჩევნების მონაცემთა აპლიკაციაში

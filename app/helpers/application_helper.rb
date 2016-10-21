@@ -49,6 +49,32 @@ module ApplicationHelper
     end
   end
 
+  # format boolean answers
+  def format_boolean_flag(flag, small=false)
+    css_small = small == true ? 'small-status' : ''
+    return "<div class='boolean-flag #{flag} #{css_small}'>#{flag == true ? t('formtastic.yes') : t('formtastic.no')}</div>".html_safe
+  end
+
+  # format election status
+  # - on going = green
+  # - coming up = yellow
+  # - completed = red
+  def format_election_status(status, small=false)
+    css_small = small == true ? 'small-status' : ''
+    key = 'activerecord.attributes.election.status_types'
+    flag = case status
+    when I18n.t("#{key}.ongoing")
+      'green'
+    when I18n.t("#{key}.coming_up")
+      'yellow'
+    when I18n.t("#{key}.completed")
+      'red'
+    end
+    return "<div class='election-status #{flag} #{css_small}'>#{status}</div>".html_safe
+  end
+
+
+
 
 	# Based on https://gist.github.com/1182136
   class BootstrapLinkRenderer < ::WillPaginate::ActionView::LinkRenderer

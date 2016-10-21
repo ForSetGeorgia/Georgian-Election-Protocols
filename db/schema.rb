@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161019083848) do
+ActiveRecord::Schema.define(:version => 20161020102609) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -226,23 +226,35 @@ ActiveRecord::Schema.define(:version => 20161019083848) do
   create_table "elections", :force => true do |t|
     t.date     "election_at"
     t.integer  "election_app_event_id"
-    t.boolean  "can_enter_data",                               :default => false
-    t.boolean  "parties_same_for_all_districts",               :default => true
-    t.boolean  "is_local_majoritarian",                        :default => false
-    t.boolean  "has_regions",                                  :default => false
-    t.boolean  "has_district_names",                           :default => false
+    t.boolean  "can_enter_data",                                    :default => false
+    t.boolean  "parties_same_for_all_districts",                    :default => true
+    t.boolean  "is_local_majoritarian",                             :default => false
+    t.boolean  "has_regions",                                       :default => false
+    t.boolean  "has_district_names",                                :default => false
     t.string   "analysis_table_name"
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
-    t.integer  "max_party_in_district",                        :default => 0
-    t.string   "protocol_top_box_margin",        :limit => 10, :default => "0"
-    t.string   "protocol_party_top_margin",      :limit => 10, :default => "0"
+    t.datetime "created_at",                                                           :null => false
+    t.datetime "updated_at",                                                           :null => false
+    t.integer  "max_party_in_district",                             :default => 0
+    t.string   "protocol_top_box_margin",             :limit => 10, :default => "0"
+    t.string   "protocol_party_top_margin",           :limit => 10, :default => "0"
     t.string   "scraper_url_base"
     t.string   "scraper_url_folder_to_images"
     t.string   "scraper_page_pattern"
-    t.boolean  "has_indepenedent_parties",                     :default => false
-    t.string   "district_precinct_separator",    :limit => 5,  :default => "-"
-    t.boolean  "has_custom_shape_levels",                      :default => true
+    t.boolean  "has_indepenedent_parties",                          :default => false
+    t.string   "district_precinct_separator",         :limit => 5,  :default => "-"
+    t.boolean  "has_custom_shape_levels",                           :default => true
+    t.string   "party_file_file_name"
+    t.string   "party_file_content_type"
+    t.integer  "party_file_file_size"
+    t.datetime "party_file_updated_at"
+    t.string   "district_precinct_file_file_name"
+    t.string   "district_precinct_file_content_type"
+    t.integer  "district_precinct_file_file_size"
+    t.datetime "district_precinct_file_updated_at"
+    t.string   "party_district_file_file_name"
+    t.string   "party_district_file_content_type"
+    t.integer  "party_district_file_file_size"
+    t.datetime "party_district_file_updated_at"
   end
 
   add_index "elections", ["can_enter_data"], :name => "index_elections_on_can_enter_data"
