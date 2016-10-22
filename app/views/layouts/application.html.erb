@@ -53,9 +53,11 @@
           <%= link_to(t('app.common.app_name'), root_path(:locale => I18n.locale),:class=>"brand font")%>
           <div class="container-fluid nav-collapse">
             <ul class="nav">
-  	          <% if user_signed_in? && @elections.present? %>
+  	          <% if user_signed_in? %>
                 <% if current_user.completed_training? %>
-                  <li><%= link_to t('.enter_data'), protocol_path, class: 'enter-data' %></li>
+                  <% if @elections.present? %>
+                    <li><%= link_to t('.enter_data'), protocol_path, class: 'enter-data' %></li>
+                  <% end %>
                 <% else %>
                   <li><%= link_to t('.training'), training_path, class: 'training' %></li>
                 <% end %>
