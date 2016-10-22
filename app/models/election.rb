@@ -88,17 +88,17 @@ class Election < ActiveRecord::Base
     is_valid = true
     if self.can_enter_data_changed? && self.can_enter_data?
       puts "- changed!"
-      if !self.party_file.exists?
+      if !self.has_parties?
         puts '- party file does not exist!'
         is_valid = false
         errors.add(:party_file, I18n.t('app.msgs.required_for_can_enter_data'))
       end
-      if !self.district_precinct_file.exists?
+      if !self.has_district_precincts?
         puts '- district precinct file does not exist!'
         is_valid = false
         errors.add(:district_precinct_file, I18n.t('app.msgs.required_for_can_enter_data'))
       end
-      if !self.parties_same_for_all_districts? && !self.party_district_file.exists?
+      if !self.parties_same_for_all_districts? && !self.has_party_districts?
         puts '- party district file does not exist!'
         is_valid = false
         errors.add(:party_district_file, I18n.t('app.msgs.required_for_can_enter_data'))
