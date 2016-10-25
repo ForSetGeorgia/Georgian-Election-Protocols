@@ -42,10 +42,7 @@ class Election < ActiveRecord::Base
                   :has_regions, :has_district_names, :election_app_event_id, :election_at, :election_translations_attributes,
                   :max_party_in_district, :protocol_top_box_margin, :protocol_party_top_margin, :district_precinct_separator,
                   :scraper_url_base, :scraper_url_folder_to_images, :scraper_page_pattern, :has_custom_shape_levels,
-                  :party_file, #:party_file_file_name, :party_file_content_type, :party_file_file_size, :party_file_updated_at,
-                  :district_precinct_file, #:district_precinct_file_content_type, :district_precinct_file_file_size, :district_precinct_file_updated_at,
-                  :party_district_file, #:party_district_file_content_type, :party_district_file_file_size, :party_district_file_updated_at,
-                  :tmp_analysis_table_name
+                  :party_file, :district_precinct_file, :party_district_file, :tmp_analysis_table_name
   attr_accessor :reset_max_party_num, :tmp_analysis_table_name
 
   #######################################
@@ -83,7 +80,7 @@ class Election < ActiveRecord::Base
   # - scraper_page_pattern
   def check_if_can_enter_data
     puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-    puts "reset_max_party_in_district"
+    puts "check_if_can_enter_data"
     puts "- change = #{self.can_enter_data_changed?}, can enter = #{self.can_enter_data?}"
     is_valid = true
     if self.can_enter_data_changed? && self.can_enter_data?

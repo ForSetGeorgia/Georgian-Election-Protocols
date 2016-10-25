@@ -6,7 +6,7 @@ class AddRerunElection < ActiveRecord::Migration
       election = Election.new(
         can_enter_data: false,
         election_at: '2016-10-22',
-        election_app_event_id: 48,
+        election_app_event_id: 49,
         parties_same_for_all_districts: false,
         district_precinct_separator: '.',
         has_regions: false,
@@ -22,7 +22,7 @@ class AddRerunElection < ActiveRecord::Migration
         tmp_analysis_table_name: '2016 Parliamentary - Major Rerun'
       )
       election.election_translations.build(locale: 'en', name: '2016 Parliamentary - Majoritarian Rerun')
-      election.election_translations.build(locale: 'ka', name: '2016 წლის საპარლამენტო არჩევნები - მაჟორიტარული მეორე ტური')
+      election.election_translations.build(locale: 'ka', name: '2016 წლის საპარლამენტო არჩევნები - მაჟორიტარული არჩევნების განმეორებითი კენჭისყრა')
       election.save
 
     end
