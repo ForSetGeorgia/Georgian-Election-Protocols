@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  district_precinct_id: 1
+  file_name: MyString
+  is_amendment: false
+  is_explanatory_note: false
+
+two:
+  district_precinct_id: 1
+  file_name: MyString
+  is_amendment: false
+  is_explanatory_note: false

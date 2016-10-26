@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161026063629) do
+ActiveRecord::Schema.define(:version => 20161026131913) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -360,6 +360,17 @@ ActiveRecord::Schema.define(:version => 20161026063629) do
   end
 
   add_index "region_district_names", ["district_id"], :name => "index_region_district_names_on_district_id"
+
+  create_table "supplemental_documents", :force => true do |t|
+    t.integer  "district_precinct_id"
+    t.string   "file_path"
+    t.boolean  "is_amendment",         :default => false
+    t.boolean  "is_explanatory_note",  :default => false
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
+  end
+
+  add_index "supplemental_documents", ["district_precinct_id"], :name => "index_supplemental_documents_on_district_precinct_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "", :null => false

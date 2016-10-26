@@ -2,11 +2,15 @@ class DistrictPrecinct < ActiveRecord::Base
   @@analysis_db = 'protocol_analysis'
 
   #######################################
+  ## RELATIONSHIPS
+  has_many :supplemental_documents
+
+  #######################################
   ## ATTRIBUTES
   attr_accessible :election_id, :district_id, :precinct_id,
                   :has_protocol, :is_validated, :is_annulled,
-                  :has_supplimental_documents, :supplimental_document_count,
-                  :has_amendment, :has_explanatory_note
+                  :has_supplemental_documents, :supplemental_document_count,
+                  :has_amendment, :has_explanatory_note, :supplemental_documents_attributes
   attr_accessor :num_precincts, :num_protocols_found, :num_protocols_missing, :num_protocols_not_entered, :num_protocols_validated
 
   #######################################
@@ -37,6 +41,10 @@ class DistrictPrecinct < ActiveRecord::Base
 
   def self.has_been_annulled
     where(is_annulled: true)
+  end
+
+  def self.with_supplemental_documents
+    where(has_supplemental_documents: true)
   end
 
   #######################
@@ -266,7 +274,7 @@ class DistrictPrecinct < ActiveRecord::Base
 
       if election.present?
         record_count += DistrictPrecinct.by_ids(election_id, district_id, precinct_id)
-                        .update_all(is_validated: false, has_supplimental_documents: false, supplimental_document_count: 0,
+                        .update_all(is_validated: false, has_supplemental_documents: false, supplemental_document_count: 0,
                                     has_amendment: false, has_explanatory_note: false)
         record_count += CrowdDatum.by_ids(election_id, district_id, precinct_id)
                         .update_all(is_valid: false)
@@ -357,39 +365,39 @@ class DistrictPrecinct < ActiveRecord::Base
                   hp.district_id = dp.district_id and
                   hp.precinct_id = dp.precinct_id and
                   hp.supplemental_document_count > dp.supplemental_document_count
-                where dp.has_supplimental_documents = 1"
-          has_update_supplimental_documents = client.select_all(sql)
-          puts "++++++++++ found #{has_update_supplimental_documents.present? ? has_update_supplimental_documents.length : 0} amendments for precincts that ALREADY HAD an amendment"
+                where dp.has_supplemental_documents = 1"
+          has_update_supplemental_documents = client.select_all(sql)
+          puts "++++++++++ found #{has_update_supplemental_documents.present? ? has_update_supplemental_documents.length : 0} amendments for precincts that ALREADY HAD an amendment"
 
 
           # if district/precinct did not have supplemental documents:
           # - update flag
           sql = "select dp.election_id, dp.district_id, dp.precinct_id, hp.supplemental_document_count from district_precincts as dp "
           sql << "inner join has_protocols as hp on hp.election_id = dp.election_id and hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id "
-          sql << "where dp.has_supplimental_documents = 0"
-          has_new_supplimental_documents = client.select_all(sql)
-          puts "++++++++++ found #{has_new_supplimental_documents.present? ? has_new_supplimental_documents.length : 0} amendments for precincts that DID NOT HAVE amendments"
+          sql << "where dp.has_supplemental_documents = 0"
+          has_new_supplemental_documents = client.select_all(sql)
+          puts "++++++++++ found #{has_new_supplemental_documents.present? ? has_new_supplemental_documents.length : 0} amendments for precincts that DID NOT HAVE amendments"
 
-          if has_update_supplimental_documents.present? || has_new_supplimental_documents.present?
+          if has_update_supplemental_documents.present? || has_new_supplemental_documents.present?
             puts "++++++++++ recording supplemental documents"
             # clear out temp table
             HasProtocol.delete_all
             election_ids = []
 
             # insert the records
-            if has_update_supplimental_documents.present?
+            if has_update_supplemental_documents.present?
               sql = "insert into has_protocols (election_id, district_id, precinct_id, supplemental_document_count) values "
-              sql << has_update_supplimental_documents.map{|x| "(#{x['election_id']}, '#{x['district_id']}', '#{x['precinct_id']}', #{x['supplemental_document_count']})"}.uniq.join(", ")
+              sql << has_update_supplemental_documents.map{|x| "(#{x['election_id']}, '#{x['district_id']}', '#{x['precinct_id']}', #{x['supplemental_document_count']})"}.uniq.join(", ")
               client.execute(sql)
 
-              election_ids << has_update_supplimental_documents.map{|x| x['election_id']}.uniq
+              election_ids << has_update_supplemental_documents.map{|x| x['election_id']}.uniq
             end
-            if has_new_supplimental_documents.present?
+            if has_new_supplemental_documents.present?
               sql = "insert into has_protocols (election_id, district_id, precinct_id, supplemental_document_count) values "
-              sql << has_new_supplimental_documents.map{|x| "(#{x['election_id']}, '#{x['district_id']}', '#{x['precinct_id']}', #{x['supplemental_document_count']})"}.uniq.join(", ")
+              sql << has_new_supplemental_documents.map{|x| "(#{x['election_id']}, '#{x['district_id']}', '#{x['precinct_id']}', #{x['supplemental_document_count']})"}.uniq.join(", ")
               client.execute(sql)
 
-              election_ids << has_update_supplimental_documents.map{|x| x['election_id']}.uniq
+              election_ids << has_update_supplemental_documents.map{|x| x['election_id']}.uniq
             end
             election_ids.flatten!.uniq!
             puts "++++++++++ election_ids = #{election_ids}"
@@ -397,7 +405,7 @@ class DistrictPrecinct < ActiveRecord::Base
             # mark flag
             sql = "update district_precincts as dp inner join has_protocols as hp on
                     hp.election_id = dp.election_id and hp.district_id = dp.district_id and hp.precinct_id = dp.precinct_id
-                    set dp.has_supplimental_documents = 1, dp.supplemental_document_count = hp.supplemental_document_count, dp.is_validated = 0, dp.updated_at = '#{now}' "
+                    set dp.has_supplemental_documents = 1, dp.supplemental_document_count = hp.supplemental_document_count, dp.is_validated = 0, dp.updated_at = '#{now}' "
             client.execute(sql)
 
             # mark crowd datum as invalid
