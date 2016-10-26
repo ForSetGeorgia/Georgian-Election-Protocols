@@ -5,7 +5,7 @@ class SupplementalDocument < ActiveRecord::Base
 
   #######################################
   ## ATTRIBUTES
-  attr_accessible :district_precinct_id, :file_path, :is_amendment, :is_explanatory_note
+  attr_accessible :district_precinct_id, :file_path, :is_amendment, :is_explanatory_note, :is_annullment
 
   #######################################
   ## VALIDATIONS

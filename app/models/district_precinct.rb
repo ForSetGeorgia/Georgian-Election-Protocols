@@ -294,7 +294,8 @@ class DistrictPrecinct < ActiveRecord::Base
   ############################################
   # folder format: /election_id/district_id/majorid-precinct_id[_amendment_*].jpg
   def self.new_image_search
-    files = Dir.glob("#{Rails.root}/public/system/protocols/**/*.jpg")
+    root = "#{Rails.root}/public"
+    files = Dir.glob("#{root}/system/protocols/**/*.jpg")
     puts "==> there are #{files.length} protocol images"
     if files.present?
       ids = []
@@ -309,6 +310,7 @@ class DistrictPrecinct < ActiveRecord::Base
         precinct_id = parts[-1].gsub(/\d*-(\d*.\d*).*.jpg/, '\1')
         supplemental_documents_found = parts[-1].index('amendment').present?
         supplemental_document_count = supplemental_documents_found==true ? 1 : 0
+        file_path = f.gsub(root, '')
 
         # see if there is already a record
         exists = ids.select{|x| x[:election_id] == election_id && x[:district_id] == district_id && x[:precinct_id] == precinct_id}.first
@@ -316,8 +318,16 @@ class DistrictPrecinct < ActiveRecord::Base
           # this is an amendendent, so update the count
           exists[:supplemental_documents_found] = true
           exists[:supplemental_document_count] += 1
+          exists[:files] << file_path
         else
-          ids << {election_id: election_id, district_id: district_id, precinct_id: precinct_id, supplemental_documents_found: supplemental_documents_found, supplemental_document_count: supplemental_document_count}
+          ids << {
+            election_id: election_id,
+            district_id: district_id,
+            precinct_id: precinct_id,
+            supplemental_documents_found: supplemental_documents_found,
+            supplemental_document_count: supplemental_document_count,
+            files: [file_path]
+          }
         end
 
       end
@@ -427,6 +437,29 @@ class DistrictPrecinct < ActiveRecord::Base
                 client.execute(sql)
               end
             end
+
+            # now register the new documents
+            all_files = ids.map{|x| x[:files]}.flatten
+            existing_documents = SupplementalDocument.pluck(:file_path)
+            # if existing documents exist, remove them from the list so they are not entered again
+            if existing_documents.present?
+              all_files = all_files - existing_documents
+            end
+            puts "++++++++++ need to create #{all_files.length} supplemental doc records"
+
+            # if there are any files left, register them
+            if all_files.present?
+              all_files.each do |file|
+                id = ids.select{|x| x[:files].include? file}.first
+                if id.present?
+                  dp = DistrictPrecinct.by_ids(id[:election_id], id[:district_id], id[:precinct_id]).first
+                  if dp.present?
+                    dp.supplemental_documents.create(file_path: file)
+                  end
+                end
+              end
+            end
+
           end
         end
       end

@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
 
   # use role inheritence
   # - a role with a larger number can do everything that smaller numbers can do
-  ROLES = {:user => 0, :moderator => 50, :admin => 99}
+  ROLES = {:user => 0, :categorize_supplemental_documents => 40, :moderator => 50, :admin => 99}
 
 
   validates :role, :presence => true

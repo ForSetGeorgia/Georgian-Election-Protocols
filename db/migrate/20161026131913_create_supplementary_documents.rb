@@ -6,10 +6,13 @@ class CreateSupplementaryDocuments < ActiveRecord::Migration
       t.string :file_path
       t.boolean :is_amendment, default: false
       t.boolean :is_explanatory_note, default: false
+      t.boolean :is_annullment, default: false
 
       t.timestamps
     end
     add_index :supplemental_documents, :district_precinct_id
+    add_index :supplemental_documents, :file_path
+    add_index :supplemental_documents, [:is_amendment, :is_explanatory_note, :is_annullment], name: 'idx_sup_docs_flags'
 
     root = "#{Rails.root}/public"
 
@@ -32,7 +35,7 @@ class CreateSupplementaryDocuments < ActiveRecord::Migration
             crowd = CrowdDatum.by_ids(election_id, dp.district_id, dp.precinct_id).first
             if crowd.present?
               has_documents = false
-              documents = crowd.amendment_image_paths
+              documents = crowd.supplemental_document_image_paths
               if documents.present?
                 found_all = true
                 documents.each do |document|

@@ -23,7 +23,7 @@
       <%= t('.p2') %>
     </p>
 
-    <% if @crowd_datum.amendment_image_paths.present? %>
+    <% if @crowd_datum.supplemental_document_image_paths.present? %>
 
       <p id="amendment_explanation">
         <%= t('.amendment_explanation1') %>
@@ -128,7 +128,7 @@
           <%= f.action :submit, :as => :input, :label => t('app.common.submit') %>
         <% end %>
 
-        <% if @crowd_datum.amendment_image_paths.present? %>
+        <% if @crowd_datum.supplemental_document_image_paths.present? %>
           <p id="amendment_copy">
             <%= t('.amendment_explanation1') %>
             <br />
@@ -162,9 +162,9 @@
       </div>
 
     </div>
-    <% if @crowd_datum.amendment_image_paths.present? %>
+    <% if @crowd_datum.supplemental_document_image_paths.present? %>
       <div id="amendment_image" class="clear">
-        <% @crowd_datum.amendment_image_paths.each do |img_path| %>
+        <% @crowd_datum.supplemental_document_image_paths.each do |img_path| %>
           <%= image_tag img_path %>
           <br />
         <% end %>

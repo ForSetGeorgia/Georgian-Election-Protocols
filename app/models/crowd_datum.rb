@@ -229,9 +229,9 @@ class CrowdDatum < ActiveRecord::Base
     return path
   end
 
-  # get the path to the protocol amendment image(s)
+  # get the path to the protocol supplemental document image(s)
   # if the file does not exist, return nil
-  def amendment_image_paths
+  def supplemental_document_image_paths
     path = nil
 
     if self.election_id.present? && self.district_id.present? && self.precinct_id.present?

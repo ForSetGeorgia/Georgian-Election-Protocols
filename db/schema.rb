@@ -366,11 +366,14 @@ ActiveRecord::Schema.define(:version => 20161026131913) do
     t.string   "file_path"
     t.boolean  "is_amendment",         :default => false
     t.boolean  "is_explanatory_note",  :default => false
+    t.boolean  "is_annullment",        :default => false
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
   end
 
   add_index "supplemental_documents", ["district_precinct_id"], :name => "index_supplemental_documents_on_district_precinct_id"
+  add_index "supplemental_documents", ["file_path"], :name => "index_supplemental_documents_on_file_path"
+  add_index "supplemental_documents", ["is_amendment", "is_explanatory_note", "is_annullment"], :name => "idx_sup_docs_flags"
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "", :null => false

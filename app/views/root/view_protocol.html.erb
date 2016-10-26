@@ -5,8 +5,8 @@
   <%= image_tag @crowd_datum.image_path %>
   <br />
 
-  <% if @crowd_datum.amendment_image_paths.present? %>
-    <% @crowd_datum.amendment_image_paths.each do |img_path| %>
+  <% if @crowd_datum.supplemental_document_image_paths.present? %>
+    <% @crowd_datum.supplemental_document_image_paths.each do |img_path| %>
       <%= image_tag img_path %>
       <br />
     <% end %>
