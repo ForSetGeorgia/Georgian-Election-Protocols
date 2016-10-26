@@ -277,7 +277,7 @@ ka:
       tabs:
         status: სტატუსი
         summary: შეჯამება
-        amendments: შესწორებები
+        supplemental_documents: Supplemental Documents
         annulled: გაუქმებული
         download: მონაცემების ჩამოტვირთვა
       annulled:
@@ -286,13 +286,15 @@ ka:
         headers:
           district: ოლქი
           precinct: საარჩევნო უბანი
-      amendments:
-        no_data: არცერთს საარჩევნო უბანს არ შესწორება არ შეუტანია !
-        view_title: იხილეთ ოქმები და შესწორებები
+      supplemental_documents:
+        no_data: Hooray! No precincts have had supplemental documents attached to the protocols!
+        view_title: View Protocol and Supplemental Document(s)
         headers:
           district: ოლქი
           precinct: საარჩევნო უბანი
-          count: შესწორებები (#)
+          count: Supplemental Documents (#)
+          has_amendment: Has Amendment?
+          has_explanatory_note: Has Explanatory Note?
           invalid_ballots: ბათილი ბიულეტინები (#)
           logic_check_fail: 'ლოგიკური შემოწმება ვერ გაიარა (პარტიების ხმების რაოდენობას - ბათილი ბიულეტინები = მიღებულ ხმებს)? (#) '
           logic_check_difference:  სხვაობა ლოგიკურ შემოწმებაში (#)
@@ -301,7 +303,7 @@ ka:
           more_votes_than_ballots_flag: მეტი ხმა ვიდრე ბიულეტინი?
           more_votes_than_ballots: რამდენით მეტი ბიულეტინია ვიდრე ხმა (#)
       district_summaries:
-        no_data: ამ დროისთვის მონაცემები არ არის დამატებული .
+        no_data: ამ დროისთვის მონაცემები არ არის დამატებული.
         headers:
           district: ოლქის სახელი
           district_id: ოლქი ID
@@ -312,9 +314,11 @@ ka:
           more_ballots_avg: მეტი ბიულეტინი ვიდრე ხმა (საშუალო)
           more_votes_percent: საარჩევნო უბნები სადაც მეტი ხმაა ვიდრე ბიულეტინი (%)
           more_votes_avg: მეტი ხმა ვიდრე ბიულეტინი (საშუალოდ)
-          amendments_percent: საარჩევნო უბნები შესწორებებით (%
-          amendments_avg: შესწორებები (საშუალოდ)
+          supplemental_documents_percent: Precincts with Supplemental Documents (%)
+          supplemental_documents_avg: Supplemental Documents (Average)
           vpm: უბნების რაოდენობა, სადაც ხმის მიცემა წუთში > 2
+          precincts_reported_num: Precincts Reported (#)
+          precincts_reported_percent: Precincts Reported (%)
       status:
         headers:
           data_entry: არჩევნების სტატუსი
@@ -455,8 +459,10 @@ ka:
         more_ballots_than_votes: ეს გამოითვლება “ჩათვლილი ხმების რაოდენობა” - პარტიების მიერ მიღებული ხმების რაოდენობა. იდეალურ შემთხვევაში, უნდა იყოს 0.
         more_votes_than_ballots_flag: ეს დროშა აღნიშნავს სად დაფიქსირდა მეტი ხმა, ვიდრე ბიულეტინების რაოდენობა იყო. პარტიების მიერ მიღებული ხმების რაოდენობის ჯამი > ჩათვლილი ხმების რაოდენობაზე. იდეალურ შემთხვევაში, ეს მონაცემები ერთმანეთს უნდა ემთხვეოდეს. 0 = ემთხვევა. 1 = არ ემთხვევა.
         more_votes_than_ballots: ეს გამოითვლება პარტიების მიერ მიღებული ხმების საერთო რაოდენობა - ჩათვლილი ხმების რაოდენობა. იდეალურ შემთხვევაში, უნდა იყოს 0.
-        amendments_flag: ეს დროშა აღნიშნავს დაემატა თუ არა შესწორება ოქმს. 0 = არა. 1 = კი.
-        amendment_count: ეს რიცხვი უჩვენებს რამდენი შესწორება აიტვირთა.
+        supplemental_documents_flag: This a flag that indicates whether supplemental documents have been submitted to the original protocol. 0 = no. 1 = yes.
+        supplemental_document_count: This number shows how many supplemental documents have been submitted.
+        amendment_flag: This a flag that indicates whether an amendment has been submitted to the original protocol. 0 = no. 1 = yes.
+        explanatory_note_flag: This a flag that indicates whether an explanatory note been submitted to the original protocol. An explanatory note is any document that is not an amendment. 0 = no. 1 = yes.
         is_annulled: ეს დროშა უჩვენებს გაბათილდა თუ არა ხმები საარჩევნო უბანზე. იხილეთ ოქმების შესწორებები და გაიგეთ რატომ. 0 = არა. 1 = კი.
     about:
       title: შესახებ

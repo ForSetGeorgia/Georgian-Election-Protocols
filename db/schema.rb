@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161025065733) do
+ActiveRecord::Schema.define(:version => 20161026063629) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -167,23 +167,27 @@ ActiveRecord::Schema.define(:version => 20161025065733) do
   add_index "district_parties", ["election_id", "district_id"], :name => "index_district_parties_elec_id_dist_id"
 
   create_table "district_precincts", :force => true do |t|
-    t.string   "district_id",     :limit => 10
-    t.string   "precinct_id",     :limit => 10
-    t.boolean  "has_protocol",                  :default => false
-    t.boolean  "is_validated",                  :default => false
+    t.string   "district_id",                 :limit => 10
+    t.string   "precinct_id",                 :limit => 10
+    t.boolean  "has_protocol",                              :default => false
+    t.boolean  "is_validated",                              :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "has_amendment",                 :default => false
+    t.boolean  "has_supplemental_documents",                :default => false
     t.integer  "election_id"
     t.string   "region"
-    t.integer  "amendment_count",               :default => 0
-    t.boolean  "is_annulled",                   :default => false
+    t.integer  "supplemental_document_count",               :default => 0
+    t.boolean  "is_annulled",                               :default => false
+    t.boolean  "has_amendment",                             :default => false
+    t.boolean  "has_explanatory_note",                      :default => false
   end
 
   add_index "district_precincts", ["district_id", "precinct_id"], :name => "idx_dp_location"
   add_index "district_precincts", ["election_id", "region", "district_id", "precinct_id"], :name => "idx_elec_dist_prec"
   add_index "district_precincts", ["has_amendment"], :name => "index_district_precincts_on_has_amendment"
+  add_index "district_precincts", ["has_explanatory_note"], :name => "index_district_precincts_on_has_explanatory_note"
   add_index "district_precincts", ["has_protocol"], :name => "index_district_precincts_on_has_protocol"
+  add_index "district_precincts", ["has_supplemental_documents"], :name => "index_district_precincts_on_has_supplemental_documents"
   add_index "district_precincts", ["is_annulled"], :name => "index_district_precincts_on_is_annulled"
   add_index "district_precincts", ["is_validated"], :name => "index_district_precincts_on_is_validated"
 
@@ -260,12 +264,12 @@ ActiveRecord::Schema.define(:version => 20161025065733) do
   add_index "elections", ["can_enter_data"], :name => "index_elections_on_can_enter_data"
 
   create_table "has_protocols", :force => true do |t|
-    t.string   "district_id",     :limit => 10
-    t.string   "precinct_id",     :limit => 10
+    t.string   "district_id",                 :limit => 10
+    t.string   "precinct_id",                 :limit => 10
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "election_id"
-    t.integer  "amendment_count",               :default => 0
+    t.integer  "supplemental_document_count",               :default => 0
   end
 
   add_index "has_protocols", ["district_id", "precinct_id"], :name => "idx_hp_ids"

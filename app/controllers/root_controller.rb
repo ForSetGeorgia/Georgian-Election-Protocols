@@ -15,7 +15,7 @@ class RootController < ApplicationController
       @overall_stats_by_district = DistrictPrecinct.overall_stats_by_district(@current_election.id)
       @overall_user_stats = CrowdDatum.overall_user_stats(@current_election.id)
       @annulled = DistrictPrecinct.by_election(@current_election.id).has_been_annulled
-      @amendments = @current_election.raw_with_amendments
+      @supplemental_documents = @current_election.raw_with_supplemental_documents
       @district_summaries = @current_election.district_summary
     end
 

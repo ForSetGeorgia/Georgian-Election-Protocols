@@ -49,7 +49,7 @@
         <ul class="nav nav-tabs">
           <li class="active"><a href="#status" data-toggle="tab"><%= t('.tabs.status') %></a></li>
           <li><a href="#summary" data-toggle="tab"><%= t('.tabs.summary') %></a></li>
-          <li><a href="#amendments" data-toggle="tab"><%= t('.tabs.amendments') %></a></li>
+          <li><a href="#supplemental_documents" data-toggle="tab"><%= t('.tabs.supplemental_documents') %></a></li>
           <li><a href="#annulled" data-toggle="tab"><%= t('.tabs.annulled') %></a></li>
           <li><a href="#download" data-toggle="tab"><%= t('.tabs.download') %></a></li>
         </ul>
@@ -262,6 +262,12 @@
                       <%= t('.district_summaries.headers.district_id') %>
                     </th>
                     <th>
+                      <%= t('.district_summaries.headers.precincts_reported_num') %>
+                    </th>
+                    <th>
+                      <%= t('.district_summaries.headers.precincts_reported_percent') %>
+                    </th>
+                    <th>
                       <%= t('.district_summaries.headers.vote_num') %>
                     </th>
                     <th>
@@ -286,10 +292,10 @@
                       <%= t('.district_summaries.headers.more_votes_avg') %>
                     </th>
                     <th>
-                      <%= t('.district_summaries.headers.amendments_percent') %>
+                      <%= t('.district_summaries.headers.supplemental_documents_percent') %>
                     </th>
                     <th>
-                      <%= t('.district_summaries.headers.amendments_avg') %>
+                      <%= t('.district_summaries.headers.supplemental_documents_avg') %>
                     </th>
                   </tr>
                 </thead>
@@ -303,6 +309,12 @@
                       <% end %>
                       <td>
                         <%= district_summary['district_id'] %>
+                      </td>
+                      <td>
+                        <%= number_with_delimiter(district_summary['num_precincts_reported_number']) %>
+                      </td>
+                      <td>
+                        <%= number_to_percentage(district_summary['num_precincts_reported_percent']) %>
                       </td>
                       <td>
                         <%= number_with_delimiter(district_summary['total valid ballots cast']) %>
@@ -329,10 +341,10 @@
                         <%= number_with_delimiter(number_with_precision(district_summary['avg precinct difference more votes than ballots'])) %>
                       </td>
                       <td>
-                        <%= number_to_percentage(district_summary['percent precincts with amendments']) %>
+                        <%= number_to_percentage(district_summary['percent precincts with supplemental documents']) %>
                       </td>
                       <td>
-                        <%= number_with_delimiter(number_with_precision(district_summary['avg precinct amendment count'])) %>
+                        <%= number_with_delimiter(number_with_precision(district_summary['avg precinct supplemental document count'])) %>
                       </td>
                     </tr>
                   <% end %>
@@ -346,85 +358,97 @@
           </div>
 
 
-          <div class="tab-pane fade in" id="amendments">
-            <% if @amendments.present? %>
-              <table class="table table-striped amendments">
+          <div class="tab-pane fade in" id="supplemental_documents">
+            <% if @supplemental_documents.present? %>
+              <table class="table table-striped supplemental_documents">
                 <thead>
                   <tr>
                     <th>
                     </th>
                     <th class="hl1">
-                      <%= t('.amendments.headers.district') %>
+                      <%= t('.supplemental_documents.headers.district') %>
                     </th>
                     <th class="hl1">
-                      <%= t('.amendments.headers.precinct') %>
+                      <%= t('.supplemental_documents.headers.precinct') %>
                     </th>
                     <th>
-                      <%= t('.amendments.headers.count') %>
+                      <%= t('.supplemental_documents.headers.count') %>
                     </th>
                     <th>
-                      <%= t('.amendments.headers.invalid_ballots') %>
+                      <%= t('.supplemental_documents.headers.has_amendment') %>
                     </th>
                     <th>
-                      <%= t('.amendments.headers.logic_check_fail') %>
+                      <%= t('.supplemental_documents.headers.has_explanatory_note') %>
                     </th>
                     <th>
-                      <%= t('.amendments.headers.logic_check_difference') %>
+                      <%= t('.supplemental_documents.headers.invalid_ballots') %>
                     </th>
                     <th>
-                      <%= t('.amendments.headers.more_ballots_than_votes_flag') %>
+                      <%= t('.supplemental_documents.headers.logic_check_fail') %>
                     </th>
                     <th>
-                      <%= t('.amendments.headers.more_ballots_than_votes') %>
+                      <%= t('.supplemental_documents.headers.logic_check_difference') %>
                     </th>
                     <th>
-                      <%= t('.amendments.headers.more_votes_than_ballots_flag') %>
+                      <%= t('.supplemental_documents.headers.more_ballots_than_votes_flag') %>
                     </th>
                     <th>
-                      <%= t('.amendments.headers.more_votes_than_ballots') %>
+                      <%= t('.supplemental_documents.headers.more_ballots_than_votes') %>
+                    </th>
+                    <th>
+                      <%= t('.supplemental_documents.headers.more_votes_than_ballots_flag') %>
+                    </th>
+                    <th>
+                      <%= t('.supplemental_documents.headers.more_votes_than_ballots') %>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <% @amendments.each do |amendment| %>
+                  <% @supplemental_documents.each do |supplemental_document| %>
                     <tr>
                       <td>
                         <%= link_to t('helpers.links.view'),
                                 view_protocol_path(election_id: @current_election.analysis_table_name,
-                                                    district_id: amendment['district_id'],
-                                                    precinct_id: amendment['precinct_id']),
-                                class: 'btn btn-default', title: t('.amendments.view_title'),
+                                                    district_id: supplemental_document['district_id'],
+                                                    precinct_id: supplemental_document['precinct_id']),
+                                class: 'btn btn-default', title: t('.supplemental_documents.view_title'),
                                 target: :blank %>
                       </td>
                       <td>
-                        <%= amendment['district_id'] %>
+                        <%= supplemental_document['district_id'] %>
                       </td>
                       <td>
-                        <%= amendment['precinct_id'] %>
+                        <%= supplemental_document['precinct_id'] %>
                       </td>
                       <td>
-                        <%= amendment['amendment_count'] %>
+                        <%= supplemental_document['supplemental_document_count'] %>
                       </td>
                       <td>
-                        <%= amendment['num_invalid_votes'] %>
+                        <%= convert_boolean_answer(supplemental_document['has_amendment']) %>
                       </td>
                       <td>
-                        <%= convert_boolean_answer(amendment['logic_check_fail']) %>
+                        <%= convert_boolean_answer(supplemental_document['has_explanatory_note']) %>
                       </td>
                       <td>
-                        <%= amendment['logic_check_difference'] %>
+                        <%= supplemental_document['num_invalid_votes'] %>
                       </td>
                       <td>
-                        <%= convert_boolean_answer(amendment['more_ballots_than_votes_flag']) %>
+                        <%= convert_boolean_answer(supplemental_document['logic_check_fail']) %>
                       </td>
                       <td>
-                        <%= amendment['more_ballots_than_votes'] %>
+                        <%= supplemental_document['logic_check_difference'] %>
                       </td>
                       <td>
-                        <%= convert_boolean_answer(amendment['more_votes_than_ballots_flag']) %>
+                        <%= convert_boolean_answer(supplemental_document['more_ballots_than_votes_flag']) %>
                       </td>
                       <td>
-                        <%= amendment['more_votes_than_ballots'] %>
+                        <%= supplemental_document['more_ballots_than_votes'] %>
+                      </td>
+                      <td>
+                        <%= convert_boolean_answer(supplemental_document['more_votes_than_ballots_flag']) %>
+                      </td>
+                      <td>
+                        <%= supplemental_document['more_votes_than_ballots'] %>
                       </td>
                     </tr>
                   <% end %>
@@ -432,7 +456,7 @@
               </table>
             <% else %>
               <div class="alert alert-success">
-                <%= t('.amendments.no_data') %>
+                <%= t('.supplemental_documents.no_data') %>
               </div>
             <% end %>
           </div>
@@ -642,12 +666,20 @@
                   <td><%= t('root.download.explanations.more_votes_than_ballots') %></td>
                 </tr>
                 <tr>
-                  <td>amendments_flag</td>
-                  <td><%= t('root.download.explanations.amendments_flag') %></td>
+                  <td>supplemental_documents_flag</td>
+                  <td><%= t('root.download.explanations.supplemental_documents_flag') %></td>
                 </tr>
                 <tr>
-                  <td>amendment_count</td>
-                  <td><%= t('root.download.explanations.amendment_count') %></td>
+                  <td>supplemental_document_count</td>
+                  <td><%= t('root.download.explanations.supplemental_document_count') %></td>
+                </tr>
+                <tr>
+                  <td>amendment_flag</td>
+                  <td><%= t('root.download.explanations.amendment_flag') %></td>
+                </tr>
+                <tr>
+                  <td>explanatory_note_flag</td>
+                  <td><%= t('root.download.explanations.explanatory_note_flag') %></td>
                 </tr>
                 <tr>
                   <td>is_annulled</td>

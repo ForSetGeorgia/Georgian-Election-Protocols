@@ -277,7 +277,7 @@ en:
       tabs:
         status: Status
         summary: Summary
-        amendments: Amendments
+        supplemental_documents: Supplemental Documents
         annulled: Annulled
         download: Download Data
       annulled:
@@ -286,13 +286,15 @@ en:
         headers:
           district: District
           precinct: Precinct
-      amendments:
-        no_data: Hooray! No precincts have had their protocols amended!
-        view_title: View Protocol and Amendment(s)
+      supplemental_documents:
+        no_data: Hooray! No precincts have had supplemental documents attached to the protocols!
+        view_title: View Protocol and Supplemental Document(s)
         headers:
           district: District
           precinct: Precinct
-          count: Amendments (#)
+          count: Supplemental Documents (#)
+          has_amendment: Has Amendment?
+          has_explanatory_note: Has Explanatory Note?
           invalid_ballots: Invalid Ballots (#)
           logic_check_fail: 'Logic Check Fail (Party Sum - Invalid != Ballots Submitted)? (#)'
           logic_check_difference:  Logic Check Difference (#)
@@ -312,9 +314,11 @@ en:
           more_ballots_avg: More Ballots Than Votes (Average)
           more_votes_percent: Precincts with More Votes than Ballots (%)
           more_votes_avg: More Votes than Ballots (Average)
-          amendments_percent: Precincts with Amendments (%)
-          amendments_avg: Amendments (Average)
+          supplemental_documents_percent: Precincts with Supplemental Documents (%)
+          supplemental_documents_avg: Supplemental Documents (Average)
           vpm: Number of Precincts with votes per minute > 2
+          precincts_reported_num: Precincts Reported (#)
+          precincts_reported_percent: Precincts Reported (%)
       status:
         headers:
           data_entry: Election Status
@@ -455,8 +459,10 @@ en:
         more_ballots_than_votes: This is a calculation of 'num_valid_votes' - sum of the party votes. Ideally, this should be 0.
         more_votes_than_ballots_flag: This is a flag that indicates whether there are more votes for parties than ballots submitted. The calculation is sum of the party votes > 'num_valid_votes'. Ideally, these values should match. 0 = they do match. 1 = they do not match.
         more_votes_than_ballots: This is a calculation of sum of the party votes - 'num_valid_votes'. Ideally, this should be 0.
-        amendments_flag: This a flag that indicates whether amendments have been submitted to the original protocol. 0 = no. 1 = yes.
-        amendment_count: This number shows how many amendments have been submitted.
+        supplemental_documents_flag: This a flag that indicates whether supplemental documents have been submitted to the original protocol. 0 = no. 1 = yes.
+        supplemental_document_count: This number shows how many supplemental documents have been submitted.
+        amendment_flag: This a flag that indicates whether an amendment has been submitted to the original protocol. 0 = no. 1 = yes.
+        explanatory_note_flag: This a flag that indicates whether an explanatory note been submitted to the original protocol. An explanatory note is any document that is not an amendment. 0 = no. 1 = yes.
         is_annulled: This is a flag that indicates whether the votes in this precinct have been annulled. View the protocol amendment to learn why. 0 = no. 1 = yes.
     about:
       title: About
