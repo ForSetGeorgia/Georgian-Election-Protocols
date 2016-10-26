@@ -7,9 +7,11 @@ class CreateSupplementaryDocuments < ActiveRecord::Migration
       t.boolean :is_amendment, default: false
       t.boolean :is_explanatory_note, default: false
       t.boolean :is_annullment, default: false
+      t.integer :categorized_by_user_id
 
       t.timestamps
     end
+    add_index :supplemental_documents, :categorized_by_user_id
     add_index :supplemental_documents, :district_precinct_id
     add_index :supplemental_documents, :file_path
     add_index :supplemental_documents, [:is_amendment, :is_explanatory_note, :is_annullment], name: 'idx_sup_docs_flags'

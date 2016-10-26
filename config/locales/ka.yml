@@ -182,6 +182,7 @@ ka:
       election_data: არჩევნების მონაცემების მიგრაცია
       reset_bad_data: ოქმის მონაცემების წაშლა
       elections: Manage Elections
+      categorize_supplemental_documents: Categorize Supplemental Documents
       sign_in: სისტემაში შესვლა
       training: ტრენინგი
       enter_data: მონაცემთა შეყვანა
@@ -466,6 +467,22 @@ ka:
         is_annulled: ეს დროშა უჩვენებს გაბათილდა თუ არა ხმები საარჩევნო უბანზე. იხილეთ ოქმების შესწორებები და გაიგეთ რატომ. 0 = არა. 1 = კი.
     about:
       title: შესახებ
+    categorize_supplemental_documents:
+      title: Categorize A Supplemental Document
+      no_documents: Hooray! No supplemental documents need to be categorized!
+      amendment: Amendment
+      annulled: Annullment
+      explanatory_note: Explanatory Note
+      skip: Skip
+      user_stats:
+        completed_by_user: Completed By You
+        completed_by_others: Completed By Others
+        remaining: Remaining
+      document_stats:
+        amendment: Amendments
+        annulled: Annullments
+        explanatory_note: Explanatory Notes
+        unknown: Unknown
   mailer:
     new_user:
       subject: Are you ready to help JumpStart digitize some election protocols?!

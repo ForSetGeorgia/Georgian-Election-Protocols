@@ -3,6 +3,10 @@ module ApplicationHelper
     content_for(:title) { page_title }
   end
 
+  def title_right(title_right)
+    content_for(:title_right) { title_right }
+  end
+
   def current_url
     "#{request.protocol}#{request.host_with_port}#{request.fullpath}"
   end

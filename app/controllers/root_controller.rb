@@ -1,5 +1,9 @@
 class RootController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :download, :generate_spreadsheet, :about, :view_protocol]
+  before_filter only: :categorize_supplemental_documents do |controller_instance|
+    controller_instance.send(:valid_role?, User::ROLES[:categorize_supplemental_documents])
+  end
+
   require 'utf8_converter'
 
   PROTOCOL_NUMBERS = (1..5).to_a
@@ -230,6 +234,24 @@ logger.debug ">>>>>>>>>>>>>>>> format = csv"
 		end
   end
 
+
+  # indicate the type of the document
+  def categorize_supplemental_documents
+
+    if request.put?
+      supplemental_document = SupplementalDocument.find(params[:supplemental_document][:id])
+      params[:supplemental_document].delete(:id) # do this so not get mass assignment error
+      supplemental_document.update_attributes(params[:supplemental_document]) if supplemental_document.present?
+    end
+
+    # get the next doc
+    @supplemental_document = SupplementalDocument.next_to_categorize
+
+    # get user stats
+    @supplemental_document_user_stats = SupplementalDocument.user_stats(current_user.id)
+    # get document stats
+    @document_stats = SupplementalDocument.document_stats
+  end
 
 
   protected

@@ -1,0 +1,99 @@
+<% title t('.title') %>
+<% title_right link_to(t('.skip'), categorize_supplemental_documents_path, class: 'btn btn-primary skip') %>
+
+<div id="categorize_supplemental_documents">
+
+  <% if @supplemental_document_user_stats.present? %>
+    <ul class="inline">
+      <li>
+        <strong><%= t('.user_stats.completed_by_user') %>:</strong>
+        <%= @supplemental_document_user_stats[:completed_by_user][:number] %>
+        <% if @supplemental_document_user_stats[:completed_by_user][:number] != I18n.t('app.common.na') %>
+          (<%= @supplemental_document_user_stats[:completed_by_user][:percent] %>)
+        <% end %>
+      </li>
+      <li>
+        <strong><%= t('.user_stats.completed_by_others') %>:</strong>
+        <%= @supplemental_document_user_stats[:completed_by_others][:number] %>
+        <% if @supplemental_document_user_stats[:completed_by_others][:number] != I18n.t('app.common.na') %>
+          (<%= @supplemental_document_user_stats[:completed_by_others][:percent] %>)
+        <% end %>
+      </li>
+      <li>
+        <strong><%= t('.user_stats.remaining') %>:</strong>
+        <%= @supplemental_document_user_stats[:remaining][:number] %>
+      </li>
+    </ul>
+    <ul class="inline">
+      <li>
+        <strong><%= t('.document_stats.amendment') %>:</strong>
+        <%= @document_stats[:amendment][:number] %>
+        <% if @document_stats[:amendment][:number] != I18n.t('app.common.na') %>
+          (<%= @document_stats[:amendment][:percent] %>)
+        <% end %>
+      </li>
+      <li>
+        <strong><%= t('.document_stats.annulled') %>:</strong>
+        <%= @document_stats[:annulled][:number] %>
+        <% if @document_stats[:annulled][:number] != I18n.t('app.common.na') %>
+          (<%= @document_stats[:annulled][:percent] %>)
+        <% end %>
+      </li>
+      <li>
+        <strong><%= t('.document_stats.explanatory_note') %>:</strong>
+        <%= @document_stats[:explanatory_note][:number] %>
+        <% if @document_stats[:explanatory_note][:number] != I18n.t('app.common.na') %>
+          (<%= @document_stats[:explanatory_note][:percent] %>)
+        <% end %>
+      </li>
+      <li>
+        <strong><%= t('.document_stats.unknown') %>:</strong>
+        <%= @document_stats[:unknown][:number] %>
+        <% if @document_stats[:unknown][:number] != I18n.t('app.common.na') %>
+          (<%= @document_stats[:unknown][:percent] %>)
+        <% end %>
+      </li>
+    </ul>
+  <% end %>
+
+  <% if @supplemental_document.present? %>
+    <%= semantic_form_for(@supplemental_document, url: categorize_supplemental_documents_path) do |f| %>
+      <%= f.error_messages %>
+
+      <%= f.inputs do %>
+        <%= f.hidden_field :id %>
+        <%= f.hidden_field :is_amendment %>
+        <%= f.hidden_field :is_annullment %>
+        <%= f.hidden_field :is_explanatory_note %>
+        <%= f.hidden_field :categorized_by_user_id, value: current_user.id %>
+
+        <div class="document-selection">
+          <div class="row-fluid">
+            <div class="span4">
+              <%= link_to t('.amendment'), '#', class: 'btn amendment', :'data-name' => :is_amendment %>
+            </div>
+            <div class="span4">
+              <%= link_to t('.annulled'), '#', class: 'btn annulled', :'data-name' => :is_annullment %>
+            </div>
+            <div class="span4">
+              <%= link_to t('.explanatory_note'), '#', class: 'btn explanatory', :'data-name' => :is_explanatory_note %>
+            </div>
+          </div>
+        </div>
+
+        <div class="document-image">
+          <%= image_tag @supplemental_document.file_path %>
+        </div>
+      <% end %>
+
+    <% end %>
+
+  <% else %>
+
+    <p class="alert alert-success">
+      <%= t('.no_documents') %>
+    </p>
+
+  <% end %>
+
+</div>

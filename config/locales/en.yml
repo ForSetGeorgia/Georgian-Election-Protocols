@@ -182,6 +182,7 @@ en:
       election_data: Election Data Migration
       reset_bad_data: Delete Data for Protocol
       elections: Manage Elections
+      categorize_supplemental_documents: Categorize Supplemental Documents
       sign_out: Sign Out
       sign_in: Sign In
       training: Training
@@ -466,6 +467,22 @@ en:
         is_annulled: This is a flag that indicates whether the votes in this precinct have been annulled. View the protocol amendment to learn why. 0 = no. 1 = yes.
     about:
       title: About
+    categorize_supplemental_documents:
+      title: Categorize A Supplemental Document
+      no_documents: Hooray! No supplemental documents need to be categorized!
+      amendment: Amendment
+      annulled: Annullment
+      explanatory_note: Explanatory Note
+      skip: Skip
+      user_stats:
+        completed_by_user: Completed By You
+        completed_by_others: Completed By Others
+        remaining: Remaining
+      document_stats:
+        amendment: Amendments
+        annulled: Annullments
+        explanatory_note: Explanatory Notes
+        unknown: Unknown
   mailer:
     new_user:
       subject: Are you ready to help JumpStart digitize some election protocols?!
