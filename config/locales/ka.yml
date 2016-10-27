@@ -87,6 +87,8 @@ ka:
       reset: საწყის კონფიგურაციაზე დაბრუნება
       view: ნახვა
       download_file: Download Existing File
+      help: Help
+      close: Close
     titles:
       new: "ახალი %{model}"
       edit: "შეცვლა %{model}"
@@ -487,6 +489,13 @@ ka:
       annulled: Annullment
       explanatory_note: Explanatory Note
       skip: Skip
+      modal_header: Help for Categorizing A Supplemental Document
+    categorize_supplemental_documents_help:
+      explanation: Below is an explanation of the different types of supplementary documents that you need to identify.
+      tab:
+        amendment: Amendment
+        annulled: Annullment
+        explanatory_note: Explanatory Note
   mailer:
     new_user:
       subject: Are you ready to help JumpStart digitize some election protocols?!

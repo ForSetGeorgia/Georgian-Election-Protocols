@@ -1,5 +1,7 @@
 <% title t('.title') %>
-<% title_right link_to(t('.skip'), categorize_supplemental_documents_path, class: 'btn btn-primary skip') %>
+<% links = link_to(t('helpers.links.help'), '#help-modal', class: 'btn btn-primary', role: 'button', :'data-toggle' => 'modal') +
+            ' ' + link_to(t('.skip'), categorize_supplemental_documents_path, class: 'btn btn-primary skip') %>
+<% title_right links %>
 
 <div id="categorize_supplemental_documents">
 
@@ -43,4 +45,18 @@
 
   <% end %>
 
+</div>
+
+
+<div id="help-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel"><%= t('.modal_header') %></h3>
+  </div>
+  <div class="modal-body">
+    <%= render :partial => 'root/categorize_supplemental_documents_help' %>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true"><%= t('helpers.links.close') %></button>
+  </div>
 </div>
