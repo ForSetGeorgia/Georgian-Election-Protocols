@@ -192,6 +192,19 @@ en:
       js_link_title: "Visit JumpStart Georgia's website"
       js_link_text: Built by
       js_slogan: JumpStart Georgia - Informing Communities with Data and Design
+    stats_header:
+      header:
+        supplemental_documents: Supplemental Document Stats
+        data_entry: Your Data Entry Stats
+      user_document_stats:
+        completed_by_user: Completed By You
+        completed_by_others: Completed By Others
+        remaining: Remaining
+      document_stats:
+        amendment: Amendments
+        annulled: Annullments
+        explanatory_note: Explanatory Notes
+        unknown: Unknown
     unsupported_browser:
       title: Unsupported Browser
       p1: We are sorry to report that your browser is out of date and will not properly render the content from this website.
@@ -474,15 +487,6 @@ en:
       annulled: Annullment
       explanatory_note: Explanatory Note
       skip: Skip
-      user_stats:
-        completed_by_user: Completed By You
-        completed_by_others: Completed By Others
-        remaining: Remaining
-      document_stats:
-        amendment: Amendments
-        annulled: Annullments
-        explanatory_note: Explanatory Notes
-        unknown: Unknown
   mailer:
     new_user:
       subject: Are you ready to help JumpStart digitize some election protocols?!

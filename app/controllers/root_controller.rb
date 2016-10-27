@@ -246,11 +246,6 @@ logger.debug ">>>>>>>>>>>>>>>> format = csv"
 
     # get the next doc
     @supplemental_document = SupplementalDocument.next_to_categorize
-
-    # get user stats
-    @supplemental_document_user_stats = SupplementalDocument.user_stats(current_user.id)
-    # get document stats
-    @document_stats = SupplementalDocument.document_stats
   end
 
 

@@ -45,15 +45,18 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
-          <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+          <a class="btn btn-navbar" data-target="#nav-collapse-main" data-toggle="collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
           <%= link_to(t('app.common.app_name'), root_path(:locale => I18n.locale),:class=>"brand font")%>
-          <div class="container-fluid nav-collapse">
+          <div class="container-fluid nav-collapse" id="nav-collapse-main">
             <ul class="nav">
-  	          <% if user_signed_in? %>
+            </ul>
+
+	          <ul class="nav pull-right">
+              <% if user_signed_in? %>
                 <% if current_user.completed_training? %>
                   <% if @elections.present? %>
                     <li><%= link_to t('.enter_data'), protocol_path, class: 'enter-data' %></li>
@@ -64,48 +67,9 @@
               <% end %>
               <li><%= link_to t('.about'), about_path %></li>
               <li>
-                <%= link_to download_path, title: t('.download') do %>
-                  <i class="icon-download-alt"></i>
-                <% end %>
+                <%= link_to t('.download'), download_path %>
               </li>
-            </ul>
-
-	          <ul class="nav pull-right">
 		          <% if user_signed_in? %>
-				        <% if @user_stats.present? %>
-                  <li class="user_stats">
-                    <i class="icon-share" title="<%= t('app.user_stats.submitted') %>"></i>
-                    <%= @user_stats[:submitted] %>
-                  </li>
-                  <li class="user_stats">
-                    <i class="icon-play" title="<%= t('app.user_stats.pending') %>"></i>
-                    <%= @user_stats[:pending][:number] %>
-                    <% if @user_stats[:pending][:number] != I18n.t('app.common.na') %>
-                      (<%= @user_stats[:pending][:percent] %>)
-                    <% end %>
-                  </li>
-                  <li class="user_stats">
-                    <i class="icon-ok" title="<%= t('app.user_stats.valid') %>"></i>
-                    <%= @user_stats[:valid][:number] %>
-                    <% if @user_stats[:valid][:number] != I18n.t('app.common.na') %>
-                      (<%= @user_stats[:valid][:percent] %>)
-                    <% end %>
-                  </li>
-                  <li class="user_stats">
-                    <i class="icon-remove" title="<%= t('app.user_stats.invalid') %>"></i>
-                    <%= @user_stats[:invalid][:number] %>
-                    <% if @user_stats[:invalid][:number] != I18n.t('app.common.na') %>
-                      (<%= @user_stats[:invalid][:percent] %>)
-                    <% end %>
-                  </li>
-                  <li class="user_stats">
-                    <i class=" icon-plus" title="<%= t('app.user_stats.extra') %>"></i>
-                    <%= @user_stats[:extra][:number] %>
-                    <% if @user_stats[:extra][:number] != I18n.t('app.common.na') %>
-                      (<%= @user_stats[:extra][:percent] %>)
-                    <% end %>
-                  </li>
-				        <% end %>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="icon-user"></i>
@@ -157,6 +121,8 @@
         </div>
       </div>
     </div>
+
+    <%= render :partial => 'layouts/stats_header' %>
 
 		<div id="wrapper">
 		  <div class="container-fluid">

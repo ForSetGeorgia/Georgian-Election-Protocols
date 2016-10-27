@@ -71,6 +71,13 @@ logger.debug "////////////////////////// BROWSER NOT SUPPORTED"
   		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id, @election_ids)
 		end
 
+    if user_signed_in? && current_user.role?(User::ROLES[:categorize_supplemental_documents])
+      # get user stats
+      @supplemental_document_user_stats = SupplementalDocument.user_stats(current_user.id)
+      # get document stats
+      @document_stats = SupplementalDocument.document_stats
+    end
+
     @bitly_url = 'http://bit.ly/Icounted'
 	end
 

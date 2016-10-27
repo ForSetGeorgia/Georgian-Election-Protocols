@@ -1,0 +1,118 @@
+<% if user_signed_in? %>
+
+  <div class="navbar navbar-stats">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+        <a class="btn btn-navbar" data-target="#nav-collapse-stats" data-toggle="collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+
+        <div class="container-fluid nav-collapse" id="nav-collapse-stats">
+          <div class="nav stats">
+            <% if @supplemental_document_user_stats.present? %>
+              <h4><%= t('.header.supplemental_documents') %></h4>
+              <ul class="inline">
+                <li>
+                  <strong><%= t('.user_document_stats.completed_by_user') %>:</strong>
+                  <%= @supplemental_document_user_stats[:completed_by_user][:number] %>
+                  <% if @supplemental_document_user_stats[:completed_by_user][:number] != I18n.t('app.common.na') %>
+                    (<%= @supplemental_document_user_stats[:completed_by_user][:percent] %>)
+                  <% end %>
+                </li>
+                <li>
+                  <strong><%= t('.user_document_stats.completed_by_others') %>:</strong>
+                  <%= @supplemental_document_user_stats[:completed_by_others][:number] %>
+                  <% if @supplemental_document_user_stats[:completed_by_others][:number] != I18n.t('app.common.na') %>
+                    (<%= @supplemental_document_user_stats[:completed_by_others][:percent] %>)
+                  <% end %>
+                </li>
+                <li>
+                  <strong><%= t('.user_document_stats.remaining') %>:</strong>
+                  <%= @supplemental_document_user_stats[:remaining][:number] %>
+                </li>
+              </ul>
+            <% end %>
+            <% if @document_stats.present? %>
+              <ul class="inline">
+                <li>
+                  <strong><%= t('.document_stats.amendment') %>:</strong>
+                  <%= @document_stats[:amendment][:number] %>
+                  <% if @document_stats[:amendment][:number] != I18n.t('app.common.na') %>
+                    (<%= @document_stats[:amendment][:percent] %>)
+                  <% end %>
+                </li>
+                <li>
+                  <strong><%= t('.document_stats.annulled') %>:</strong>
+                  <%= @document_stats[:annulled][:number] %>
+                  <% if @document_stats[:annulled][:number] != I18n.t('app.common.na') %>
+                    (<%= @document_stats[:annulled][:percent] %>)
+                  <% end %>
+                </li>
+                <li>
+                  <strong><%= t('.document_stats.explanatory_note') %>:</strong>
+                  <%= @document_stats[:explanatory_note][:number] %>
+                  <% if @document_stats[:explanatory_note][:number] != I18n.t('app.common.na') %>
+                    (<%= @document_stats[:explanatory_note][:percent] %>)
+                  <% end %>
+                </li>
+                <li>
+                  <strong><%= t('.document_stats.unknown') %>:</strong>
+                  <%= @document_stats[:unknown][:number] %>
+                  <% if @document_stats[:unknown][:number] != I18n.t('app.common.na') %>
+                    (<%= @document_stats[:unknown][:percent] %>)
+                  <% end %>
+                </li>
+              </ul>
+            <% end %>
+          </div>
+
+          <% if @user_stats.present? %>
+            <div class="nav stats pull-right">
+              <h4><%= t('.header.data_entry') %></h4>
+              <ul class="inline">
+                <li>
+                  <strong><%= t('app.user_stats.submitted') %>:</strong>
+                  <%= @user_stats[:submitted] %>
+                </li>
+                <li>
+                  <strong><%= t('app.user_stats.pending') %>:</strong>
+                  <%= @user_stats[:pending][:number] %>
+                  <% if @user_stats[:pending][:number] != I18n.t('app.common.na') %>
+                    (<%= @user_stats[:pending][:percent] %>)
+                  <% end %>
+                </li>
+                <li>
+                  <strong><%= t('app.user_stats.valid') %>:</strong>
+                  <%= @user_stats[:valid][:number] %>
+                  <% if @user_stats[:valid][:number] != I18n.t('app.common.na') %>
+                    (<%= @user_stats[:valid][:percent] %>)
+                  <% end %>
+                </li>
+                <li>
+                  <strong><%= t('app.user_stats.invalid') %>:</strong>
+                  <%= @user_stats[:invalid][:number] %>
+                  <% if @user_stats[:invalid][:number] != I18n.t('app.common.na') %>
+                    (<%= @user_stats[:invalid][:percent] %>)
+                  <% end %>
+                </li>
+                <li>
+                  <strong><%= t('app.user_stats.extra') %>:</strong>
+                  <%= @user_stats[:extra][:number] %>
+                  <% if @user_stats[:extra][:number] != I18n.t('app.common.na') %>
+                    (<%= @user_stats[:extra][:percent] %>)
+                  <% end %>
+                </li>
+              </ul>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+<% end %>
