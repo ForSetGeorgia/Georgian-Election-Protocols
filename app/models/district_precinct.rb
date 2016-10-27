@@ -7,6 +7,8 @@ class DistrictPrecinct < ActiveRecord::Base
 
   #######################################
   ## ATTRIBUTES
+  MODERATION_REASONS = {bad_image: 1, missing_info: 2, cant_read: 3, docs_not_clear: 4, annulled: 5}
+
   attr_accessible :election_id, :district_id, :precinct_id,
                   :has_protocol, :is_validated, :is_annulled,
                   :has_supplemental_documents, :supplemental_document_count,
@@ -282,6 +284,32 @@ class DistrictPrecinct < ActiveRecord::Base
         record_count += DistrictPrecinct.by_ids(election_id, district_id, precinct_id)
                         .update_all(is_validated: false, has_supplemental_documents: false, supplemental_document_count: 0,
                                     has_amendment: false, has_explanatory_note: false)
+        record_count += CrowdDatum.by_ids(election_id, district_id, precinct_id)
+                        .update_all(is_valid: false)
+
+        # delete analysis record
+        sql = "delete from `#{@@analysis_db}`.`#{election.analysis_table_name} - raw`
+                where district_id = '#{district_id}'
+                and precinct_id = '#{precinct_id}'"
+        client.execute(sql)
+      end
+    end
+
+    return record_count > 0
+  end
+
+  ############################################
+  ############################################
+  def self.add_moderation(election_id, district_id, precinct_id, moderation_reason)
+    record_count = 0
+    DistrictPrecinct.transaction do
+      client = ActiveRecord::Base.connection
+      election = Election.find(election_id)
+
+      if election.present?
+        moderation_reason.delete('')
+        record_count += DistrictPrecinct.by_ids(election_id, district_id, precinct_id)
+                        .update_all(is_validated: false, being_moderated: true, moderation_reason: moderation_reason.join(','))
         record_count += CrowdDatum.by_ids(election_id, district_id, precinct_id)
                         .update_all(is_valid: false)
 

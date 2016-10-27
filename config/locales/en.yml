@@ -416,8 +416,8 @@ en:
       title: Enter Data
       p1: "Please only enter numbers; do not enter any 'X'."
       p2: "If a required field (*) does not have a number, please enter 0."
-      amendment_explanation1: The CEC has issued an amendment for this protocol, which is located at the bottom of this page.
-      amendment_explanation2: Please enter the numbers from the amendment into the appropriate form fields.
+      supplemental_document_explanation1: The CEC has issued supplemental documents for this protocol, which is located at the bottom of this page.
+      supplemental_document_explanation2: If the documents indicate changes in the protocol data, please enter the changes from the documents into the appropriate form fields.
       overseas_explanation1: This is an overseas district.
       overseas_explanation2: "Please enter the number from #2 into #1 and enter '0' for #2."
       no_protocols: At this time, there are no protocols to enter.
@@ -428,6 +428,8 @@ en:
       votesum_explanation3: "These numbers are here to guide you with your data entry."
       votesum_explanation4: "It is possible that these numbers will not match."
       scroll_to_zoom: Scroll protocol to zoom
+      supplemental_documents: Supplemental Documents
+      image_alt: If you see this after the page is finished loading, then the protocol image is bad and needs to be re-downloaded. Please select the 'No Protocol' option above.
       title:
         toggle: Toggle
         ccw: Rotate CounterClockwise
@@ -438,6 +440,20 @@ en:
         left: Move left
         right: Move right
         reset: Reset all transformations
+      cant_enter:
+        title: If you can't enter data, please indicate why
+        text:
+          bad_image: No Protocol
+          cant_read: Can't Read
+          missing_info: Missing Information
+          docs_not_clear: Documents Not Clear
+          annulled: Is Annulled
+        titles:
+          bad_image: The protocol image does not appear below
+          cant_read: You cannot read the handwriting in the protocol
+          missing_info: The protocol does not have information provided for all sections
+          docs_not_clear: The supplemental documents at the bottom of the page need clarification
+          annulled: A supplemental document at the bottom of the page indicates the protocol has been annulled
     download:
       title: Download Results of Data Entry
       num_precincts: There are %{count} out of %{total} precincts (%{percent}) with election data.

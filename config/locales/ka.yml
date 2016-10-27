@@ -416,8 +416,8 @@ ka:
       title: მონაცემების შეყვანა
       p1: "გთხოვთ, შეიყვანოთ მხოლოდ რიცხვები; არ შეიყვანოთ 'X'."
       p2: "თუ სავალდებულს ველი (*)  არ აქვს რიცხვი გთხოვთ, შეიყვანოთ 0"
-      amendment_explanation1: ცესკომ ამ ოქმში შეიტანა ცვლილება, რომელიც განთავსებულია ამ გვერდი ბოლოში.
-      amendment_explanation2: გთხოვთ, შეიყვანოთ ცვლილებაში მოცემული რიცხვები შესაბამისი ველის ფორმებში.
+      supplemental_document_explanation1: The CEC has issued supplemental documents for this protocol, which is located at the bottom of this page.
+      supplemental_document_explanation2: If the documents indicate changes in the protocol data, please enter the changes from the documents into the appropriate form fields.
       overseas_explanation1: ეს არის სხვა სახელმწიფოში შედგენილი ოქმი.
       overseas_explanation2: "გთხოვთ, პირველ გრაფაში შეიყვანოთ რიცხვი #2 გრაფიდან, ხოლო #2 გრაფა დატოვეთ ცარიელი."
       no_protocols: ამ დროისთვის არ არის შესაყვანი ოქმები
@@ -428,6 +428,8 @@ ka:
       votesum_explanation3: "ეს რიცხვები დაგეხმარებათ მონაცემთა სეყვანაში."
       votesum_explanation4: "შესაძლოა, რომ ეს რიცხვები არ ემთხვეოდეს."
       scroll_to_zoom: გასადიდებლად დასქროლე ოქმი
+      supplemental_documents: Supplemental Documents
+      image_alt: If you see this after the page is finished loading, then the protocol image is bad and needs to be re-downloaded. Please select the 'No Protocol' option above.
       title:
         toggle: გადართე
         ccw: შეაბრუნე მთვლელი საათის ისრის მიმართულებით
@@ -438,6 +440,20 @@ ka:
         left: გაწიე მარცხნივ
         right: გაწიე მარჯვნივ
         reset: ყველა მოქმედების გაუქმება
+      cant_enter:
+        title: If you can't enter data, please indicate why
+        text:
+          bad_image: No Protocol
+          cant_read: Can't Read
+          missing_info: Missing Information
+          docs_not_clear: Documents Not Clear
+          annulled: Is Annulled
+        titles:
+          bad_image: The protocol image does not appear below
+          cant_read: You cannot read the handwriting in the protocol
+          missing_info: The protocol does not have information provided for all sections
+          docs_not_clear: The supplemental documents at the bottom of the page need clarification
+          annulled: A supplemental document at the bottom of the page indicates the protocol has been annulled
     download:
       title: ჩამოტვირთე შეყვანილი მონაცემები
       num_precincts: არსებობს %{total}-დან %{count} საარჩევნო უბანი საარჩევნო მონაცემებით.

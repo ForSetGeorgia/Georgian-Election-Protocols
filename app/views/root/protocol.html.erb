@@ -1,3 +1,4 @@
+<% dp = DistrictPrecinct %>
 <% title t('.title') %>
 
 
@@ -19,21 +20,18 @@
     <p>
       <%= t('.p1') %>
     </p>
-    <p>
-      <%= t('.p2') %>
-    </p>
 
     <% if @crowd_datum.supplemental_document_image_paths.present? %>
 
       <p id="amendment_explanation">
-        <%= t('.amendment_explanation1') %>
+        <%= t('.supplemental_document_explanation1') %>
         <br />
-        <%= t('.amendment_explanation2') %>
+        <%= t('.supplemental_document_explanation2') %>
       </p>
 
     <% end %>
 
-    <% if @crowd_datum.district_id == 87 %>
+    <% if @crowd_datum.district_id == '87' || @crowd_datum.district_id == '00' %>
 
       <p id="overseas_explanation">
         <%= t('.overseas_explanation1') %>
@@ -42,15 +40,45 @@
       </p>
 
     <% end %>
+
+    <div class="cant-enter">
+      <h3><%= t('.cant_enter.title') %></h3>
+      <%= semantic_form_for @crowd_datum, :url => protocol_path do |f| %>
+        <%= f.inputs do %>
+          <%= f.input :election_id, :as => :hidden %>
+          <%= f.input :district_id, :as => :hidden %>
+          <%= f.input :precinct_id, :as => :hidden %>
+          <%= f.input :user_id, :as => :hidden %>
+
+          <input id="crowd_datum_moderation_reason_none" name="crowd_datum[moderation_reason][]" value="" type="hidden">
+          <ul class="inline">
+            <% dp::MODERATION_REASONS.keys.each do |key| %>
+              <li>
+                <input id="crowd_datum_moderation_reason_<%= dp::MODERATION_REASONS[key] %>" name="crowd_datum[moderation_reason][]"
+                        value="<%= dp::MODERATION_REASONS[key] %>" type="checkbox">
+                <label class="choice checkbox" for="crowd_datum_moderation_reason_<%= dp::MODERATION_REASONS[key] %>"
+                        title="<%= t(".cant_enter.titles.#{key}") %>">
+                  <%= t(".cant_enter.text.#{key}") %>
+                </label>
+              </li>
+            <% end %>
+            <li>
+              <input name="commit" value="<%= t('app.common.submit') %>" type="submit" disabled="disabled">
+            </li>
+          </ul>
+
+
+        <% end %>
+      <% end %>
+    </div>
+
+    <hr />
+
     <div class="protocol-container">
-      <%#= image_tag @crowd_datum.image_path, :id => 'protocolimg' %>
-      <% logger.debug "!!!!!!!!!!! election #{@crowd_datum.election_id}; dist: #{@crowd_datum.district_id}; prec: #{@crowd_datum.precinct_id}; user: #{@crowd_datum.user_id}" %>
 
       <div class="magnifier-thumb-wrapper">
-        <%= image_tag @crowd_datum.image_path, :id => 'protocolimg' %>
-        <%#= image_tag @crowd_datum.image_path, :id => 'protocolimg', :class => (FastImage.size(full_url(@crowd_datum.image_path))[1] < 1100 ? 'low' : '') %>
+        <%= image_tag @crowd_datum.image_path, :id => 'protocolimg', alt: t('.image_alt') %>
       </div>
-      <%#= image_tag 'http://localhost:3000/system/protocols/53/53-29.jpg', :id => 'protocolimg', :class => (FastImage.size("/system/protocols/53/53-29.jpg")[1] < 1100 ? 'low' : '') %>
 
 
       <%= semantic_form_for @crowd_datum, :url => protocol_path do |f| %>
@@ -124,16 +152,16 @@
 
         <% end %>
 
-        <%= f.actions do %>
-          <%= f.action :submit, :as => :input, :label => t('app.common.submit') %>
-        <% end %>
-
         <% if @crowd_datum.supplemental_document_image_paths.present? %>
           <p id="amendment_copy">
-            <%= t('.amendment_explanation1') %>
+            <%= t('.supplemental_document_explanation1') %>
             <br />
-            <%= t('.amendment_explanation2') %>
+            <%= t('.supplemental_document_explanation2') %>
           </p>
+        <% end %>
+
+        <%= f.actions do %>
+          <%= f.action :submit, :as => :input, :label => t('app.common.submit') %>
         <% end %>
 
         <div id="votesum_explanation">
@@ -163,6 +191,8 @@
 
     </div>
     <% if @crowd_datum.supplemental_document_image_paths.present? %>
+      <hr />
+      <h2><%= t('.supplemental_documents') %></h2>
       <div id="amendment_image" class="clear">
         <% @crowd_datum.supplemental_document_image_paths.each do |img_path| %>
           <%= image_tag img_path %>

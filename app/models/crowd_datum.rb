@@ -23,6 +23,8 @@ class CrowdDatum < ActiveRecord::Base
   MAX_PARTIES = 60
   ANALYSIS_DB = 'protocol_analysis'
 
+  attr_accessor :moderation_reason
+
   #######################################
   ## VALIDATIONS
   validates :election_id, :district_id, :precinct_id, :possible_voters, :ballots_signed_for, :presence => true

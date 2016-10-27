@@ -78,21 +78,31 @@ class RootController < ApplicationController
     valid = true
     if request.post?
       logger.info "%%%%%%%%%%%% - request is post"
-     #CrowdDatum.numerical_values_provided(params[:crowd_datum])
-      params[:crowd_datum] = CrowdDatum.extract_numbers(params[:crowd_datum])
 
-      # in case users are refreshing page, look to see if the record already exists
-      # if so, ignore it, else create it
-      @crowd_datum = CrowdDatum.by_ids(params[:crowd_datum][:election_id], params[:crowd_datum][:district_id], params[:crowd_datum][:precinct_id])
-                      .by_user(params[:crowd_datum][:user_id]).first
-      if @crowd_datum.nil?
-        @crowd_datum = CrowdDatum.new(params[:crowd_datum])
-        valid = @crowd_datum.save
+      if params[:crowd_datum].has_key?(:moderation_reason)
+        # this is a cant enter submission
+
+        # make sure something was selected
+        if params[:crowd_datum][:moderation_reason] != ['']
+          DistrictPrecinct.add_moderation(params[:crowd_datum][:election_id], params[:crowd_datum][:district_id], params[:crowd_datum][:precinct_id], params[:crowd_datum][:moderation_reason])
+        end
       else
-        logger.info "!!!!!! record already exists, so ignoring submission"
-        valid = true
+        # this is a normal data entry submission
+        params[:crowd_datum] = CrowdDatum.extract_numbers(params[:crowd_datum])
+
+        # in case users are refreshing page, look to see if the record already exists
+        # if so, ignore it, else create it
+        @crowd_datum = CrowdDatum.by_ids(params[:crowd_datum][:election_id], params[:crowd_datum][:district_id], params[:crowd_datum][:precinct_id])
+                        .by_user(params[:crowd_datum][:user_id]).first
+        if @crowd_datum.nil?
+          @crowd_datum = CrowdDatum.new(params[:crowd_datum])
+          valid = @crowd_datum.save
+        else
+          logger.info "!!!!!! record already exists, so ignoring submission"
+          valid = true
+        end
+    		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id, @election_ids)
       end
-  		@user_stats = CrowdDatum.overall_stats_for_user(current_user.id, @election_ids)
     end
 
     # get the next record if there were no errors

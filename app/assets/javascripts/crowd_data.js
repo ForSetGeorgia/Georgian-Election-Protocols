@@ -1,7 +1,18 @@
 $(function ()
 {
 
-
+  // when a cant enter item is checked/unchecked determine the appropriate action to take
+  // - if nothing checked, turn off submit and reset value in being moderated
+  // - if something checked, turn on submit and give value to being moderated
+  $('.cant-enter').on('change', 'input[type="checkbox"]', function(){
+    if ($('.cant-enter input[type="checkbox"]:checked').length > 0){
+      // something is checked
+      $('.cant-enter input[type="submit"]').prop('disabled', false);
+    }else{
+      // nothing is checked
+      $('.cant-enter input[type="submit"]').prop('disabled', true);
+    }
+  });
 
 
   $('input.error').next('.help-inline').replaceWith(function ()
