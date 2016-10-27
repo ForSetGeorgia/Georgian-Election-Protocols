@@ -335,10 +335,6 @@ def self.next_available_record(user_id)
 
     logger.info "=========== query 1"
     # see if a record needs a match
-    # sql = "SELECT cd.id, cd.election_id, cd.district_id, cd.precinct_id FROM `crowd_data` as cd left join ( "
-    # sql << "select cq.id, cq.election_id, cq.district_id, cq.precinct_id, cq.user_id from crowd_queues as cq where is_finished is null) "
-    # sql << "as y on cd.election_id = y.election_id and cd.district_id = y.district_id and cd.precinct_id = y.precinct_id "
-    # sql << "WHERE cd.user_id != :user_id and y.user_id != :user_id and cd.is_valid is null and cd.is_extra = 0 and y.id is null and cd.election_id in (:e_ids)"
     sql = "SELECT cd.id, cd.election_id, cd.district_id, cd.precinct_id FROM `crowd_data` as cd left join ( "
     sql << "select cq.id, cq.election_id, cq.district_id, cq.precinct_id from crowd_queues as cq where is_finished is null) "
     sql << "as y on cd.election_id = y.election_id and cd.district_id = y.district_id and cd.precinct_id = y.precinct_id "
@@ -364,7 +360,7 @@ def self.next_available_record(user_id)
       sql = "SELECT dp.election_id, dp.district_id, dp.precinct_id "
       sql << "FROM (select dp.election_id, dp.district_id, dp.precinct_id, count(*) as c "
       sql << "from district_precincts as dp inner join crowd_data as cd on dp.election_id = cd.election_id and dp.district_id = cd.district_id and dp.precinct_id = cd.precinct_id "
-      sql << "where dp.is_validated = 0 and dp.has_protocol = 1 and cd.is_valid = 0 and cd.user_id != :user_id and cd.election_id in (:e_ids) "
+      sql << "where dp.is_validated = 0 and dp.has_protocol = 1 and dp.is_annulled = 0 and (dp.being_moderated = 0 or dp.being_moderated is null) and cd.is_valid = 0 and cd.user_id != :user_id and cd.election_id in (:e_ids) "
       sql << "group by dp.election_id, dp.district_id, dp.precinct_id having c > 1) as dp "
       sql << "left join ( select cq.id, cq.election_id, cq.district_id, cq.precinct_id from crowd_queues as cq where cq.is_finished is null and cq.user_id != :user_id and cq.election_id in (:e_ids)) "
       sql << "as y on dp.election_id = y.election_id and dp.district_id = y.district_id and dp.precinct_id = y.precinct_id WHERE y.id is null and dp.election_id in (:e_ids)"
@@ -398,7 +394,7 @@ def self.next_available_record(user_id)
         sql << ") as x on dp.election_id = x.election_id and dp.district_id = x.district_id and dp.precinct_id = x.precinct_id "
         sql << "left join (select cq.id, cq.election_id, cq.district_id, cq.precinct_id from crowd_queues as cq "
         sql << "where is_finished is null and cq.election_id in (:e_ids)) as y on dp.election_id = y.election_id and dp.district_id = y.district_id and dp.precinct_id = y.precinct_id "
-        sql << "where dp.has_protocol = 1 and dp.is_validated = 0 and x.id is null and y.id is null and dp.election_id in (:e_ids)"
+        sql << "where dp.has_protocol = 1 and dp.is_validated = 0 and dp.is_annulled = 0 and (dp.being_moderated = 0 or dp.being_moderated is null) and x.id is null and y.id is null and dp.election_id in (:e_ids)"
         needs_processing = DistrictPrecinct.find_by_sql([sql, :user_id => user_id, e_ids: e_ids])
 
         remove_user_records(user_records, needs_processing)

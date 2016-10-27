@@ -72,17 +72,17 @@ class ChangeAmendmentFields < ActiveRecord::Migration
 
   def down
     puts '- updating protocol tables'
-    # remove_index :district_precincts, :has_amendment
-    # remove_index :district_precincts, :has_explanatory_note
-    # remove_column :district_precincts, :has_amendment
-    # remove_column :district_precincts, :has_explanatory_note
+    remove_index :district_precincts, :has_amendment
+    remove_index :district_precincts, :has_explanatory_note
+    remove_column :district_precincts, :has_amendment
+    remove_column :district_precincts, :has_explanatory_note
 
-    # remove_index :district_precincts, :has_supplemental_documents
-    # rename_column :district_precincts, :has_supplemental_documents, :has_amendment
-    # rename_column :district_precincts, :supplemental_document_count, :amendment_count
-    # add_index :district_precincts, :has_amendment
+    remove_index :district_precincts, :has_supplemental_documents
+    rename_column :district_precincts, :has_supplemental_documents, :has_amendment
+    rename_column :district_precincts, :supplemental_document_count, :amendment_count
+    add_index :district_precincts, :has_amendment
 
-    # rename_column :has_protocols, :supplemental_document_count, :amendment_count
+    rename_column :has_protocols, :supplemental_document_count, :amendment_count
 
 
     puts '- updating analysis tables'

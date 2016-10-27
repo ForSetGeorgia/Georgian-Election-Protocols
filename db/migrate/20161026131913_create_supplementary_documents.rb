@@ -52,19 +52,19 @@ class CreateSupplementaryDocuments < ActiveRecord::Migration
               end
 
               # if the dp has documents, update how many
-              # else if the dp actually does not have documents, so update the flag
+              # else if the dp actually does not have documents, update the flag
               # - 2013 protocols are not on file so do not reset the dp records for this election
               if election_id > 1
                 if has_documents
                   dp.supplemental_document_count = dp.supplemental_documents.count
                   dp.save
                 else
-                  puts "- #{dp.district_id}.#{dp.precinct_id} does not have amendments -> reseting values"
-                  dp.has_supplemental_documents = false
-                  dp.supplemental_document_count = 0
-                  dp.has_amendment = false
-                  dp.has_explanatory_note = false
-                  dp.save
+                  # puts "- #{dp.district_id}.#{dp.precinct_id} does not have amendments -> reseting values"
+                  # dp.has_supplemental_documents = false
+                  # dp.supplemental_document_count = 0
+                  # dp.has_amendment = false
+                  # dp.has_explanatory_note = false
+                  # dp.save
                 end
               end
             end

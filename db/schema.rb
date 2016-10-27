@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161026131913) do
+ActiveRecord::Schema.define(:version => 20161027101420) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -180,8 +180,11 @@ ActiveRecord::Schema.define(:version => 20161026131913) do
     t.boolean  "is_annulled",                               :default => false
     t.boolean  "has_amendment",                             :default => false
     t.boolean  "has_explanatory_note",                      :default => false
+    t.boolean  "being_moderated"
+    t.string   "moderation_reason"
   end
 
+  add_index "district_precincts", ["being_moderated"], :name => "index_district_precincts_on_being_moderated"
   add_index "district_precincts", ["district_id", "precinct_id"], :name => "idx_dp_location"
   add_index "district_precincts", ["election_id", "region", "district_id", "precinct_id"], :name => "idx_elec_dist_prec"
   add_index "district_precincts", ["has_amendment"], :name => "index_district_precincts_on_has_amendment"

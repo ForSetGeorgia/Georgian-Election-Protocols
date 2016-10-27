@@ -10,7 +10,8 @@ class DistrictPrecinct < ActiveRecord::Base
   attr_accessible :election_id, :district_id, :precinct_id,
                   :has_protocol, :is_validated, :is_annulled,
                   :has_supplemental_documents, :supplemental_document_count,
-                  :has_amendment, :has_explanatory_note, :supplemental_documents_attributes
+                  :has_amendment, :has_explanatory_note, :supplemental_documents_attributes,
+                  :being_moderated, :moderation_reason
   attr_accessor :num_precincts, :num_protocols_found, :num_protocols_missing, :num_protocols_not_entered, :num_protocols_validated
 
   #######################################
@@ -61,6 +62,11 @@ class DistrictPrecinct < ActiveRecord::Base
   # is_annulled (protocol no longer valid)
   # - 0 = default value
   # - 1 = set to true when find amemendment that indicates the protocol is annulled
+
+  # being_moderated
+  # - by default is null which means that it has never been moderated
+  # - 0 = it was moderated and is finished
+  # - 1 = it is currently being moderated
 
   #######################
 
