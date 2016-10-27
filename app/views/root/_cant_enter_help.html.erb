@@ -1,0 +1,39 @@
+<p>
+  <%= t('.explanation') %>
+</p>
+<div class="tabs">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#bad_image" data-toggle="tab"><%= t('.tabs.bad_image') %></a></li>
+    <li><a href="#missing_info" data-toggle="tab"><%= t('.tabs.missing_info') %></a></li>
+    <li><a href="#cant_read" data-toggle="tab"><%= t('.tabs.cant_read') %></a></li>
+    <li><a href="#docs_not_clear" data-toggle="tab"><%= t('.tabs.docs_not_clear') %></a></li>
+    <li><a href="#annulled" data-toggle="tab"><%= t('.tabs.annulled') %></a></li>
+  </ul>
+  <div class="tab-content tab-content">
+    <div class="tab-pane fade in active" id="bad_image">
+      <%= simple_format(t('.text.bad_image')) %>
+    </div>
+
+    <div class="tab-pane fade in" id="missing_info">
+      <%= simple_format(t('.text.missing_info')) %>
+      <img src="/help/missing_info1.jpg" />
+
+      <%= simple_format(t('.text.missing_info2')) %>
+      <img src="/help/missing_info2.jpg" />
+    </div>
+
+    <div class="tab-pane fade in" id="cant_read">
+      <%= simple_format(t('.text.cant_read')) %>
+      <img src="/help/cant_read1.jpg" />
+    </div>
+
+    <div class="tab-pane fade in" id="docs_not_clear">
+      <%= simple_format(t('.text.docs_not_clear')) %>
+      <img src="/help/doc_not_clear1.jpg" />
+    </div>
+    <div class="tab-pane fade in" id="annulled">
+      <%= simple_format(t('.text.annulled')) %>
+      <img src="/help/annulled.jpg" />
+    </div>
+  </div>
+</div>

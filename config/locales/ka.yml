@@ -430,6 +430,7 @@ ka:
       scroll_to_zoom: გასადიდებლად დასქროლე ოქმი
       supplemental_documents: Supplemental Documents
       image_alt: If you see this after the page is finished loading, then the protocol image is bad and needs to be re-downloaded. Please select the 'No Protocol' option above.
+      modal_header: Explanation of reasons why you cannot enter data
       title:
         toggle: გადართე
         ccw: შეაბრუნე მთვლელი საათის ისრის მიმართულებით
@@ -443,11 +444,11 @@ ka:
       cant_enter:
         title: If you can't enter data, please indicate why
         text:
-          bad_image: No Protocol
-          cant_read: Can't Read
-          missing_info: Missing Information
-          docs_not_clear: Documents Not Clear
-          annulled: Is Annulled
+          bad_image: აკლია ოქმი
+          cant_read: არ იკითხება
+          missing_info: აკლია ინფორმაცია
+          docs_not_clear: გაურკვეველი ტექსტი
+          annulled: გაუქმებული
         titles:
           bad_image: The protocol image does not appear below
           cant_read: You cannot read the handwriting in the protocol
@@ -505,13 +506,67 @@ ka:
       annulled: Annullment
       explanatory_note: Explanatory Note
       skip: Skip
-      modal_header: Help for Categorizing A Supplemental Document
+      modal_header: Explanation on Categorizing A Supplemental Document
     categorize_supplemental_documents_help:
-      explanation: Below is an explanation of the different types of supplementary documents that you need to identify.
-      tab:
+      explanation: Below are explanations of the different types of supplementary documents that you need to identify.
+      tabs:
         amendment: Amendment
         annulled: Annullment
         explanatory_note: Explanatory Note
+      text:
+        amendment: |
+          An amendment is a document that indicates that numbers for a line item or party needs to be fixed. It is an official document that is filled in by hand.
+
+          Below is an exmaple of what an amendment looks like.
+        annullment: |
+          Sometimes the CEC decides that the protocol is not valid and annulls it, thus making entering the data for the protocol not necessary. When this happens, there will be a supplemental document that is an official letter indicating that the protocol has been annulled.
+
+          Below is an example of a document indicating that the protocol has been annulled.
+        explanatory_note: |
+          If a supplemental document is not an amendment or an annullment, then it is an explanatory note. Typically these are hand-written letters explaining a situation.
+
+          Below is an exmaple of what an explanatory note looks like.
+    cant_enter_help:
+      explanation: Below are explanations and examples of the different reasons why you may not be able to enter the protocol data.
+      tabs:
+        bad_image: აკლია ოქმი
+        cant_read: არ იკითხება
+        missing_info: აკლია ინფორმაცია
+        docs_not_clear: გაურკვეველი ტექსტი
+        annulled: გაუქმებული
+      text:
+        bad_image: |
+          If you just see a blank screen and no protocol image, then a problem occurred while downloading the image from the CEC and the image needs to be downloaded again.
+
+          Please click the "No Protocol" button so a new image can be downloaded.
+        cant_read: |
+          It is possible that you may not be able to read the number(s) written on the protocol either due to a bad pen, the color of the ink, or bad handwriting.
+
+          When you encounter this issue, please check if there is a supplemental document below the protocol that properly indicates what the number should be. If so, enter that number and submit the protocol. If not, please click the "Can't Read" button so the moderators can follow-up on this issue.
+
+          If you have doubts about what a number could be, please report it so the moderators can decide how best to proceed.
+
+          Below is an example of a protocol that has some issues with not being able to properly know what number to use. For Party 17 - is that a 1 or an X. For Party 26 - is that a 7 or 37.
+        missing_info: |
+          A protocol should have all of the information provided for Items 1-6 and at least some parties. If information is missing, please report it instead of entering a partially filled in protocol.
+
+          When you encounter this issue, please check if there is a supplemental document below the protocol that properly indicates what the missing number(s) should be. If so, enter the number(s) and submit the protocol. If not, please click the "Missing Information" button so the moderators can follow-up on this issue.
+
+          If any of this information is not provided, please report it so the moderators can follow-up with the CEC on getting the issue resolved.
+
+          Below is an example of Item 4 not being filled in.
+        missing_info2: |
+          Below is an example of Items 1-5 not being filled in.
+        docs_not_clear: |
+          Sometimes the supplemental documents have issues and, therefore, make it impossible to properly fill in the protocol. For instance, the supplemental document might be for a different protocol. The document might be an amendment that says to fix something that cannot be found in the protocol. Or, the handwriting in the document is illegible.
+
+          If you have any dobuts about the supplemental documents, please report it by clicking on the "Documents Not Clear" button so the moderators can follow-up with the CEC.
+
+          Below is an example of a supplemental document that was submitted to fix the original protocol. Ideally, an amendment should be submitted to resolve the issue, not another protocol.
+        annulled: |
+          Sometimes the CEC decides that the protocol is not valid and annulls it, thus making entering the data for the protocol not necessary. When this happens, there will be a supplemental document that is an official letter indicating that the protocol has been annulled.
+
+          Below is an example of a document indicating that the protocol has been annulled.
   mailer:
     new_user:
       subject: Are you ready to help JumpStart digitize some election protocols?!
