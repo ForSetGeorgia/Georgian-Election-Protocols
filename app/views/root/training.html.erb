@@ -6,15 +6,18 @@
     <%= t('.p1', :count => @user_trained_num) %>
   </p>
 
-  <p>
-    <%= t('.p2') %>
-  </p>
+  <hr />
 
   <div class="protocol-container">
     <div class="magnifier-thumb-wrapper">
       <%= image_tag '/training/' + @next_protocol.to_s + '.jpg', :id => 'protocolimg' %>
     </div>
     <%= form_tag training_path, :class => 'training' do %>
+      <div class="not-enter-x">
+        <%= t('.p2').html_safe %>
+      </div>
+
+
       <% [
           [1, :possible_voters],
           [2, :special_voters],

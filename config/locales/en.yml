@@ -266,7 +266,7 @@ en:
         migration_history: Migration History
       edit:
         title: Edit Data
-        p1: "Please only enter numbers; do not enter any 'X'."
+        p1: "Please only <br/> enter numbers; <br/> do not enter 'X'."
         p2: "If a required field (*) does not have a number, please enter 0."
         amendment_explanation1: The CEC has issued an amendment for this protocol, which is located at the bottom of this page.
         amendment_explanation2: Please enter the numbers from the amendment into the appropriate form fields.
@@ -390,7 +390,7 @@ en:
     training:
       title: Training Center
       p1: You must successfully complete 5 training protocols before you can enter data for real protocols.  So far you have completed %{count}.
-      p2: "Please only enter numbers; do not enter any 'X'."
+      p2: "Please only <br/> enter numbers; <br/> do not enter 'X'."
       success: Success, data you entered was correct. Showing next protocol
       completed: You have successfully completed the training
       errors:
@@ -415,7 +415,7 @@ en:
         reset: Reset all transformations
     protocol:
       title: Enter Data
-      p1: "Please only enter numbers; do not enter any 'X'."
+      p1: "Please only <br/> enter numbers; <br/> do not enter 'X'."
       p2: "If a required field (*) does not have a number, please enter 0."
       supplemental_document_explanation1: The CEC has issued supplemental documents for this protocol, which is located at the bottom of this page.
       supplemental_document_explanation2: If the documents indicate changes in the protocol data, please enter the changes from the documents into the appropriate form fields.

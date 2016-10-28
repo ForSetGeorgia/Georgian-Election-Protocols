@@ -17,10 +17,6 @@
 
   <div id="protocol-form-container">
 
-    <p>
-      <%= t('.p1') %>
-    </p>
-
     <% if @crowd_datum.supplemental_document_image_paths.present? %>
 
       <p id="amendment_explanation">
@@ -90,6 +86,11 @@
           <%= f.input :district_id, :as => :hidden %>
           <%= f.input :precinct_id, :as => :hidden %>
           <%= f.input :user_id, :as => :hidden %>
+
+          <div class="not-enter-x">
+            <%= t('.p1').html_safe %>
+          </div>
+
 
           <%
             style = ''

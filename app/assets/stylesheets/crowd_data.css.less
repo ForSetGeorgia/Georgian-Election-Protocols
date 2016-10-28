@@ -80,6 +80,12 @@
   }
 
   .cant-enter{
+    h3{
+      color: #195378;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      font-size: 23px;
+    }
     input[type='checkbox']{
       display: none;
       & + label{
@@ -148,8 +154,20 @@
 
 .magnifier-thumb-wrapper + form {
   display: block;
+  position: relative;
   z-index:1;
   margin-left: -40px;
+
+  .not-enter-x{
+    position:absolute;
+    top: 0;
+    left:0;
+    color: #8A0A15;
+    margin-left: 40px;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 25px;
+  }
 
   .top-box{
     margin-top: 108px;

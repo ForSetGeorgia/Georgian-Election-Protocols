@@ -266,7 +266,7 @@ ka:
         migration_history: გადატანის (მიგრაციის) ისტორია
       edit:
         title: მონაცემების შეყვანა
-        p1: "გთხოვთ, შეიყვანოთ მხოლოდ რიცხვები; არ შეიყვანოთ 'X'."
+        p1: "გთხოვთ, შეიყვანოთ <br /> მხოლოდ რიცხვები; <br /> არ შეიყვანოთ 'X'."
         p2: "თუ სავალდებულს ველი (*)  არ აქვს რიცხვი გთხოვთ, შეიყვანოთ 0"
         amendment_explanation1: ცესკომ ამ ოქმში შეიტანა ცვლილება, რომელიც განთავსებულია ამ გვერდი ბოლოში.
         amendment_explanation2: გთხოვთ, შეიყვანოთ ცვლილებაში მოცემული რიცხვები შესაბამისი ველის ფორმებში.
@@ -390,7 +390,7 @@ ka:
     training:
       title: ტრენინგ ცენტრი
       p1: თქვენ წარმატებით უნდა შეავსოთ ტრენინგის 5 ოქმი, სანამ ნამდვილი ოქმების მონაცემების შეყვანას დაიწყებთ. ამჟამად შევსებული გაქვთ %{count} ოქმი.
-      p2: "გთხოვთ, შეიყვანოთ მხოლოდ რიცხვები; არ შეიყვანოთ 'X'."
+      p2: "გთხოვთ, შეიყვანოთ <br /> მხოლოდ რიცხვები; <br /> არ შეიყვანოთ 'X'."
       success: თქვენ ყველა ველი სწორად შეავსეთ. მოცემულია შემდეგი ოქმი
       completed: თქვენ წარმატებით დაასრულეთ მოსამზადებელი ეტაპი
       errors:
@@ -415,7 +415,7 @@ ka:
         reset: ყველა მოქმედების გაუქმება
     protocol:
       title: მონაცემების შეყვანა
-      p1: "გთხოვთ, შეიყვანოთ მხოლოდ რიცხვები; არ შეიყვანოთ 'X'."
+      p1: "გთხოვთ, შეიყვანოთ <br /> მხოლოდ რიცხვები; <br /> არ შეიყვანოთ 'X'."
       p2: "თუ სავალდებულს ველი (*)  არ აქვს რიცხვი გთხოვთ, შეიყვანოთ 0"
       supplemental_document_explanation1: The CEC has issued supplemental documents for this protocol, which is located at the bottom of this page.
       supplemental_document_explanation2: If the documents indicate changes in the protocol data, please enter the changes from the documents into the appropriate form fields.
