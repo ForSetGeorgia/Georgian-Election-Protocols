@@ -35,7 +35,7 @@ en:
         party_district_file: District/Party CSV
         status: Status
         status_types:
-          ongoing: On Going
+          ongoing: Ongoing
           coming_up: Coming Soon
           completed: Completed
         has_parties: Has Parties?
@@ -52,7 +52,7 @@ en:
   formtastic:
     hints:
       election:
-        election_app_event_id: ID of the event in the Election Portal app that is need for data migation to work
+        election_app_event_id: ID of the event in the Election Portal app that is need for data migration to work
         parties_same_for_all_districts: Are the parties the same for every district or do they vary (i.e., majoritarian). This is needed to determine which parties to show in the protocol form.
         is_local_majoritarian: For analysis - Local Majoritarian has an extra level of majoritarian districts
         has_regions: For analysis - do regions need to be included in the analysis
@@ -204,7 +204,7 @@ en:
         remaining: Remaining
       document_stats:
         amendment: Amendments
-        annulled: Annullments
+        annulled: Annulments
         explanatory_note: Explanatory Notes
         unknown: Unknown
     unsupported_browser:
@@ -238,7 +238,7 @@ en:
         title: User Details
     elections:
       form:
-        party_file_explanation: "The Pary CSV should have three columns: Party Number, Party Name, Is Independent. The party name must match the name of the party in the Election Data Portal. For the last column, you can leave it blank if the party is not independent, otherwise please enter true."
+        party_file_explanation: "The Party CSV should have three columns: Party Number, Party Name, Is Independent. The party name must match the name of the party in the Election Data Portal. For the last column, you can leave it blank if the party is not independent, otherwise please enter true."
         party_file_warning: "WARNING - Loading a new file will cause the analysis tables and views to be reloaded and all existing data will be deleted."
         district_precinct_file_explanation: 'The District/Precinct CSV should have two columns: District, Precinct. For the new xx.yy.zz format, xx is the district and yy.zz is the precinct.'
         district_precinct_file_warning: "WARNING - Loading a new file that removes precincts will cause the data for those precincts to be deleted."
@@ -503,7 +503,7 @@ en:
       title: Categorize A Supplemental Document
       no_documents: Hooray! No supplemental documents need to be categorized!
       amendment: Amendment
-      annulled: Annullment
+      annulled: Annulment
       explanatory_note: Explanatory Note
       skip: Skip
       modal_header: Explanation on Categorizing A Supplemental Document
@@ -511,21 +511,21 @@ en:
       explanation: Below are explanations of the different types of supplementary documents that you need to identify.
       tabs:
         amendment: Amendment
-        annulled: Annullment
+        annulment: Annulment
         explanatory_note: Explanatory Note
       text:
         amendment: |
           An amendment is a document that indicates that numbers for a line item or party needs to be fixed. It is an official document that is filled in by hand.
 
-          Below is an exmaple of what an amendment looks like.
-        annullment: |
-          Sometimes the CEC decides that the protocol is not valid and annulls it, thus making entering the data for the protocol not necessary. When this happens, there will be a supplemental document that is an official letter indicating that the protocol has been annulled.
+          Below is an example of what an amendment looks like.
+        annulment: |
+          Sometimes the CEC decides that the protocol is not valid and annuls it, thus making entering the data for the protocol not necessary. When this happens, there will be a supplemental document that is an official letter indicating that the protocol has been annulled.
 
           Below is an example of a document indicating that the protocol has been annulled.
         explanatory_note: |
-          If a supplemental document is not an amendment or an annullment, then it is an explanatory note. Typically these are hand-written letters explaining a situation.
+          If a supplemental document is not an amendment or an annulment, then it is an explanatory note. Typically these are hand-written letters explaining a situation.
 
-          Below is an exmaple of what an explanatory note looks like.
+          Below is an example of what an explanatory note looks like.
     cant_enter_help:
       explanation: Below are explanations and examples of the different reasons why you may not be able to enter the protocol data.
       tabs:
@@ -558,11 +558,11 @@ en:
         docs_not_clear: |
           Sometimes the supplemental documents have issues and, therefore, make it impossible to properly fill in the protocol. For instance, the supplemental document might be for a different protocol, the document might be an amendment that says to fix something that cannot be found in the protocol, or the handwriting in the document is illegible.
 
-          If you have any dobuts about the supplemental documents, please report it by clicking on the "Documents Not Clear" button so the moderators can follow-up with the CEC.
+          If you have any doubts about the supplemental documents, please report it by clicking on the "Documents Not Clear" button so the moderators can follow-up with the CEC.
 
           Below is an example of a supplemental document that was submitted to fix the original protocol. Ideally, an amendment should be submitted to resolve the issue, but in this case another protocol was submitted.
         annulled: |
-          Sometimes the CEC decides that the protocol is not valid and annulls it, thus making entering the data for the protocol not necessary. When this happens, there will be a supplemental document that is an official letter indicating that the protocol has been annulled.
+          Sometimes the CEC decides that the protocol is not valid and annuls it, thus making entering the data for the protocol not necessary. When this happens, there will be a supplemental document that is an official letter indicating that the protocol has been annulled.
 
           Below is an example of a document indicating that the protocol has been annulled.
   mailer:
