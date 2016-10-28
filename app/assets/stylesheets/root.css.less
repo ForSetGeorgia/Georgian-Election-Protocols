@@ -14,19 +14,29 @@
     font-size: 15px;
     line-height: 20px;
   }
-  h2, h3{
+  h1, h2, h3{
     margin-top: 25px;
     padding-bottom: 10px;
   }
-  h2 > .switch-to{
-    display: inline-block;
-    margin-left: 20px;
-    font-size: 13px;
+  h1{
+    & > div:last-of-type{
+      margin-top: 10px;
+    }
+    .switch-to{
+      display: inline-block;
+      margin-left: 60px;
+      font-size: 13px;
+      border: 1px solid #8A0A15;
+      padding: 3px 9px;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      border-radius: 5px;
+    }
   }
   h3{
     font-size: 16pt;
     &.underline{
-      border-bottom: solid 2px #ebebeb;
+      /*border-bottom: solid 2px #ebebeb;*/
     }
   }
   a {
@@ -34,13 +44,27 @@
     text-decoration:underline;
   }
   .elections-coming-up {
-    ul li {
-      color:#8A0A15;
-      font-weight:bold;
+    .coming-up-date{
+      text-decoration: underline;
+      font-weight: bold;
+    }
+    img{
+      margin-right: 20px;
     }
   }
   .data-downloads li{
     margin-top: 10px;
   }
 
+
+  #status .outer-border, #download .outer-border{
+    border: solid 2px #ebebeb;
+    & > div:first-of-type{
+      padding-left: 10px;
+      border-right: solid 2px #ebebeb;
+      &.no-inner-border{
+        border-right: none;
+      }
+    }
+  }
 }

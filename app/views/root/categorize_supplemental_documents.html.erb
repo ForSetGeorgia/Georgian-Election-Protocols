@@ -1,6 +1,6 @@
 <% title t('.title') %>
-<% links = link_to(t('helpers.links.help'), '#help-modal', class: 'btn btn-primary', role: 'button', :'data-toggle' => 'modal') +
-            ' ' + link_to(t('.skip'), categorize_supplemental_documents_path, class: 'btn btn-primary skip') %>
+<% links = link_to(t('helpers.links.help'), '#help-modal', class: 'protocol-button small help', role: 'button', :'data-toggle' => 'modal') +
+            ' ' + link_to(t('.skip'), categorize_supplemental_documents_path, class: 'protocol-button help skip small') %>
 <% title_right links %>
 
 <div id="categorize_supplemental_documents">
@@ -19,13 +19,13 @@
         <div class="document-selection">
           <div class="row-fluid">
             <div class="span4">
-              <%= link_to t('.amendment'), '#', class: 'btn amendment', :'data-name' => :is_amendment %>
+              <%= link_to t('.amendment'), '#', class: 'protocol-button amendment', :'data-name' => :is_amendment %>
             </div>
             <div class="span4">
-              <%= link_to t('.annulled'), '#', class: 'btn annulled', :'data-name' => :is_annullment %>
+              <%= link_to t('.annulled'), '#', class: 'protocol-button annulled', :'data-name' => :is_annullment %>
             </div>
             <div class="span4">
-              <%= link_to t('.explanatory_note'), '#', class: 'btn explanatory', :'data-name' => :is_explanatory_note %>
+              <%= link_to t('.explanatory_note'), '#', class: 'protocol-button explanatory', :'data-name' => :is_explanatory_note %>
             </div>
           </div>
         </div>

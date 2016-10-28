@@ -2,45 +2,45 @@
 
 
   <% if @all_elections.present? %>
-    <h2>
-      <%= @current_election.name %>
-      |
-      <%= l @current_election.election_at %>
-      <% if @current_election.can_enter_data? %>
-        | <i class="icon-edit" title='<%= t('.flags.active') %>'></i>
-      <% elsif @current_election.is_coming_up? %>
-        | <i class="icon-time" title='<%= t('.flags.coming_up') %>'></i>
-      <% end %>
-
-      <div class="switch-to dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <%= t('.choose') %>
-          <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <% @all_elections.each do |election| %>
-
-            <li>
-              <%= link_to params.merge(election: election.analysis_table_name) do %>
-                <% flag = election.can_enter_data? ?
-                            "| #{t('.flags.active')}" : election.is_coming_up? ?
-                            "| #{t('.flags.coming_up')}" : '' %>
-                <%= "#{election.name} | #{l election.election_at} #{flag}" %>
-              <% end %>
-            </li>
-          <% end %>
-        </ul>
+    <h1>
+      <div>
+        <%= @current_election.name %>
       </div>
-    </h2>
+      <div>
+        <%= l @current_election.election_at %>
+
+        <div class="switch-to dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <%= t('.choose') %>
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <% @all_elections.each do |election| %>
+
+              <li>
+                <%= link_to params.merge(election: election.analysis_table_name) do %>
+                  <% flag = election.can_enter_data? ?
+                              "| #{t('.flags.active')}" : election.is_coming_up? ?
+                              "| #{t('.flags.coming_up')}" : '' %>
+                  <%= "#{election.name} | #{l election.election_at} #{flag}" %>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </h1>
 
     <% if @current_election.is_coming_up? %>
 
-      <div class="row-fluid elections-coming-up">
-        <div class="span6">
-          <h3><%= t('.stay_tuned.header') %></h3>
+      <div class="elections-coming-up">
+        <%= link_to(image_tag('volunteers.png', class: 'pull-left'), @bitly_url, target: :blank) %>
 
-          <p><%= t('.stay_tuned.text', name: @current_election.name, date: l(@current_election.election_at)) %></p>
-        </div>
+        <h3><%= t('.stay_tuned.header') %></h3>
+
+        <p><%= t('.stay_tuned.text1', name: @current_election.name) %></p>
+
+        <p class="coming-up-date"><%= t('.stay_tuned.text2', date: l(@current_election.election_at)) %></p>
       </div>
 
     <% else %>
@@ -60,7 +60,7 @@
                 <h3 class="underline"><%= t('.status.headers.data_entry') %></h3>
                 <% stats = @overall_stats.select{|x| x[:election_id] == @current_election.id}.first %>
                 <% if stats.present? %>
-                  <div class="row-fluid">
+                  <div class="row-fluid outer-border">
                     <div class="span6">
                       <p>
                         <strong><%= t('.status.overall_stats.districts')%>:</strong>
@@ -103,7 +103,7 @@
 
               <div class="span6">
                 <h3 class="underline"><%= t('.status.headers.users') %></h3>
-                <div class="row-fluid">
+                <div class="row-fluid outer-border">
                   <div class="span6">
                     <p>
                       <strong><%= t('.status.overall_user_stats.users')%>:</strong>
@@ -285,10 +285,10 @@
                     <th>
                       <%= t('.district_summaries.headers.more_ballots_avg') %>
                     </th>
-                    <th>
+                    <th class="hl2">
                       <%= t('.district_summaries.headers.more_votes_percent') %>
                     </th>
-                    <th>
+                    <th class="hl2">
                       <%= t('.district_summaries.headers.more_votes_avg') %>
                     </th>
                     <th>
@@ -511,7 +511,7 @@
                 <h3 class="underline"><%= t('.status.headers.data_entry') %></h3>
                 <% stats = @overall_stats.select{|x| x[:election_id] == @current_election.id}.first %>
                 <% if stats.present? %>
-                  <div class="row-fluid">
+                  <div class="row-fluid outer-border">
                     <div class="span6">
                       <p>
                         <strong><%= t('.status.overall_stats.districts')%>:</strong>
@@ -554,19 +554,22 @@
 
               <div class="span6">
                 <h3 class="underline"><%= t('.download.headers.download') %></h3>
-                <% if @current_election.has_analysis_data? %>
-                  <ul class="data-downloads">
-                    <li>
-                      <%= link_to 'CSV', generate_spreadsheet_path(id: @current_election.analysis_table_name, :format => :csv), class: 'btn btn-success' %>
-
-                    </li>
-                    <li>
-                      <%= link_to 'XLS', generate_spreadsheet_path(id: @current_election.analysis_table_name, :format => :xls), class: 'btn btn-success' %>
-                    </li>
-                  </ul>
-                <% else %>
-                  <p class="alert alert-warning"><%= t('root.download.no_data') %></p>
-                <% end %>
+                <div class="row-fluid outer-border">
+                  <div class="span6 no-inner-border">
+                    <% if @current_election.has_analysis_data? %>
+                      <ul class="data-downloads">
+                        <li>
+                          <%= link_to 'CSV', generate_spreadsheet_path(id: @current_election.analysis_table_name, :format => :csv), class: 'btn btn-success' %>
+                        </li>
+                        <li>
+                          <%= link_to 'XLS', generate_spreadsheet_path(id: @current_election.analysis_table_name, :format => :xls), class: 'btn btn-success' %>
+                        </li>
+                      </ul>
+                    <% else %>
+                      <p class="alert alert-warning"><%= t('root.download.no_data') %></p>
+                    <% end %>
+                  </div>
+                </div>
               </div>
             </div>
 

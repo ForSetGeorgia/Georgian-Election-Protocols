@@ -368,7 +368,8 @@ ka:
           protocols_validated: დამოწმებული ოქმები
       stay_tuned:
         header: თვალი ადევნეთ!
-        text: "The '%{name}' will soon have protocols for us to enter. Please check back on %{date}."
+        text1: "The '%{name}' will soon have protocols for us to enter."
+        text2: "Please check back on %{date}."
       want_help:
         header: გინდა დაგვეხმარო?
         text: |
