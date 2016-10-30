@@ -124,8 +124,9 @@ else
               img_bname = "#{did}-#{precinct}"
               amend_count = 1
 
-              logger_info.info("Deleting existing protocol and amendments")
-              del_files = Dir.glob("#{ddir}#{img_bname}*")
+              # DELETE EXISTING FILES BEFORE DOWNLOADING THEM
+              #logger_info.info("Deleting existing protocol and amendments")
+              #del_files = Dir.glob("#{ddir}#{img_bname}*")
 
               del_files.each do |f|
                 begin
