@@ -4,7 +4,7 @@ ka:
     models:
       user: მომხმარებელი
       president2013: President 2013
-      election: Election
+      election: არჩევნები
     attributes:
       user:
         email: ელ.ფოსტა
@@ -13,37 +13,37 @@ ka:
         role: როლი
         remember_me: დამიმახსოვრე
       election:
-        election_app_event_id: Election Portal Event ID
-        election_at: Election Date
-        can_enter_data: Can Enter Data?
-        parties_same_for_all_districts: Same Parties For All Districts?
-        is_local_majoritarian: Is Local Majoritarian Election?
-        has_indepenedent_parties: Has Independent Parties?
-        has_regions: Has Regions?
-        has_district_names: Has District Names?
+        election_app_event_id: საარჩევნო პორტალი ღონისძიების ნომერი
+        election_at: არჩევნების თარიღი
+        can_enter_data: შესაძლებელია მონაცემების შეყვანა?
+        parties_same_for_all_districts: პარტიები ყველა ოლქისთვის იგივეა?
+        is_local_majoritarian: არის ადგილობრივი მაჟორიტარული არჩევნები?
+        has_indepenedent_parties: არის საინიციატივო ჯგუფები?
+        has_regions: აქვს რეგიონები?
+        has_district_names: აქვს ოლქის სახელები?
         has_custom_shape_levels: Has Custom Shape Levels (Tbilisi)?
-        max_party_in_district: Max Parties in District
-        protocol_top_box_margin: Protocol Top Box Margin Top
-        protocol_party_top_margin: Protocol Party Box Margin Top
-        district_precinct_separator: Character Between District / Precinct ('.', '-')
-        scraper_url: Scraper URL
-        scraper_url_base: Domain for CEC Results Site
-        scraper_url_folder_to_images: Folder to Election in CEC Results Site
-        scraper_page_pattern: Page Pattern for CEC Results Page
-        party_file: Party CSV
-        district_precinct_file: District/Precinct CSV
-        party_district_file: District/Party CSV
-        status: Status
+        max_party_in_district: პარტიების მაქსიმალური რაოდენობა ოლქში
+        protocol_top_box_margin: ოქმის ზედა გრაფების ზღვარი
+        protocol_party_top_margin: ოქმში პარტიების გრაფების ზედა ზღვარი
+        district_precinct_separator: ნიშანი ოლქსა და უბანს შორის ('.', '-')
+        scraper_url: სკრეიპერის ბმული
+        scraper_url_base: ცესკოს შედეგების გვერდის დომეინი
+        scraper_url_folder_to_images: საქაღალდე არჩევნების შედეგებისსათვის ცესკოს გვერდიდან
+        scraper_page_pattern: ცესკოს შედეგების გვერდის ნიმუში
+        party_file: პარტია CSV
+        district_precinct_file: ოლქი/უბანი CSV
+        party_district_file: ოლქი/პარტია CSV
+        status: სტატუსი
         status_types:
-          ongoing: On Going
-          coming_up: Coming Soon
-          completed: Completed
-        has_parties: Has Parties?
-        has_districts: Has Districts/Precincts?
-        has_party_districts: Has Parties per District?
-        tmp_analysis_table_name: Analysis Table Name
+          ongoing: მიმდინარე
+          coming_up: მალე
+          completed: დასრულებული
+        has_parties: არის პარტიები?
+        has_districts: არის ოლქები/უბნები?
+        has_party_districts: არის პარტიები ყველა ოლქისთვის?
+        tmp_analysis_table_name: ანალიზის სახელი
       election_translation:
-        name: Election Name
+        name: არჩევნების სახელი
     errors:
       messages:
         required_field: "სავალდებულოა"
@@ -52,27 +52,27 @@ ka:
   formtastic:
     hints:
       election:
-        election_app_event_id: ID of the event in the Election Portal app that is need for data migation to work
-        parties_same_for_all_districts: Are the parties the same for every district or do they vary (i.e., majoritarian). This is needed to determine which parties to show in the protocol form.
-        is_local_majoritarian: For analysis - Local Majoritarian has an extra level of majoritarian districts
-        has_regions: For analysis - do regions need to be included in the analysis
-        has_district_names: For analysis - do district names need to be included in the analysis
-        has_custom_shape_levels: For analysis - is Tbilisi, or other shapes, merged into custom shapes
-        max_party_in_district: This determines how many party fields need to be shown in the protocol form. This is filled in when loading the districts/precincts.
-        protocol_top_box_margin: Protocol form margin top for the top section to align the fields properly
-        protocol_party_top_margin: Protocol form margin top for the party section to align the fields properly
-        has_indepenedent_parties: For analysis - are there independent parties that are different for each district and need to be merged into one general independent part
-        scraper_url_base: 'example: results.cec.gov.ge'
-        scraper_url_folder_to_images: 'example: /oqm/7/'
-        scraper_page_pattern: 'example: oqmi_{id}.html'
-        district_precinct_separator: 'example: xx.yy.zz or xx-yy'
-        can_enter_data: When Yes, users will be able to enter data. When No, the data will still be available on the site, but no one can enter data.
-        tmp_analysis_table_name: This value will be used in the names of the analysis tables and views and is limited to 32 characters
+        election_app_event_id: საარჩევნო პორტალის აპლიკაციის ღონისძიების ნომერი, რომელიც საჭიროა მონაცემების მიგრაციისთვის
+        parties_same_for_all_districts: პარტიები ყველა ოლქში იგივე თუ იცვლება (მაგ. მაჟორიტარული). ეს საჭიროა იმისთვის, რომ განსაზღვრო რომელი პარტიები აჩვენო ოქმის ფორმაში.
+        is_local_majoritarian: ანალიზისთვის - ადგილობრივ მაჟორიტარულს აქვს მეტი დონე ვიდრე მაჟორიტარულ ოლქს
+        has_regions: ანალიზისთვის - საჭიროა ანალიზში რეგიონების ჩასმა
+        has_district_names: ანალიზისთვის - საჭიროა ანალიზში ოლქის სახელის ჩასმა
+        has_custom_shape_levels: ანალიზისთვის- არის თბილი ან სხვა ფორმა სპეციალურ ფორმასთან სერწყმული
+        max_party_in_district: ეს განსაზღვრავს რამდენი პარტიის ველის ჩვენებაა საჭირო ოქმის ფორმისთვის. ის ივსება ოლქის/უბნის ჩატვისრთვისას.
+        protocol_top_box_margin: ოქმის ზედა გრაფების ზღვარი იმისათვის რომ ველები გასწორდეს
+        protocol_party_top_margin: ოქმში პარტიების გრაფების ზედა ზღვარი იმისათვის რომ ველები გასწორდეს
+        has_indepenedent_parties: ანალიზისთვის - არის საინიციატივო ჯგუფები, რომლებიც განსხვავდებიან ყველა ოლქში და საჭიროა მათი ერთ ზოგად საინიციატივო ჯგუფში გაერთიანება
+        scraper_url_base: '“მაგ: results.cec.gov.ge'
+        scraper_url_folder_to_images: '“მაგ: /oqm/7/'
+        scraper_page_pattern: '“მაგ: oqmi_{id}.html'
+        district_precinct_separator: '“მაგ: xx.yy.zz or xx-yy'
+        can_enter_data: როდესაც დიახ, მაშინ მომხმარებლები შეძლებენ მონაცემების შეყვანას. როდესაც არა, მონაცემები ხელმისაწვდომი იქნება საიტზე, მაგრამ ვერავინ შეძლებს მის შეყვანას.
+        tmp_analysis_table_name: ეს შეფასება გამოყენებული იქნება ანალიზისთვის და 32 სიმბოლოთი იქნება შეზღუდული
   mailer:
     notification:
       can_migrate:
-        subject: "%{app_name} (%{env}) - Enough Precincts Exist to Migrate Data!"
-        message: "Enough protocols have been entered since the last migration that a new migration should be run."
+        subject: "%{app_name} (%{env}) - მოანცემების მიგრაციისთვის უბნების საკმარისი რაოდენობაა!"
+        message: "ბოლო მიგრაციის შემდეგ საკმარისი ოქმებია შეყვანილი იმისათვის, რომ ახალი მიგრაცია მოხდეს."
   helpers:
     actions: აირჩიეთ
     links:
@@ -86,9 +86,9 @@ ka:
       cancel: გაუქმება
       reset: საწყის კონფიგურაციაზე დაბრუნება
       view: ნახვა
-      download_file: Download Existing File
-      help: Help
-      close: Close
+      download_file: ჩამოტვირთე არსებული ფაილი
+      help: დახმარება
+      close: დახურვა
     titles:
       new: "ახალი %{model}"
       edit: "შეცვლა %{model}"
@@ -133,7 +133,7 @@ ka:
       data_reset: ოქმების ბაზა განახლდა და საჭიროა მათი თავიდან შეყვანა.
       could_not_rest: ბოდიში, ოქმების ბაზის განახლება შეუძლებელია.
       no_protocol: ბოდიში, აღნიშნული ოქმი არ მოიძებნა.
-      required_for_can_enter_data: 'must be provided before setting Can Enter Data to Yes'
+      required_for_can_enter_data: 'უნდა იყოს მზად სანამ პარამეტრამდე შესაძლებელია მონაცემების შეყვანა'
       training_reset: Training for all users have been reset.
     csv_header:
       region: რეგიონი
@@ -184,8 +184,8 @@ ka:
       users: მომხმარებლების მართვა
       election_data: არჩევნების მონაცემების მიგრაცია
       reset_bad_data: ოქმის მონაცემების წაშლა
-      elections: Manage Elections
-      categorize_supplemental_documents: Categorize Documents
+      elections: მართე არჩევნები
+      categorize_supplemental_documents: დოკუმენტების კატეგორიზაცია
       moderate: Moderate Protocols
       sign_in: სისტემაში შესვლა
       training: ტრენინგი
@@ -198,17 +198,17 @@ ka:
       js_slogan: JumpStart Georgia - ჩვენ გაწვდით ინფორმაციას მონაცემებით და დიზაინით
     stats_header:
       header:
-        supplemental_documents: Supplemental Document Stats
-        data_entry: Your Data Entry Stats
+        supplemental_documents: დამატებითი დოკუმენტების სტატისტიკა
+        data_entry: თქვენ მიერ შეყვანილი მონაცემების სტატისტიკა
       user_document_stats:
-        completed_by_user: Completed By You
-        completed_by_others: Completed By Others
-        remaining: Remaining
+        completed_by_user: დასრულებულია თქვენ მიერ
+        completed_by_others: დასრულებულია სხვის მიერ
+        remaining: დარჩენილი
       document_stats:
-        amendment: Amendments
-        annulled: Annullments
-        explanatory_note: Explanatory Notes
-        unknown: Unknown
+        amendment: შესწორებები
+        annulled: გაბათილებული
+        explanatory_note: ახსნა-განმარტებითი ჩანაწერი
+        unknown: უცნობი
     unsupported_browser:
       title: არასათანადო ბრაუზერი
       p1: სამწუხაროდ თქვენი ინტერნეტ ბრაუზერის მოხმარების ვადა გასულია და ვერ მოხდება ვებ-გვერდთან სრულად დაკავშირება.
@@ -241,11 +241,11 @@ ka:
         title: მომხმარებლის დეტალები
     elections:
       form:
-        party_file_explanation: "The Pary CSV should have three columns: Party Number, Party Name, Is Independent. The party name must match the name of the party in the Election Data Portal. For the last column, you can leave it blank if the party is not independent, otherwise please enter true."
-        party_file_warning: "WARNING - Loading a new file will cause the analysis tables and views to be reloaded and all existing data will be deleted."
-        district_precinct_file_explanation: 'The District/Precinct CSV should have two columns: District, Precinct. For the new xx.yy.zz format, xx is the district and yy.zz is the precinct.'
-        district_precinct_file_warning: "WARNING - Loading a new file that removes precincts will cause the data for those precincts to be deleted."
-        party_district_file_explanation: 'The District/Party CSV should have two columns: District, Party Number. This file is used to determine which parties to show in the protocol form.'
+        party_file_explanation: "პარტიების CSV-ის უნდა ჰქონდეს 3 სვეტი: პარტიი ნომერი, პარტიის სახელი, არის საინიციატივო ჯგუფი. პარტიის სახელი უნდა ემთხვეოდეს სახელს, რომელიც აქვს საარჩევნო მონაცემების პორტალზე. ბოლო სვეტისთვის, თუ არ არის საინიციატივო ჯგუფი შეგიძლიათ დატოვოთ ღია, მაგრამ თუ არის შეიყვანოთ “სწორია”"
+        party_file_warning: "გაფრთხილება - ახალი ფაილის ატვირთვა გამოიწვევს ანალიზის და ნახვის გადატვირთვას და არსებული მონაცემები წაიშლება."
+        district_precinct_file_explanation: 'ოლქს/უბანს CSV-ს უნდა ჰქონდე ორი სვეტი: ოლქი და უბანი. ახალ xx.yy.zz ფორმატში xx არის ოლქი და yy.zz უბანი.'
+        district_precinct_file_warning: "გაფრთხილება - ახალი ფაილის ატვირთვა, რომელიც ამოიღებს უბნებს, ამ უბნების მონაცემებს წაშლის."
+        party_district_file_explanation: 'ოლქი/პარტია CSV უნდა ჰქონდეს 2 სვეტი: ოლქი, პარტიის ნომერი. ეს ფაილები გამოიყენება იმისთვის, რომ განისაზღვროს რომელი პარტიები უნდა იყოს ნაჩვენები ოქმში.'
     election_data:
       index:
         title: მონაცემები გაგზავნილია არჩევნების მონაცემთა აპლიკაციაში
@@ -296,7 +296,7 @@ ka:
       tabs:
         status: სტატუსი
         summary: შეჯამება
-        supplemental_documents: Supplemental Documents
+        supplemental_documents: დამატებითი დოკუმენტები
         annulled: გაუქმებული
         download: მონაცემების ჩამოტვირთვა
       annulled:
@@ -306,14 +306,14 @@ ka:
           district: ოლქი
           precinct: საარჩევნო უბანი
       supplemental_documents:
-        no_data: Hooray! No precincts have had supplemental documents attached to the protocols!
-        view_title: View Protocol and Supplemental Document(s)
+        no_data: მაგარია! არცერთ უბანს ჰქონდა დამატებითი დოკუმენტები!
+        view_title: იხილეთ ოქმი და დამატებითი დოკუმენტ(ებ)ი
         headers:
           district: ოლქი
           precinct: საარჩევნო უბანი
-          count: Supplemental Documents (#)
-          has_amendment: Has Amendment?
-          has_explanatory_note: Has Explanatory Note?
+          count: დამატებითი დოკუმენტები (#)
+          has_amendment: აქვს შესწორება?
+          has_explanatory_note: აქვს ახსნა-განმარტებითი ჩანაწერი?
           invalid_ballots: ბათილი ბიულეტინები (#)
           logic_check_fail: 'ლოგიკური შემოწმება ვერ გაიარა (პარტიების ხმების რაოდენობას - ბათილი ბიულეტინები = მიღებულ ხმებს)? (#) '
           logic_check_difference:  სხვაობა ლოგიკურ შემოწმებაში (#)
@@ -333,11 +333,11 @@ ka:
           more_ballots_avg: მეტი ბიულეტინი ვიდრე ხმა (საშუალო)
           more_votes_percent: საარჩევნო უბნები სადაც მეტი ხმაა ვიდრე ბიულეტინი (%)
           more_votes_avg: მეტი ხმა ვიდრე ბიულეტინი (საშუალოდ)
-          supplemental_documents_percent: Precincts with Supplemental Documents (%)
-          supplemental_documents_avg: Supplemental Documents (Average)
+          supplemental_documents_percent: უბნები დამატებითი დოკუმენტებით (%)
+          supplemental_documents_avg: დამატებითი დოკუმენტები (საშუალოდ)
           vpm: უბნების რაოდენობა, სადაც ხმის მიცემა წუთში > 2
-          precincts_reported_num: Precincts Reported (#)
-          precincts_reported_percent: Precincts Reported (%)
+          precincts_reported_num: ცნობილი უბნები (#)
+          precincts_reported_percent: ცნობილი უბნები (%)
       status:
         headers:
           data_entry: არჩევნების სტატუსი
@@ -371,8 +371,8 @@ ka:
           protocols_validated: დამოწმებული ოქმები
       stay_tuned:
         header: თვალი ადევნეთ!
-        text1: "The '%{name}' will soon have protocols for us to enter."
-        text2: "Please check back on %{date}."
+        text1: "'%{სახელი}' მალე იქნება შესაყვანი ოქმები."
+        text2: "გთხოვთ შეამოწმოთ %{თარიღი}."
       want_help:
         header: გინდა დაგვეხმარო?
         text: |
@@ -433,9 +433,9 @@ ka:
       votesum_explanation3: "ეს რიცხვები დაგეხმარებათ მონაცემთა სეყვანაში."
       votesum_explanation4: "შესაძლოა, რომ ეს რიცხვები არ ემთხვეოდეს."
       scroll_to_zoom: გასადიდებლად დასქროლე ოქმი
-      supplemental_documents: Supplemental Documents
-      image_alt: If you see this after the page is finished loading, then the protocol image is bad and needs to be re-downloaded. Please select the 'No Protocol' option above.
-      modal_header: Explanation of reasons why you cannot enter data
+      supplemental_documents: დამატებითი დოკუმენტები
+      image_alt: თუ გვერდის ჩატვირთვის დასრულების შემდეგ დაინახავთ, რომ ფოტო ცუდია და სჭირდება თავიდან გადმოწერა, გთხოთ მონიშნოთ “არ არის ოქმი”.
+      modal_header: ახსენით მიზეზი, რატომ ვერ შეიყვანეთ მონაცემები
       title:
         toggle: გადართე
         ccw: შეაბრუნე მთვლელი საათის ისრის მიმართულებით
@@ -447,7 +447,7 @@ ka:
         right: გაწიე მარჯვნივ
         reset: ყველა მოქმედების გაუქმება
       cant_enter:
-        title: If you can't enter data, please indicate why
+        title: თუ ვერ შეგყავთ მონაცემები, აჩვენეთ რატომ
         text:
           bad_image: აკლია ოქმი
           cant_read: არ იკითხება
@@ -455,11 +455,11 @@ ka:
           docs_not_clear: გაურკვეველი ტექსტი
           annulled: გაუქმებული
         titles:
-          bad_image: The protocol image does not appear below
-          cant_read: You cannot read the handwriting in the protocol
-          missing_info: The protocol does not have information provided for all sections
-          docs_not_clear: The supplemental documents at the bottom of the page need clarification
-          annulled: A supplemental document at the bottom of the page indicates the protocol has been annulled
+          bad_image: ოქმის ფოტო არ გამოჩნდა
+          cant_read: ვერ წაიკითხეთ ხელნაწერი
+          missing_info: არ არის ინფორმაცია ოქმის ყველა გრაფაში
+          docs_not_clear: ბოლოში მიმაგრებულ დამატებით დოკუმენტებს განმარტება სჭირდება
+          annulled: ბოლოში მიმაგრებულ დამატებითი დოკუმენტის მიხედვით ოქმი გაბათილებულია
     download:
       title: ჩამოტვირთე შეყვანილი მონაცემები
       num_precincts: არსებობს %{total}-დან %{count} საარჩევნო უბანი საარჩევნო მონაცემებით.
@@ -497,81 +497,81 @@ ka:
         more_ballots_than_votes: ეს გამოითვლება “ჩათვლილი ხმების რაოდენობა” - პარტიების მიერ მიღებული ხმების რაოდენობა. იდეალურ შემთხვევაში, უნდა იყოს 0.
         more_votes_than_ballots_flag: ეს დროშა აღნიშნავს სად დაფიქსირდა მეტი ხმა, ვიდრე ბიულეტინების რაოდენობა იყო. პარტიების მიერ მიღებული ხმების რაოდენობის ჯამი > ჩათვლილი ხმების რაოდენობაზე. იდეალურ შემთხვევაში, ეს მონაცემები ერთმანეთს უნდა ემთხვეოდეს. 0 = ემთხვევა. 1 = არ ემთხვევა.
         more_votes_than_ballots: ეს გამოითვლება პარტიების მიერ მიღებული ხმების საერთო რაოდენობა - ჩათვლილი ხმების რაოდენობა. იდეალურ შემთხვევაში, უნდა იყოს 0.
-        supplemental_documents_flag: This a flag that indicates whether supplemental documents have been submitted to the original protocol. 0 = no. 1 = yes.
-        supplemental_document_count: This number shows how many supplemental documents have been submitted.
-        amendment_flag: This a flag that indicates whether an amendment has been submitted to the original protocol. 0 = no. 1 = yes.
-        explanatory_note_flag: This a flag that indicates whether an explanatory note been submitted to the original protocol. An explanatory note is any document that is not an amendment. 0 = no. 1 = yes.
+        supplemental_documents_flag: ეს დროშა უჩვენებს აქვს თუ არა ოქმს მიმაგრებული დამატებითი დოკუმენტები. 0=არა. 1=კი.
+        supplemental_document_count: ეს რიცხვის უჩვენებს რამდენი დამატებითი დოკუმენტი იყო მიმაგრებული
+        amendment_flag: ეს დროშა უჩვენებს იყო თუ არა შესწორებები მიმაგრებული ორიგინალ ოქმზე. 0=არა. 1= კი.
+        explanatory_note_flag: 'ეს დროა უჩვენებს იყო თუ არა ახსნა-განმარტებები მიმაგრებული ორიგინალ ოქმზე: ახსნა-განმარტებითია ყველა ჩანაწერი, რომელიც არ არის შესწორება. 0=არა. 1=კი.'
         is_annulled: ეს დროშა უჩვენებს გაბათილდა თუ არა ხმები საარჩევნო უბანზე. იხილეთ ოქმების შესწორებები და გაიგეთ რატომ. 0 = არა. 1 = კი.
     about:
       title: შესახებ
     categorize_supplemental_documents:
-      title: Categorize A Supplemental Document
-      no_documents: Hooray! No supplemental documents need to be categorized!
-      amendment: Amendment
-      annulled: Annullment
-      explanatory_note: Explanatory Note
-      skip: Skip
-      modal_header: Explanation on Categorizing A Supplemental Document
+      title: დამატებითი დოკუმენტების კატეგორიზაცია
+      no_documents: მაგარია! არ არის დამატებითი დოკუმენტები კატეგორიზაციისთვის
+      amendment: შესწორება
+      annulled: გაბათილებულია
+      explanatory_note: ახსნა-განმარტებითი ჩანაწერი
+      skip: გამოტოვება
+      modal_header: განმარტება დამატებითი დოკუმენტების კატეგორიზაციაზე.
     categorize_supplemental_documents_help:
-      explanation: Below are explanations of the different types of supplementary documents that you need to identify.
+      explanation: აქ არის განმარტებები სხვადასხვა სახის დამატებით დოკუმენტებზე, რომლების იდენტიფიცირებაც უნდა გააკეთოთ
       tabs:
-        amendment: Amendment
-        annulment: Annullment
-        explanatory_note: Explanatory Note
+        amendment: შეწსორება
+        annulment: გაბათილებულია
+        explanatory_note: ახსნა-განმარტებითი ჩანაწერი
       text:
         amendment: |
-          An amendment is a document that indicates that numbers for a line item or party needs to be fixed. It is an official document that is filled in by hand.
+          შესწორება არის დოკუმენტი რომელიც უჩვენებს რიცხვებს ხაზებისთვის ან პარტიებსისთვის რომლებიც უნდა შესწორდეს. ეს არის ოფიციალური დოკუმენტი, რომელიც ხელით ივსება.
 
-          Below is an example of what an amendment looks like.
+          ეს არის შესწორების ნიმუში.
         annulment: |
-          Sometimes the CEC decides that the protocol is not valid and annuls it, thus making entering the data for the protocol not necessary. When this happens, there will be a supplemental document that is an official letter indicating that the protocol has been annulled.
+          ხანდახან ცესკო გადაწყვიტავს, რომ ოქმი არ არის მართებული და აბათილებს მას, რის გამოც ოქმის მონაცემების შეყვანა საჭირო აღარ ხდება. როცა ეს ხდება, ოქმს თან ერთვის დამატებითი დოკუმენტი, რომელიც არის ოფიციალური წერილი და განმარტავს, რომ ოქმი გაბათილდა.
 
-          Below is an example of a document indicating that the protocol has been annulled.
+          ეს არის ნიმუში დოკუმენტისა, რომელიც უჩვენებს რომ ოქმი გაბათილდა.
         explanatory_note: |
-          If a supplemental document is not an amendment or an annulment, then it is an explanatory note. Typically these are hand-written letters explaining a situation.
+          თუ დამატებითი დოკუმენტი არ არის შესწორება ან გაბათილება, მაშინ ის ახსნა-განმარტებითი ჩანაწერია. ძირითადად, ეს არის ხელით დაწერილი წერილები, რომლებიც სიტუაციას აღწერენ.
 
-          Below is an example of what an explanatory note looks like.
+          ეს არის ახსნა-განმარტებითი ჩანაწერის ნიმუში.
     cant_enter_help:
-      explanation: Below are explanations and examples of the different reasons why you may not be able to enter the protocol data.
+      explanation: აქ არის ახსნილი და ნაჩვენები მაგალითები რატომ შეიძლება ვერ შეიყვანოთ ოქმის მონაცემები.
       tabs:
         bad_image: აკლია ოქმი
         cant_read: არ იკითხება
         missing_info: აკლია ინფორმაცია
         docs_not_clear: გაურკვეველი ტექსტი
-        annulled: გაუქმებული
+        annulled: გაბათილებულია
       text:
         bad_image: |
-          If you just see a blank screen and no protocol image, then a problem occurred while downloading the image from the CEC and the image needs to be downloaded again.
+          თუ ხედავთ მხოლოდ ცარიელ ეკრანს და არ არის ოქმის სურათი, ეს ნისნავს, რომ ცესკოს გვერდიდან მისი გადმოწერისას შეიქმნა პრობლემა და საჭიროა ახლიდან ჩამოტვირთვა.
 
-          Please click the "No Protocol" button so a new image can be downloaded.
+          გთხოვთ მონიშნოთ “არ არის ოქმი” იმისათვის, რომ ახალი ფოტო ჩამოვტვირთოთ.
         cant_read: |
-          It is possible that you may not be able to read the number(s) written on the protocol either due to a bad pen, the color of the ink, or bad handwriting.
+          შესაძლებელია, რომ ვერ შეძლოთ ოქმში ჩაწერილი რიცხვების წაკითხვა ცუდი კალმის, მელნის ფერის ანდ ცუდი ხელნაწერის გამო.
 
-          When you encounter this issue, please check if there is a supplemental document below the protocol that properly indicates what the number should be. If so, enter that number and submit the protocol. If not, please click the "Can't Read" button so the moderators can follow-up on this issue.
+          თუ თქვენ მსგავსი პრობლემა შეგექმნათ, შეამოწმეთ დამატებითი დოკუმენტები, რომლებიც უჩვენებენ რა რიცხვები უნდა ეწეროს ოქმში. თუ არის დოკუმენტი, შეიყვანეთ შესაბამისი ოქმები და ატვირთეთ ოქმი. თუ არ არის დოკუმენტი, მონიშნეთ “არ იკითხება” რომ მოდერატორმა ყურადღება მიაქციოს.
 
-          If you have doubts about what a number could be, please report it so the moderators can decide how best to proceed.
+          თუ გაქვთ ეჭვები რა რიცხვი უნდა იყოს, გთხოვთ დაარეპორტეთ ის, რომ მოდერატორმა განიხილოს.
 
-          Below is an example of a protocol that has some issues with not being able to properly know what number to use. For Party 17 - is that a 1 or an X. For Party 26 - is that a 7 or 37.
+          აქ არის ნიმუში ოქმისა, რომელშიც რთული გასარჩევია რა რიცხვები უნდა იყოს. პარტისთვის 17 - არის 1 თუ X. პარტიისთვის 26 - არი 7 თუ 37.
         missing_info: |
-          A protocol should have all of the information provided for Items 1-6 and at least some parties. If information is missing, please report it instead of entering a partially filled in protocol.
+          ოქმსი უნდა იყოს ყველა ინფორმაცია 1დან 6მდე გრაფებში და რამდენიმე პარტია მაინც. თუ ინფორმაცია არის არასრული, გთხოვთ ნაწილობრივ შეყვანის ნაცვლად დაარეპორტეთ.
 
-          When you encounter this issue, please check if there is a supplemental document below the protocol that properly indicates what the missing number(s) should be. If so, enter the number(s) and submit the protocol. If not, please click the "Missing Information" button so the moderators can follow-up on this issue.
+          თუ თქვენ მსგავსი პრობლემა შეგექმნათ, შეამოწმეთ დამატებითი დოკუმენტები, რომლებიც უჩვენებენ რა რიცხვები უნდა ეწეროს ოქმში. თუ არის დოკუმენტი, შეიყვანეთ შესაბამისი ოქმები და ატვირთეთ ოქმი. თუ არ არის დოკუმენტი, მონიშნეთ “აკლია ინფორმაცია” რომ მოდერატორმა ყურადღება მიაქციოს.
 
-          If any of this information is not provided, please report it so the moderators can follow-up with the CEC on getting the issue resolved.
+          თუ ამ ინფორმაციიდან რომელიმე არ არის, გთხოვთ დაარეპორტოთ, იმისათვის რომ მოდერატორმა გამოიკვლიოს საკითხი.
 
-          Below is an example of Item 4 not being filled in.
+          ამ მაგალითში გრაფა 4 არ არის შევსებული.
         missing_info2: |
-          Below is an example of Items 1-5 not being filled in.
+          ამ მაგალითსი 1-დან 5-მდე გრაფები ცარიელია
         docs_not_clear: |
-          Sometimes the supplemental documents have issues and, therefore, make it impossible to properly fill in the protocol. For instance, the supplemental document might be for a different protocol. The document might be an amendment that says to fix something that cannot be found in the protocol. Or, the handwriting in the document is illegible.
+          ხანდახან დამატებით დოკუმენტებს აქვთ პრობლემა და ოქმის შეყვანა შეუძლებელია. მაგალითად, დამატებითი დოკუმენტი შესაძლოა სხვა ოქმის იყოს. დოკუმენტი შეიძლება იყოს შესწორება, რომელიც ისეთი მონაცემის შეცვლას ითხოვს, რომელიც ოქმში არაა ან ცუდი ხელნაწერის გამო დოკუმენტი არ იკითხება.
 
-          If you have any doubts about the supplemental documents, please report it by clicking on the "Documents Not Clear" button so the moderators can follow-up with the CEC.
+          თუ გაქვთ ეჭვები დამატებით დოკუმენტებთან დაკავშირებით, გთხოვთ დაარეპორტოთ როგორც “გაურკვეველი ტექსტი.”
 
-          Below is an example of a supplemental document that was submitted to fix the original protocol. Ideally, an amendment should be submitted to resolve the issue, not another protocol.
+          ამ მაგალითში ნაჩვენებია დამატებითი დოკუმენტი, რომელიც მიმაგრებულია ორიგინალის დასაზუსტებლად. იდეალურ შემთხვევაში მიმაგრებული უნდა იყოს შესწორება და არა სხვა ოქმი.
         annulled: |
-          Sometimes the CEC decides that the protocol is not valid and annuls it, thus making entering the data for the protocol not necessary. When this happens, there will be a supplemental document that is an official letter indicating that the protocol has been annulled.
+          ხანდახან ცესკო გადაწყვიტავს, რომ ოქმი არ არის ვარგისი და აბათილებს მას, ამის გამო მისი შეყვანა საჭირო აღარ არის. როცა ეს ხდება, ოქმს თან ერთვის დამატებითი დოკუმენტი, ოფიციალური წერილი, რომელიც განმარტავს რომ ოქმი გაბათილდა.
 
-          Below is an example of a document indicating that the protocol has been annulled.
+          ეს არის მაგალითი დოკუმენტისა, რომელიც უჩვენებს რომ ოქმი გაბათილდა.
     moderate:
       title: Moderate Protocol Issues
       no_pending: Hooray! No protocols are in need of moderation!
