@@ -4,16 +4,21 @@ class DistrictPrecinct < ActiveRecord::Base
   #######################################
   ## RELATIONSHIPS
   has_many :supplemental_documents
+  belongs_to :election
 
   #######################################
   ## ATTRIBUTES
   MODERATION_REASONS = {bad_image: 1, missing_info: 2, cant_read: 3, docs_not_clear: 4, annulled: 5}
+  MODERATION_STATUS = {waiting: 0, request_image: 1, annulled: 2, contact_cec: 3, supplementary_document_added: 4, no_problem: 5}
 
   attr_accessible :election_id, :district_id, :precinct_id,
                   :has_protocol, :is_validated, :is_annulled,
                   :has_supplemental_documents, :supplemental_document_count,
                   :has_amendment, :has_explanatory_note, :supplemental_documents_attributes,
-                  :being_moderated, :moderation_reason
+                  :being_moderated, :moderation_reason, :issue_reported_by_user_id, :issue_reported_at,
+                  :last_moderation_update_by_user_id, :last_moderation_updated_at,
+                  :moderation_status, :moderation_notes
+
   attr_accessor :num_precincts, :num_protocols_found, :num_protocols_missing, :num_protocols_not_entered, :num_protocols_validated
 
   #######################################
@@ -48,6 +53,22 @@ class DistrictPrecinct < ActiveRecord::Base
 
   def self.with_supplemental_documents
     where(has_supplemental_documents: true)
+  end
+
+  def self.needs_moderation
+    where(being_moderated: true)
+  end
+
+  def self.was_moderated
+    where(being_moderated: false)
+  end
+
+  def self.with_elections
+    includes(:election)
+  end
+
+  def self.sort_issue_reported_at
+    order('issue_reported_at desc')
   end
 
   #######################
@@ -300,7 +321,7 @@ class DistrictPrecinct < ActiveRecord::Base
 
   ############################################
   ############################################
-  def self.add_moderation(election_id, district_id, precinct_id, moderation_reason)
+  def self.add_moderation(election_id, district_id, precinct_id, user_id, moderation_reason)
     record_count = 0
     DistrictPrecinct.transaction do
       client = ActiveRecord::Base.connection
@@ -309,7 +330,9 @@ class DistrictPrecinct < ActiveRecord::Base
       if election.present?
         moderation_reason.delete('')
         record_count += DistrictPrecinct.by_ids(election_id, district_id, precinct_id)
-                        .update_all(is_validated: false, being_moderated: true, moderation_reason: moderation_reason.join(','))
+                        .update_all(is_validated: false, being_moderated: true,
+                          issue_reported_by_user_id: user_id, issue_reported_at: Time.now,
+                          moderation_reason: moderation_reason.join(','))
         record_count += CrowdDatum.by_ids(election_id, district_id, precinct_id)
                         .update_all(is_valid: false)
 
@@ -323,6 +346,30 @@ class DistrictPrecinct < ActiveRecord::Base
 
     return record_count > 0
   end
+
+  ############################################
+  ############################################
+  def self.mark_as_annulled(id, moderator_user_id)
+    dp = find(id)
+    if dp.present?
+      DistrictPrecinct.transaction do
+        # update the dp record
+        dp.is_annulled = true
+        dp.moderation_status = MODERATION_STATUS[:annulled]
+        dp.being_moderated = false
+        dp.last_moderation_updated_at = Time.now
+        dp.save
+
+        # update the analysis raw table
+        client = ActiveRecord::Base.connection
+        sql = "update `#{@@analysis_db}`.`#{dp.election.analysis_table_name} - raw`
+              set is_annulled = 1 where district_id = '#{dp.district_id}' and precinct_id = '#{dp.precinct_id}'"
+        client.execute(sql)
+
+      end
+    end
+  end
+
 
   ############################################
   ############################################
@@ -499,6 +546,44 @@ class DistrictPrecinct < ActiveRecord::Base
       end
     end
   end
+
+
+  #######################################
+  ## METHODS
+
+  # return the text labels for all the reasons being moderated
+  def moderation_reason_text(sep=', ')
+    text = []
+
+    if self.moderation_reason.present?
+      reasons = self.moderation_reason.index(',').nil? ? [self.moderation_reason] : self.moderation_reason.split(',')
+      reasons.each do |reason|
+        index = MODERATION_REASONS.values.index(reason.to_i)
+        if index.present?
+          text << I18n.t("root.cant_enter_help.tabs.#{MODERATION_REASONS.keys[index]}")
+        end
+      end
+    end
+
+    return text.join(sep)
+  end
+
+  def moderation_status_text
+    text = ''
+
+    self.moderation_status = 0 if self.moderation_status.nil?
+    index = MODERATION_STATUS.values.index(self.moderation_status.to_i)
+    if index.present?
+      text = I18n.t("root.moderate.status.#{MODERATION_STATUS.keys[index]}")
+    end
+
+    return text
+  end
+
+
+  #######################################
+  #######################################
+  #######################################
 
   protected
 

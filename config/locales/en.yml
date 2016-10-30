@@ -184,7 +184,8 @@ en:
       election_data: Election Data Migration
       reset_bad_data: Delete Data for Protocol
       elections: Manage Elections
-      categorize_supplemental_documents: Categorize Supplemental Documents
+      categorize_supplemental_documents: Categorize Documents
+      moderate: Moderate Protocols
       sign_out: Sign Out
       sign_in: Sign In
       training: Training
@@ -566,6 +567,36 @@ en:
           Sometimes the CEC decides that the protocol is not valid and annuls it, thus making entering the data for the protocol not necessary. When this happens, there will be a supplemental document that is an official letter indicating that the protocol has been annulled.
 
           Below is an example of a document indicating that the protocol has been annulled.
+    moderate:
+      title: Moderate Protocol Issues
+      no_pending: Hooray! No protocols are in need of moderation!
+      no_completed: No protocols have been moderated.
+      view_title: View the protocol
+      pending: Pending Items
+      completed: Completed Items
+      header:
+        reported_at: Reported At
+        reason: Reason
+        election: Election
+        district_id: District
+        precinct_id: Precinct
+        status: Status
+        notes: Notes
+        moderated_at: Last Moderated At
+        action: Moderate
+      moderate:
+        request_image: Re-download Protocol Image
+        annulled: Confirm Annulment
+        contact_cec: Follow-up with CEC
+        supplementary_document_added: New Supplementary Document Resolves Issue
+        no_problem: No Problem Found
+      status:
+        waiting: Waiting for Moderation
+        request_image: Re-download Protocol Image
+        annulled: Confirmed Annulment
+        contact_cec: Following up with CEC
+        supplementary_document_added: New Supplementary Document Resolves Issue
+        no_problem: No Problem Found
   mailer:
     new_user:
       subject: Are you ready to help JumpStart digitize some election protocols?!

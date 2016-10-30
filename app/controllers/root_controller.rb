@@ -3,6 +3,9 @@ class RootController < ApplicationController
   before_filter only: :categorize_supplemental_documents do |controller_instance|
     controller_instance.send(:valid_role?, User::ROLES[:categorize_supplemental_documents])
   end
+  before_filter only: [:moderate, :moderate_record] do |controller_instance|
+    controller_instance.send(:valid_role?, User::ROLES[:moderator])
+  end
 
   require 'utf8_converter'
 
@@ -84,7 +87,8 @@ class RootController < ApplicationController
 
         # make sure something was selected
         if params[:crowd_datum][:moderation_reason] != ['']
-          DistrictPrecinct.add_moderation(params[:crowd_datum][:election_id], params[:crowd_datum][:district_id], params[:crowd_datum][:precinct_id], params[:crowd_datum][:moderation_reason])
+          DistrictPrecinct.add_moderation(params[:crowd_datum][:election_id], params[:crowd_datum][:district_id],
+                        params[:crowd_datum][:precinct_id], current_user.id, params[:crowd_datum][:moderation_reason])
         end
       else
         # this is a normal data entry submission
@@ -259,7 +263,41 @@ logger.debug ">>>>>>>>>>>>>>>> format = csv"
   end
 
 
-  protected
+  def moderate
+    @needs_moderation = DistrictPrecinct.with_elections.sort_issue_reported_at
+
+    if params[:status].present? && params[:status] == 'completed'
+      @needs_moderation = @needs_moderation.was_moderated
+    else
+      params[:status] = 'pending'
+      @needs_moderation = @needs_moderation.needs_moderation
+    end
+
+    gon.moderate_record_url = moderate_record_path
+
+  end
+
+  def moderate_record
+    if params[:id].present? && params[:action_to_take].present? && params[:user_id].present?
+
+      case params[:action_to_take].downcase
+        when 'annulled'
+          DistrictPrecinct.mark_as_annulled(params[:id], params[:user_id])
+      end
+
+      respond_to do |format|
+        format.json { render json: {status: 'ok'}}
+      end
+
+    else
+      respond_to do |format|
+        format.json { render json: {status: 'fail'}}
+      end
+    end
+
+  end
+
+protected
 
 	# remove bad characters from file name
 	def clean_filename(filename)

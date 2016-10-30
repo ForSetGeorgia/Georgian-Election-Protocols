@@ -37,6 +37,8 @@ BootstrapStarter::Application.routes.draw do
     match '/about', :to => 'root#about', :as => :about, :via => :get
     match '/view_protocol/:election_id', :to => 'root#view_protocol', :as => :view_protocol, :via => :get
     match '/categorize_supplemental_documents', :to => 'root#categorize_supplemental_documents', :as => :categorize_supplemental_documents, :via => [:get,:put]
+    match '/moderate', :to => 'root#moderate', :as => :moderate, :via => :get
+    match '/moderate_record', :to => 'root#moderate_record', :as => :moderate_record, :via => :post, :defaults => {:format => 'json'}
 
 
 

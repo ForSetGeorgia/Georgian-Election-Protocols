@@ -65,6 +65,16 @@
                   <li><%= link_to t('.training'), training_path, class: 'training' %></li>
                 <% end %>
               <% end %>
+              <% if current_user.role?(User::ROLES[:categorize_supplemental_documents]) %>
+                <li>
+                 <%= link_to t('.categorize_supplemental_documents'), categorize_supplemental_documents_path %>
+                </li>
+              <% end %>
+              <% if current_user.role?(User::ROLES[:moderator]) %>
+                <li>
+                 <%= link_to t('.moderate'), moderate_path %>
+                </li>
+              <% end %>
               <li><%= link_to t('.about'), about_path %></li>
               <li>
                 <%= link_to t('.download'), download_path %>
@@ -76,11 +86,6 @@
                         <b class="caret"></b>
                   </a>
                   <ul class="dropdown-menu">
-                    <% if current_user.role?(User::ROLES[:categorize_supplemental_documents]) %>
-                      <li>
-                       <%= link_to t('.categorize_supplemental_documents'), categorize_supplemental_documents_path %>
-                      </li>
-                    <% end %>
                     <% if current_user.role?(User::ROLES[:admin]) %>
                       <li>
                        <%= link_to t('.elections'), admin_elections_path %>

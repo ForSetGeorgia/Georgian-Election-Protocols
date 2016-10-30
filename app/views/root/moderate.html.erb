@@ -1,0 +1,117 @@
+<% title t('.title') %>
+
+  <div id="moderate">
+    <%
+      p = 'completed'
+      text = t('.completed')
+      no_text = t('.no_pending')
+      if params[:status] == 'completed'
+        p = 'pending'
+        text = t('.pending')
+        no_text = t('.no_completed')
+      end
+    %>
+    <div>
+      <%= link_to text, params.merge(status: p), :class => 'btn btn-success' %>
+    </div>
+
+  <% if @needs_moderation.present? %>
+
+    <table class="table table-striped moderate">
+      <thead>
+        <tr>
+          <th>
+          </th>
+          <th>
+            <%= t('.header.reported_at') %>
+          </th>
+          <th>
+            <%= t('.header.reason') %>
+          </th>
+          <th class="hl1">
+            <%= t('.header.election') %>
+          </th>
+          <th class="hl1">
+            <%= t('.header.district_id') %>
+          </th>
+          <th class="hl1">
+            <%= t('.header.precinct_id') %>
+          </th>
+          <th>
+            <%= t('.header.status') %>
+          </th>
+          <th>
+            <%= t('.header.notes') %>
+          </th>
+          <th>
+            <%= t('.header.moderated_at') %>
+          </th>
+          <th>
+            <%= t('.header.action') %>
+          </th>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input type="text" name="search_reported_at" value="Search" class="search_init"/></td>
+          <td><input type="text" name="search_reason" value="Search" class="search_init" /></td>
+          <td><input type="text" name="search_election" value="Search" class="search_init" /></td>
+          <td><input type="text" name="search_district" value="Search" class="search_init" /></td>
+          <td><input type="text" name="search_precinct" value="Search" class="search_init" /></td>
+          <td><input type="text" name="search_status" value="Search" class="search_init" /></td>
+          <td><input type="text" name="search_notes" value="Search" class="search_init" /></td>
+          <td><input type="text" name="search_moderated_at" value="Search" class="search_init" /></td>
+          <td></td>
+        </tr>
+      </thead>
+      <tbody>
+        <% @needs_moderation.each do |to_moderate| %>
+          <tr>
+            <td>
+              <%= link_to t('helpers.links.view'),
+                      view_protocol_path(election_id: to_moderate.election.analysis_table_name,
+                                          district_id: to_moderate.district_id,
+                                          precinct_id: to_moderate.precinct_id),
+                      class: 'btn btn-default', title: t('.view_title'),
+                      target: :blank %>
+            </td>
+            <td>
+              <%= l to_moderate.issue_reported_at, format: :file if to_moderate.issue_reported_at.present? %>
+            </td>
+            <td>
+              <%= to_moderate.moderation_reason_text %>
+            </td>
+            <td>
+              <%= to_moderate.election.name %>
+            </td>
+            <td>
+              <%= to_moderate.district_id %>
+            </td>
+            <td>
+              <%= to_moderate.precinct_id %>
+            </td>
+            <td>
+              <%= to_moderate.moderation_status_text %>
+            </td>
+            <td>
+              <%= to_moderate.moderation_notes %>
+            </td>
+            <td>
+              <%= l to_moderate.last_moderation_updated_at, format: :file if to_moderate.last_moderation_updated_at.present? %>
+            </td>
+            <td>
+              <%= link_to 'moderate', '#', :'data-action_to_take' => 'annulled', :'data-id' => to_moderate.id, :'data-user_id' => current_user.id, class: 'moderate-record'  %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <% else %>
+
+    <p class="alert alert-success">
+      <%= no_text %>
+    </p>
+
+  <% end %>
+
+</div>

@@ -165,4 +165,62 @@ $(document).ready(function(){
 
 
 
+  // the moderation table uses textbox filters
+  // taken from https://legacy.datatables.net/release-datatables/extras/ColReorder/col_filter.html
+
+  var moderationTable;
+  var $moderationFilters = $("table.moderate thead input");
+  /* Add the events etc before DataTables hides a column */
+  $moderationFilters.keyup( function () {
+    /* Filter on the column (the index) of this element */
+    // have to +1 the index for the first column does not have an input field
+    moderationTable.fnFilter( this.value, moderationTable.oApi._fnVisibleToColumnIndex(
+      moderationTable.fnSettings(), $moderationFilters.index(this)+1 ) );
+  });
+
+  /*
+   * Support functions to provide a little bit of 'user friendlyness' to the textboxes
+   */
+  $moderationFilters.each( function (i) {
+    this.initVal = this.value;
+  });
+
+  $moderationFilters.focus( function () {
+    if ( this.className == "search_init" )
+    {
+      this.className = "";
+      this.value = "";
+    }
+  });
+
+  $moderationFilters.blur( function (i) {
+    if ( this.value == "" )
+    {
+      this.className = "search_init";
+      this.value = this.initVal;
+    }
+  });
+
+  moderationTable = $('table.moderate').dataTable({
+    "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+    "sPaginationType": "bootstrap",
+    "bJQueryUI": true,
+    "bProcessing": true,
+    "bAutoWidth": true,
+    "aoColumnDefs": [
+      { "sType": "formatted-num", "aTargets": 'num-sort' },
+      {
+         "bSortable": false,
+         "aTargets": [ 0 ]
+      }
+    ],
+    "oLanguage": {
+      "sUrl": gon.datatable_i18n_url
+    },
+    "aaSorting": [[1, 'desc']],
+    "bSortCellsTop": true
+  });
+
+
+
 });

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161027101420) do
+ActiveRecord::Schema.define(:version => 20161029192826) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -167,21 +167,27 @@ ActiveRecord::Schema.define(:version => 20161027101420) do
   add_index "district_parties", ["election_id", "district_id"], :name => "index_district_parties_elec_id_dist_id"
 
   create_table "district_precincts", :force => true do |t|
-    t.string   "district_id",                 :limit => 10
-    t.string   "precinct_id",                 :limit => 10
-    t.boolean  "has_protocol",                              :default => false
-    t.boolean  "is_validated",                              :default => false
+    t.string   "district_id",                       :limit => 10
+    t.string   "precinct_id",                       :limit => 10
+    t.boolean  "has_protocol",                                    :default => false
+    t.boolean  "is_validated",                                    :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "has_supplemental_documents",                :default => false
+    t.boolean  "has_supplemental_documents",                      :default => false
     t.integer  "election_id"
     t.string   "region"
-    t.integer  "supplemental_document_count",               :default => 0
-    t.boolean  "is_annulled",                               :default => false
-    t.boolean  "has_amendment",                             :default => false
-    t.boolean  "has_explanatory_note",                      :default => false
+    t.integer  "supplemental_document_count",                     :default => 0
+    t.boolean  "is_annulled",                                     :default => false
+    t.boolean  "has_amendment",                                   :default => false
+    t.boolean  "has_explanatory_note",                            :default => false
     t.boolean  "being_moderated"
     t.string   "moderation_reason"
+    t.integer  "issue_reported_by_user_id"
+    t.datetime "issue_reported_at"
+    t.integer  "last_moderation_update_by_user_id"
+    t.datetime "last_moderation_updated_at"
+    t.integer  "moderation_status"
+    t.text     "moderation_notes"
   end
 
   add_index "district_precincts", ["being_moderated"], :name => "index_district_precincts_on_being_moderated"
@@ -193,6 +199,9 @@ ActiveRecord::Schema.define(:version => 20161027101420) do
   add_index "district_precincts", ["has_supplemental_documents"], :name => "index_district_precincts_on_has_supplemental_documents"
   add_index "district_precincts", ["is_annulled"], :name => "index_district_precincts_on_is_annulled"
   add_index "district_precincts", ["is_validated"], :name => "index_district_precincts_on_is_validated"
+  add_index "district_precincts", ["issue_reported_at"], :name => "index_district_precincts_on_issue_reported_at"
+  add_index "district_precincts", ["last_moderation_updated_at"], :name => "index_district_precincts_on_last_moderation_updated_at"
+  add_index "district_precincts", ["moderation_status"], :name => "index_district_precincts_on_moderation_status"
 
   create_table "election_data_migrations", :force => true do |t|
     t.integer  "num_precincts"
