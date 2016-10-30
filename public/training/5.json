@@ -1,25 +1,34 @@
 {
-  "possible_voters": "997",
-  "special_voters": "7",
-  "votes_by_1200": "350",
-  "votes_by_1700": "656",
-  "ballots_signed_for": "656",
-  "ballots_available": "900",
-  "party_1": "1",
-  "party_4": "",
-  "party_5": "224",
-  "party_9": "1",
-  "party_10": "11",
-  "party_17": "",
-  "party_19": "",
-  "party_23": "",
-  "party_24": "3",
-  "party_26": "",
-  "party_30": "",
-  "party_35": "",
-  "party_36": "",
-  "party_38": "7",
-  "party_40": "",
-  "party_41": "399",
-  "invalid_ballots_submitted": "10"
+  "protocol_top_box_margin": 114,
+  "protocol_party_top_margin": 2.5,
+  "parties_same_for_all_districts": false,
+  "max_party_in_district": 16,
+  "cant_enter": "2",
+  "top_box": [
+    {"number": "1", "key": "possible_voters", "value": "1387"},
+    {"number": "2", "key": "special_voters", "value": "6"},
+    {"number": "3ა (12:00)", "key": "votes_by_1200", "value": "287"},
+    {"number": "3ბ (17:00)", "key": "votes_by_1700", "value": "669"},
+    {"number": "4", "key": "ballots_signed_for", "value": "xxx"},
+    {"number": "5", "key": "ballots_available", "value": "1300"}
+  ],
+  "parties":[
+    {"number": "1", "key": "party_1", "value": "5"},
+    {"number": "3", "key": "party_3", "value": "19"},
+    {"number": "5", "key": "party_5", "value": "218"},
+    {"number": "6", "key": "party_6", "value": ""},
+    {"number": "7", "key": "party_7", "value": "10"},
+    {"number": "8", "key": "party_8", "value": "91"},
+    {"number": "12", "key": "party_12", "value": "1"},
+    {"number": "18", "key": "party_18", "value": "2"},
+    {"number": "19", "key": "party_19", "value": "2"},
+    {"number": "23", "key": "party_23", "value": ""},
+    {"number": "26", "key": "party_26", "value": "17"},
+    {"number": "27", "key": "party_27", "value": "46"},
+    {"number": "41", "key": "party_41", "value": "228"},
+    {"number": "42", "key": "party_42", "value": "143"}
+  ],
+  "bottom_box":[
+    {"number": "6", "key":"invalid_ballots_submitted", "value":"6"}
+  ]
 }

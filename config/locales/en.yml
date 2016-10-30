@@ -134,6 +134,7 @@ en:
       could_not_rest: Sorry, the protocol data could not be reset.
       no_protocol: Sorry, the selected protocol could not be found.
       required_for_can_enter_data: 'must be provided before setting Can Enter Data to Yes'
+      training_reset: Training for all users have been reset.
     csv_header:
       region: Region
       district_id: District ID
@@ -233,6 +234,7 @@ en:
         training: Trainings Completed
         all_stats: View Stats for all Elections
         current_election_stats: View Stats for Current Elections
+        reset_training: Reset Training Status for All Users
       new:
         title: New User
       show:
@@ -398,6 +400,7 @@ en:
         incorrect: "Data you entered is incorrect"
         mismatch: "Field is incorrect"
         number: "Field must be numeric"
+        cant_enter: "One of these buttons should be selected"
       sum_party_votes: SUM(Party Votes) - Invalid Ballots
       votesum_explanation1: "Left Number: %{label}"
       votesum_explanation2: "Right Number: %{label}"

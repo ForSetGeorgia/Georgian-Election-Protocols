@@ -7,6 +7,8 @@
             :class => 'btn btn-primary' %>
 <%= link_to t('helpers.links.admin'), admin_path,
 :class => 'btn' %>
+<%= link_to t('.reset_training'), reset_training_admin_users_path,
+:class => 'btn btn-warning', method: :post, :data => { :confirm => I18n.t("helpers.links.confirm") } %>
 
 <%
   p = params[:current_elections] == 'true' ? false : true

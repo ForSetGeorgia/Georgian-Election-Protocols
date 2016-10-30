@@ -112,6 +112,18 @@
     input[type='submit']{
       padding: 3px 7px;
     }
+    &.error {
+      .error-message {
+        background-color: #B94A48;
+        color: #fff;
+        padding: 5px 10px;
+        margin-bottom: 10px;
+        height: @h;
+        line-height: @h;
+        font-weight: bold;
+      }
+    }
+
   }
 }
 
@@ -352,6 +364,22 @@
 
 
   &.training {
+    .f {
+      &.error {
+        input, label {
+          border-color: #B94A48;
+          color: #B94A48;
+        }
+        .error-message {
+          color: #B94A48;
+          margin: 0px 10px;
+          float: left;
+          height: @h;
+          line-height: @h;
+        }
+      }
+    }
+
     .m {
       label {
         border-color: #444;

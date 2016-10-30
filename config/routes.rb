@@ -10,7 +10,11 @@ BootstrapStarter::Application.routes.draw do
 
 		namespace :admin do
       resources :elections
-			resources :users
+			resources :users do
+        collection do
+          post :reset_training
+        end
+      end
   		match '/election_data', :to => 'election_data#index', :as => :election_data, :via => :get
   		match '/election_data/create_migration/:id', :to => 'election_data#create_migration', :as => :election_data_create_migration, :via => :get, :defaults => {:format => 'json'}
   		match '/election_data/notification_response', :to => 'election_data#notification', :as => :election_data_notification, :via => :get

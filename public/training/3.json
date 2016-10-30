@@ -1,25 +1,35 @@
 {
-  "possible_voters": "297",
-  "special_voters": "1160",
-  "votes_by_1200": "87",
-  "votes_by_1700": "184",
-  "ballots_signed_for": "1201",
-  "ballots_available": "1449",
-  "party_1": "1",
-  "party_4": "2",
-  "party_5": "824",
-  "party_9": "1",
-  "party_10": "9",
-  "party_17": "",
-  "party_19": "",
-  "party_23": "2",
-  "party_24": "2",
-  "party_26": "",
-  "party_30": "",
-  "party_35": "",
-  "party_36": "1",
-  "party_38": "8",
-  "party_40": "",
-  "party_41": "304",
-  "invalid_ballots_submitted": "47"
+  "protocol_top_box_margin": 119,
+  "protocol_party_top_margin": 7,
+  "parties_same_for_all_districts": true,
+  "cant_enter": "",
+  "top_box": [
+    {"number": "1", "key": "possible_voters", "value": "297"},
+    {"number": "2", "key": "special_voters", "value": "1160"},
+    {"number": "3ა (12:00)", "key": "votes_by_1200", "value": "87"},
+    {"number": "3ბ (17:00)", "key": "votes_by_1700", "value": "184"},
+    {"number": "4", "key": "ballots_signed_for", "value": "1201"},
+    {"number": "5", "key": "ballots_available", "value": "1449"}
+  ],
+  "parties":[
+    {"number": "1", "key": "party_1", "value": "1"},
+    {"number": "4", "key": "party_4", "value": "2"},
+    {"number": "5", "key": "party_5", "value": "824"},
+    {"number": "9", "key": "party_9", "value": "1"},
+    {"number": "10", "key": "party_10", "value": "9"},
+    {"number": "17", "key": "party_17", "value": ""},
+    {"number": "19", "key": "party_19", "value": ""},
+    {"number": "23", "key": "party_23", "value": "2"},
+    {"number": "24", "key": "party_24", "value": "2"},
+    {"number": "26", "key": "party_26", "value": ""},
+    {"number": "30", "key": "party_30", "value": ""},
+    {"number": "35", "key": "party_35", "value": ""},
+    {"number": "36", "key": "party_36", "value": "1"},
+    {"number": "38", "key": "party_38", "value": "8"},
+    {"number": "40", "key": "party_40", "value": ""},
+    {"number": "41", "key": "party_41", "value": "304"}
+  ],
+  "bottom_box":[
+    {"number": "6", "key":"invalid_ballots_submitted", "value":"47"}
+  ]
 }

@@ -102,4 +102,12 @@ class Admin::UsersController < ApplicationController
       format.json { head :ok }
     end
   end
+
+
+  def reset_training
+    User.update_all(trained: nil)
+    respond_to do |format|
+      format.html { redirect_to admin_users_path, notice: t('app.msgs.training_reset') }
+    end
+  end
 end

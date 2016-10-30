@@ -1,3 +1,4 @@
+<% dp = DistrictPrecinct %>
 <% title t('.title') %>
 
 <div id="protocol-form-container">
@@ -8,6 +9,43 @@
 
   <hr />
 
+  <% field_with_error = !(@errors.nil? || @errors['cant_enter'].nil?) %>
+  <div class="cant-enter <%= field_with_error == true ? 'error' : '' %>">
+    <h3><%= t('root.protocol.cant_enter.title') %></h3>
+    <%= form_tag training_path, :class => 'training' do %>
+      <input type="hidden" name="protocol_number" value="<%= @next_protocol %>" />
+
+      <% if field_with_error %>
+        <div class="error-message">
+          <%= @errors['cant_enter'] %>
+        </div>
+      <% end %>
+
+      <input id="protocol_moderation_reason_none" name="protocol[moderation_reason][]" value="" type="hidden">
+      <ul class="inline">
+        <% dp::MODERATION_REASONS.keys.each do |key| %>
+          <li>
+            <input id="protocol_moderation_reason_<%= dp::MODERATION_REASONS[key] %>" name="protocol[moderation_reason][]"
+                    value="<%= dp::MODERATION_REASONS[key] %>" type="checkbox">
+            <label class="choice checkbox" for="protocol_moderation_reason_<%= dp::MODERATION_REASONS[key] %>"
+                    title="<%= t("root.protocol.cant_enter.titles.#{key}") %>">
+              <%= t("root.protocol.cant_enter.text.#{key}") %>
+            </label>
+          </li>
+        <% end %>
+        <li>
+          <input name="commit" value="<%= t('app.common.submit') %>" type="submit" disabled="disabled">
+        </li>
+        <li>
+          <%= link_to(t('helpers.links.help'), '#help-modal', class: 'protocol-button small help', role: 'button', :'data-toggle' => 'modal') %>
+        </li>
+      </ul>
+    <% end %>
+  </div>
+
+  <hr />
+
+
   <div class="protocol-container">
     <div class="magnifier-thumb-wrapper">
       <%= image_tag '/training/' + @next_protocol.to_s + '.jpg', :id => 'protocolimg' %>
@@ -17,75 +55,111 @@
         <%= t('.p2').html_safe %>
       </div>
 
+      <%
+        style = ''
+        if @protocol_data['protocol_top_box_margin'].to_f > 0
+          style = "margin-top: #{@protocol_data['protocol_top_box_margin']}px"
+        end
+      %>
 
-      <% [
-          [1, :possible_voters],
-          [2, :special_voters],
-          ['12:00', :votes_by_1200],
-          ['17:00', :votes_by_1700],
-          [4, :ballots_signed_for],
-          [5, :ballots_available],
-          [1, :party_1],
-          [4, :party_4],
-          [5, :party_5],
-          [9, :party_9],
-          [10, :party_10],
-          [17, :party_17],
-          [19, :party_19],
-          [23, :party_23],
-          [24, :party_24],
-          [26, :party_26],
-          [30, :party_30],
-          [35, :party_35],
-          [36, :party_36],
-          [38, :party_38],
-          [40, :party_40],
-          [41, :party_41],
-          [6, :invalid_ballots_submitted]
-         ].each_with_index do |f, i| %>
-
-        <% if i == 2 %>
-          <div class="inline clearfix">
-        <% elsif i == 4 %>
+      <div class="top-box" style='<%= style %>'>
+        <% @protocol_data['top_box'].each_with_index do |item, i| %>
+          <% if i == 2 %>
+            <div class="inline clearfix">
+          <% elsif i == 4 %>
+            </div>
+          <% end %>
+          <% field_with_error = !(@errors.nil? || @errors[item['key']].nil?) %>
+          <div class="f f<%= (i + 1).to_s %><%= field_with_error == true ? ' error' : '' %>">
+            <div class="string control-group optional stringish">
+              <label class="control-label" for="protocol_<%= item['key'] %>"><%= item['number'] %></label>
+              <div class="controls">
+                <input id="protocol_<%= item['key'] %>" maxlength="4" name="protocol[<%= item['key'] %>]" type="text" autocomplete="off" value="<%= if (!params['protocol'].nil?); params['protocol'][item['key']]; end %>" />
+              </div>
+              <% if field_with_error %>
+                <div class="error-message">
+                  <%= @errors[item['key']] %>
+                </div>
+              <% end %>
+            </div>
           </div>
         <% end %>
+      </div>
 
-        <% field_with_error = !(@errors.nil? || @errors[f[1].to_s].nil?) %>
-
-        <div class="m m<%= (i + 1).to_s %><%= if field_with_error; ' error'; end; %>">
-          <div class="string control-group optional stringish">
-            <label class="control-label" for="protocol_<%= f[1] %>"><%= f[0] %></label>
-            <div class="controls">
-              <input id="protocol_<%= f[1] %>" maxlength="4" name="protocol[<%= f[1] %>]" type="text" autocomplete="off" value="<%= if (!params['protocol'].nil?); params['protocol'][f[1]]; end %>" />
-            </div>
-            <% if field_with_error %>
-              <div class="error-message">
-                <%= @errors[f[1].to_s] %>
+      <div class="party-box" style="margin-top: 2px;">
+        <%
+          style = "margin-top: #{@protocol_data['protocol_party_top_margin']}px"
+          logger.debug "========== #{@protocol_data['protocol_party_top_margin']}"
+        %>
+        <% @protocol_data['parties'].each do |item| %>
+          <% field_with_error = !(@errors.nil? || @errors[item['key']].nil?) %>
+          <div class="f <%= field_with_error == true ? ' error' : '' %>" style='<%= style %>'>
+            <div class="string control-group optional stringish">
+              <label class="control-label" for="protocol_<%= item['key'] %>"><%= item['number'] %></label>
+              <div class="controls">
+                <input id="protocol_<%= item['key'] %>" maxlength="4" name="protocol[<%= item['key'] %>]" type="text" autocomplete="off" value="<%= if (!params['protocol'].nil?); params['protocol'][item['key']]; end %>" />
               </div>
-            <% end %>
+              <% if field_with_error %>
+                <div class="error-message">
+                  <%= @errors[item['key']] %>
+                </div>
+              <% end %>
+            </div>
           </div>
-        </div>
+        <% end %>
+      </div>
 
-      <% end %>
+      <%
+        style = ''
+        if @protocol_data['parties_same_for_all_districts'] == false && @protocol_data['max_party_in_district'] > 0 && @protocol_data['max_party_in_district'] != @protocol_data['parties'].length
+
+          # have to calculate how high the party box should be
+          # and subtract from the # of parties in the box
+          # - 22.5 is the default height for each field
+          party_height = 22.5 + @protocol_data['protocol_party_top_margin'].to_f
+          total_height = @protocol_data['max_party_in_district'] * party_height
+          total_party_height = @protocol_data['parties'].length * (party_height)
+          empty_space = total_height - total_party_height
+          style = "margin-top: #{empty_space}px"
+        end
+      %>
+      <div class="bottom-box" style='<%= style %>'>
+        <% @protocol_data['bottom_box'].each_with_index do |item, i| %>
+          <% field_with_error = !(@errors.nil? || @errors[item['key']].nil?) %>
+          <div class="f f<%= (i + 7).to_s %><%= field_with_error == true ? ' error' : '' %>">
+            <div class="string control-group optional stringish">
+              <label class="control-label" for="protocol_<%= item['key'] %>"><%= item['number'] %></label>
+              <div class="controls">
+                <input id="protocol_<%= item['key'] %>" maxlength="4" name="protocol[<%= item['key'] %>]" type="text" autocomplete="off" value="<%= if (!params['protocol'].nil?); params['protocol'][item['key']]; end %>" />
+              </div>
+              <% if field_with_error %>
+                <div class="error-message">
+                  <%= @errors[item['key']] %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
 
       <input type="hidden" name="protocol_number" value="<%= @next_protocol %>" />
       <input type="submit" value="<%= t('app.common.submit')%>" />
 
-        <div id="votesum_explanation">
-          <p>
-            **
-            <%= t('.votesum_explanation1', :label => t('app.csv_header.num_votes')) %>
-          </p>
-          <p>
-            <%= t('.votesum_explanation2', :label => t('.sum_party_votes')) %>
-          </p>
-          <p>
-            <%= t('.votesum_explanation3') %>
-          </p>
-          <p>
-            <%= t('.votesum_explanation4') %>
-          </p>
-        </div>
+      <div id="votesum_explanation">
+        <p>
+          **
+          <%= t('.votesum_explanation1', :label => t('app.csv_header.num_votes')) %>
+        </p>
+        <p>
+          <%= t('.votesum_explanation2', :label => t('.sum_party_votes')) %>
+        </p>
+        <p>
+          <%= t('.votesum_explanation3') %>
+        </p>
+        <p>
+          <%= t('.votesum_explanation4') %>
+        </p>
+      </div>
 
     <% end %>
 
@@ -116,5 +190,19 @@
     <div>
       <button type="button" id="protocol_rotate_reset" title="<%= t('root.protocol.title.reset')%>"></button>
     </div>
+  </div>
+</div>
+
+
+<div id="help-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel"><%= t('root.protocol.modal_header') %></h3>
+  </div>
+  <div class="modal-body">
+    <%= render :partial => 'root/cant_enter_help' %>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true"><%= t('helpers.links.close') %></button>
   </div>
 </div>

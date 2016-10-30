@@ -1,0 +1,34 @@
+{
+  "protocol_top_box_margin": 119,
+  "protocol_party_top_margin": 7,
+  "parties_same_for_all_districts": true,
+  "top_box": [
+    {"number": "1", "key": "possible_voters", "value": "997"},
+    {"number": "2", "key": "special_voters", "value": "7"},
+    {"number": "3ა (12:00)", "key": "votes_by_1200", "value": "350"},
+    {"number": "3ბ (17:00)", "key": "votes_by_1700", "value": "656"},
+    {"number": "4", "key": "ballots_signed_for", "value": "656"},
+    {"number": "5", "key": "ballots_available", "value": "900"}
+  ],
+  "parties":[
+    {"number": "1", "key": "party_1", "value": "1"},
+    {"number": "4", "key": "party_4", "value": ""},
+    {"number": "5", "key": "party_5", "value": "224"},
+    {"number": "9", "key": "party_9", "value": "1"},
+    {"number": "10", "key": "party_10", "value": "11"},
+    {"number": "17", "key": "party_17", "value": ""},
+    {"number": "19", "key": "party_19", "value": ""},
+    {"number": "23", "key": "party_23", "value": ""},
+    {"number": "24", "key": "party_24", "value": "3"},
+    {"number": "26", "key": "party_26", "value": ""},
+    {"number": "30", "key": "party_30", "value": ""},
+    {"number": "35", "key": "party_35", "value": ""},
+    {"number": "36", "key": "party_36", "value": ""},
+    {"number": "38", "key": "party_38", "value": "7"},
+    {"number": "40", "key": "party_40", "value": ""},
+    {"number": "41", "key": "party_41", "value": "399"}
+  ],
+  "bottom_box":[
+    {"number": "6", "key":"invalid_ballots_submitted", "value":"10"}
+  ]
+}

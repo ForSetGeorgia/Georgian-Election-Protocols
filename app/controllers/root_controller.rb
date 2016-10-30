@@ -138,30 +138,25 @@ class RootController < ApplicationController
       # if the user entered a 0, reset to '' so matching works
       # trim the values so there are no leading spaces
       params['protocol'].each{|k,v|
-        params['protocol'][k] = v.strip
-        if params['protocol'][k] == '0'
-          params['protocol'][k] = ''
+        if k != 'moderation_reason'
+          params['protocol'][k] = v.strip
+          if params['protocol'][k] == '0'
+            params['protocol'][k] = ''
+          end
         end
       }
 
       @next_protocol = params['protocol_number']
-      filedata = JSON.parse(File.read('public/training/' + @next_protocol + '.json'))
-      if filedata == params['protocol']
+      @protocol_data = JSON.parse(File.read("public/training/#{@next_protocol}.json"))
+      errors = validate_training_values(@protocol_data, params['protocol'])
+      if errors.keys.length == 0
         trained = (trained + [@next_protocol.to_i]).uniq.sort
         user.trained = trained.join(',')
         user.save
         @user_trained_num = user.trained.length
   			flash[:notice] = I18n.t('root.training.success')
       else
-        @errors = {}
-        filedata.each_pair do |key, value|
-          pval = params['protocol'][key]
-          if pval.length > 0 && pval.gsub(/[a-zA-Z]/, '') != pval
-            @errors[key] = I18n.t('root.training.errors.number')
-          elsif value != pval
-            @errors[key] = I18n.t('root.training.errors.mismatch')
-          end
-        end
+        @errors = errors
   			flash[:alert] = I18n.t('root.training.errors.incorrect')
       end
     end
@@ -170,11 +165,13 @@ class RootController < ApplicationController
     if @errors.blank?
       params['protocol'] = nil # make sure form fields are not pre-populated with the last form
       if user.trained.blank?
-        @next_protocol = PROTOCOL_NUMBERS.sample
+        @next_protocol = 5#PROTOCOL_NUMBERS.sample
+        @protocol_data = JSON.parse(File.read("public/training/#{@next_protocol}.json"))
       else
         left = PROTOCOL_NUMBERS - trained
         if left.present?
           @next_protocol = left.sample
+          @protocol_data = JSON.parse(File.read("public/training/#{@next_protocol}.json"))
         else
           redirect_to protocol_path, :notice => I18n.t('root.training.completed')
           return
@@ -303,5 +300,47 @@ protected
 	def clean_filename(filename)
 		Utf8Converter.convert_ka_to_en(filename.gsub(' ', '_').gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,''))
 	end
+
+  def validate_training_values(actual, submitted)
+    errors = Hash.new
+
+    # check if cant_enter is supposed to exist
+    if actual['cant_enter'].present?
+      moderation_reason = nil
+      if submitted['moderation_reason'].present?
+        submitted['moderation_reason'].delete('')
+        moderation_reason = submitted['moderation_reason'].first
+      end
+      if actual['cant_enter'] != moderation_reason
+        errors['cant_enter'] = I18n.t('root.training.errors.cant_enter')
+      end
+    end
+
+    if !errors.keys.present? && !actual['cant_enter'].present?
+
+      # top box
+      actual['top_box'].each do |item|
+        if item['value'] != submitted[item['key']]
+          errors[item['key']] = I18n.t('root.training.errors.mismatch')
+        end
+      end
+
+      # parties
+      actual['parties'].each do |item|
+        if item['value'] != submitted[item['key']]
+          errors[item['key']] = I18n.t('root.training.errors.mismatch')
+        end
+      end
+
+      # bottom box
+      actual['bottom_box'].each do |item|
+        if item['value'] != submitted[item['key']]
+          errors[item['key']] = I18n.t('root.training.errors.mismatch')
+        end
+      end
+    end
+
+    return errors
+  end
 
 end

@@ -134,6 +134,7 @@ ka:
       could_not_rest: ბოდიში, ოქმების ბაზის განახლება შეუძლებელია.
       no_protocol: ბოდიში, აღნიშნული ოქმი არ მოიძებნა.
       required_for_can_enter_data: 'must be provided before setting Can Enter Data to Yes'
+      training_reset: Training for all users have been reset.
     csv_header:
       region: რეგიონი
       district_id: ოლქის ID
@@ -233,7 +234,8 @@ ka:
         training: ტრენინგი დასრულებულია
         all_stats: იხილეთ ყველა არჩევნების სტატისტიკა
         current_election_stats: იხილეთ მიმდინარე არჩევნების სტატისტიკა
-        new:
+        reset_training: Reset Training Status for All Users
+      new:
         title: ახალი მომხმარებელი
       show:
         title: მომხმარებლის დეტალები
@@ -398,6 +400,7 @@ ka:
         incorrect: "შეყვანილი ინფორმაცია არასწორია"
         mismatch: "არასწორია"
         number: "უნდა იყოს რიცხვი"
+        cant_enter: "One of these buttons should be selected"
       sum_party_votes: ჯამი (პარტიების ხმები) - ბათილი ბიულეტენები
       votesum_explanation1: "მარცხენა რიცხვი: %{label}"
       votesum_explanation2: "მარჯვენა რიცხვი: %{label}"
