@@ -128,14 +128,14 @@ else
               #logger_info.info("Deleting existing protocol and amendments")
               #del_files = Dir.glob("#{ddir}#{img_bname}*")
 
-              del_files.each do |f|
-                begin
-                  logger_info.info("Deleting: #{f}")
-                  FileUtils.rm(f)
-                rescue => e
-                  logger_error.error("Failed to delete: #{f}")
-                end
-              end
+              # del_files.each do |f|
+              #   begin
+              #     logger_info.info("Deleting: #{f}")
+              #     FileUtils.rm(f)
+              #   rescue => e
+              #     logger_error.error("Failed to delete: #{f}")
+              #   end
+              # end
 
               if index == 0
                 begin
