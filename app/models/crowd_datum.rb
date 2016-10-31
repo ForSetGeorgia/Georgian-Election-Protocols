@@ -124,9 +124,11 @@ class CrowdDatum < ActiveRecord::Base
           ballots_votes_amount = ballots_votes == true ? logic_diff : 0
           votes_ballots = valid < sum_parties ? 1 : 0
           votes_ballots_amount = votes_ballots == true ? logic_diff.abs : 0
-          amendments = dp.has_amendment? ? 1 : 0
-          amendment_count = dp.amendment_count
+          supplemental_documents_flag = dp.has_supplemental_documents? ? 1 : 0
+          supplemental_document_count = dp.supplemental_document_count
           annulled = dp.is_annulled? ? 1 : 0
+          amendment_flag = dp.has_amendment
+          explanatory_note_flag = dp.has_explanatory_note
 
           # if the election has indeodent parties, add them all together
           # for election app can only show this as one result
@@ -148,7 +150,7 @@ class CrowdDatum < ActiveRecord::Base
                  `num_possible_voters`, `num_special_voters`, `num_at_12`, `num_at_17`, `num_votes`, `num_ballots`,
                  `num_invalid_votes`, `num_valid_votes`, `logic_check_fail`, `logic_check_difference`,
                  `more_ballots_than_votes_flag`, `more_ballots_than_votes`, `more_votes_than_ballots_flag`, `more_votes_than_ballots`,
-                 `amendments_flag`, `amendment_count`, `is_annulled`, "
+                 `supplemental_documents_flag`, `supplemental_document_count`, `amendment_flag`, `explanatory_note_flag`, `is_annulled`, "
           sql << parties.map{|x| "`#{x.column_name}`"}.join(', ')
           if election.has_indepenedent_parties?
             sql << ", `#{Election::INDEPENDENT_MERGED_ANALYSIS_NAME}`"
@@ -174,7 +176,7 @@ class CrowdDatum < ActiveRecord::Base
             self.precinct_id, self.possible_voters, self.special_voters,
             self.votes_by_1200, self.votes_by_1700, self.ballots_signed_for, self.ballots_available, self.invalid_ballots_submitted,
             valid, logic_fail, logic_diff, ballots_votes, ballots_votes_amount, votes_ballots, votes_ballots_amount,
-            amendments, amendment_count, annulled
+            supplemental_documents_flag, supplemental_document_count, amendment_flag, explanatory_note_flag, annulled
           ]
           parties.each do |p|
             sql_values << self["party_#{p.number}"]
