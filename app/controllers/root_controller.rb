@@ -22,8 +22,18 @@ class RootController < ApplicationController
       @overall_stats_by_district = DistrictPrecinct.overall_stats_by_district(@current_election.id)
       @overall_user_stats = CrowdDatum.overall_user_stats(@current_election.id)
       @annulled = DistrictPrecinct.by_election(@current_election.id).has_been_annulled
-      @supplemental_documents = @current_election.raw_with_supplemental_documents
       @district_summaries = @current_election.district_summary
+
+      # make sure all districts/precincts appear whether or not they have been entered yet
+      # so use raw as baseline and add anything missing from dp
+      @supplemental_documents = @current_election.raw_with_supplemental_documents
+      supplemental_documents_dp = DistrictPrecinct.by_election(@current_election.id).with_supplemental_documents
+      supplemental_documents_dp.each do |dp|
+        if @supplemental_documents.index{|x| x['district_id'] == dp.district_id && x['precinct_id'] == dp.precinct_id}.nil?
+          @supplemental_documents << dp
+        end
+      end
+
     end
 
     respond_to do |format|
