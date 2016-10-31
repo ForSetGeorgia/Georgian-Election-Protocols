@@ -64,16 +64,16 @@
                 <% else %>
                   <li><%= link_to t('.training'), training_path, class: 'training' %></li>
                 <% end %>
+                <% if current_user.role?(User::ROLES[:categorize_supplemental_documents]) %>
+                  <li>
+                   <%= link_to t('.categorize_supplemental_documents'), categorize_supplemental_documents_path %>
+                  </li>
+                <% end %>
+                <% if false #current_user.role?(User::ROLES[:moderator]) %>
+                  <li>
+                   <%= link_to t('.moderate'), moderate_path %>
+                  </li>
               <% end %>
-              <% if current_user.role?(User::ROLES[:categorize_supplemental_documents]) %>
-                <li>
-                 <%= link_to t('.categorize_supplemental_documents'), categorize_supplemental_documents_path %>
-                </li>
-              <% end %>
-              <% if false #current_user.role?(User::ROLES[:moderator]) %>
-                <li>
-                 <%= link_to t('.moderate'), moderate_path %>
-                </li>
               <% end %>
               <li><%= link_to t('.about'), about_path %></li>
               <li>
