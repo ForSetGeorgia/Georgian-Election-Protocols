@@ -480,10 +480,13 @@
                       <%= t('.needs_clarification.headers.reason') %>
                     </th>
                     <th>
-                      <%= t('.needs_clarification.headers.status') %>
+                      <%= t('.needs_clarification.headers.action_taken') %>
                     </th>
                     <th>
                       <%= t('.needs_clarification.headers.notes') %>
+                    </th>
+                    <th>
+                      <%= t('.needs_clarification.headers.status') %>
                     </th>
                     <th>
                       <%= t('.needs_clarification.headers.moderated_at') %>
@@ -515,6 +518,9 @@
                       </td>
                       <td>
                         <%= simple_format(needs_clarification.moderation_notes) %>
+                      </td>
+                      <td>
+                        <%= needs_clarification.being_moderated? ? t('.pending') : t('.completed')  %>
                       </td>
                       <td>
                         <%= needs_clarification.last_moderation_updated_at %>
