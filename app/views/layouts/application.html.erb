@@ -70,7 +70,7 @@
                  <%= link_to t('.categorize_supplemental_documents'), categorize_supplemental_documents_path %>
                 </li>
               <% end %>
-              <% if current_user.role?(User::ROLES[:moderator]) %>
+              <% if false #current_user.role?(User::ROLES[:moderator]) %>
                 <li>
                  <%= link_to t('.moderate'), moderate_path %>
                 </li>
