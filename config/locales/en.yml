@@ -132,6 +132,8 @@ en:
       provide_all_params: Please provide values for all fields.
       data_reset: The protocol data was reset and will have to be re-entered.
       could_not_rest: Sorry, the protocol data could not be reset.
+      protocol_reset: The protocol was reset and will have to be re-entered after the new protocol is downloaded in the next scrape.
+      could_not_rest_protocol: Sorry, the protocol data and image(s) could not be reset.
       no_protocol: Sorry, the selected protocol could not be found.
       required_for_can_enter_data: 'must be provided before setting Can Enter Data to Yes'
       training_reset: Training for all users have been reset.
@@ -184,6 +186,7 @@ en:
       users: Manage Users
       election_data: Election Data Migration
       reset_bad_data: Delete Data for Protocol
+      redownload_protocol: Redownload Protocol
       elections: Manage Elections
       categorize_supplemental_documents: Categorize Documents
       moderate: Moderate Protocols
@@ -284,6 +287,11 @@ en:
         votesum_explanation4: "It is possible that these numbers will not match."
       reset_bad_protocol_data:
         title: Delete data for wrongly entered protocol
+        election: Election
+        district: District (i.e., 01, 02)
+        precinct: Precinct (i.e., 10.05, 05.90)
+      redownload_protocols:
+        title: Redownload a Protocol
         election: Election
         district: District (i.e., 01, 02)
         precinct: Precinct (i.e., 10.05, 05.90)

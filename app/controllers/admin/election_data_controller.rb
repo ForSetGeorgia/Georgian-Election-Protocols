@@ -43,6 +43,35 @@ class Admin::ElectionDataController < ApplicationController
 
   end
 
+
+  def redownload_protocols
+    if @elections.nil?
+      redirect_to admin_path, :notice => I18n.t('root.protocol.no_current_elections')
+      return
+    end
+
+    if request.put?
+      if params[:election_id].present? && params[:district_id].present? && params[:precinct_id].present?
+        if DistrictPrecinct.redownload_protocol_and_documents(params[:election_id], params[:district_id], params[:precinct_id])
+          flash[:notice] = I18n.t('app.msgs.protocol_reset')
+          params[:electon_id] = nil
+          params[:district_id] = nil
+          params[:precinct_id] = nil
+        else
+          flash[:alert] = I18n.t('app.msgs.could_not_rest_protocol')
+        end
+      else
+        flash[:notice] = I18n.t('app.msgs.provide_all_params')
+      end
+    end
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+
+  end
+
+
   def edit
     election = Election.find(params[:election_id])
 

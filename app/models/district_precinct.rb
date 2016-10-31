@@ -324,6 +324,37 @@ class DistrictPrecinct < ActiveRecord::Base
     return record_count > 0
   end
 
+
+  ############################################
+  ############################################
+  def self.redownload_protocol_and_documents(election_id, district_id, precinct_id)
+    record_count = 0
+    DistrictPrecinct.transaction do
+      reset_bad_data(election_id, district_id, precinct_id)
+
+      record_count += DistrictPrecinct.by_ids(election_id, district_id, precinct_id)
+                      .update_all(has_protocol: false)
+
+      # delete any files
+      cd = CrowdDatum.by_ids(election_id, district_id, precinct_id).first
+      if cd.present?
+        files = [cd.image_path]
+        files << cd.supplemental_document_image_paths
+        files.flatten!
+        files.delete(nil)
+        if files.present?
+          files.each do |f|
+            FileUtils.rm("#{Rails.root}/public/#{f}")
+          end
+        end
+      end
+    end
+
+    return record_count > 0
+  end
+
+
+
   ############################################
   ############################################
   def self.add_moderation(election_id, district_id, precinct_id, user_id, moderation_reason)

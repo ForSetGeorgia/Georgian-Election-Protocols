@@ -132,6 +132,8 @@ ka:
       provide_all_params: გთხოვთ ყველა ველს მიუთითოთ მაჩვენებელი.
       data_reset: ოქმების ბაზა განახლდა და საჭიროა მათი თავიდან შეყვანა.
       could_not_rest: ბოდიში, ოქმების ბაზის განახლება შეუძლებელია.
+      protocol_reset: The protocol was reset and will have to be re-entered after the new protocol is downloaded in the next scrape.
+      could_not_rest_protocol: Sorry, the protocol data and image(s) could not be reset.
       no_protocol: ბოდიში, აღნიშნული ოქმი არ მოიძებნა.
       required_for_can_enter_data: 'უნდა იყოს მზად სანამ პარამეტრამდე შესაძლებელია მონაცემების შეყვანა'
       training_reset: ტრეინინგი ყველა მომხმარებლისთვის განახლდა.
@@ -184,6 +186,7 @@ ka:
       users: მომხმარებლების მართვა
       election_data: არჩევნების მონაცემების მიგრაცია
       reset_bad_data: ოქმის მონაცემების წაშლა
+      redownload_protocol: Redownload Protocol
       elections: მართე არჩევნები
       categorize_supplemental_documents: დოკუმენტების კატეგორიზაცია
       moderate: ოქმის მოდერაცია
@@ -287,6 +290,11 @@ ka:
         election: არჩევნები
         district: ოლქი (მაგ. 01,02)
         precinct: უბანი (მაგ.10.05, 05.90)
+      redownload_protocols:
+        title: Redownload a Protocol
+        election: Election
+        district: District (i.e., 01, 02)
+        precinct: Precinct (i.e., 10.05, 05.90)
   root:
     index:
       choose: გადადი არჩევნებზე
