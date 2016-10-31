@@ -589,6 +589,7 @@ en:
         moderated_at: Last Moderated At
         action: Moderate
       moderate:
+        failed: The requested action encountered an error.
         request_image: Re-download Protocol Image
         annulled: Confirm Annulment
         contact_cec: Follow-up with CEC

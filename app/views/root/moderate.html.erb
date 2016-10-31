@@ -2,17 +2,17 @@
 
   <div id="moderate">
     <%
-      p = 'completed'
+      status = 'completed'
       text = t('.completed')
       no_text = t('.no_pending')
       if params[:status] == 'completed'
-        p = 'pending'
+        status = 'pending'
         text = t('.pending')
         no_text = t('.no_completed')
       end
     %>
-    <div>
-      <%= link_to text, params.merge(status: p), :class => 'btn btn-success' %>
+    <div class="switch-view">
+      <%= link_to text, params.merge(status: status), :class => 'btn btn-success' %>
     </div>
 
   <% if @needs_moderation.present? %>
@@ -46,9 +46,11 @@
           <th>
             <%= t('.header.moderated_at') %>
           </th>
-          <th>
-            <%= t('.header.action') %>
-          </th>
+          <% if params[:status] == "pending" %>
+            <th>
+              <%= t('.header.action') %>
+            </th>
+          <% end %>
         </tr>
         <tr>
           <td></td>
@@ -60,7 +62,9 @@
           <td><input type="text" name="search_status" value="Search" class="search_init" /></td>
           <td><input type="text" name="search_notes" value="Search" class="search_init" /></td>
           <td><input type="text" name="search_moderated_at" value="Search" class="search_init" /></td>
-          <td></td>
+          <% if params[:status] == "pending" %>
+            <td></td>
+          <% end %>
         </tr>
       </thead>
       <tbody>
@@ -89,18 +93,48 @@
             <td>
               <%= to_moderate.precinct_id %>
             </td>
-            <td>
-              <%= to_moderate.moderation_status_text %>
+            <td class="moderation-status">
+              <span><%= to_moderate.moderation_status_text %></span>
             </td>
-            <td>
-              <%= to_moderate.moderation_notes %>
+            <td class="moderation-notes">
+              <span>
+                <% if params[:status] == "pending" %>
+                  <textarea cols="10" rows="2" data-id="<%= to_moderate.id %>" data-user_id="<%= current_user.id%>"><%= to_moderate.moderation_notes %></textarea>
+                <% else %>
+                  <%= simple_format(to_moderate.moderation_notes) %>
+                <% end %>
+              </span>
             </td>
-            <td>
-              <%= l to_moderate.last_moderation_updated_at, format: :file if to_moderate.last_moderation_updated_at.present? %>
+            <td class="moderation-updated-at">
+              <span><%= l to_moderate.last_moderation_updated_at, format: :file if to_moderate.last_moderation_updated_at.present? %></span>
             </td>
-            <td>
-              <%= link_to 'moderate', '#', :'data-action_to_take' => 'annulled', :'data-id' => to_moderate.id, :'data-user_id' => current_user.id, class: 'moderate-record'  %>
-            </td>
+            <% if params[:status] == "pending" %>
+              <td>
+                <div class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <%= t('.header.action') %>
+                    <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+                    <li role="presentation">
+                      <%= link_to t('.moderate.request_image'), '#', :'data-action_to_take' => 'request_image', :'data-id' => to_moderate.id, :'data-user_id' => current_user.id, class: 'moderate-record', role: 'menuitem', tabindex: '-1'  %>
+                    </li>
+                    <li role="presentation">
+                      <%= link_to t('.moderate.annulled'), '#', :'data-action_to_take' => 'annulled', :'data-id' => to_moderate.id, :'data-user_id' => current_user.id, class: 'moderate-record', role: 'menuitem', tabindex: '-1'  %>
+                    </li>
+                    <li role="presentation">
+                      <%= link_to t('.moderate.contact_cec'), '#', :'data-action_to_take' => 'contact_cec', :'data-id' => to_moderate.id, :'data-user_id' => current_user.id, class: 'moderate-record', role: 'menuitem', tabindex: '-1'  %>
+                    </li>
+                    <li role="presentation">
+                      <%= link_to t('.moderate.supplementary_document_added'), '#', :'data-action_to_take' => 'supplementary_document_added', :'data-id' => to_moderate.id, :'data-user_id' => current_user.id, class: 'moderate-record', role: 'menuitem', tabindex: '-1'  %>
+                    </li>
+                    <li role="presentation">
+                      <%= link_to t('.moderate.no_problem'), '#', :'data-action_to_take' => 'no_problem', :'data-id' => to_moderate.id, :'data-user_id' => current_user.id, class: 'moderate-record', role: 'menuitem', tabindex: '-1'  %>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            <% end %>
           </tr>
         <% end %>
       </tbody>
