@@ -299,6 +299,7 @@ ka:
         supplemental_documents: დამატებითი დოკუმენტები
         annulled: გაუქმებული
         download: მონაცემების ჩამოტვირთვა
+        needs_clarification: Needs Clarification
       annulled:
         no_data: არცერთ საარჩევნო უბანს ოქმი არ გაუუქმებია!
         view_title: View Protocol and Supplemental Document(s)
@@ -321,6 +322,16 @@ ka:
           more_ballots_than_votes: რამდენით მეტი ბიულეტინია ვიდრე ხმა (#)
           more_votes_than_ballots_flag: მეტი ხმა ვიდრე ბიულეტინი?
           more_votes_than_ballots: რამდენით მეტი ბიულეტინია ვიდრე ხმა (#)
+      needs_clarification:
+        no_data: Hooray! No protocols need clarification!
+        view_title: View Protocol and Supplemental Document(s)
+        headers:
+          district: District
+          precinct: Precinct
+          reason: Reason
+          status: Status
+          notes: Notes
+          moderated_at: Last Moderated At
       district_summaries:
         no_data: ამ დროისთვის მონაცემები არ არის დამატებული.
         headers:

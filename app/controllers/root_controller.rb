@@ -23,6 +23,7 @@ class RootController < ApplicationController
       @overall_user_stats = CrowdDatum.overall_user_stats(@current_election.id)
       @annulled = DistrictPrecinct.by_election(@current_election.id).has_been_annulled
       @district_summaries = @current_election.district_summary
+      @needs_clarifications = DistrictPrecinct.by_election(@current_election.id).needs_clarification
 
       # make sure all districts/precincts appear whether or not they have been entered yet
       # so use raw as baseline and add anything missing from dp

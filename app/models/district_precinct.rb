@@ -71,6 +71,11 @@ class DistrictPrecinct < ActiveRecord::Base
     order('issue_reported_at desc')
   end
 
+  # only missing info, cant read, and docs not clear require clarification
+  def self.needs_clarification
+    where(["being_moderated is not null and (moderation_reason like '%?%' or moderation_reason like '%?%' or moderation_reason like '%?%')",
+      MODERATION_REASONS[:missing_info], MODERATION_REASONS[:cant_read], MODERATION_REASONS[:docs_not_clear]])
+  end
   #######################
   # flag descriptions
   #######################

@@ -299,6 +299,7 @@ en:
         supplemental_documents: Supplemental Documents
         annulled: Annulled
         download: Download Data
+        needs_clarification: Needs Clarification
       annulled:
         no_data: Hooray! No precincts have had their protocols annulled!
         view_title: View Protocol and Supplemental Document(s)
@@ -321,6 +322,16 @@ en:
           more_ballots_than_votes: How Many More Ballots Than Votes (#)
           more_votes_than_ballots_flag: More Votes Than Ballots?
           more_votes_than_ballots: How Many More Ballots Than Votes (#)
+      needs_clarification:
+        no_data: Hooray! No protocols need clarification!
+        view_title: View Protocol and Supplemental Document(s)
+        headers:
+          district: District
+          precinct: Precinct
+          reason: Reason
+          status: Status
+          notes: Notes
+          moderated_at: Last Moderated At
       district_summaries:
         no_data: No data has been submitted yet.
         headers:
