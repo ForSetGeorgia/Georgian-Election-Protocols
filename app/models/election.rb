@@ -373,7 +373,7 @@ class Election < ActiveRecord::Base
 
   # determine if closed, on going or coming up
   def status
-    if self.is_coming_up?
+    if self.is_coming_up? && !self.can_enter_data?
       I18n.t('activerecord.attributes.election.status_types.coming_up')
     elsif self.can_enter_data?
       I18n.t('activerecord.attributes.election.status_types.ongoing')

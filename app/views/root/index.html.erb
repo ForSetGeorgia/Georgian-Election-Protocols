@@ -31,7 +31,7 @@
       </div>
     </h1>
 
-    <% if @current_election.is_coming_up? %>
+    <% if @current_election.is_coming_up? && !@current_election.can_enter_data? %>
 
       <div class="elections-coming-up">
         <%= link_to(image_tag('volunteers.png', class: 'pull-left'), @bitly_url, target: :blank) %>
