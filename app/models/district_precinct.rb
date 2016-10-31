@@ -520,7 +520,8 @@ class DistrictPrecinct < ActiveRecord::Base
             end
 
             # now register the new documents
-            all_files = ids.map{|x| x[:files]}.flatten
+            all_files = ids.select{|x| x[:supplemental_documents_found] == true}.map{|x| x[:files]}.flatten
+            all_files = all_files.select{|x| x.index('amendment').present?}
             existing_documents = SupplementalDocument.pluck(:file_path)
             # if existing documents exist, remove them from the list so they are not entered again
             if existing_documents.present?
@@ -540,7 +541,6 @@ class DistrictPrecinct < ActiveRecord::Base
                 end
               end
             end
-
           end
         end
       end
