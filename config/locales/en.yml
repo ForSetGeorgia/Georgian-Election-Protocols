@@ -301,7 +301,7 @@ en:
         download: Download Data
       annulled:
         no_data: Hooray! No precincts have had their protocols annulled!
-        view_title: View Protocol and Amendment(s)
+        view_title: View Protocol and Supplemental Document(s)
         headers:
           district: District
           precinct: Precinct
@@ -512,6 +512,7 @@ en:
       explanatory_note: Explanatory Note
       skip: Skip
       modal_header: Explanation on Categorizing A Supplemental Document
+      view_protocol: View All Documents for this Protocol
     categorize_supplemental_documents_help:
       explanation: Below are explanations of the different types of supplementary documents that you need to identify.
       tabs:

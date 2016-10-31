@@ -134,7 +134,7 @@ ka:
       could_not_rest: ბოდიში, ოქმების ბაზის განახლება შეუძლებელია.
       no_protocol: ბოდიში, აღნიშნული ოქმი არ მოიძებნა.
       required_for_can_enter_data: 'უნდა იყოს მზად სანამ პარამეტრამდე შესაძლებელია მონაცემების შეყვანა'
-      training_reset: Training for all users have been reset.
+      training_reset: ტრეინინგი ყველა მომხმარებლისთვის განახლდა.
     csv_header:
       region: რეგიონი
       district_id: ოლქის ID
@@ -234,7 +234,7 @@ ka:
         training: ტრენინგი დასრულებულია
         all_stats: იხილეთ ყველა არჩევნების სტატისტიკა
         current_election_stats: იხილეთ მიმდინარე არჩევნების სტატისტიკა
-        reset_training: Reset Training Status for All Users
+        reset_training: ტრეინინგის სტატუსის განახლება ყველა მომხმარებლისთვის
       new:
         title: ახალი მომხმარებელი
       show:
@@ -301,7 +301,7 @@ ka:
         download: მონაცემების ჩამოტვირთვა
       annulled:
         no_data: არცერთ საარჩევნო უბანს ოქმი არ გაუუქმებია!
-        view_title: ილიხეთ ოქმი და შესწორებები
+        view_title: View Protocol and Supplemental Document(s)
         headers:
           district: ოლქი
           precinct: საარჩევნო უბანი
@@ -421,8 +421,8 @@ ka:
       title: მონაცემების შეყვანა
       p1: "გთხოვთ, შეიყვანოთ <br /> მხოლოდ რიცხვები; <br /> არ შეიყვანოთ 'X'."
       p2: "თუ სავალდებულს ველი (*)  არ აქვს რიცხვი გთხოვთ, შეიყვანოთ 0"
-      supplemental_document_explanation1: The CEC has issued supplemental documents for this protocol, which is located at the bottom of this page.
-      supplemental_document_explanation2: If the documents indicate changes in the protocol data, please enter the changes from the documents into the appropriate form fields.
+      supplemental_document_explanation1: ცესკო ოქმს დამატებითი დოკუმენტები დაურთო, რომლებიც ქვევით არის მიბმული.
+      supplemental_document_explanation2: თუ დოკუმენტი ოქმში ცვლილებების შეტანას ითხოვს, გთხოვთ, შეიყვანოთ შეცვლილი რიცხვები შესაბამის ველებში.
       overseas_explanation1: ეს არის სხვა სახელმწიფოში შედგენილი ოქმი.
       overseas_explanation2: "გთხოვთ, პირველ გრაფაში შეიყვანოთ რიცხვი #2 გრაფიდან, ხოლო #2 გრაფა დატოვეთ ცარიელი."
       no_protocols: ამ დროისთვის არ არის შესაყვანი ოქმები
@@ -512,6 +512,7 @@ ka:
       explanatory_note: ახსნა-განმარტებითი ჩანაწერი
       skip: გამოტოვება
       modal_header: განმარტება დამატებითი დოკუმენტების კატეგორიზაციაზე.
+      view_protocol: იხილეთ ამ ოქმის ყველა დოკუმენტი
     categorize_supplemental_documents_help:
       explanation: აქ არის განმარტებები სხვადასხვა სახის დამატებით დოკუმენტებზე, რომლების იდენტიფიცირებაც უნდა გააკეთოთ
       tabs:
