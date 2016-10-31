@@ -71,6 +71,11 @@ class DistrictPrecinct < ActiveRecord::Base
     order('issue_reported_at desc')
   end
 
+  # only missing info, cant read, and docs not clear require clarification
+  def self.needs_clarification
+    where(["being_moderated is not null and (moderation_reason like '%?%' or moderation_reason like '%?%' or moderation_reason like '%?%')",
+      MODERATION_REASONS[:missing_info], MODERATION_REASONS[:cant_read], MODERATION_REASONS[:docs_not_clear]])
+  end
   #######################
   # flag descriptions
   #######################
@@ -347,6 +352,40 @@ class DistrictPrecinct < ActiveRecord::Base
     return record_count > 0
   end
 
+
+  ############################################
+  ############################################
+  def self.cancel_moderation(id, moderator_user_id)
+    DistrictPrecinct.transaction do
+      dp = find(id)
+      if dp.present?
+        dp.moderation_status = MODERATION_STATUS[:no_problem]
+        dp.being_moderated = false
+        dp.last_moderation_update_by_user_id = moderator_user_id
+        dp.last_moderation_updated_at = Time.now
+        dp.save
+      end
+    end
+
+    return true
+  end
+
+  ############################################
+  ############################################
+  def self.add_moderation_notes(id, notes, moderator_user_id)
+    DistrictPrecinct.transaction do
+      dp = find(id)
+      if dp.present?
+        dp.moderation_notes = notes.strip
+        dp.last_moderation_update_by_user_id = moderator_user_id
+        dp.last_moderation_updated_at = Time.now
+        dp.save
+      end
+    end
+
+    return true
+  end
+
   ############################################
   ############################################
   def self.mark_as_annulled(id, moderator_user_id)
@@ -357,6 +396,7 @@ class DistrictPrecinct < ActiveRecord::Base
         dp.is_annulled = true
         dp.moderation_status = MODERATION_STATUS[:annulled]
         dp.being_moderated = false
+        dp.last_moderation_update_by_user_id = moderator_user_id
         dp.last_moderation_updated_at = Time.now
         dp.save
 
@@ -368,6 +408,92 @@ class DistrictPrecinct < ActiveRecord::Base
 
       end
     end
+
+    return true
+  end
+
+  ############################################
+  ############################################
+  def self.mark_as_contact_cec(id, moderator_user_id)
+    dp = find(id)
+    if dp.present?
+      DistrictPrecinct.transaction do
+        # update the dp record
+        dp.moderation_status = MODERATION_STATUS[:contact_cec]
+        dp.being_moderated = true
+        dp.last_moderation_update_by_user_id = moderator_user_id
+        dp.last_moderation_updated_at = Time.now
+        dp.save
+      end
+    end
+
+    return true
+  end
+
+  ############################################
+  ############################################
+  def self.mark_as_supplementary_document_added(id, moderator_user_id)
+    dp = find(id)
+    if dp.present?
+      DistrictPrecinct.transaction do
+        # update the dp record
+        dp.moderation_status = MODERATION_STATUS[:supplementary_document_added]
+        dp.being_moderated = false
+        dp.last_moderation_update_by_user_id = moderator_user_id
+        dp.last_moderation_updated_at = Time.now
+        dp.save
+      end
+    end
+
+    return true
+  end
+
+
+  ############################################
+  ############################################
+  def self.request_new_image(id, moderator_user_id)
+    record_count = 0
+    DistrictPrecinct.transaction do
+      dp = find(id)
+      if dp.present?
+
+        client = ActiveRecord::Base.connection
+        election = dp.election
+
+        if election.present?
+          success = dp.update_attributes(has_protocol: false, is_validated: false, has_supplemental_documents: false,
+                                      supplemental_document_count: 0,
+                                      has_amendment: false, has_explanatory_note: false,
+                                      moderation_status: MODERATION_STATUS[:request_image],
+                                      last_moderation_update_by_user_id: moderator_user_id,
+                                      being_moderated: false, last_moderation_updated_at: Time.now)
+          record_count += 1 if success == true
+          record_count += CrowdDatum.by_ids(dp.election_id, dp.district_id, dp.precinct_id)
+                          .update_all(is_valid: false)
+
+          # delete analysis record
+          sql = "delete from `#{@@analysis_db}`.`#{election.analysis_table_name} - raw`
+                  where district_id = '#{dp.district_id}'
+                  and precinct_id = '#{dp.precinct_id}'"
+          client.execute(sql)
+
+          # now delete the existing protocol images
+          files = Dir.glob("#{Rails.root}/public/system/protocols/#{dp.election_id}/#{dp.district_id}/#{dp.district_id}-#{dp.precinct_id}*.jpg")
+          if files.present?
+            files.each do |f|
+              begin
+                logger_info.info("Deleting: #{f}")
+                FileUtils.rm(f)
+              rescue => e
+                logger_error.error("Failed to delete: #{f}")
+              end
+            end
+          end
+        end
+      end
+    end
+
+    return record_count > 0
   end
 
 

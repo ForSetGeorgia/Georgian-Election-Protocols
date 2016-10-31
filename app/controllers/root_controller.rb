@@ -23,6 +23,7 @@ class RootController < ApplicationController
       @overall_user_stats = CrowdDatum.overall_user_stats(@current_election.id)
       @annulled = DistrictPrecinct.by_election(@current_election.id).has_been_annulled
       @district_summaries = @current_election.district_summary
+      @needs_clarifications = DistrictPrecinct.by_election(@current_election.id).needs_clarification
 
       # make sure all districts/precincts appear whether or not they have been entered yet
       # so use raw as baseline and add anything missing from dp
@@ -281,27 +282,84 @@ logger.debug ">>>>>>>>>>>>>>>> format = csv"
     end
 
     gon.moderate_record_url = moderate_record_path
+    gon.moderate_notes_url = moderate_notes_path
 
   end
 
   def moderate_record
     if params[:id].present? && params[:action_to_take].present? && params[:user_id].present?
-
+      response = nil
+      errors = nil
       case params[:action_to_take].downcase
         when 'annulled'
-          DistrictPrecinct.mark_as_annulled(params[:id], params[:user_id])
+          success = DistrictPrecinct.mark_as_annulled(params[:id], params[:user_id])
+          if success
+            response = {status: I18n.t('root.moderate.status.annulled'), time: I18n.l(Time.now, format: :file)}
+          else
+            errors = {status: I18n.t('root.moderate.moderate.failed')}
+          end
+        when 'request_image'
+          success = DistrictPrecinct.request_new_image(params[:id], params[:user_id])
+          if success
+            response = {status: I18n.t('root.moderate.status.request_image'), time: I18n.l(Time.now, format: :file)}
+          else
+            errors = {status: I18n.t('root.moderate.moderate.failed')}
+          end
+        when 'contact_cec'
+          success = DistrictPrecinct.mark_as_contact_cec(params[:id], params[:user_id])
+          if success
+            response = {status: I18n.t('root.moderate.status.contact_cec'), time: I18n.l(Time.now, format: :file)}
+          else
+            errors = {status: I18n.t('root.moderate.moderate.failed')}
+          end
+        when 'supplementary_document_added'
+          success = DistrictPrecinct.mark_as_supplementary_document_added(params[:id], params[:user_id])
+          if success
+            response = {status: I18n.t('root.moderate.status.supplementary_document_added'), time: I18n.l(Time.now, format: :file)}
+          else
+            errors = {status: I18n.t('root.moderate.moderate.failed')}
+          end
+        when 'no_problem'
+          success = DistrictPrecinct.cancel_moderation(params[:id], params[:user_id])
+          if success
+            response = {status: I18n.t('root.moderate.status.no_problem'), time: I18n.l(Time.now, format: :file)}
+          else
+            errors = {status: I18n.t('root.moderate.moderate.failed')}
+          end
       end
 
       respond_to do |format|
-        format.json { render json: {status: 'ok'}}
+        format.json { render json: {response: response, errors: errors}}
       end
 
     else
       respond_to do |format|
-        format.json { render json: {status: 'fail'}}
+        format.json { render json: {errors: {status: I18n.t('root.moderate.moderate.failed')}}}
       end
     end
 
+  end
+
+
+  def moderate_notes
+    if params[:id].present? && params[:notes].present? && params[:user_id].present?
+      response = nil
+      errors = nil
+      success = DistrictPrecinct.add_moderation_notes(params[:id], params[:notes], params[:user_id])
+      if success
+        response = {time: I18n.l(Time.now, format: :file)}
+      else
+        errors = {status: I18n.t('root.moderate.moderate.failed')}
+      end
+      respond_to do |format|
+        format.json { render json: {response: response, errors: errors}}
+      end
+
+    else
+      respond_to do |format|
+        format.json { render json: {errors: {status: I18n.t('root.moderate.moderate.failed')}}}
+      end
+    end
   end
 
 protected

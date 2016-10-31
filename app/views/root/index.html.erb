@@ -50,6 +50,7 @@
           <li class="active"><a href="#status" data-toggle="tab"><%= t('.tabs.status') %></a></li>
           <li><a href="#summary" data-toggle="tab"><%= t('.tabs.summary') %></a></li>
           <li><a href="#supplemental_documents" data-toggle="tab"><%= t('.tabs.supplemental_documents') %></a></li>
+          <li><a href="#needs_clarification" data-toggle="tab"><%= t('.tabs.needs_clarification') %></a></li>
           <li><a href="#annulled" data-toggle="tab"><%= t('.tabs.annulled') %></a></li>
           <li><a href="#download" data-toggle="tab"><%= t('.tabs.download') %></a></li>
         </ul>
@@ -461,6 +462,79 @@
             <% end %>
           </div>
 
+
+          <div class="tab-pane fade in" id="needs_clarification">
+            <% if @needs_clarifications.present? %>
+              <table class="table table-striped needs_clarification">
+                <thead>
+                  <tr>
+                    <th>
+                    </th>
+                    <th class="hl1">
+                      <%= t('.needs_clarification.headers.district') %>
+                    </th>
+                    <th class="hl1">
+                      <%= t('.needs_clarification.headers.precinct') %>
+                    </th>
+                    <th>
+                      <%= t('.needs_clarification.headers.reason') %>
+                    </th>
+                    <th>
+                      <%= t('.needs_clarification.headers.action_taken') %>
+                    </th>
+                    <th>
+                      <%= t('.needs_clarification.headers.notes') %>
+                    </th>
+                    <th>
+                      <%= t('.needs_clarification.headers.status') %>
+                    </th>
+                    <th>
+                      <%= t('.needs_clarification.headers.moderated_at') %>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @needs_clarifications.each do |needs_clarification| %>
+                    <tr>
+                      <td>
+                        <%= link_to t('helpers.links.view'),
+                                view_protocol_path(election_id: @current_election.analysis_table_name,
+                                                    district_id: needs_clarification['district_id'],
+                                                    precinct_id: needs_clarification['precinct_id']),
+                                class: 'btn btn-default', title: t('.needs_clarification.view_title'),
+                                target: :blank %>
+                      </td>
+                      <td>
+                        <%= needs_clarification['district_id'] %>
+                      </td>
+                      <td>
+                        <%= needs_clarification['precinct_id'] %>
+                      </td>
+                      <td>
+                        <%= needs_clarification.moderation_reason_text %>
+                      </td>
+                      <td>
+                        <%= needs_clarification.moderation_status_text %>
+                      </td>
+                      <td>
+                        <%= simple_format(needs_clarification.moderation_notes) %>
+                      </td>
+                      <td>
+                        <%= needs_clarification.being_moderated? ? t('.pending') : t('.completed')  %>
+                      </td>
+                      <td>
+                        <%= needs_clarification.last_moderation_updated_at %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            <% else %>
+              <div class="alert alert-success">
+                <%= t('.needs_clarification.no_data') %>
+              </div>
+            <% end %>
+          </div>
 
           <div class="tab-pane fade in" id="annulled">
             <% if @annulled.present? %>

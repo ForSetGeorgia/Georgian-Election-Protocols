@@ -221,6 +221,25 @@ $(document).ready(function(){
     "bSortCellsTop": true
   });
 
+  $('table.needs_clarification').dataTable({
+    "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+    "sPaginationType": "bootstrap",
+    "bJQueryUI": true,
+    "bProcessing": true,
+    "bAutoWidth": true,
+    "aoColumnDefs": [
+      { "sType": "formatted-num", "aTargets": 'num-sort' },
+      {
+         "bSortable": false,
+         "aTargets": [ 0 ]
+      }
+    ],
+    "oLanguage": {
+      "sUrl": gon.datatable_i18n_url
+    },
+    "aaSorting": [[1, 'desc']]
+  });
+
 
 
 });
