@@ -1,13 +1,19 @@
 <% title t('.title') %>
-<% links =  link_to(t('.view_protocol'),
-            view_protocol_path(election_id: @supplemental_document.district_precinct.election.analysis_table_name,
-                                district_id: @supplemental_document.district_precinct.district_id,
-                                precinct_id: @supplemental_document.district_precinct.precinct_id),
-            class: 'protocol-button small help', target: :blank) +
-            ' ' +
-            link_to(t('helpers.links.help'), '#help-modal', class: 'protocol-button small help', role: 'button', :'data-toggle' => 'modal') +
-            ' ' +
-            link_to(t('.skip'), categorize_supplemental_documents_path, class: 'protocol-button help skip small') %>
+
+<%
+  links = nil
+  if @supplemental_document.present?
+    links =  link_to(t('.view_protocol'),
+              view_protocol_path(election_id: @supplemental_document.district_precinct.election.analysis_table_name,
+                                  district_id: @supplemental_document.district_precinct.district_id,
+                                  precinct_id: @supplemental_document.district_precinct.precinct_id),
+              class: 'protocol-button small help', target: :blank) +
+              ' ' +
+              link_to(t('helpers.links.help'), '#help-modal', class: 'protocol-button small help', role: 'button', :'data-toggle' => 'modal') +
+              ' ' +
+              link_to(t('.skip'), categorize_supplemental_documents_path, class: 'protocol-button help skip small')
+  end
+%>
 <% title_right links %>
 
 <div id="categorize_supplemental_documents">

@@ -42,7 +42,11 @@ class SupplementalDocument < ActiveRecord::Base
 
   def self.next_to_categorize
     id = not_categorized.pluck(:id).sample
-    find(id)
+    if id.present?
+      return find(id)
+    else
+      return nil
+    end
   end
 
   def self.by_user(user_id)
