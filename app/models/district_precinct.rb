@@ -332,8 +332,11 @@ class DistrictPrecinct < ActiveRecord::Base
     DistrictPrecinct.transaction do
       reset_bad_data(election_id, district_id, precinct_id)
 
-      record_count += DistrictPrecinct.by_ids(election_id, district_id, precinct_id)
-                      .update_all(has_protocol: false)
+      dps = DistrictPrecinct.by_ids(election_id, district_id, precinct_id)
+      record_count += dps.update_all(has_protocol: false)
+      dps.each do |dp|
+        dp.supplemental_documents.destroy_all
+      end
 
       # delete any files
       cd = CrowdDatum.by_ids(election_id, district_id, precinct_id).first
