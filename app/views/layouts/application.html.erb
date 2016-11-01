@@ -33,6 +33,15 @@
     <% if @protocol_manipulator == true %>
       <%= stylesheet_link_tag "protocol_manipulator" %>
     <% end %>
+
+    <% if user_signed_in? %>
+      <% # if user is signed in, then the stats nav bar will appear and the top padding is not needed %>
+      <style>
+        #wrapper > .container, #wrapper > .container-fluid {
+          padding-top: 0px;
+        }
+      </style>
+    <% end %>
 		<!--[if IE 6]><%= stylesheet_link_tag 'ie6' %><![endif]-->
 	  <!--[if IE 7]><%= stylesheet_link_tag 'ie7' %><![endif]-->
 
