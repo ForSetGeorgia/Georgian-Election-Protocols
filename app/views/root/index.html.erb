@@ -425,10 +425,12 @@
                         <%= supplemental_document['supplemental_document_count'] %>
                       </td>
                       <td>
-                        <%= convert_boolean_answer(supplemental_document['has_amendment']) %>
+                         <% key = supplemental_document.class == DistrictPrecinct ? 'has_amendment' : 'amendment_flag' %>
+                        <%= convert_boolean_answer(supplemental_document[key]) %>
                       </td>
                       <td>
-                        <%= convert_boolean_answer(supplemental_document['has_explanatory_note']) %>
+                         <% key = supplemental_document.class == DistrictPrecinct ? 'has_explanatory_note' : 'explanatory_note_flag' %>
+                        <%= convert_boolean_answer(supplemental_document[key]) %>
                       </td>
                       <td>
                         <%= supplemental_document['num_invalid_votes'] %>
