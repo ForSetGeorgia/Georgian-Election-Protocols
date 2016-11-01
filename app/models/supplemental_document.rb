@@ -16,15 +16,24 @@ class SupplementalDocument < ActiveRecord::Base
   after_save :update_district_precinct_flag
 
   def update_district_precinct_flag
+    changed = false
     if self.is_amendment_changed? && self.is_amendment?
       self.district_precinct.has_amendment = true
       self.district_precinct.save
+      changed = true
     elsif self.is_explanatory_note_changed? && self.is_explanatory_note?
       self.district_precinct.has_explanatory_note = true
       self.district_precinct.save
+      changed = true
     elsif self.is_annullment_changed? && self.is_annullment?
       self.district_precinct.is_annulled = true
       self.district_precinct.save
+      changed = true
+    end
+
+    # if there was a change, also update the analysis raw table
+    if changed
+      self.district_precinct.update_analysis_supplemental_document_data
     end
 
     return true

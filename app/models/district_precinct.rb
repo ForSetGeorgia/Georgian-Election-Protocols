@@ -740,6 +740,24 @@ class DistrictPrecinct < ActiveRecord::Base
     return text
   end
 
+  ############################################
+  ############################################
+  def update_analysis_supplemental_document_data
+
+    # update the analysis raw table
+    client = ActiveRecord::Base.connection
+    sql = "update `#{@@analysis_db}`.`#{self.election.analysis_table_name} - raw`
+          set supplemental_documents_flag = #{has_supplemental_documents},
+              supplemental_document_count = #{supplemental_document_count},
+              amendment_flag = #{has_amendment},
+              explanatory_note_flag = #{has_explanatory_note}
+          where district_id = '#{self.district_id}' and precinct_id = '#{self.precinct_id}'"
+    client.execute(sql)
+
+  end
+
+
+
 
   #######################################
   #######################################
