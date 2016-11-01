@@ -1,5 +1,5 @@
 <%- model_class = Election -%>
-<%= semantic_form_for([:admin,@election], :multipart => true) do |f| %>
+<%= semantic_form_for([:admin,@election], html: {:multipart => true}) do |f| %>
   <%= f.error_messages %>
 
   <%= f.inputs do %>
