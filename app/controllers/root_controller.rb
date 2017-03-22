@@ -72,12 +72,16 @@ class RootController < ApplicationController
       if dp.present? && dp.has_protocol?
         @crowd_datum = CrowdDatum.new(election_id: dp.election_id, district_id: dp.district_id, precinct_id: dp.precinct_id)
       end
-    end
 
-    respond_to do |format|
-      format.html # index.html.erb
-    end
+      respond_to do |format|
+        format.html # index.html.erb
+      end
 
+    else
+      # election not found, send them back to home page
+      redirect_to root_path, alert: I18n.t('app.msgs.could_not_find_election')
+      return
+    end
   end
 
   def protocol
