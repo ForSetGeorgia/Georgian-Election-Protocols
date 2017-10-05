@@ -52,41 +52,49 @@
   <body>
 
     <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
+      <div class="navbar-inner navbar-inner-head">
         <div class="container-fluid">
           <a class="btn btn-navbar" data-target="#nav-collapse-main" data-toggle="collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <%= link_to(t('app.common.app_name'), root_path(:locale => I18n.locale),:class=>"brand font")%>
-          <div class="container-fluid nav-collapse" id="nav-collapse-main">
-            <ul class="nav">
-            </ul>
 
+          <%= link_to(image_tag(@header_img_name), root_path(:locale => I18n.locale),
+                :title=> t('app.common.app_name'), :class=>"brand")%>
+
+          <div class="nav-collapse" id="nav-collapse-main">
 	          <ul class="nav pull-right">
               <% if user_signed_in? %>
                 <% if current_user.completed_training? %>
                   <% if @elections.present? %>
-                    <li><%= link_to t('.enter_data'), protocol_path, class: 'enter-data' %></li>
+                    <li><%= link_to t('.enter_data'), protocol_path, class: 'highlight' %></li>
                   <% end %>
                 <% else %>
-                  <li><%= link_to t('.training'), training_path, class: 'training' %></li>
+                  <li><%= link_to t('.training'), training_path, class: 'highlight' %></li>
                 <% end %>
                 <% if current_user.role?(User::ROLES[:categorize_supplemental_documents]) %>
                   <li>
-                   <%= link_to t('.categorize_supplemental_documents'), categorize_supplemental_documents_path %>
+                   <%= link_to t('.categorize_supplemental_documents').gsub(' ', '<br />').html_safe, categorize_supplemental_documents_path, class: 'long_text' %>
                   </li>
                 <% end %>
                 <% if current_user.role?(User::ROLES[:moderator]) %>
                   <li>
-                   <%= link_to t('.moderate'), moderate_path %>
+                   <%= link_to t('.moderate').gsub(' ', '<br />').html_safe, moderate_path, class: 'long_text' %>
                   </li>
-              <% end %>
+                <% end %>
+              <% elsif @elections.present? %>
+                <li>
+                  <%= link_to t('app.common.help_us'), @bitly_url, target: :blank, class: 'highlight' %>
+                </li>
               <% end %>
               <li><%= link_to t('.about'), about_path %></li>
               <li>
-                <%= link_to t('.download'), download_path %>
+                <% if user_signed_in? %>
+                  <%= link_to t('.download').gsub(' ', '<br />').html_safe, download_path, class: 'long_text' %>
+                <% else %>
+                  <%= link_to t('.download'), download_path %>
+                <% end %>
               </li>
 		          <% if user_signed_in? %>
                 <li class="dropdown">
@@ -118,11 +126,6 @@
                   </ul>
                 </li>
 			        <% else %>
-                <% if @elections.present? %>
-                  <li>
-                    <%= link_to t('app.common.help_us'), @bitly_url, target: :blank, class: 'help-us' %>
-                  </li>
-                <% end %>
                 <li>
                  <%= link_to t('.sign_in'), new_user_session_path %>
                 </li>

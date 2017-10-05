@@ -207,32 +207,50 @@ footer .row-fluid .org-logo {
   padding: 0.5em 1em;
 }
 
-/* help us button in header */
-.nav > li > a.training{
-  color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-image: linear-gradient(to bottom, #0088cc, #0044cc);
-  background-repeat: repeat-x;
-  font-size: 17px;
-  padding: 10px;
-  margin-left: 20px;
+.nav > li > a.long_text{
+  margin-top: -10px;
 }
-.nav > li > a.enter-data{
-  color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-image: linear-gradient(to bottom, #62c462, #51a351);
-  background-repeat: repeat-x;
+/* highlight links in header */
+.nav > li > a.highlight{
+  color: #000 !important;
+  background: #f7cc59;
+  border-radius: 4px;
   font-size: 17px;
-  padding: 10px;
-  margin-left: 20px;
+  padding: 10px !important;
+  -moz-box-shadow:    2px 2px 2px #115d2d;
+  -webkit-box-shadow: 2px 2px 2px #115d2d;
+  box-shadow:         2px 2px 2px #115d2d;
+  margin-top: -10px;
+  margin-right: 30px;
+  text-shadow: none !important;
+  font-weight: bold;
+  &:hover{
+    color: #000 !important;
+    background: #f7cc59;
+    opacity: 0.9;
+    text-shadow: none !important;
+  }
 }
-.nav > li > a.help-us{
-  color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-image: linear-gradient(to bottom, #62c462, #51a351);
-  background-repeat: repeat-x;
-  font-size: 17px;
-  padding: 10px;
+@media (max-width: 1115px) {
+  .nav > li > a.highlight{
+    color: #000 !important;
+    background: transparent;
+    border-radius: 0;
+    padding: 10px !important;
+    -moz-box-shadow:    unset;
+    -webkit-box-shadow: unset;
+    box-shadow:         unset;
+    margin-top: 0px;
+    margin-right: 0px;
+    text-shadow: none !important;
+    font-weight: bold;
+    &:hover{
+      color: #000 !important;
+      background: #fff;
+      opacity: 1;
+      text-shadow: none !important;
+    }
+  }
 }
 
 /* about page */

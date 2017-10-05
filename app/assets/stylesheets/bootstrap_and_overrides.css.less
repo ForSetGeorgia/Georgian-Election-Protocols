@@ -33,6 +33,8 @@
 /* Eric Meyer's Reset CSS v2.0 - http://cssreset.com */
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;font-size:100%;font:inherit;vertical-align:baseline;margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}table{border-collapse:collapse;border-spacing:0}
 
+// due to long text in menu, make the menu collapse earlier
+@navbarCollapseWidth: 1115px;
 
 html, body {
   height: 100%;
@@ -47,14 +49,14 @@ html, body {
 }
 
 #wrapper > .container, #wrapper > .container-fluid {
-	padding-top: 60px;
+	padding-top: 87px;
 	padding-bottom: 60px;
 	overflow: auto;
 }
 
 .push { height: 155px; } /* Just some arbitrary space to add between footer and rest of the content, when they are close */
 
-@media (max-width: 979px) {
+@media (max-width: 1115px) {
   body {
   	margin-top: 0;
   }
@@ -73,13 +75,66 @@ html, body {
   font-size: 19px;
 }
 
+.navbar-inner-head {
+   min-height: 87px;
+   background: url("/assets/header-bg.jpg") !important;
+   color: #fff;
+}
+
+.navbar-inner-head .nav > li > a {
+   color: #fff !important;
+   padding: 0 1em !important;
+   &:hover {
+     text-shadow: rgba(0,0,0,0.7) 1px 1px 3px !important;
+
+    transition: text-shadow .045s;
+    -webkit-transition: text-shadow .045s;
+    -moz-transition: text-shadow .045s;
+    -o-transition: text-shadow .045s;
+  }
+}
+.navbar-inner-head .nav {
+  .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-submenu:hover > a, .dropdown-submenu:focus > a{
+    background-color: #ddd;
+    background-image: none;
+    color: #000;
+  }
+}
+
+
+.navbar-inner-head .container-fluid {
+   width: 100%;
+   height: 100%;
+   padding: 28px 0 0 0;
+}
+
+.navbar-inner-head .brand {
+   padding: 0 !important;
+   margin: 0 !important;
+   padding-left: 28px !important;
+}
+
+.navbar-inner-head .container .nav-collapse a {
+   padding-right: 28px !important;
+}
+
+
+.navbar .nav > li {
+    padding-top: 5px;
+}
+
+.navbar .nav > li > a{
+  font-size: 15px;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+}
+
 .navbar .nav.stats > li {
   padding: 10px 5px;
   color: #555555;
 }
 
 .navbar-stats{
-  margin-top:41px;
+  margin-top:87px; /*41px*/
   & > .navbar-inner > .container-fluid{
     padding: 10px 0;
   }
@@ -133,13 +188,37 @@ html, body {
   }
 }
 
-@media (max-width: 1205px) {
+@media (max-width: 1410px) {
   .navbar .nav a:lang(ka){
-    font-size: 10px;
+    font-size: 13px;
   }
 }
 
-@media (max-width: 979px) {
+@media (max-width: 1300px) {
+  .navbar .nav a:lang(ka){
+    font-size: 10px;
+  }
+  .nav > li > a.highlight:lang(ka){
+    padding: 10px !important;
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .navbar .nav a:lang(en){
+    font-size: 13px;
+  }
+  .nav > li > a.highlight:lang(en){
+    padding: 10px !important;
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 1115px) {
+  .navbar .nav a{
+    font-size: 13px;
+  }
+
   .navbar-stats{
     margin-top:0;
   }

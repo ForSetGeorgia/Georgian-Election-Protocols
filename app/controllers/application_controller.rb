@@ -79,6 +79,10 @@ logger.debug "////////////////////////// BROWSER NOT SUPPORTED"
     end
 
     @bitly_url = 'http://bit.ly/Icounted'
+
+    @header_img_name = "header-text_#{I18n.locale}.png"
+    @header_img_name = "header-text.png" if Rails.application.assets.find_asset(@header_img_name).blank?
+
 	end
 
 	def initialize_gon

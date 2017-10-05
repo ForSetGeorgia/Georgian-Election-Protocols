@@ -89,6 +89,18 @@ en:
       download_file: Download Existing File
       help: Help
       close: Close
+      sign_in_facebook: Sign in with Facebook
+      forgot_password: Forgot Your Password?
+      change_password: Change Your Password
+      change_password2: Change Password
+      password_reset: Reset Password
+      sign_in2: Sign In
+      sign_in: "Already have an account?"
+      sign_up2: Sign Up
+      sign_up_question: "Not registered?"
+      sign_up: "Create Account"
+      sign_up_title: Join %{app_name}
+      sign_out: Sign Out
     titles:
       new: "New %{model}"
       edit: "Edit %{model}"

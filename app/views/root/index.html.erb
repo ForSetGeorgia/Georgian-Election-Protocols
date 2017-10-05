@@ -3,30 +3,31 @@
 
   <% if @all_elections.present? %>
     <h1>
-      <div>
-        <%= @current_election.name %>
+      <div class="switch-to dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <%= t('.choose') %>
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <% @all_elections.each do |election| %>
+
+            <li>
+              <%= link_to params.merge(election: election.analysis_table_name) do %>
+                <% flag = election.can_enter_data? ?
+                            "| #{t('.flags.active')}" : election.is_coming_up? ?
+                            "| #{t('.flags.coming_up')}" : '' %>
+                <%= "#{election.name} | #{l election.election_at} #{flag}" %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
       </div>
-      <div>
-        <%= l @current_election.election_at %>
-
-        <div class="switch-to dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <%= t('.choose') %>
-            <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <% @all_elections.each do |election| %>
-
-              <li>
-                <%= link_to params.merge(election: election.analysis_table_name) do %>
-                  <% flag = election.can_enter_data? ?
-                              "| #{t('.flags.active')}" : election.is_coming_up? ?
-                              "| #{t('.flags.coming_up')}" : '' %>
-                  <%= "#{election.name} | #{l election.election_at} #{flag}" %>
-                <% end %>
-              </li>
-            <% end %>
-          </ul>
+      <div class="election-title">
+        <div>
+          <%= @current_election.name %>
+        </div>
+        <div>
+          <%= l @current_election.election_at %>
         </div>
       </div>
     </h1>

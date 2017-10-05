@@ -89,6 +89,13 @@ ka:
       download_file: ჩამოტვირთე არსებული ფაილი
       help: დახმარება
       close: დახურვა
+      sign_in2: "შესვლა"
+      sign_in: "უკვე გაქვთ ანგარიში?"
+      sign_up2: "რეგისტრაცია"
+      sign_up_question: "არ გაქვთ ანგარიში?"
+      sign_up: "დარეგისტრირდით"
+      sign_up_title: "შემოგვიერთდი “%{app_name}”"
+      sign_out: "გასვლა"
     titles:
       new: "ახალი %{model}"
       edit: "შეცვლა %{model}"
