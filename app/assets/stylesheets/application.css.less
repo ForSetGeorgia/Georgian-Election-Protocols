@@ -156,11 +156,13 @@ div#form-ka {
 }
 
 /* footer */
+// Footer
 footer {
-	margin-top: -54px; /* negative value of footer height */
-	min-height: 41px !important;
-	padding: 0 20px;
+   min-height: 54px !important;
+//   min-width: 100%;
    background: #D4D4D4 !important;
+   padding: 0;
+   margin: -54px 0 0 0;
 }
 
 footer .row-fluid {
@@ -168,11 +170,21 @@ footer .row-fluid {
    background: #D4D4D4 !important;
 }
 
-footer .row-fluid .copyright {
-   padding-top: 18px;
+footer .ndi-logo {
+   margin-top: 10px;
+   margin-left: 20px !important;
+   img:first-of-type{
+    margin-right: 5px;
+   }
 }
 
-footer .row-fluid .js-logo {
+footer .row-fluid .copyright {
+  text-align: center;
+  margin: 20px auto 0 !important;
+  font-size: 12px;
+}
+
+footer .row-fluid .org-logo {
   text-align: right;
 	padding-top: 13px !important;
 }

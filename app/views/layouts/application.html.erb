@@ -181,14 +181,15 @@
 
     <footer>
 		  <div class="row-fluid">
+        <div class="ndi-logo span4">
+          <%= link_to(image_tag("election_portal.jpg"), "http://electionportal.ge/", :target => "_blank") %>
+          <%= link_to(image_tag("ndi-logo.png", :style => 'height: 37px;'), "http://www.ndi.org", :target => "_blank") %>
+        </div>
 				<div class="copyright span4">
 					&copy; 2013-<%= DateTime.now.year %>
 				</div>
-				<div class="span4">
-				  &nbsp;
-				</div>
-        <div class="js-logo span4">
-          <%= link_to(image_tag("jumpstart-logo.png"), "http://jumpstart.ge", :target => "_blank", :title => t('.js_slogan')) %>
+        <div class="org-logo span4">
+          <%= link_to(image_tag("forset-logo.png"), "https://forset.ge", :target => "_blank", :title => t('.org_slogan')) %>
         </div>
 	    </div><!--/row-->
     </footer>
@@ -213,8 +214,6 @@
         ga('send', 'pageview');
 
       </script>
-		<% elsif Rails.env.staging? %>
-			<!-- insert google analytics for staging site here -->
 		<% end %>
     <% if @protocol_manipulator == true %>
       <%= javascript_include_tag "protocol_manipulator" %>

@@ -114,7 +114,7 @@ en:
     common:
       app_name: Georgian Election Protocols
       app_slogan: To help us ensure your vote counts, help us count.
-      app_description: As a civic tech organization, JumpStart often tries to find solutions to these sorts of transparency shortcomings and we often use technology to do it. This year, JumpStart is building a web-based tool that enables anyone to help us take the precinct information, which is uploaded to the CEC's website in the form of scanned documents, and digitize it so that organizations can then analyze it in time to have an impact - before the outcome of the elections has been decided. With the support of the National Democratic Institute and volunteers in Georgia and all over the world, JumpStart is spearheading a massive effort to digitize all the precinct information within 48 hours after polling stations close.
+      app_description: As a civic tech organization, ForSet tries to find solutions to transparency shortcomings and we often use technology to do it. ForSet is using this site to enable anyone to help us take the precinct information, which is uploaded to the CEC's website in the form of scanned documents, and digitize it so that organizations can then analyze it in time to have an impact - before the outcome of the elections has been decided. With the support of the National Democratic Institute and volunteers in Georgia and all over the world, ForSet is spearheading a massive effort to digitize all the precinct information within 48 hours after polling stations close.
       added_on: "Added on: %{date}"
       na: 'N/A'
       submit: Submit
@@ -196,9 +196,7 @@ en:
       enter_data: Enter Data
       download: Download Data
       about: About
-      js_link_title: "Visit JumpStart Georgia's website"
-      js_link_text: Built by
-      js_slogan: JumpStart Georgia - Informing Communities with Data and Design
+      org_slogan: ForSet - Communicating With Data
     stats_header:
       header:
         supplemental_documents: Supplemental Document Stats
@@ -223,8 +221,7 @@ en:
       Safari: Safari
       admin: Admin
       sign_out: Sign Out
-      js_link_title: "Visit JumpStart Georgia's website"
-      js_link_text: Built by
+      org_slogan: ForSet - Communicating With Data
   admin:
     index:
       title: Administration Section
@@ -398,7 +395,7 @@ en:
       want_help:
         header: Want to Help Us?
         text: |
-          JumpStart welcomes any and all support for this effort, including YOUR time. By volunteering your time to digitize even a small number of precinct ballot protocols, you will help us achieve our goal. The data will be available to everyone for download throughout the night in spreadsheet format and will regularly feed into the <a href="http://elections.jumpstart.ge/" target="_blank">Georgian Election Data Portal</a> to make it easy for people to explore, visually, what the data means.
+          ForSet welcomes any and all support for this effort, including YOUR time. By volunteering your time to digitize even a small number of precinct ballot protocols, you will help us achieve our goal. The data will be available to everyone for download throughout the night in spreadsheet format and will regularly feed into the <a href="https://data.electionsportal.ge/en" target="_blank">Georgian Election Data Portal</a> to make it easy for people to explore, visually, what the data means.
 
           To help us ensure your vote counts, help us count.
 
@@ -526,6 +523,18 @@ en:
         is_annulled: This is a flag that indicates whether the votes in this precinct have been annulled. View the protocol amendment to learn why. 0 = no. 1 = yes.
     about:
       title: About
+      text: |
+        During elections, most people watch on TV how candidates do in each district, and the CEC provides this information with regular updates after the polling stations close. To do this, the CEC adds up all the values in each precinct in each district. However, the CEC <strong><em>does not</em></strong> make the information from each precinct public until 20 days after the elections take place, well after the outcome has been decided.
+
+        The main challenge for monitoring organizations is that, to perform the types of checks that highlight problematic areas during an election, the district information isn't helpful. The precinct information, however, is.
+
+        For example, if you want to know whether or not in a precinct there are more votes than ballots, which should definitely not happen, you need precinct information, not district. There are several other checks that organizations perform during an election that indicate areas that need investigation and detect where there is a high risk of fraudulent activity and they all rely on precinct information, not district.
+
+        As a civic tech organization, ForSet tries to find solutions to transparency shortcomings and we often use technology to do it. ForSet is using this site to enable anyone to help us take the precinct information, which is uploaded to the CEC's website in the form of scanned documents, and digitize it so that organizations can then analyze it in time to have an impact - before the outcome of the elections has been decided. With the support of the National Democratic Institute and volunteers in Georgia and all over the world, ForSet is spearheading a massive effort to digitize all the precinct information within 48 hours after polling stations close.
+
+        ForSet welcomes any and all support for this effort, including YOUR time. By volunteering your time to digitize even a small number of precinct ballot protocols, you will help us achieve our goal. The data will be available to everyone for download throughout the night in spreadsheet format and will regularly feed into the <a href="https://data.electionsportal.ge/en" target="_blank">Georgian Election Data Portal</a> to make it easy for people to explore, visually, what the data means.
+
+        To help us ensure your vote counts, help us count. <a href="[bitly_url]" target="_blank">Register to receive an account.</a>
     categorize_supplemental_documents:
       title: Categorize A Supplemental Document
       no_documents: Hooray! No supplemental documents need to be categorized!
@@ -626,17 +635,17 @@ en:
         no_problem: No Problem Found
   mailer:
     new_user:
-      subject: Are you ready to help JumpStart digitize some election protocols?!
+      subject: Are you ready to help ForSet digitize some election protocols?!
       message: |
         Dear volunteer,
 
-        The time is come to help JumpStart make Georgian Parliamentary election data transparent! We appreciate you efforts to digitize the protocols, making the analysis of the election data more interesting.
+        The time is come to help ForSet make Georgian election data transparent! We appreciate you efforts to digitize the protocols, making the analysis of the election data more interesting.
 
         Below are some instructions to get you started.
 
         First you will need to go to the website:
 
-        <a href="https://protocols.jumpstart.ge">https://protocols.jumpstart.ge</a>
+        <a href="https://protocols.electionsportal.ge">https://protocols.electionsportal.ge</a>
 
         Your login information is as follows:
 
@@ -651,10 +660,10 @@ en:
 
         If you do have questions or ideas to improve the form, please contact us so we can improve it. Please send us a message on our Facebook page at:
 
-        <a href="https://www.facebook.com/JumpStartGeorgia/">https://www.facebook.com/JumpStartGeorgia/</a>
+        <a href="https://www.facebook.com/ForSet.ge/">https://www.facebook.com/ForSet.ge/</a>
 
         And again, thank you!
 
         Sincerely,
 
-        The JumpStart Team
+        The ForSet Team
