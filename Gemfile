@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-ruby "2.3.1"
+ruby "2.3.4"
 
 gem 'bundler'
-gem "rails", "3.2.22.2"
+gem "rails", "3.2.22.5"
 gem "mysql2", "~> 0.3.18" # this gem works better with utf-8
 
 gem "json"
@@ -36,6 +36,7 @@ gem "fastimage" # get image size without downloading the image
 gem 'test-unit', '~> 3.0' # needed for rails console
 
 gem 'whenever', '~> 0.9.7' # schedule cron jobs
+gem 'dotenv-rails', '~> 2.2', '>= 2.2.1' # environment variables
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -58,5 +59,5 @@ group :development do
 end
 
 group :staging, :production do
-  gem "unicorn", "4.8.3" # http server
+  gem 'unicorn', '~> 5.3.1' # http server
 end

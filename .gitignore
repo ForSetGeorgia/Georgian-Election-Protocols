@@ -17,5 +17,5 @@
 # ignore file uploads
 /public/system/*
 
-#ignore db config
-/config/database.yml
+# ignore .env
+/.env
