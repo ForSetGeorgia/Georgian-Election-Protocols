@@ -124,7 +124,7 @@ en:
       confirm: Are you sure?
       new: New
     common:
-      app_name: Georgian Election Protocols
+      app_name: Georgia Election Protocols
       app_slogan: To help us ensure your vote counts, help us count.
       app_description: As a civic tech organization, ForSet tries to find solutions to transparency shortcomings and we often use technology to do it. ForSet is using this site to enable anyone to help us take the precinct information, which is uploaded to the CEC's website in the form of scanned documents, and digitize it so that organizations can then analyze it in time to have an impact - before the outcome of the elections has been decided. With the support of the National Democratic Institute and volunteers in Georgia and all over the world, ForSet is spearheading a massive effort to digitize all the precinct information within 48 hours after polling stations close.
       added_on: "Added on: %{date}"
@@ -407,7 +407,7 @@ en:
       want_help:
         header: Want to Help Us?
         text: |
-          ForSet welcomes any and all support for this effort, including YOUR time. By volunteering your time to digitize even a small number of precinct ballot protocols, you will help us achieve our goal. The data will be available to everyone for download throughout the night in spreadsheet format and will regularly feed into the <a href="https://data.electionsportal.ge/en" target="_blank">Georgian Election Data Portal</a> to make it easy for people to explore, visually, what the data means.
+          ForSet welcomes any and all support for this effort, including YOUR time. By volunteering your time to digitize even a small number of precinct ballot protocols, you will help us achieve our goal. The data will be available to everyone for download throughout the night in spreadsheet format and will regularly feed into the <a href="https://data.electionsportal.ge/en" target="_blank">Georgia Election Data Portal</a> to make it easy for people to explore, visually, what the data means.
 
           To help us ensure your vote counts, help us count.
 
@@ -544,7 +544,7 @@ en:
 
         As a civic tech organization, ForSet tries to find solutions to transparency shortcomings and we often use technology to do it. ForSet is using this site to enable anyone to help us take the precinct information, which is uploaded to the CEC's website in the form of scanned documents, and digitize it so that organizations can then analyze it in time to have an impact - before the outcome of the elections has been decided. With the support of the National Democratic Institute and volunteers in Georgia and all over the world, ForSet is spearheading a massive effort to digitize all the precinct information within 48 hours after polling stations close.
 
-        ForSet welcomes any and all support for this effort, including YOUR time. By volunteering your time to digitize even a small number of precinct ballot protocols, you will help us achieve our goal. The data will be available to everyone for download throughout the night in spreadsheet format and will regularly feed into the <a href="https://data.electionsportal.ge/en" target="_blank">Georgian Election Data Portal</a> to make it easy for people to explore, visually, what the data means.
+        ForSet welcomes any and all support for this effort, including YOUR time. By volunteering your time to digitize even a small number of precinct ballot protocols, you will help us achieve our goal. The data will be available to everyone for download throughout the night in spreadsheet format and will regularly feed into the <a href="https://data.electionsportal.ge/en" target="_blank">Georgia Election Data Portal</a> to make it easy for people to explore, visually, what the data means.
 
         To help us ensure your vote counts, help us count. <a href="[bitly_url]" target="_blank">Register to receive an account.</a>
     categorize_supplemental_documents:
