@@ -1,3 +1,8 @@
-== Crowd Source Protocols
+# Georgia Election Protocols
+
+## Databases
+The protocols app uses two database: one to store the data entry records and one that summarizes all of the results for analysis. This means two databases need to be created and the user that has access to the first database also needs access to the second.
+
+The second database should be called protocol_analysis.
 
 
