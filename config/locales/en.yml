@@ -536,17 +536,13 @@ en:
     about:
       title: About
       text: |
-        During elections, most people watch on TV how candidates do in each district, and the CEC provides this information with regular updates after the polling stations close. To do this, the CEC adds up all the values in each precinct in each district. However, the CEC <strong><em>does not</em></strong> make the information from each precinct public until 20 days after the elections take place, well after the outcome has been decided.
+        Monitoring elections and verifying the election results is an important part to ensuring the accuracy and validity of the elections and giving the public confidence in the outcome. The main challenge for election monitoring organizations is that, to perform the types of checks that highlight problematic areas during an election, the election information from each precinct is required. Unfortunately, the CEC only provides summary district data during the election. The precinct information is not released until 20 days after the election takes places, well after the outcome has been decided and the time to address issues has passed.
 
-        The main challenge for monitoring organizations is that, to perform the types of checks that highlight problematic areas during an election, the district information isn't helpful. The precinct information, however, is.
+        The Georgia Election Protocols site is dedicated to monitoring the election results on the night of the election by utilizing the power of crowdsourcing to manually enter the election results from each precinct. The CEC uploads the precinct information to their website in the form of scanned documents and this site takes those documents and allows volunteers to digitize the precinct information through a double-blind data entry verification process. Once this information is digitized, the election monitoring organizations can then analyze the data in time to have an impact - before the outcome of the elections has been decided.
 
-        For example, if you want to know whether or not in a precinct there are more votes than ballots, which should definitely not happen, you need precinct information, not district. There are several other checks that organizations perform during an election that indicate areas that need investigation and detect where there is a high risk of fraudulent activity and they all rely on precinct information, not district.
+        With the support of the National Democratic Institute and volunteers in Georgia and all over the world, ForSet is spearheading a massive effort to digitize all the precinct information within 48 hours after polling stations close. We welcome any and all support for this effort, including YOUR time. By volunteering your time to digitize even a small number of precinct ballot protocols, you will help us achieve our goal. The data will be available to everyone for <a href="/en/download">download</a> throughout the night in spreadsheet format and will regularly feed into the <a href="https://data.electionsportal.ge/en" target="_blank">Georgian Election Data Portal</a> to make it easy for people to explore, visually, what the data means.
 
-        As a civic tech organization, ForSet tries to find solutions to transparency shortcomings and we often use technology to do it. ForSet is using this site to enable anyone to help us take the precinct information, which is uploaded to the CEC's website in the form of scanned documents, and digitize it so that organizations can then analyze it in time to have an impact - before the outcome of the elections has been decided. With the support of the National Democratic Institute and volunteers in Georgia and all over the world, ForSet is spearheading a massive effort to digitize all the precinct information within 48 hours after polling stations close.
-
-        ForSet welcomes any and all support for this effort, including YOUR time. By volunteering your time to digitize even a small number of precinct ballot protocols, you will help us achieve our goal. The data will be available to everyone for download throughout the night in spreadsheet format and will regularly feed into the <a href="https://data.electionsportal.ge/en" target="_blank">Georgia Election Data Portal</a> to make it easy for people to explore, visually, what the data means.
-
-        To help us ensure your vote counts, help us count. <a href="[bitly_url]" target="_blank">Register to receive an account.</a>
+        To help us ensure your vote counts, help us count! <a href="[bitly_url]" target="_blank">Register to receive an account.</a>
     categorize_supplemental_documents:
       title: Categorize A Supplemental Document
       no_documents: Hooray! No supplemental documents need to be categorized!
@@ -655,9 +651,7 @@ en:
 
         Below are some instructions to get you started.
 
-        First you will need to go to the website:
-
-        <a href="https://protocols.electionsportal.ge">https://protocols.electionsportal.ge</a>
+        First you will need to go to the website: <a href="https://protocols.electionsportal.ge">https://protocols.electionsportal.ge</a>
 
         Your login information is as follows:
 
@@ -670,9 +664,7 @@ en:
 
         Take your time at first, you will eventually speed up. There are several helpful controls at the bottom of the page that allow you to adjust the protocol image to align with the form fields such as rotate, move up, and move sideways.
 
-        If you do have questions or ideas to improve the form, please contact us so we can improve it. Please send us a message on our Facebook page at:
-
-        <a href="https://www.facebook.com/ForSet.ge/">https://www.facebook.com/ForSet.ge/</a>
+        If you do have questions or ideas to improve the form, please contact us so we can improve it. Please send us a message on our Facebook page at: <a href="https://www.facebook.com/ForSet.ge/">https://www.facebook.com/ForSet.ge/</a>
 
         And again, thank you!
 
