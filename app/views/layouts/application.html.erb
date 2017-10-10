@@ -182,7 +182,8 @@
 
     <div class="push"><!--//--></div>
 
-    <footer>
+    <% footer_class = user_signed_in? ? "with-stats" : "" %>
+    <footer class="<%= footer_class %>">
 		  <div class="row-fluid">
         <div class="ndi-logo span4">
           <%= link_to(image_tag("election_portal.jpg"), "http://electionportal.ge/", :target => "_blank") %>
