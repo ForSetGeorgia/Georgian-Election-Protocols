@@ -2,5 +2,5 @@
 
 <div id="about-page">
   <%= link_to(image_tag('volunteers.png', class: 'pull-right'), @bitly_url, target: :blank) %>
-  <%= simple_format(t('.text').gsub('[bitly_url]', @bitly_url)) %>
+  <%= simple_format(t('.text').gsub('[bitly_url]', @bitly_url).html_safe) %>
 </div>
