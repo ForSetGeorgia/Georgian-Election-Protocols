@@ -3,6 +3,9 @@
 ## Databases
 The protocols app uses two database: one to store the data entry records and one that summarizes all of the results for analysis. This means two databases need to be created and the user that has access to the first database also needs access to the second.
 
-The second database should be called protocol_analysis.
+The second database name is hardcoded and should be called protocol_analysis.
+
+You will need to grant access to this second database and make sure you include the ability to 'create view'.
+GRANT select, insert, update, delete, create, alter, index, drop, create view, references ON `protocol_analysis`.* TO `username`@localhost IDENTIFIED BY 'password';
 
 
