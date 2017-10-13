@@ -215,19 +215,25 @@ class Election < ActiveRecord::Base
 
       puts '- load precincts/districts'
       csv_data = CSV.read(self.district_precinct_file.path)
+      idx_district = 0
+      idx_major = 1
+      idx_precinct = self.is_local_majoritarian? ? 2 : 1
       sql_values = []
+
       csv_data.each_with_index do |row, i|
         if i > 0
           # if the district/precint does not exist, add it
           if dps.select{|x| x.district_id == row[0] && x.precinct_id == row[1]}.empty?
-            sql_values << "(#{self.id}, '#{row[0]}', '#{row[1]}', '#{now}')"
+            major_value = self.is_local_majoritarian? ? "'#{row[idx_major]}', " : ''
+            sql_values << "(#{self.id}, '#{row[idx_district]}', '#{row[idx_precinct]}', #{major_value} '#{now}')"
           end
         end
       end
       puts "  - adding #{sql_values.length} precincts"
       if sql_values.present?
+        major_value = self.is_local_majoritarian? ? "`major_district_id`, " : ''
         client.execute("insert into district_precincts
-          (`election_id`, `district_id`, `precinct_id`, `created_at`)
+          (`election_id`, `district_id`, `precinct_id`, #{major_value} `created_at`)
           values #{sql_values.join(', ')}"
         )
       end

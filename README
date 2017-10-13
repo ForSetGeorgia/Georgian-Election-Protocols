@@ -1,5 +1,10 @@
 # Georgia Election Protocols
 
+## Local Majoritarian Elections
+These elections have an extra layer of complexity. In addition to the district and precinct, there is now a majoritarian district in between the district and precinct. The ID of this district is of a different format: district_id.majoritarian_id, i.e., 01.02. It is also possible for there to be a sub-majoritarian district so in this case the ID will be 01.01.01.
+
+This majoritarian ID is only needed for generating the data for the election data site. For this site, everything is still tied to the district and precinct which still works with local majoritarian elections.
+
 ## Databases
 The protocols app uses two database: one to store the data entry records and one that summarizes all of the results for analysis. This means two databases need to be created and the user that has access to the first database also needs access to the second.
 

@@ -18,7 +18,7 @@ class Add2017Mayor < ActiveRecord::Migration
         # protocol_party_top_margin: '2.5',
         party_file: File.open("#{csv_path}2017_mayor_parties.csv"),
         district_precinct_file: File.open("#{csv_path}2017_districts_precincts.csv"),
-        party_district_file: File.open("#{csv_path}2017_district_mayor_parties.csv"),
+        party_district_file: File.open("#{csv_path}2017_mayor_districts_parties.csv"),
         tmp_analysis_table_name: '2017 Mayor'
       )
       election.election_translations.build(locale: 'en', name: '2017 Mayor Election')

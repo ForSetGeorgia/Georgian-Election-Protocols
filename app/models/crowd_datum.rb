@@ -95,8 +95,8 @@ class CrowdDatum < ActiveRecord::Base
           puts "==> match was found, saving to analysis table"
 
           # indicate that the precinct has been processed and validated
-          dp = DistrictPrecinct.where(["election_id = ? and district_id = ? and precinct_id = ?",
-                                  self.election_id, self.district_id, self.precinct_id]).first
+          dp = DistrictPrecinct.by_ids(self.election_id, self.district_id, self.precinct_id).first
+
           dp.is_validated = true
           dp.save
 
@@ -146,7 +146,11 @@ class CrowdDatum < ActiveRecord::Base
           if election.has_regions?
             sql << "`region`, "
           end
-          sql << "`district_id`, `district_name`, `precinct_id`,
+          sql << "`district_id`, `district_name`, "
+          if election.is_local_majoritarian?
+            sql << "`major_district_id`, "
+          end
+          sql << "`precinct_id`,
                  `num_possible_voters`, `num_special_voters`, `num_at_12`, `num_at_17`, `num_votes`, `num_ballots`,
                  `num_invalid_votes`, `num_valid_votes`, `logic_check_fail`, `logic_check_difference`,
                  `more_ballots_than_votes_flag`, `more_ballots_than_votes`, `more_votes_than_ballots_flag`, `more_votes_than_ballots`,
@@ -171,6 +175,9 @@ class CrowdDatum < ActiveRecord::Base
             sql_values << rd.district_name
           else
             sql_values << district_id
+          end
+          if election.is_local_majoritarian?
+            sql_values << dp.major_district_id
           end
           sql_values << [
             self.precinct_id, self.possible_voters, self.special_voters,
