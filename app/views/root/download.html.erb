@@ -9,7 +9,7 @@
     </ul>
     <div class="tab-content tab-content">
       <div class="tab-pane fade in active" id="download-data">
-        <% if @elections.present? && @overall_stats.present? %>
+        <% if @all_elections.present? && @overall_stats.present? %>
           <table class="table table-striped" id="download_elections">
             <thead>
               <tr>
@@ -52,8 +52,10 @@
                 <tr>
                   <% election = @all_elections.select{|x| x.id == stats[:election_id]}.first %>
                   <td>
-                    <%= link_to 'CSV', generate_spreadsheet_path(id: election.analysis_table_name, :format => :csv), class: 'btn btn-small' %>
-                    <%= link_to 'XLS', generate_spreadsheet_path(id: election.analysis_table_name, :format => :xls), class: 'btn btn-small' %>
+                    <% if @elections_with_data.present? && @elections_with_data.index(election.id).present? %>
+                      <%= link_to 'CSV', generate_spreadsheet_path(id: election.analysis_table_name, :format => :csv), class: 'btn btn-small' %>
+                      <%= link_to 'XLS', generate_spreadsheet_path(id: election.analysis_table_name, :format => :xls), class: 'btn btn-small' %>
+                    <% end %>
                   </td>
                   <td>
                     <%= election.name if election.present? %>

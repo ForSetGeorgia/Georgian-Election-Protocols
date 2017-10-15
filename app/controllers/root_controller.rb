@@ -201,6 +201,7 @@ class RootController < ApplicationController
 
   def download
     @overall_stats = DistrictPrecinct.overall_stats(@all_elections.map{|x| x.id})
+    @elections_with_data = CrowdDatum.election_ids_with_valid_data
 
     respond_to do |format|
       format.html # index.html.erb
