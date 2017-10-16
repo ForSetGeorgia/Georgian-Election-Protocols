@@ -150,15 +150,7 @@ Rails.logger.debug "+++++++++++ file_name = #{file_name}"
   protected
 
   def site_url
-    url = 'http://localhost:3000/'
-
-    if Rails.env.production?
-      url = 'https://elections.jumpstart.ge/'
-    elsif Rails.env.staging?
-      url = 'http://dev-electiondata.jumpstart.ge/'
-    end
-
-    return url
+    ENV['ELECTION_DATA_URL'].present? ? ENV['ELECTION_DATA_URL'] : 'http://localhost:3000/'
   end
 
 
