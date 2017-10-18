@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171013073236) do
+ActiveRecord::Schema.define(:version => 20171013200513) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -89,9 +89,10 @@ ActiveRecord::Schema.define(:version => 20171013073236) do
     t.datetime "updated_at"
     t.boolean  "is_valid"
     t.boolean  "is_extra",                                :default => false
+    t.string   "major_district_id",         :limit => 10
   end
 
-  add_index "crowd_data", ["election_id", "district_id", "precinct_id"], :name => "idx_election_location"
+  add_index "crowd_data", ["election_id", "district_id", "major_district_id", "precinct_id"], :name => "idx_election_location"
   add_index "crowd_data", ["is_extra"], :name => "index_crowd_data_on_is_extra"
   add_index "crowd_data", ["is_valid"], :name => "index_crowd_data_on_is_valid"
   add_index "crowd_data", ["user_id"], :name => "index_crowd_data_on_user_id"
@@ -143,28 +144,30 @@ ActiveRecord::Schema.define(:version => 20171013073236) do
 
   create_table "crowd_queues", :force => true do |t|
     t.integer  "user_id"
-    t.string   "district_id", :limit => 10
-    t.string   "precinct_id", :limit => 10
+    t.string   "district_id",       :limit => 10
+    t.string   "precinct_id",       :limit => 10
     t.boolean  "is_finished"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "election_id"
+    t.string   "major_district_id", :limit => 10
   end
 
-  add_index "crowd_queues", ["district_id", "precinct_id"], :name => "idx_queue_ids"
-  add_index "crowd_queues", ["election_id", "district_id", "precinct_id"], :name => "idx_election_queue_ids"
+  add_index "crowd_queues", ["district_id", "major_district_id", "precinct_id"], :name => "idx_queue_ids"
+  add_index "crowd_queues", ["election_id", "district_id", "major_district_id", "precinct_id"], :name => "idx_election_queue_ids"
   add_index "crowd_queues", ["is_finished"], :name => "index_crowd_queues_on_is_finished"
   add_index "crowd_queues", ["user_id"], :name => "index_crowd_queues_on_user_id"
 
   create_table "district_parties", :force => true do |t|
     t.integer  "election_id"
-    t.string   "district_id",  :limit => 10
+    t.string   "district_id",       :limit => 10
     t.integer  "party_number"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+    t.string   "major_district_id", :limit => 10
   end
 
-  add_index "district_parties", ["election_id", "district_id"], :name => "index_district_parties_elec_id_dist_id"
+  add_index "district_parties", ["election_id", "district_id", "major_district_id"], :name => "index_district_parties_elec_id_dist_id"
 
   create_table "district_precincts", :force => true do |t|
     t.string   "district_id",                       :limit => 10
@@ -188,11 +191,12 @@ ActiveRecord::Schema.define(:version => 20171013073236) do
     t.datetime "last_moderation_updated_at"
     t.integer  "moderation_status"
     t.text     "moderation_notes"
+    t.string   "major_district_id",                 :limit => 10
   end
 
   add_index "district_precincts", ["being_moderated"], :name => "index_district_precincts_on_being_moderated"
-  add_index "district_precincts", ["district_id", "precinct_id"], :name => "idx_dp_location"
-  add_index "district_precincts", ["election_id", "region", "district_id", "precinct_id"], :name => "idx_elec_dist_prec"
+  add_index "district_precincts", ["district_id", "major_district_id", "precinct_id"], :name => "idx_dp_location"
+  add_index "district_precincts", ["election_id", "region", "district_id", "major_district_id", "precinct_id"], :name => "idx_elec_dist_prec"
   add_index "district_precincts", ["has_amendment"], :name => "index_district_precincts_on_has_amendment"
   add_index "district_precincts", ["has_explanatory_note"], :name => "index_district_precincts_on_has_explanatory_note"
   add_index "district_precincts", ["has_protocol"], :name => "index_district_precincts_on_has_protocol"

@@ -1162,7 +1162,6 @@ module DataAnalysis
               cast(`raw`.`precinct_id` as char charset utf8)) AS `precinct_name`, "
       end
       sql << "`raw`.`num_possible_voters` AS `possible voters`,
-              `raw`.`num_possible_voters` AS `possible voters`,
               `raw`.`num_votes` AS `total ballots cast`,
               `raw`.`num_valid_votes` AS `total valid ballots cast`,
               (100 * (`raw`.`num_invalid_votes` / `raw`.`num_votes`)) AS `percent invalid ballots`,
@@ -1297,7 +1296,7 @@ module DataAnalysis
 
       sql << " union "
 
-      sql = "select `raw`.`region` AS `region`,
+      sql << "select `raw`.`region` AS `region`,
               999 AS `district_id`,
               `raw`.`district_name` AS `district_Name`,
               `raw`.`major_district_id` AS `major_district_id`,
@@ -1637,7 +1636,6 @@ module DataAnalysis
 
       # major district
       if self.is_local_majoritarian
-
         sql << "(select 'Majoritarian District' AS `#{@@common_headers[0]}`,
                 `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`major_district_id` AS `#{@@common_headers[1]}`,
                 `#{self.analysis_table_name} - #{@@shapes[:major_district]}`.`major_district_Name` AS `#{@@common_headers[2]}`,

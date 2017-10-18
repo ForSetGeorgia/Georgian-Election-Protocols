@@ -5,7 +5,7 @@ class DistrictParty < ActiveRecord::Base
 
   #######################################
   ## ATTRIBUTES
-  attr_accessible :district_id, :election_id, :party_number
+  attr_accessible :district_id, :major_district_id, :election_id, :party_number
 
   #######################################
   ## VALIDATIONS
@@ -15,8 +15,18 @@ class DistrictParty < ActiveRecord::Base
   #######################################
   ## SCOPES
 
-  def self.by_election_district(election_id, district_id)
-    where(election_id: election_id, district_id: district_id)
+  def self.by_election_district(election_id, district_id, major_district_id=nil)
+    where(election_id: election_id, district_id: district_id, major_district_id: major_district_id)
+  end
+
+  def self.max_parties_in_district(election_id, is_local_majoritarian)
+    x = where(election_id: election_id)
+    if is_local_majoritarian
+      x = x.group(:major_district_id)
+    else
+      x = x.group(:district_id)
+    end
+    x = x.count.values.max
   end
 
 end

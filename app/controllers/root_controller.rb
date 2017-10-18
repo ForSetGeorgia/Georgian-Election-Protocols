@@ -70,7 +70,7 @@ class RootController < ApplicationController
       dp = DistrictPrecinct.by_ids(@election.id, params[:district_id], params[:precinct_id]).first
 
       if dp.present? && dp.has_protocol?
-        @crowd_datum = CrowdDatum.new(election_id: dp.election_id, district_id: dp.district_id, precinct_id: dp.precinct_id)
+        @crowd_datum = CrowdDatum.new(election_id: dp.election_id, district_id: dp.district_id, major_district_id: dp.major_district_id, precinct_id: dp.precinct_id)
       end
 
       respond_to do |format|
@@ -133,7 +133,9 @@ class RootController < ApplicationController
       # get the election
       @election = Election.find(@crowd_datum.election_id)
       # get the parties for the election
-      @party_numbers = Party.by_election_district(@crowd_datum.election_id, @crowd_datum.district_id).party_numbers
+      @party_numbers = Party.by_election_district(@crowd_datum.election_id, @crowd_datum.district_id, @crowd_datum.major_district_id).party_numbers
+      logger.debug ">>>>>>> party numbers = #{@party_numbers}"
+
     else
       redirect_to root_path, :notice => I18n.t('app.msgs.no_protocols')
       return

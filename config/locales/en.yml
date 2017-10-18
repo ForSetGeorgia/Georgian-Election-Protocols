@@ -101,6 +101,11 @@ en:
       sign_up: "Create Account"
       sign_up_title: Join %{app_name}
       sign_out: Sign Out
+      elections: Manage Elections
+      election_data: Election Data Migration
+      redownload_protocol: Redownload Protocol
+      reset_bad_data: Delete Data for Protocol
+      users: Manage Users
     titles:
       new: "New %{model}"
       edit: "Edit %{model}"
