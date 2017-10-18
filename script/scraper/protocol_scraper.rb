@@ -16,7 +16,7 @@ require 'mechanize'
 logger_info = Logger.new("../../log/scraper_info.log")
 logger_error = Logger.new("../../log/scraper_error.log")
 
-app_base_url = "https://protocols.jumpstart.ge"
+app_base_url = "https://protocols.electionsportal.ge"
 #app_base_url = "http://192.168.2.252:3001"
 app_get_uri = "/en/json/missing_protocols"
 

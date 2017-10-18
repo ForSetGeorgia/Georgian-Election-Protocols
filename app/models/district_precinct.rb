@@ -67,6 +67,10 @@ class DistrictPrecinct < ActiveRecord::Base
     includes(:election)
   end
 
+  def self.active_elections
+    with_elections.where(elections: {can_enter_data: true})
+  end
+
   def self.sort_issue_reported_at
     order('issue_reported_at desc')
   end
@@ -132,8 +136,9 @@ class DistrictPrecinct < ActiveRecord::Base
   def self.missing_protocols
     # records = []
     elections = Election.can_enter
-    records = awaiting_protocols.by_election(elections.map{|x| x.id})
-    all_districts = by_election(elections.map{|x| x.id})
+    election_ids = elections.map{|x| x.id}
+    records = awaiting_protocols.by_election(election_ids)
+    all_districts = by_election(election_ids)
 
     return build_api_request(elections, records, all_districts)
   end

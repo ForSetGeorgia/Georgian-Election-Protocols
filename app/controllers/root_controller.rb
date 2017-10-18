@@ -288,6 +288,13 @@ logger.debug ">>>>>>>>>>>>>>>> format = csv"
       @needs_moderation = @needs_moderation.needs_moderation
     end
 
+    if params[:elections].present? && params[:elections] == 'all'
+      # do nothing
+    else
+      params[:elections] = 'active'
+      @needs_moderation = @needs_moderation.active_elections
+    end
+
     gon.moderate_record_url = moderate_record_path
     gon.moderate_notes_url = moderate_notes_path
 

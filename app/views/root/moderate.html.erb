@@ -3,16 +3,28 @@
   <div id="moderate">
     <%
       status = 'completed'
-      text = t('.completed')
-      no_text = t('.no_pending')
+      status_text = t('.completed')
+      status_no_text = t('.no_pending')
       if params[:status] == 'completed'
         status = 'pending'
-        text = t('.pending')
-        no_text = t('.no_completed')
+        status_text = t('.pending')
+        status_no_text = t('.no_completed')
       end
+
+      elections = 'all'
+      elections_text = t('.all')
+      status_no_text = t('.no_pending')
+      if params[:elections] == 'all'
+        elections = 'active'
+        elections_text = t('.active')
+        status_no_text = t('.no_completed')
+      end
+
+
     %>
     <div class="switch-view">
-      <%= link_to text, params.merge(status: status), :class => 'btn btn-success' %>
+      <%= link_to status_text, params.merge(status: status), :class => 'btn btn-success' %>
+      <%= link_to elections_text, params.merge(elections: elections), :class => 'btn btn-primary' %>
     </div>
 
   <% if @needs_moderation.present? %>
@@ -143,7 +155,7 @@
   <% else %>
 
     <p class="alert alert-success">
-      <%= no_text %>
+      <%= status_no_text %>
     </p>
 
   <% end %>

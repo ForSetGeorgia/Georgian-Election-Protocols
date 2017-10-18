@@ -622,6 +622,8 @@ en:
       view_title: View the protocol
       pending: Pending Items
       completed: Completed Items
+      active: Active Elections
+      all: All Elections
       header:
         reported_at: Reported At
         reason: Reason

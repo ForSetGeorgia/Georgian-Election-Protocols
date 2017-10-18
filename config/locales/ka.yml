@@ -619,6 +619,8 @@ ka:
       view_title: იხილეთ ოქმი
       pending: მიმდინარე პუნქტები
       completed: დასრულებული პუნქტები
+      active: Active Elections
+      all: All Elections
       header:
         reported_at: დარეპორტებულია
         reason: მიზეზი
