@@ -10,11 +10,13 @@ This app takes the scanned protocol images from the CEC website and allows users
 * Users can view the public data on the site or they can download the data
 
 ## Scraping the CEC site
-Two scrapers exist to download the scanned protocols from the CEC site. The scraper files are located in the `script` folder. 
+Two scrapers exist to download the scanned protocols from the CEC site. The scraper files are located in the `script` folder.
 
 One scraper looks for protocols that have not been downloaded yet. The scraper calls a json api method to get a list of all the districts and precincts for all active elections that are missing protocols. The scraper then looks for these protocols on the CEC site. If they are found, the images are downloaded and saved to the `public/system/protocols` folder.
 
 The second scraper looks for supplementary documents that are attached to protocols. These documents may be added at any time and one protocol may have several documents. The scraper calls a json api method to get a list of all districts and precincts for all active elections. The scraper then looks through every single record to see if new supplementary documents exist. If so, they are downloaded and saved into the `public/system/protocols` folder.
+
+If any of the scrapers find a supplementary document for a protocol and that protocol has already had data entered, the data will be marked as invalid and the protocol will need to be re-entered. This happens because a supplemetary document is provided when an issue is addressed or fixed and so the data needs to be re-entered to account for these changes.
 
 The sole job of these scrappers is to download the images. That is all. A rake task is run periodically to check for new images in the `public/system/protocols` folder, and if found, the database is updated to indicate that these documents exist and data needs to be entered.
 
@@ -32,7 +34,7 @@ Zero or 1 records are found in each of the above methods. Out of this set, a ran
 ## Validating the protocol data
 Upon submitting data for a protocol, `CrowdDatum.match_and_validate` is called to look for a match with an existing data record for this protocol.
 * If no record for this protocol is on file, nothing happens at this time
-* If one or more records are found, the new record is compared to all existing records. 
+* If one or more records are found, the new record is compared to all existing records.
   * If a match is found, the protocol is flagged as being complete and the data is saved and made public
   * If not match is found, then nothing happens at this time.
 
@@ -54,7 +56,7 @@ The app has a moderation section that allows moderators to view these reports an
 ## The data entry form
 The data entry form is built so that the protocol appears in the middle of the screen and the data entry fields appear down the right side in alignment with the protocol fields so data entry is as easy as possible.
 
-Protocols are not always scanned in perfectly straight, so a control box is provided at the bottom of the screen to move the protocol up and down and to rotate it in order to better align the protocol to the form fields. 
+Protocols are not always scanned in perfectly straight, so a control box is provided at the bottom of the screen to move the protocol up and down and to rotate it in order to better align the protocol to the form fields.
 
 This control box also contains a magnification box that shows a zoomed in view of the area under the mouse cursor. This is helpful when trying to read bad handwritting.
 
@@ -62,7 +64,9 @@ The bottom of the data entry form contains a logic check to help indicate if the
 
 Finally, the form has a section to report problems. This is discussed about in the `Reporting issues` section above.
 
-# Managing elections
+# Admin Forms
+
+## Managing elections
 To add a new election, some preperation work is required. There is a form to enter all of the necessary information. Migration tasks have also been used to load data quickly on the production server.
 
 Below is an explanation of the election fields:
@@ -99,15 +103,21 @@ Below is an explanation of the election fields:
     * party - party number
     * if is local majoritarian, then the major id should be inserted between the district and party
 
-# Special Cases 
+## Sending data to the Georgia Election Data site
+The admin section has a section called `Election Data Migration` that allows an admin to load the latest data from an election into the election data site. The protocol site keeps records of all data that is migrated to the election data site and uses this info to show how many new data records will be added to the election site if a migration is started.
+
+## Redownload Protocols
+An admin can trigger a protocol to be re-downloaded by using the `redownload protocol` admin form. When this happens, any data already entered for this protocol will be marked as invalid, the protocol will downloaded again, and the data ill have to be re-entered.
+
+## Delete protocol data
+An admin has the ability to delete data entered for a protcol using the `delete data for protocol` admin form. Using this will mark the existing data as invalid and the data will have to be re-entered.
+
+# Special Cases
 
 ## Local Majoritarian Elections
 These elections have an extra layer of complexity. In addition to the district and precinct, there is now a majoritarian district in between the district and precinct. The ID of this district is of a different format: district_id.majoritarian_id, i.e., 01.02. It is also possible for there to be a sub-majoritarian district so in this case the ID will be 01.01.01.
 
 This majoritarian ID is only needed for generating the data for the election data site. For this site, everything is still tied to the district and precinct which still works with local majoritarian elections.
-
-# Sending data to the Georgia Election Data site
-The admin section has a section called `Election Data Migration` that allows an admin to load the latest data from an election into the election data site. The protocol site keeps records of all data that is migrated to the election data site and uses this info to show how many new data records will be added to the election site if a migration is started.
 
 # Techinical Details
 
