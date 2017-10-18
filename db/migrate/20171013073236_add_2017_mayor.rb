@@ -30,6 +30,6 @@ class Add2017Mayor < ActiveRecord::Migration
 
   def down
     election = Election.includes(:election_translations).where(election_translations: {name: '2017 Mayor Election'}).first
-    election.destroy
+    election.destroy if election.present?
   end
 end
