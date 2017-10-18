@@ -4,6 +4,15 @@
 
   <%= f.inputs do %>
 
+    <div class="row-fluid">
+      <div class="span3">
+        <%= f.input :election_at, as: :string, :input_html => {:size =>10} %>
+      </div>
+      <div class="span9">
+        <%= f.input :can_enter_data, :as => :radio %>
+      </div>
+    </div>
+
     <% @election.election_translations.sort{|x,y| x.locale <=> y.locale}.each do |trans| %>
       <%= f.fields_for :election_translations, trans do |translation| %>
 
@@ -17,22 +26,20 @@
       <% end %>
     <% end %>
 
-    <% if @election.id.nil? %>
-      <%= f.input :tmp_analysis_table_name, as: :string, :input_html => {:size =>40, maxlength: 32} %>
-      <hr />
-    <% end %>
 
     <div class="row-fluid">
       <div class="span4">
-        <%= f.input :election_at, as: :string, :input_html => {:size =>10} %>
+        <%= f.input :district_precinct_separator, as: :string, :input_html => {:size =>2} %>
       </div>
       <div class="span4">
         <%= f.input :election_app_event_id, as: :string, :input_html => {:size =>10} %>
       </div>
-      <div class="span4">
-        <%= f.input :can_enter_data, :as => :radio %>
+      <% if @election.id.nil? %>
+        <div class="span4">
+          <%= f.input :tmp_analysis_table_name, as: :string, :input_html => {:size =>40, maxlength: 32} %>
+        </div>
+      <% end %>
       </div>
-    </div>
 
     <hr />
 
@@ -48,10 +55,9 @@
       </div>
     </div>
 
+    <hr />
+
     <div class="row-fluid">
-      <div class="span4">
-        <%= f.input :district_precinct_separator, as: :string, :input_html => {:size =>2} %>
-      </div>
       <div class="span4">
         <%= f.input :protocol_top_box_margin, as: :string, :input_html => {:size =>10} %>
       </div>
@@ -67,10 +73,7 @@
         <%= f.input :parties_same_for_all_districts, :as => :radio %>
       </div>
       <div class="span4">
-        <%= f.input :has_regions, :as => :radio %>
-      </div>
-      <div class="span4">
-        <%= f.input :has_district_names, :as => :radio %>
+        <%= f.input :has_indepenedent_parties, :as => :radio %>
       </div>
     </div>
 
@@ -79,10 +82,19 @@
         <%= f.input :has_custom_shape_levels, :as => :radio %>
       </div>
       <div class="span4">
-        <%= f.input :has_indepenedent_parties, :as => :radio %>
+        <%= f.input :is_parliamentary, :as => :radio %>
       </div>
       <div class="span4">
         <%= f.input :is_local_majoritarian, :as => :radio %>
+      </div>
+    </div>
+
+    <div class="row-fluid">
+      <div class="span4">
+        <%= f.input :has_district_names, :as => :radio %>
+      </div>
+      <div class="span4">
+        <%= f.input :has_regions, :as => :radio %>
       </div>
     </div>
 

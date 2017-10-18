@@ -42,7 +42,8 @@ class Election < ActiveRecord::Base
                   :has_regions, :has_district_names, :election_app_event_id, :election_at, :election_translations_attributes,
                   :max_party_in_district, :protocol_top_box_margin, :protocol_party_top_margin, :district_precinct_separator,
                   :scraper_url_base, :scraper_url_folder_to_images, :scraper_page_pattern, :has_custom_shape_levels,
-                  :party_file, :district_precinct_file, :party_district_file, :tmp_analysis_table_name
+                  :party_file, :district_precinct_file, :party_district_file, :tmp_analysis_table_name,
+                  :is_parliamentary
   attr_accessor :reset_max_party_num, :tmp_analysis_table_name
 
   #######################################

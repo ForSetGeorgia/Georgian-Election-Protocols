@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171018125035) do
+ActiveRecord::Schema.define(:version => 20171018205946) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -275,6 +275,7 @@ ActiveRecord::Schema.define(:version => 20171018125035) do
     t.string   "party_district_file_content_type"
     t.integer  "party_district_file_file_size"
     t.datetime "party_district_file_updated_at"
+    t.boolean  "is_parliamentary",                                  :default => false
   end
 
   add_index "elections", ["can_enter_data"], :name => "index_elections_on_can_enter_data"

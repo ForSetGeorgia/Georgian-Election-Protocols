@@ -42,6 +42,7 @@ ka:
         has_districts: არის ოლქები/უბნები?
         has_party_districts: არის პარტიები ყველა ოლქისთვის?
         tmp_analysis_table_name: ანალიზის სახელი
+        is_parliamentary: Is Parliamentary Election?
       election_translation:
         name: არჩევნების სახელი
     errors:
@@ -55,6 +56,7 @@ ka:
         election_app_event_id: საარჩევნო პორტალის აპლიკაციის ღონისძიების ნომერი, რომელიც საჭიროა მონაცემების მიგრაციისთვის
         parties_same_for_all_districts: პარტიები ყველა ოლქში იგივე თუ იცვლება (მაგ. მაჟორიტარული). ეს საჭიროა იმისთვის, რომ განსაზღვრო რომელი პარტიები აჩვენო ოქმის ფორმაში.
         is_local_majoritarian: ანალიზისთვის - ადგილობრივ მაჟორიტარულს აქვს მეტი დონე ვიდრე მაჟორიტარულ ოლქს
+        is_parliamentary: Parliamentary elections have a different coding format for districts and precincts compared to the rest of the elections (i.e., xx.yy.zz vs xx-yy)
         has_regions: ანალიზისთვის - საჭიროა ანალიზში რეგიონების ჩასმა
         has_district_names: ანალიზისთვის - საჭიროა ანალიზში ოლქის სახელის ჩასმა
         has_custom_shape_levels: ანალიზისთვის- არის თბილი ან სხვა ფორმა სპეციალურ ფორმასთან სერწყმული

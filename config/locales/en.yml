@@ -42,6 +42,7 @@ en:
         has_districts: Has Districts/Precincts?
         has_party_districts: Has Parties per District?
         tmp_analysis_table_name: Analysis Table Name
+        is_parliamentary: Is Parliamentary Election?
       election_translation:
         name: Election Name
     errors:
@@ -55,6 +56,7 @@ en:
         election_app_event_id: ID of the event in the Election Portal app that is need for data migration to work
         parties_same_for_all_districts: Are the parties the same for every district or do they vary (i.e., majoritarian). This is needed to determine which parties to show in the protocol form.
         is_local_majoritarian: For analysis - Local Majoritarian has an extra level of majoritarian districts
+        is_parliamentary: Parliamentary elections have a different coding format for districts and precincts compared to the rest of the elections (i.e., xx.yy.zz vs xx-yy)
         has_regions: For analysis - do regions need to be included in the analysis
         has_district_names: For analysis - do district names need to be included in the analysis
         has_custom_shape_levels: For analysis - is Tbilisi, or other shapes, merged into custom shapes
@@ -65,7 +67,7 @@ en:
         scraper_url_base: 'example: results.cec.gov.ge'
         scraper_url_folder_to_images: 'example: /oqm/7/'
         scraper_page_pattern: 'example: oqmi_{id}.html'
-        district_precinct_separator: 'example: xx.yy.zz or xx-yy'
+        district_precinct_separator: 'example: xx.yy or xx-yy'
         can_enter_data: When Yes, users will be able to enter data. When No, the data will still be available on the site, but no one can enter data.
         tmp_analysis_table_name: This value will be used in the names of the analysis tables and views and is limited to 32 characters
   mailer:
