@@ -24,6 +24,6 @@ every 10.minutes do
   rake "scrape:register_new_images"
 end
 
-# every 10.minutes do
-#   rake "scrape:register_volunteers"
-# end
+every 15.minutes do
+  rake "scrape:register_volunteers"
+end

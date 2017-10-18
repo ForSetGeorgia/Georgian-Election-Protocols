@@ -18,7 +18,7 @@ module UpdateVolunteers
 
   def self.get_paid_users(url, emails)
     csv_users = CSV.read(url, headers: true)
-    csv_users.select { |u|  !emails.include? u[0] }
+    # csv_users.select { |u|  !emails.include? u[0] }
   end
 
   def self.fun_pwd(names)
@@ -45,14 +45,21 @@ module UpdateVolunteers
     elections = Election.can_enter
     users.each do |u|
       pwd = fun_pwd(names)
-      nu = User.create(:email => u[email_index], :password => pwd)
-      nu.elections << elections
+      user = User.find_by_email(u[email_index])
+      if user.present?
+        user.password = pwd
+        user.save
+        user.elections << elections
+      else
+        user = User.create(:email => u[email_index], :password => pwd)
+        user.elections << elections
+      end
 
       message = Message.new
-      message.to = nu.email
+      message.to = user.email
       message.locale = I18n.locale
       message.subject = I18n.t("mailer.new_user.subject", :locale => I18n.locale)
-      message.message = I18n.t("mailer.new_user.message", :locale => I18n.locale, email: nu.email, password: pwd)
+      message.message = I18n.t("mailer.new_user.message", :locale => I18n.locale, email: user.email, password: pwd)
       NotificationMailer.new_user(message).deliver if !Rails.env.staging?
     end
   end
