@@ -38,9 +38,14 @@ class CrowdDatum < ActiveRecord::Base
 
   # this will get existing records that have not been compared or have been marked as invalid
   # so even if record was invalid, it could still find match and become valid
-  def self.existing_not_validated(election_id, district_id, precinct_id, user_id)
-    where(["election_id = ? and district_id = ? and precinct_id = ? and user_id != ? and is_extra = 0 and (is_valid is null or is_valid = 0)",
-      election_id, district_id, precinct_id, user_id])
+  def self.existing_not_validated(election_id, district_id, major_district_id, precinct_id, user_id)
+    if major_district_id.present?
+      where(["election_id = ? and district_id = ? and major_district_id = ? and precinct_id = ? and user_id != ? and is_extra = 0 and (is_valid is null or is_valid = 0)",
+        election_id, district_id, major_district_id, precinct_id, user_id])
+    else
+      where(["election_id = ? and district_id = ? and precinct_id = ? and user_id != ? and is_extra = 0 and (is_valid is null or is_valid = 0)",
+        election_id, district_id, precinct_id, user_id])
+    end
   end
 
   def self.by_ids(election_id, district_id, precinct_id)
@@ -66,10 +71,10 @@ class CrowdDatum < ActiveRecord::Base
     puts "==> match_and_validate start"
     CrowdDatum.transaction do
       # finished queue item
-      CrowdQueue.finished(self.election_id, self.district_id, self.precinct_id, self.user_id)
+      CrowdQueue.finished(self.election_id, self.district_id, self.major_district_id, self.precinct_id, self.user_id)
 
       # see if existing, not validated record exists
-      existing = CrowdDatum.existing_not_validated(self.election_id, self.district_id, self.precinct_id, self.user_id)
+      existing = CrowdDatum.existing_not_validated(self.election_id, self.district_id, self.major_district_id, self.precinct_id, self.user_id)
       puts "==> existing count = #{existing.length}"
 
       if existing.present?
@@ -95,8 +100,8 @@ class CrowdDatum < ActiveRecord::Base
           puts "==> match was found, saving to analysis table"
 
           # indicate that the precinct has been processed and validated
-          dp = DistrictPrecinct.where(["election_id = ? and district_id = ? and precinct_id = ?",
-                                  self.election_id, self.district_id, self.precinct_id]).first
+          dp = DistrictPrecinct.by_ids(self.election_id, self.district_id, self.precinct_id).first
+
           dp.is_validated = true
           dp.save
 
@@ -146,7 +151,11 @@ class CrowdDatum < ActiveRecord::Base
           if election.has_regions?
             sql << "`region`, "
           end
-          sql << "`district_id`, `district_name`, `precinct_id`,
+          sql << "`district_id`, `district_name`, "
+          if election.is_local_majoritarian?
+            sql << "`major_district_id`, "
+          end
+          sql << "`precinct_id`,
                  `num_possible_voters`, `num_special_voters`, `num_at_12`, `num_at_17`, `num_votes`, `num_ballots`,
                  `num_invalid_votes`, `num_valid_votes`, `logic_check_fail`, `logic_check_difference`,
                  `more_ballots_than_votes_flag`, `more_ballots_than_votes`, `more_votes_than_ballots_flag`, `more_votes_than_ballots`,
@@ -171,6 +180,9 @@ class CrowdDatum < ActiveRecord::Base
             sql_values << rd.district_name
           else
             sql_values << district_id
+          end
+          if election.is_local_majoritarian?
+            sql_values << dp.major_district_id
           end
           sql_values << [
             self.precinct_id, self.possible_voters, self.special_voters,
@@ -346,9 +358,9 @@ class CrowdDatum < ActiveRecord::Base
 
     logger.info "=========== query 1"
     # see if a record needs a match
-    sql = "SELECT cd.id, cd.election_id, cd.district_id, cd.precinct_id FROM `crowd_data` as cd left join ( "
-    sql << "select cq.id, cq.election_id, cq.district_id, cq.precinct_id from crowd_queues as cq where is_finished is null) "
-    sql << "as y on cd.election_id = y.election_id and cd.district_id = y.district_id and cd.precinct_id = y.precinct_id "
+    sql = "SELECT cd.id, cd.election_id, cd.district_id, cd.major_district_id, cd.precinct_id FROM `crowd_data` as cd left join ( "
+    sql << "select cq.id, cq.election_id, cq.district_id, cq.major_district_id, cq.precinct_id from crowd_queues as cq where is_finished is null) "
+    sql << "as y on cd.election_id = y.election_id and cd.district_id = y.district_id and cd.major_district_id = y.major_district_id and cd.precinct_id = y.precinct_id "
     sql << "WHERE cd.user_id != :user_id and cd.is_valid is null and cd.is_extra = 0 and y.id is null and cd.election_id in (:e_ids)"
     needs_match = CrowdDatum.find_by_sql([sql, :user_id => user_id, e_ids: e_ids])
 
@@ -360,7 +372,7 @@ class CrowdDatum < ActiveRecord::Base
       (0..4).each do |try|
         # records exist that are waiting for a match
         rand = CrowdDatum.find_by_id(needs_match.map{|x| x.id}.sample)
-        next_item = CrowdDatum.new(:election_id => rand.election_id, :district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+        next_item = CrowdDatum.new(:election_id => rand.election_id, :district_id => rand.district_id, :major_district_id => rand.major_district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
         if next_item.image_path.present?
           next_records << next_item
           break
@@ -371,13 +383,13 @@ class CrowdDatum < ActiveRecord::Base
     logger.info "=========== query 2"
 
     # see if a district/precinct has invalid records and is still not valid, show one
-    sql = "SELECT dp.election_id, dp.district_id, dp.precinct_id "
-    sql << "FROM (select dp.election_id, dp.district_id, dp.precinct_id, count(*) as c "
-    sql << "from district_precincts as dp inner join crowd_data as cd on dp.election_id = cd.election_id and dp.district_id = cd.district_id and dp.precinct_id = cd.precinct_id "
+    sql = "SELECT dp.election_id, dp.district_id, dp.major_district_id, dp.precinct_id "
+    sql << "FROM (select dp.election_id, dp.district_id, dp.major_district_id, dp.precinct_id, count(*) as c "
+    sql << "from district_precincts as dp inner join crowd_data as cd on dp.election_id = cd.election_id and dp.district_id = cd.district_id and dp.major_district_id = cd.major_district_id and dp.precinct_id = cd.precinct_id "
     sql << "where dp.is_validated = 0 and dp.has_protocol = 1 and dp.is_annulled = 0 and (dp.being_moderated = 0 or dp.being_moderated is null) and cd.is_valid = 0 and cd.user_id != :user_id and cd.election_id in (:e_ids) "
-    sql << "group by dp.election_id, dp.district_id, dp.precinct_id having c > 1) as dp "
-    sql << "left join ( select cq.id, cq.election_id, cq.district_id, cq.precinct_id from crowd_queues as cq where cq.is_finished is null and cq.user_id != :user_id and cq.election_id in (:e_ids)) "
-    sql << "as y on dp.election_id = y.election_id and dp.district_id = y.district_id and dp.precinct_id = y.precinct_id WHERE y.id is null and dp.election_id in (:e_ids)"
+    sql << "group by dp.election_id, dp.district_id, dp.major_district_id, dp.precinct_id having c > 1) as dp "
+    sql << "left join ( select cq.id, cq.election_id, cq.district_id, cq.major_district_id, cq.precinct_id from crowd_queues as cq where cq.is_finished is null and cq.user_id != :user_id and cq.election_id in (:e_ids)) "
+    sql << "as y on dp.election_id = y.election_id and dp.district_id = y.district_id and dp.major_district_id = y.major_district_id and dp.precinct_id = y.precinct_id WHERE y.id is null and dp.election_id in (:e_ids)"
     needs_match = DistrictPrecinct.find_by_sql([sql, :user_id => user_id, e_ids: e_ids])
 
     remove_user_records(user_records, needs_match)
@@ -389,7 +401,7 @@ class CrowdDatum < ActiveRecord::Base
       (0..4).each do |try|
         # records exist that are waiting for a match
         rand = needs_match.sample
-        next_item = CrowdDatum.new(:election_id => rand.election_id, :district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+        next_item = CrowdDatum.new(:election_id => rand.election_id, :district_id => rand.district_id, :major_district_id => rand.major_district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
         if next_item.image_path.present?
           next_records << next_item
           break
@@ -405,11 +417,11 @@ class CrowdDatum < ActiveRecord::Base
   sql << "  on dp.district_id = cd.district_id and dp.precinct_id = cd.precinct_id "
   sql << "  where dp.has_protocol = 1 and dp.is_validated = 0 and cd.user_id = :user_id and (((cd.is_valid is null and cd.is_extra = 0) or cd.is_valid = 1)))"
 =end
-    sql = "select dp.election_id, dp.district_id, dp.precinct_id from district_precincts as dp left join ( "
-    sql << "select cd.id, cd.election_id, cd.district_id, cd.precinct_id from crowd_data as cd where cd.is_valid is null and cd.election_id in (:e_ids) "
-    sql << ") as x on dp.election_id = x.election_id and dp.district_id = x.district_id and dp.precinct_id = x.precinct_id "
-    sql << "left join (select cq.id, cq.election_id, cq.district_id, cq.precinct_id from crowd_queues as cq "
-    sql << "where is_finished is null and cq.election_id in (:e_ids)) as y on dp.election_id = y.election_id and dp.district_id = y.district_id and dp.precinct_id = y.precinct_id "
+    sql = "select dp.election_id, dp.district_id, dp.major_district_id, dp.precinct_id from district_precincts as dp left join ( "
+    sql << "select cd.id, cd.election_id, cd.district_id, cd.major_district_id, cd.precinct_id from crowd_data as cd where cd.is_valid is null and cd.election_id in (:e_ids) "
+    sql << ") as x on dp.election_id = x.election_id and dp.district_id = x.district_id and dp.major_district_id = x.major_district_id and dp.precinct_id = x.precinct_id "
+    sql << "left join (select cq.id, cq.election_id, cq.district_id, cq.major_district_id, cq.precinct_id from crowd_queues as cq "
+    sql << "where is_finished is null and cq.election_id in (:e_ids)) as y on dp.election_id = y.election_id and dp.district_id = y.district_id and dp.major_district_id = y.major_district_id and dp.precinct_id = y.precinct_id "
     sql << "where dp.has_protocol = 1 and dp.is_validated = 0 and dp.is_annulled = 0 and (dp.being_moderated = 0 or dp.being_moderated is null) and x.id is null and y.id is null and dp.election_id in (:e_ids)"
     needs_processing = DistrictPrecinct.find_by_sql([sql, :user_id => user_id, e_ids: e_ids])
 
@@ -422,7 +434,7 @@ class CrowdDatum < ActiveRecord::Base
         # precincts are waiting for processing
         # create a new crowd data record so it can be processed
         rand = needs_processing.sample
-        next_item = CrowdDatum.new(:election_id => rand.election_id, :district_id => rand.district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+        next_item = CrowdDatum.new(:election_id => rand.election_id, :district_id => rand.district_id, :major_district_id => rand.major_district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
         if next_item.image_path.present?
           next_records << next_item
           break
@@ -434,7 +446,7 @@ class CrowdDatum < ActiveRecord::Base
     logger.info "=========== next_records count = #{next_records.length}"
     if next_records.present?
       next_record = next_records.sample
-      CrowdQueue.create(:user_id => user_id, :election_id => next_record.election_id, :district_id => next_record.district_id, :precinct_id => next_record.precinct_id)
+      CrowdQueue.create(:user_id => user_id, :election_id => next_record.election_id, :district_id => next_record.district_id, :major_district_id => next_record.major_district_id, :precinct_id => next_record.precinct_id)
     end
 
     return next_record
@@ -597,6 +609,7 @@ class CrowdDatum < ActiveRecord::Base
       user_records.each do |user_record|
         found_matches << needs_matches.select{|x| x.election_id == user_record.election_id &&
                           x.district_id == user_record.district_id &&
+                          x.major_district_id == user_record.major_district_id &&
                           x.precinct_id == user_record.precinct_id}
       end
 

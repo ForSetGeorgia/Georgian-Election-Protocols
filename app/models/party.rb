@@ -23,10 +23,13 @@ class Party < ActiveRecord::Base
     where(election_id: election_id)
   end
 
-  def self.by_election_district(election_id, district_id)
+  def self.by_election_district(election_id, district_id, major_district_id=nil)
+    Rails.logger.debug ">>>>>>> election #{election_id}; district #{district_id}; major #{major_district_id}"
     p = where(election_id: election_id)
+    # if parties are different for each district
+    # get the parties that are only assigned to this district
     if !Election.are_parties_same_for_all_districts?(election_id)
-      p = p.where(number: DistrictParty.by_election_district(election_id, district_id).pluck(:party_number))
+      p = p.where(number: DistrictParty.by_election_district(election_id, district_id, major_district_id).pluck(:party_number))
     end
 
     return p

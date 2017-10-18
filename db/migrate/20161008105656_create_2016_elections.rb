@@ -101,7 +101,7 @@ class Create2016Elections < ActiveRecord::Migration
       major.create_analysis_precinct_counts
 
       # get the 2016 major and add the max value
-      major.max_party_in_district = DistrictParty.where(election_id: major.id).group(:district_id).count.values.max
+      major.max_party_in_district = DistrictParty.max_parties_in_district(major.id, major.is_local_majoritarian)
       major.save
 
       admins = User.where(role: 99)

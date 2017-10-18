@@ -96,6 +96,11 @@ ka:
       sign_up: "დარეგისტრირდით"
       sign_up_title: "შემოგვიერთდი “%{app_name}”"
       sign_out: "გასვლა"
+      elections: მართე არჩევნები
+      election_data: არჩევნების მონაცემების მიგრაცია
+      redownload_protocol: Redownload Protocol
+      reset_bad_data: ოქმის მონაცემების წაშლა
+      users: მომხმარებლების მართვა
     titles:
       new: "ახალი %{model}"
       edit: "შეცვლა %{model}"

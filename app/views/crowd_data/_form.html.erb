@@ -5,6 +5,7 @@
   <%= semantic_form_for @crowd_datum do |f| %>
     <%= f.inputs do %>
       <%= f.input :district_id, :as => :hidden %>
+      <%= f.input :major_district_id, :as => :hidden %>
       <%= f.input :precinct_id, :as => :hidden %>
 
       <div class="m m1">

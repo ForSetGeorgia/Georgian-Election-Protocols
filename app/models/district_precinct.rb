@@ -17,7 +17,7 @@ class DistrictPrecinct < ActiveRecord::Base
                   :has_amendment, :has_explanatory_note, :supplemental_documents_attributes,
                   :being_moderated, :moderation_reason, :issue_reported_by_user_id, :issue_reported_at,
                   :last_moderation_update_by_user_id, :last_moderation_updated_at,
-                  :moderation_status, :moderation_notes
+                  :moderation_status, :moderation_notes, :major_district_id
 
   attr_accessor :num_precincts, :num_protocols_found, :num_protocols_missing, :num_protocols_not_entered, :num_protocols_validated
 

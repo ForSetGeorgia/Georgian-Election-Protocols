@@ -11,6 +11,14 @@ $(document).ready(function(){
   });
 
 
+  $('form.election input[name="election[is_local_majoritarian]"]').on('change', function(){
+    // if the selected value is true, then custom shapes must also be true
+    if ($('form.election input[name="election[is_local_majoritarian]"]:checked').val() == 'true'){
+      $('form.election input#election_has_custom_shape_levels_true').prop('checked', true);
+    }
+  });
+
+
   if($('form.election').length > 0){
     // load the date pickers
     $('#election_election_at').datepicker({

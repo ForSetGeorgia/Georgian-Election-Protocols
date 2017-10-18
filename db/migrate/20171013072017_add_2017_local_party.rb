@@ -6,7 +6,7 @@ class Add2017LocalParty < ActiveRecord::Migration
       election = Election.new(
         can_enter_data: false,
         election_at: '2017-10-21',
-        # election_app_event_id: 49,
+        election_app_event_id: 51,
         parties_same_for_all_districts: true,
         district_precinct_separator: '-',
         has_regions: false,

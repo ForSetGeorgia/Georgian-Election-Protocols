@@ -129,7 +129,7 @@ class Election < ActiveRecord::Base
       # reset the flag so this is not called anymore
       self.reset_max_party_num = false
 
-      self.max_party_in_district = DistrictParty.where(election_id: self.id).group(:district_id).count.values.max
+      self.max_party_in_district = DistrictParty.max_parties_in_district(self.id, self.is_local_majoritarian)
       self.save
     end
 
@@ -215,19 +215,25 @@ class Election < ActiveRecord::Base
 
       puts '- load precincts/districts'
       csv_data = CSV.read(self.district_precinct_file.path)
+      idx_district = 0
+      idx_major = 1
+      idx_precinct = self.is_local_majoritarian? ? 2 : 1
       sql_values = []
+
       csv_data.each_with_index do |row, i|
         if i > 0
           # if the district/precint does not exist, add it
           if dps.select{|x| x.district_id == row[0] && x.precinct_id == row[1]}.empty?
-            sql_values << "(#{self.id}, '#{row[0]}', '#{row[1]}', '#{now}')"
+            major_value = self.is_local_majoritarian? ? "'#{row[idx_major]}', " : ''
+            sql_values << "(#{self.id}, '#{row[idx_district]}', '#{row[idx_precinct]}', #{major_value} '#{now}')"
           end
         end
       end
       puts "  - adding #{sql_values.length} precincts"
       if sql_values.present?
+        major_value = self.is_local_majoritarian? ? "`major_district_id`, " : ''
         client.execute("insert into district_precincts
-          (`election_id`, `district_id`, `precinct_id`, `created_at`)
+          (`election_id`, `district_id`, `precinct_id`, #{major_value} `created_at`)
           values #{sql_values.join(', ')}"
         )
       end
@@ -264,6 +270,11 @@ class Election < ActiveRecord::Base
     puts "load_party_districts"
     puts "- parties same = #{self.parties_same_for_all_districts?}; change = #{self.party_district_file_updated_at_changed?}, exists = #{self.party_district_file.exists?}"
     if !self.parties_same_for_all_districts? && self.party_district_file_updated_at_changed? && self.party_district_file.exists?
+      # columns: 0 - dist, 1 - major, 2 - party
+      idx_district = 0
+      idx_major = 1
+      idx_party = self.is_local_majoritarian? ? 2 : 1
+
       client = ActiveRecord::Base.connection
       now = Time.now
 
@@ -276,16 +287,21 @@ class Election < ActiveRecord::Base
       csv_data.each_with_index do |row, i|
         if i > 0
           # only add if this party is not in the system
-          if dps.select{|x| x.party_number.to_s == row[1].to_s && x.district_id == row[0]}.empty?
-            # puts "-- adding district party #{row[0]} / #{row[1]}"
-            sql_values << "(#{self.id}, '#{row[0]}', '#{row[1]}', '#{now}')"
+          if self.is_local_majoritarian?
+            if dps.select{|x| x.party_number.to_s == row[idx_party].to_s && x.district_id == row[idx_district] && x.major_district_id == row[idx_major]}.empty?
+              # puts "-- adding district party #{row[idx_district]} / #{row[idx_party]}"
+              sql_values << "(#{self.id}, '#{row[idx_district]}', '#{row[idx_major]}', '#{row[idx_party]}', '#{now}')"
+            end
+          elsif dps.select{|x| x.party_number.to_s == row[idx_party].to_s && x.district_id == row[idx_district]}.empty?
+            # puts "-- adding district party #{row[idx_district]} / #{row[idx_party]}"
+            sql_values << "(#{self.id}, '#{row[idx_district]}', null, '#{row[idx_party]}', '#{now}')"
           end
         end
       end
       puts "  - adding #{sql_values.length} district parties"
       if sql_values.present?
         client.execute("insert into district_parties
-          (`election_id`, `district_id`, `party_number`, `created_at`)
+          (`election_id`, `district_id`, `major_district_id`, `party_number`, `created_at`)
           values #{sql_values.join(', ')}"
         )
       end
@@ -293,7 +309,11 @@ class Election < ActiveRecord::Base
       puts "- now see if we have parties that are no longer needed"
       ids_to_delete = []
       dps.each do |dp|
-        if csv_data.select{|row| row[1].to_s == dp.party_number.to_s && row[0] == dp.district_id}.empty?
+        if self.is_local_majoritarian?
+          if csv_data.select{|row| row[idx_party].to_s == dp.party_number.to_s && row[idx_district] == dp.district_id && x.major_district_id == row[idx_major]}.empty?
+            ids_to_delete << dp.id
+          end
+        elsif csv_data.select{|row| row[idx_party].to_s == dp.party_number.to_s && row[idx_district] == dp.district_id}.empty?
           ids_to_delete << dp.id
         end
       end
