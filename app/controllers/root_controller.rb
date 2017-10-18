@@ -182,7 +182,7 @@ class RootController < ApplicationController
     if @errors.blank?
       params['protocol'] = nil # make sure form fields are not pre-populated with the last form
       if user.trained.blank?
-        @next_protocol = 5#PROTOCOL_NUMBERS.sample
+        @next_protocol = PROTOCOL_NUMBERS.sample
         @protocol_data = JSON.parse(File.read("public/training/#{@next_protocol}.json"))
       else
         left = PROTOCOL_NUMBERS - trained
