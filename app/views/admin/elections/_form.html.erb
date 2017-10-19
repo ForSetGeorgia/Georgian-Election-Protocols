@@ -5,11 +5,11 @@
   <%= f.inputs do %>
 
     <div class="row-fluid">
-      <div class="span3">
-        <%= f.input :election_at, as: :string, :input_html => {:size =>10} %>
-      </div>
-      <div class="span9">
+      <div class="span4">
         <%= f.input :can_enter_data, :as => :radio %>
+      </div>
+      <div class="span4">
+        <%= f.input :election_at, as: :string, :input_html => {:size =>10} %>
       </div>
     </div>
 
@@ -40,31 +40,6 @@
         </div>
       <% end %>
       </div>
-
-    <hr />
-
-    <div class="row-fluid">
-      <div class="span4">
-        <%= f.input :scraper_url_base, as: :string, :input_html => {:size =>25} %>
-      </div>
-      <div class="span4">
-        <%= f.input :scraper_url_folder_to_images, as: :string, :input_html => {:size =>25} %>
-      </div>
-      <div class="span4">
-        <%= f.input :scraper_page_pattern, as: :string, :input_html => {:size =>25} %>
-      </div>
-    </div>
-
-    <hr />
-
-    <div class="row-fluid">
-      <div class="span4">
-        <%= f.input :protocol_top_box_margin, as: :string, :input_html => {:size =>10} %>
-      </div>
-      <div class="span4">
-        <%= f.input :protocol_party_top_margin, as: :string, :input_html => {:size =>10} %>
-      </div>
-    </div>
 
     <hr />
 
@@ -156,6 +131,32 @@
         </div>
       </div>
     </div>
+
+    <hr />
+
+    <div class="row-fluid">
+      <div class="span4">
+        <%= f.input :scraper_url_base, as: :string, :input_html => {:size =>25} %>
+      </div>
+      <div class="span4">
+        <%= f.input :scraper_url_folder_to_images, as: :string, :input_html => {:size =>25} %>
+      </div>
+      <div class="span4">
+        <%= f.input :scraper_page_pattern, as: :string, :input_html => {:size =>25} %>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row-fluid">
+      <div class="span4">
+        <%= f.input :protocol_top_box_margin, as: :string, :input_html => {:size =>10} %>
+      </div>
+      <div class="span4">
+        <%= f.input :protocol_party_top_margin, as: :string, :input_html => {:size =>10} %>
+      </div>
+    </div>
+
 
   <% end %>
 

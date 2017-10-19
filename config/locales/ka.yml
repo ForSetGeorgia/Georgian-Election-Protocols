@@ -21,7 +21,7 @@ ka:
         has_indepenedent_parties: არის საინიციატივო ჯგუფები?
         has_regions: აქვს რეგიონები?
         has_district_names: აქვს ოლქის სახელები?
-        has_custom_shape_levels: Has Custom Shape Levels (Tbilisi)?
+        has_custom_shape_levels: გამოსახულია განსხვავებული ფორმით (თბილისი)?
         max_party_in_district: პარტიების მაქსიმალური რაოდენობა ოლქში
         protocol_top_box_margin: ოქმის ზედა გრაფების ზღვარი
         protocol_party_top_margin: ოქმში პარტიების გრაფების ზედა ზღვარი
@@ -42,7 +42,7 @@ ka:
         has_districts: არის ოლქები/უბნები?
         has_party_districts: არის პარტიები ყველა ოლქისთვის?
         tmp_analysis_table_name: ანალიზის სახელი
-        is_parliamentary: Is Parliamentary Election?
+        is_parliamentary: არის საპარლამენტო არჩევნები?
       election_translation:
         name: არჩევნების სახელი
     errors:
@@ -56,7 +56,7 @@ ka:
         election_app_event_id: საარჩევნო პორტალის აპლიკაციის ღონისძიების ნომერი, რომელიც საჭიროა მონაცემების მიგრაციისთვის
         parties_same_for_all_districts: პარტიები ყველა ოლქში იგივე თუ იცვლება (მაგ. მაჟორიტარული). ეს საჭიროა იმისთვის, რომ განსაზღვრო რომელი პარტიები აჩვენო ოქმის ფორმაში.
         is_local_majoritarian: ანალიზისთვის - ადგილობრივ მაჟორიტარულს აქვს მეტი დონე ვიდრე მაჟორიტარულ ოლქს
-        is_parliamentary: Parliamentary elections have a different coding format for districts and precincts compared to the rest of the elections (i.e., xx.yy.zz vs xx-yy)
+        is_parliamentary: საპარლამენტო არჩევნებს აქვს კოდირების განსხვავებული ფორმატი ოლქებისა და უბნებისთვის, სხვა არჩევნებთან შედარებით (მაგ. xx.yy.zz vs xx-yy)
         has_regions: ანალიზისთვის - საჭიროა ანალიზში რეგიონების ჩასმა
         has_district_names: ანალიზისთვის - საჭიროა ანალიზში ოლქის სახელის ჩასმა
         has_custom_shape_levels: ანალიზისთვის- არის თბილი ან სხვა ფორმა სპეციალურ ფორმასთან სერწყმული
@@ -621,8 +621,8 @@ ka:
       view_title: იხილეთ ოქმი
       pending: მიმდინარე პუნქტები
       completed: დასრულებული პუნქტები
-      active: Active Elections
-      all: All Elections
+      active: მიმდინარე არჩევნები
+      all: ყველა არჩევნები
       header:
         reported_at: დარეპორტებულია
         reason: მიზეზი

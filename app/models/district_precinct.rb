@@ -790,6 +790,7 @@ class DistrictPrecinct < ActiveRecord::Base
           scraper_url_base: election.scraper_url_base,
           scraper_url_folder_to_images: election.scraper_url_folder_to_images,
           scraper_page_pattern: election.scraper_page_pattern,
+          is_parliamentary: election.is_parliamentary,
           districts: [],
           district_decs: []
         }
@@ -814,7 +815,8 @@ class DistrictPrecinct < ActiveRecord::Base
         end
 
         # get dec #s for all districts
-        if all_districts.present?
+        # - only need this for parliamentary elections due to their different numbering format
+        if election.is_parliamentary? && all_districts.present?
           district_ids = all_districts.select{|x| x.election_id == election.id}.map{|x| x.district_id}.uniq
 
           if district_ids.present?
