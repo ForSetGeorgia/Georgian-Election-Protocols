@@ -104,7 +104,7 @@ Below is an explanation of the election fields:
     * if is local majoritarian, then the major id should be inserted between the district and party
 
 ## Sending data to the Georgia Election Data site
-An admin can send data from the protocols app to the Georgia Election Data app on the `Election Data Migration` admin page.
+An admin can send data from the protocols app to the [Georgia Election Data app](https://data.electionsportal.ge/en) on the `Election Data Migration` admin page.
 
 Creating a migration will cause the latest data to be downloaded to a csv file. The url to this file is then sent to the Georgia Election Data site which then downloads the file and imports the data.
 
