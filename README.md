@@ -104,7 +104,11 @@ Below is an explanation of the election fields:
     * if is local majoritarian, then the major id should be inserted between the district and party
 
 ## Sending data to the Georgia Election Data site
-The admin section has a section called `Election Data Migration` that allows an admin to load the latest data from an election into the election data site. The protocol site keeps records of all data that is migrated to the election data site and uses this info to show how many new data records will be added to the election site if a migration is started.
+An admin can send data from the protocols app to the Georgia Election Data app on the `Election Data Migration` admin page.
+
+Creating a migration will cause the latest data to be downloaded to a csv file. The url to this file is then sent to the Georgia Election Data site which then downloads the file and imports the data.
+
+The protocol site keeps records of all data that is migrated to the election data site and uses this info to show how many new data records will be added to the election site if a migration is started.
 
 ## Redownload Protocols
 An admin can trigger a protocol to be re-downloaded by using the `redownload protocol` admin form. When this happens, any data already entered for this protocol will be marked as invalid, the protocol will downloaded again, and the data ill have to be re-entered.
@@ -122,14 +126,16 @@ This majoritarian ID is only needed for generating the data for the election dat
 # Techinical Details
 
 ## Databases
-The protocols app uses two database: one to store the data entry records and one that summarizes all of the results for analysis. This means two databases need to be created and the user that has access to the first database also needs access to the second.
+The protocols app uses two database:
+* protocols - keep track of which protocols are pending and finished and store the data entry records
+* protocol_analysis - summarize the results and calculate indicators; this database is also used to create the properly formatted data form Georgia Election Data.
 
-The second database name is hardcoded and should be called protocol_analysis.
+IMPORTANT: The second database name is hardcoded and should be called `protocol_analysis`.
+
+This means two databases need to be created and the user that has access to the first database also needs access to the second.
 
 You will need to grant access to this second database and make sure you include the ability to 'create view'.
 GRANT select, insert, update, delete, create, alter, index, drop, create view, references ON `protocol_analysis`.* TO `username`@localhost IDENTIFIED BY 'password';
-
-
 
 # TODO
 * add scraper to get the data from CEC so it is possible to compare their party counts to ours
