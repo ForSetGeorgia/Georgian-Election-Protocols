@@ -1,5 +1,6 @@
 $(function ()
 {
+  $('[data-toggle="tooltip"]').tooltip();
 
   // when a cant enter item is checked/unchecked determine the appropriate action to take
   // - if nothing checked, turn off submit and reset value in being moderated

@@ -53,7 +53,7 @@
                 <input id="crowd_datum_moderation_reason_<%= dp::MODERATION_REASONS[key] %>" name="crowd_datum[moderation_reason][]"
                         value="<%= dp::MODERATION_REASONS[key] %>" type="checkbox">
                 <label class="choice checkbox" for="crowd_datum_moderation_reason_<%= dp::MODERATION_REASONS[key] %>"
-                        title="<%= t(".cant_enter.titles.#{key}") %>">
+                        title="<%= t(".cant_enter.titles.#{key}") %>" data-toggle="tooltip" data-placement="bottom">
                   <%= t(".cant_enter.text.#{key}") %>
                 </label>
               </li>
@@ -211,7 +211,7 @@
                 <input id="say_what_true" name="say_what[]"
                         value="true" type="checkbox">
                 <label class="choice checkbox" for="say_what_true"
-                        title="<%= t(".say_what.title") %>">
+                        title="<%= t(".say_what.title") %>" data-toggle="tooltip" data-placement="left">
                   <%= t(".say_what.text") %>
                 </label>
               </li>
