@@ -59,7 +59,7 @@
               </li>
             <% end %>
             <li>
-              <input name="commit" value="<%= t('app.common.submit') %>" type="submit" disabled="disabled">
+              <input name="commit" value="<%= t('app.common.submit') %>" type="submit" disabled="disabled" class="protocol-button small submit">
             </li>
             <li>
               <%= link_to(t('helpers.links.help'), '#help-modal', class: 'protocol-button small help', role: 'button', :'data-toggle' => 'modal') %>
@@ -165,7 +165,7 @@
         <% end %>
 
         <%= f.actions do %>
-          <%= f.action :submit, :as => :input, :label => t('app.common.submit') %>
+          <%= f.action :submit, :as => :input, :label => t('app.common.submit'), :button_html => {:class => "protocol-button small submit"} %>
         <% end %>
 
         <div id="votesum_explanation">
@@ -216,7 +216,7 @@
                 </label>
               </li>
               <li>
-                <input name="commit" value="<%= t('app.common.submit') %>" type="submit" disabled="disabled">
+                <input name="commit" value="<%= t('app.common.submit') %>" type="submit" disabled="disabled" class="protocol-button small submit">
               </li>
             </ul>
             <div class="say-what-success"><%= t('.say_what.success') %></div>
