@@ -17,7 +17,9 @@ class DistrictPrecinct < ActiveRecord::Base
                   :has_amendment, :has_explanatory_note, :supplemental_documents_attributes,
                   :being_moderated, :moderation_reason, :issue_reported_by_user_id, :issue_reported_at,
                   :last_moderation_update_by_user_id, :last_moderation_updated_at,
-                  :moderation_status, :moderation_notes, :major_district_id
+                  :moderation_status, :moderation_notes, :major_district_id,
+                  :has_say_what, :say_what_notes, :say_what_reported_at,
+                  :last_say_what_update_by_user_id, :last_say_what_updated_at
 
   attr_accessor :num_precincts, :num_protocols_found, :num_protocols_missing, :num_protocols_not_entered, :num_protocols_validated
 
@@ -74,6 +76,15 @@ class DistrictPrecinct < ActiveRecord::Base
   def self.sort_issue_reported_at
     order('issue_reported_at desc')
   end
+
+  def self.with_say_whats
+    where(has_say_what: true)
+  end
+
+  def self.sort_say_what_reported_at
+    order('say_what_reported_at desc')
+  end
+
 
   # only missing info, cant read, and docs not clear require clarification
   def self.needs_clarification
@@ -418,6 +429,40 @@ class DistrictPrecinct < ActiveRecord::Base
         dp.moderation_notes = notes.strip
         dp.last_moderation_update_by_user_id = moderator_user_id
         dp.last_moderation_updated_at = Time.now
+        dp.save
+      end
+    end
+
+    return true
+  end
+
+  ############################################
+  ############################################
+  def self.add_say_what_notes(id, notes, moderator_user_id)
+    DistrictPrecinct.transaction do
+      dp = find(id)
+      if dp.present?
+        dp.say_what_notes = notes.strip
+        dp.last_say_what_update_by_user_id = moderator_user_id
+        dp.last_say_what_updated_at = Time.now
+        dp.save
+      end
+    end
+
+    return true
+  end
+
+  ############################################
+  ############################################
+  def self.reset_say_what(id)
+    DistrictPrecinct.transaction do
+      dp = find(id)
+      if dp.present?
+        dp.has_say_what = false
+        dp.say_what_notes = nil
+        dp.say_what_reported_at = nil
+        dp.last_say_what_update_by_user_id = nil
+        dp.last_say_what_updated_at = nil
         dp.save
       end
     end

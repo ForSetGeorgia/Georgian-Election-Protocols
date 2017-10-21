@@ -280,6 +280,7 @@ logger.debug ">>>>>>>>>>>>>>>> format = csv"
 
   def moderate
     @needs_moderation = DistrictPrecinct.with_elections.sort_issue_reported_at
+    @say_whats = DistrictPrecinct.with_elections.with_say_whats.sort_say_what_reported_at
 
     if params[:status].present? && params[:status] == 'completed'
       @needs_moderation = @needs_moderation.was_moderated
@@ -297,6 +298,9 @@ logger.debug ">>>>>>>>>>>>>>>> format = csv"
 
     gon.moderate_record_url = moderate_record_path
     gon.moderate_notes_url = moderate_notes_path
+
+    gon.say_what_destroy_url = say_what_destroy_path
+    gon.say_what_notes_url = say_what_notes_path
 
   end
 
@@ -375,6 +379,65 @@ logger.debug ">>>>>>>>>>>>>>>> format = csv"
       end
     end
   end
+
+  # set the say what flag for a protocol
+  def say_what
+    # check for required fields
+    if params[:election_id].present? && params[:district_id].present? && params[:precinct_id].present?
+      dp = DistrictPrecinct.by_ids(params[:election_id], params[:district_id], params[:precinct_id]).first
+      if dp.present?
+        dp.has_say_what = true
+        dp.say_what_reported_at = Time.now
+        dp.save
+      end
+    end
+    respond_to do |format|
+      format.json {render json: {status: 200}}
+    end
+  end
+
+  def say_what_notes
+    if params[:id].present? && params[:notes].present? && params[:user_id].present?
+      response = nil
+      errors = nil
+      success = DistrictPrecinct.add_say_what_notes(params[:id], params[:notes], params[:user_id])
+      if success
+        response = {time: I18n.l(Time.now, format: :file)}
+      else
+        errors = {status: I18n.t('root.moderate.moderate.failed')}
+      end
+      respond_to do |format|
+        format.json { render json: {response: response, errors: errors}}
+      end
+
+    else
+      respond_to do |format|
+        format.json { render json: {errors: {status: I18n.t('root.moderate.moderate.failed')}}}
+      end
+    end
+  end
+
+  def say_what_destroy
+    if params[:id].present?
+      response = nil
+      errors = nil
+      success = DistrictPrecinct.reset_say_what(params[:id])
+      if success
+        response = {time: I18n.l(Time.now, format: :file)}
+      else
+        errors = {status: I18n.t('root.moderate.moderate.failed')}
+      end
+      respond_to do |format|
+        format.json { render json: {response: response, errors: errors}}
+      end
+
+    else
+      respond_to do |format|
+        format.json { render json: {errors: {status: I18n.t('root.moderate.moderate.failed')}}}
+      end
+    end
+  end
+
 
 protected
 

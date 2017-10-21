@@ -484,6 +484,10 @@ en:
         left: Move left
         right: Move right
         reset: Reset all transformations
+      say_what:
+        text: Say What?!
+        title: Does the supplemental document contain information in it that makes you think 'say what?!'? Such as 'too tired to count', 'someone in singing', and 'lost the protocol'. If so, use this button to report it. We will use this information to possibly tell stories of strange circumstances with the election protocols. IMPORTANT - you must still fill out the form fields if you click this button.
+        success: Thanks for letting us know!
       cant_enter:
         title: If you can't enter data, please indicate why
         text:
@@ -618,7 +622,7 @@ en:
 
           Below is an example of a document indicating that the protocol has been annulled.
     moderate:
-      title: Moderate Protocol Issues
+      title: Moderate Protocols
       no_pending: Hooray! No protocols are in need of moderation!
       no_completed: No protocols have been moderated.
       view_title: View the protocol
@@ -626,6 +630,7 @@ en:
       completed: Completed Items
       active: Active Elections
       all: All Elections
+      notes_success: The notes were saved.
       header:
         reported_at: Reported At
         reason: Reason
@@ -650,6 +655,11 @@ en:
         contact_cec: Following up with CEC
         supplementary_document_added: New Supplementary Document Resolves Issue
         no_problem: No Problem Found
+      say_what:
+        no_text: No protocols have been marked as 'Say What?!'
+      tabs:
+        issues: Issues
+        say_what: Say What?!
   mailer:
     new_user:
       subject: Are you ready to help ForSet digitize some election protocols?!

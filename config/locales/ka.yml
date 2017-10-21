@@ -479,6 +479,10 @@ ka:
         left: გაწიე მარცხნივ
         right: გაწიე მარჯვნივ
         reset: ყველა მოქმედების გაუქმება
+      say_what:
+        text: Say What?!
+        title: Does the supplemental document contain information in it that makes you think 'say what?!'? Such as 'too tired to count', 'someone in singing', and 'lost the protocol'. If so, use this button to report it. We will use this information to possibly tell stories of strange circumstances with the election protocols. IMPORTANT - you must still fill out the form fields if you click this button.
+        success: Thanks for letting us know!
       cant_enter:
         title: თუ ვერ შეგყავთ მონაცემები, აჩვენეთ რატომ
         text:
@@ -615,7 +619,7 @@ ka:
 
           ეს არის მაგალითი დოკუმენტისა, რომელიც უჩვენებს რომ ოქმი გაბათილდა.
     moderate:
-      title: ოქმების საკითხების მოდელირება
+      title: ოქმის მოდერაცია
       no_pending: მაგარია! ოქმებს მოდერაცია არ სჭირდებათ!
       no_completed: არცერთი ოქმი არ იყო მოდელირებული.
       view_title: იხილეთ ოქმი
@@ -623,6 +627,7 @@ ka:
       completed: დასრულებული პუნქტები
       active: მიმდინარე არჩევნები
       all: ყველა არჩევნები
+      notes_success: The notes were saved.
       header:
         reported_at: დარეპორტებულია
         reason: მიზეზი
@@ -647,6 +652,11 @@ ka:
         contact_cec: ცესკოსთან გარკვევა
         supplementary_document_added: ახალი დამატებითი დოკუმენტი პრობლემას აგვარებს
         no_problem: პრობლემა არ არის ნაპოვნი
+      say_what:
+        no_text: No protocols have been marked as 'Say What?!'
+      tabs:
+        issues: Issues
+        say_what: Say What?!
   mailer:
     new_user:
       subject: მზად ხარ დაეხმარო ფორსეტს საარჩევნო ოქმების გაციფრულებაში?

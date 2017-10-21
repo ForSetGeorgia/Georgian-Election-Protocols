@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171018205946) do
+ActiveRecord::Schema.define(:version => 20171020102946) do
 
   create_table "crowd_data", :force => true do |t|
     t.integer  "election_id"
@@ -192,6 +192,11 @@ ActiveRecord::Schema.define(:version => 20171018205946) do
     t.integer  "moderation_status"
     t.text     "moderation_notes"
     t.string   "major_district_id",                 :limit => 10
+    t.boolean  "has_say_what",                                    :default => false
+    t.text     "say_what_notes"
+    t.datetime "say_what_reported_at"
+    t.integer  "last_say_what_update_by_user_id"
+    t.datetime "last_say_what_updated_at"
   end
 
   add_index "district_precincts", ["being_moderated"], :name => "index_district_precincts_on_being_moderated"
@@ -200,6 +205,7 @@ ActiveRecord::Schema.define(:version => 20171018205946) do
   add_index "district_precincts", ["has_amendment"], :name => "index_district_precincts_on_has_amendment"
   add_index "district_precincts", ["has_explanatory_note"], :name => "index_district_precincts_on_has_explanatory_note"
   add_index "district_precincts", ["has_protocol"], :name => "index_district_precincts_on_has_protocol"
+  add_index "district_precincts", ["has_say_what", "say_what_reported_at"], :name => "idx_say_what"
   add_index "district_precincts", ["has_supplemental_documents"], :name => "index_district_precincts_on_has_supplemental_documents"
   add_index "district_precincts", ["is_annulled"], :name => "index_district_precincts_on_is_annulled"
   add_index "district_precincts", ["is_validated"], :name => "index_district_precincts_on_is_validated"

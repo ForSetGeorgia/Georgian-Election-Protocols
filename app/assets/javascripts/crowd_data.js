@@ -15,6 +15,39 @@ $(function ()
   });
 
 
+  // when say what is checked/unchecked determine the appropriate action to take
+  // - if nothing checked, turn off submit
+  // - if something checked, turn on submit
+  $('.supplemental-documents').on('change', 'input[type="checkbox"]', function(){
+    if ($('.supplemental-documents input[type="checkbox"]:checked').length > 0){
+      // something is checked
+      $('.supplemental-documents input[type="submit"]').prop('disabled', false);
+    }else{
+      // nothing is checked
+      $('.supplemental-documents input[type="submit"]').prop('disabled', true);
+    }
+  });
+
+
+  // mark this protocol has being 'say what'
+  $(".supplemental-documents form").on('submit', function(e) {
+    var $form = $(this);
+    $.ajax({
+      type: "POST",
+      url: $form.prop('action'),
+      data: $form.serialize(),
+      dataType: 'json',
+      success: function() {
+        $form.find('ul').fadeOut(function(){
+          $form.find('.say-what-success').fadeIn();
+        });
+      }
+    });
+    return false;
+
+  });
+
+
   $('input.error').next('.help-inline').replaceWith(function ()
   {
     return '<img src="/assets/exclamation.png" class="error-icon" alt="error" data-message="' + $(this).text() + '" />';
