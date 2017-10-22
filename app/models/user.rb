@@ -32,6 +32,32 @@ class User < ActiveRecord::Base
     where(['role >= ?', role])
   end
 
+  # create accounts for the provided email addresses
+  def self.create_user(users)
+    users = users.to_a if users.class == String
+
+    names = ["Alliance", "Armed", "Christian", "Christian-Democratic", "Communist", "Council", "Country", "Democratic", "Democrats", "Dream", "European", "Fair", "For", "Forum", "Free", "Freedom", "Future", "Georgia", "Georgian", "Government", "Greens", "Group", "Hall", "Homeland", "Idea", "In", "Industrialists", "Industry", "Initiative", "Ivanishvili", "Kostava", "Labour", "Leftist", "Lord", "Mamulishvili", "Merab", "Movement", "Name", "National", "New", "Nikoloz", "Non-Parliamentary", "Opposition", "Our", "Ours", "Ourselves", "Party", "Patriots", "Peace", "People", "People's", "Politics", "Progressive", "Public", "Radical", "Reformers", "Republican", "Right", "Rights", "Save", "Self-governance", "Socialist", "Society", "Solidarity", "Sportsman's", "Stalin", "State", "Topadze", "Tortladze", "Traditionalists", "Union", "United", "Unity", "Veterans", "Way", "We", "Whole", "Will", "Wing", "Women's", "Workers"]
+
+    users.each do |u|
+      pwd = fun_pwd(names)
+      user = User.find_by_email(u)
+      if user.present?
+        user.password = pwd
+        user.save
+      else
+        user = User.create(:email => u, :password => pwd)
+      end
+
+      message = Message.new
+      message.to = user.email
+      message.locale = I18n.locale
+      message.subject = I18n.t("mailer.new_user.subject", :locale => I18n.locale)
+      message.message = I18n.t("mailer.new_user.message", :locale => I18n.locale, email: user.email, password: pwd)
+      NotificationMailer.new_user(message).deliver
+    end
+
+  end
+
   #######################################
   ## METHODS
 
@@ -66,6 +92,15 @@ class User < ActiveRecord::Base
 
   def nickname
     self.email.split('@')[0]
+  end
+
+
+  def fun_pwd(names)
+    rand1 = names.shuffle[0]
+    rand2 = names.shuffle[0]
+    rand3 = names.shuffle[0]
+    rand4 = (0..9).to_a.shuffle[1..4].join
+    pwd = "#{rand1.titleize}#{rand2.titleize}#{rand3.titleize}#{rand4}"
   end
 
 end
