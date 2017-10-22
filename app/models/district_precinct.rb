@@ -843,14 +843,14 @@ class DistrictPrecinct < ActiveRecord::Base
         records << e
 
         district_ids = data.select{|x| x.election_id == election.id}.map{|x| x.district_id}.uniq
-# district_ids = district_ids[20..25]
+# district_ids = district_ids[70..72]
         if district_ids.present?
           district_ids.each do |district_id|
             district = Hash.new
             e[:districts] << district
             district[district_id] = []
             precinct_ids = data.select{|x| x.election_id == election.id && x.district_id == district_id}.map{|x| x.precinct_id}.uniq.sort
-# precinct_ids = precinct_ids[0..25]
+# precinct_ids = precinct_ids[25..50]
             if precinct_ids.present?
               district[district_id] << precinct_ids
               district[district_id].flatten!
