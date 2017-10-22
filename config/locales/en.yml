@@ -633,6 +633,7 @@ en:
       notes_success: The notes were saved.
       header:
         reported_at: Reported At
+        reported_by: Reported By
         reason: Reason
         election: Election
         district_id: District

@@ -34,12 +34,12 @@ class User < ActiveRecord::Base
 
   # create accounts for the provided email addresses
   def self.create_user(users)
-    users = users.to_a if users.class == String
+    users = [users] if users.class == String
 
     names = ["Alliance", "Armed", "Christian", "Christian-Democratic", "Communist", "Council", "Country", "Democratic", "Democrats", "Dream", "European", "Fair", "For", "Forum", "Free", "Freedom", "Future", "Georgia", "Georgian", "Government", "Greens", "Group", "Hall", "Homeland", "Idea", "In", "Industrialists", "Industry", "Initiative", "Ivanishvili", "Kostava", "Labour", "Leftist", "Lord", "Mamulishvili", "Merab", "Movement", "Name", "National", "New", "Nikoloz", "Non-Parliamentary", "Opposition", "Our", "Ours", "Ourselves", "Party", "Patriots", "Peace", "People", "People's", "Politics", "Progressive", "Public", "Radical", "Reformers", "Republican", "Right", "Rights", "Save", "Self-governance", "Socialist", "Society", "Solidarity", "Sportsman's", "Stalin", "State", "Topadze", "Tortladze", "Traditionalists", "Union", "United", "Unity", "Veterans", "Way", "We", "Whole", "Will", "Wing", "Women's", "Workers"]
 
     users.each do |u|
-      pwd = fun_pwd(names)
+      pwd = User.fun_pwd(names)
       user = User.find_by_email(u)
       if user.present?
         user.password = pwd
@@ -95,7 +95,9 @@ class User < ActiveRecord::Base
   end
 
 
-  def fun_pwd(names)
+  private
+
+  def self.fun_pwd(names)
     rand1 = names.shuffle[0]
     rand2 = names.shuffle[0]
     rand3 = names.shuffle[0]

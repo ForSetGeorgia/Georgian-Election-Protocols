@@ -630,6 +630,7 @@ ka:
       notes_success: შენიშვნები დაფიქსირებულია.
       header:
         reported_at: დარეპორტებულია
+        reported_by: Reported By
         reason: მიზეზი
         election: არჩევნები
         district_id: ოლქი

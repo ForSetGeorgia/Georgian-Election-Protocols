@@ -45,6 +45,9 @@
                   <%= t('.header.reported_at') %>
                 </th>
                 <th>
+                  <%= t('.header.reported_by') %>
+                </th>
+                <th>
                   <%= t('.header.reason') %>
                 </th>
                 <th class="hl1">
@@ -74,6 +77,7 @@
               <tr>
                 <td></td>
                 <td><input type="text" name="search_reported_at" value="Search" class="search_init"/></td>
+                <td><input type="text" name="search_reported_by" value="Search" class="search_init" /></td>
                 <td><input type="text" name="search_reason" value="Search" class="search_init" /></td>
                 <td><input type="text" name="search_election" value="Search" class="search_init" /></td>
                 <td><input type="text" name="search_district" value="Search" class="search_init" /></td>
@@ -99,6 +103,9 @@
                   </td>
                   <td>
                     <%= l to_moderate.issue_reported_at, format: :file if to_moderate.issue_reported_at.present? %>
+                  </td>
+                  <td>
+                    <%= to_moderate.issue_reported_by_user.nickname %>
                   </td>
                   <td>
                     <%= to_moderate.moderation_reason_text %>

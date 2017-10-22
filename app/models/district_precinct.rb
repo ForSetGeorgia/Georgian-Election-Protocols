@@ -5,6 +5,7 @@ class DistrictPrecinct < ActiveRecord::Base
   ## RELATIONSHIPS
   has_many :supplemental_documents
   belongs_to :election
+  belongs_to :issue_reported_by_user, class_name: 'User'
 
   #######################################
   ## ATTRIBUTES
