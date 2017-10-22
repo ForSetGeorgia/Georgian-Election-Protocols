@@ -146,8 +146,8 @@ ka:
       provide_all_params: გთხოვთ ყველა ველს მიუთითოთ მაჩვენებელი.
       data_reset: ოქმების ბაზა განახლდა და საჭიროა მათი თავიდან შეყვანა.
       could_not_rest: ბოდიში, ოქმების ბაზის განახლება შეუძლებელია.
-      protocol_reset: The protocol was reset and will have to be re-entered after the new protocol is downloaded in the next scrape.
-      could_not_rest_protocol: Sorry, the protocol data and image(s) could not be reset.
+protocol_reset: ოქმი განახლდა, მონაცემები თავიდან უნდა შეიყვანოთ მას შემდეგ, რაც ახალი ოქმი ჩაიტვირთება.
+could_not_rest_protocol: ბოდიში, ოქმის მონაცემები და ფოტო(ები) ვერ განახლდა.
       no_protocol: ბოდიში, აღნიშნული ოქმი არ მოიძებნა.
       required_for_can_enter_data: 'უნდა იყოს მზად სანამ პარამეტრამდე შესაძლებელია მონაცემების შეყვანა'
       training_reset: ტრეინინგი ყველა მომხმარებლისთვის განახლდა.
@@ -200,7 +200,7 @@ ka:
       users: მომხმარებლების მართვა
       election_data: არჩევნების მონაცემების მიგრაცია
       reset_bad_data: ოქმის მონაცემების წაშლა
-      redownload_protocol: Redownload Protocol
+      redownload_protocol: ოქმის ხელახლა ჩამოტვირთვა
       elections: მართე არჩევნები
       categorize_supplemental_documents: დოკუმენტების კატეგორიზაცია
       moderate: ოქმის მოდერაცია
@@ -302,10 +302,10 @@ ka:
         district: ოლქი (მაგ. 01,02)
         precinct: უბანი (მაგ.10.05, 05.90)
       redownload_protocols:
-        title: Redownload a Protocol
-        election: Election
-        district: District (i.e., 01, 02)
-        precinct: Precinct (i.e., 10.05, 05.90)
+        title: ოქმის ხელახლა ჩამოტვირთვა
+        election: არჩევნები
+        district: ოლქი (მაგ. 01, 02)
+        precinct: უბანი (მაგ. 10.05, 05.90)
   root:
     index:
       choose: გადადი არჩევნებზე
@@ -413,7 +413,7 @@ ka:
 
           დაგვეხმარე, დავრწმუნდეთ, რომ შენი ხმა ჩიათვალა. დაგვეხმარე დათვლაში!
 
-          <a href="http://bit.ly/Icounted" target="_blank">დარეგისტრირდი ანგარიშის მისაღებად</a>
+          <a href="http://bit.ly/icounted" target="_blank">დარეგისტრირდი ანგარიშის მისაღებად</a>
       no_elections:
         header: არჩევნებისთვის დროისთვის სიმშვიდეა
         text: |
@@ -480,9 +480,9 @@ ka:
         right: გაწიე მარჯვნივ
         reset: ყველა მოქმედების გაუქმება
       say_what:
-        text: Say What?!
-        title: Does the supplemental document contain information in it that makes you think 'say what?!'? Such as 'too tired to count', 'someone in singing', and 'lost the protocol'. If so, use this button to report it. We will use this information to possibly tell stories of strange circumstances with the election protocols. IMPORTANT - you must still fill out the form fields if you click this button.
-        success: Thanks for letting us know!
+        text: ბატონო?!
+        title: თუკი ოქმზე თანდართული ახსნა-განმარტებითი ბარათი შეიცავს ინფორმაციას, რომელიც გაფიქრებინებთ - „ბატონო?!“ - მაგ. „ზედმეტად დაღლილი ვარ დასათვლელად“, „ვიღაცა მღერის და ხელს მიშლის“, „ოქმი დავკარგე“ და ა.შ., გამოიყენეთ ეს ღილაკი გასასაჩივრებლად. ამ ინფორმაციას გამოვიყენებთ ოქმებთან დაკავშირებული უცნაური ინფორმაციის გასავრცელებლად. მნიშვნელოვანია - ამ ღილაკის გამოყენების შემთხვევაში, ანკეტის ველები მაინც უნდა შეავსოთ.
+        success: გმადლობთ შეტყობინებისათვის!
       cant_enter:
         title: თუ ვერ შეგყავთ მონაცემები, აჩვენეთ რატომ
         text:
@@ -627,7 +627,7 @@ ka:
       completed: დასრულებული პუნქტები
       active: მიმდინარე არჩევნები
       all: ყველა არჩევნები
-      notes_success: The notes were saved.
+      notes_success: შენიშვნები დაფიქსირებულია.
       header:
         reported_at: დარეპორტებულია
         reason: მიზეზი
@@ -653,10 +653,10 @@ ka:
         supplementary_document_added: ახალი დამატებითი დოკუმენტი პრობლემას აგვარებს
         no_problem: პრობლემა არ არის ნაპოვნი
       say_what:
-        no_text: No protocols have been marked as 'Say What?!'
+        no_text: არცერთი ოქმი არ მონიშნულა როგორც „ბატონო?!“
       tabs:
         issues: Issues
-        say_what: Say What?!
+        say_what: ბატონო?!
   mailer:
     new_user:
       subject: მზად ხარ დაეხმარო ფორსეტს საარჩევნო ოქმების გაციფრულებაში?
