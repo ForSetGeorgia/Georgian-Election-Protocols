@@ -35,8 +35,8 @@ every 10.minutes do
 end
 
 # look for new volunteers
-every 15.minutes do
-  rake "scrape:register_volunteers"
-end
+# every 15.minutes do
+#   rake "scrape:register_volunteers"
+# end
 
 
