@@ -18,7 +18,7 @@ checkfile = "prot_scraper_check"
 @logger_error = Logger.new("../../log/scraper_error.log")
 
 app_base_url = if !ARGV[0].nil? && ARGV[0].downcase == 'test'
-  'http://localhost:3000'
+  'http://localhost:3001'
 else
   'https://protocols.electionsportal.ge'
 end
