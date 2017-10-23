@@ -39,7 +39,7 @@ class CrowdQueue < ActiveRecord::Base
       logger.debug "))) - found match, marking as finished"
       sql = "election_id = :election and user_id = :user and district_id = :district and precinct_id = :precinct"
       if major_district_id.present?
-        sql << " and major_district_id = :major_district"
+        sql << " and major_district_id = :major_district_id"
       end
       CrowdQueue.where(["#{sql} and is_finished is null",
                 election: election_id, user: user_id, district: district_id, precinct: precinct_id, major_district_: major_district_id])
