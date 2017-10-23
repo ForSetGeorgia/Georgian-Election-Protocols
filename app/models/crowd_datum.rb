@@ -286,7 +286,7 @@ class CrowdDatum < ActiveRecord::Base
     end
   end
 
-  def self.extract_numbers (pairs)
+  def self.extract_numbers(pairs)
     not_convert = ['district_id', 'district_name', 'precinct_id', 'major_district_id']
 
     pairs.each_pair do |key, val|
@@ -372,7 +372,13 @@ class CrowdDatum < ActiveRecord::Base
       (0..4).each do |try|
         # records exist that are waiting for a match
         rand = CrowdDatum.find_by_id(needs_match.map{|x| x.id}.sample)
-        next_item = CrowdDatum.new(:election_id => rand.election_id, :district_id => rand.district_id, :major_district_id => rand.major_district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+        next_item = CrowdDatum.new(
+          :election_id => rand.election_id,
+          :district_id => rand.district_id,
+          :major_district_id => rand.major_district_id,
+          :precinct_id => rand.precinct_id,
+          :user_id => user_id
+        )
         if next_item.image_path.present?
           next_records << next_item
           break
@@ -401,7 +407,13 @@ class CrowdDatum < ActiveRecord::Base
       (0..4).each do |try|
         # records exist that are waiting for a match
         rand = needs_match.sample
-        next_item = CrowdDatum.new(:election_id => rand.election_id, :district_id => rand.district_id, :major_district_id => rand.major_district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+        next_item = CrowdDatum.new(
+          :election_id => rand.election_id,
+          :district_id => rand.district_id,
+          :major_district_id => rand.major_district_id,
+          :precinct_id => rand.precinct_id,
+          :user_id => user_id
+        )
         if next_item.image_path.present?
           next_records << next_item
           break
@@ -434,7 +446,13 @@ class CrowdDatum < ActiveRecord::Base
         # precincts are waiting for processing
         # create a new crowd data record so it can be processed
         rand = needs_processing.sample
-        next_item = CrowdDatum.new(:election_id => rand.election_id, :district_id => rand.district_id, :major_district_id => rand.major_district_id, :precinct_id => rand.precinct_id, :user_id => user_id)
+        next_item = CrowdDatum.new(
+          :election_id => rand.election_id,
+          :district_id => rand.district_id,
+          :major_district_id => rand.major_district_id,
+          :precinct_id => rand.precinct_id,
+          :user_id => user_id
+        )
         if next_item.image_path.present?
           next_records << next_item
           break
@@ -446,7 +464,13 @@ class CrowdDatum < ActiveRecord::Base
     logger.info "=========== next_records count = #{next_records.length}"
     if next_records.present?
       next_record = next_records.sample
-      CrowdQueue.create(:user_id => user_id, :election_id => next_record.election_id, :district_id => next_record.district_id, :major_district_id => next_record.major_district_id, :precinct_id => next_record.precinct_id)
+      CrowdQueue.create(
+        :user_id => user_id,
+        :election_id => next_record.election_id,
+        :district_id => next_record.district_id,
+        :major_district_id => next_record.major_district_id,
+        :precinct_id => next_record.precinct_id
+      )
     end
 
     return next_record

@@ -85,6 +85,7 @@
           <%= f.input :election_id, :as => :hidden %>
           <%= f.input :district_id, :as => :hidden %>
           <%= f.input :precinct_id, :as => :hidden %>
+          <%= f.input :major_district_id, :as => :hidden %>
           <%= f.input :user_id, :as => :hidden %>
 
           <div class="not-enter-x">
@@ -203,6 +204,7 @@
 
             <%= hidden_field_tag :election_id, @crowd_datum.election_id %>
             <%= hidden_field_tag :district_id, @crowd_datum.district_id %>
+            <%= hidden_field_tag :major_district_id, @crowd_datum.major_district_id %>
             <%= hidden_field_tag :precinct_id, @crowd_datum.precinct_id %>
             <ul class="inline">
               <li>
