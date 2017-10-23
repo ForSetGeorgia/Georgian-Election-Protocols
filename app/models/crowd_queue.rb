@@ -20,6 +20,21 @@ class CrowdQueue < ActiveRecord::Base
 
   MAX_TIME = 5
 
+  #######################################
+  ## CALLBACKS
+  before_save :reset_majoritarian_id
+
+  # if this record does not have a majoritarian id,
+  # make sure the id is saved as nil and not ''
+  def reset_majoritarian_id
+    if self.major_district_id == '' || self.major_district_id == '0'
+      self.major_district_id = nil
+    end
+  end
+
+
+  #######################################
+  ## SCOPES
 
   # clean the queue from old items that were never finished
   # and remove all unfinished items for this user

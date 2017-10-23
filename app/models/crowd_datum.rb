@@ -62,7 +62,16 @@ class CrowdDatum < ActiveRecord::Base
 
   #######################################
   ## CALLBACKS
+  before_save :reset_majoritarian_id
   after_create :match_and_validate
+
+  # if this record does not have a majoritarian id,
+  # make sure the id is saved as nil and not ''
+  def reset_majoritarian_id
+    if self.major_district_id == '' || self.major_district_id == '0'
+      self.major_district_id = nil
+    end
+  end
 
   # if another record exists for this district/precinct
   # and the district/precinct is not already approved
