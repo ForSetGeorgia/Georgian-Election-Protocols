@@ -107,8 +107,9 @@ class RootController < ApplicationController
         end
       else
         # this is a normal data entry submission
+logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!! #{params[:crowd_datum]}"
         params[:crowd_datum] = CrowdDatum.extract_numbers(params[:crowd_datum])
-
+logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!! #{params[:crowd_datum]}"
         # in case users are refreshing page, look to see if the record already exists
         # if so, ignore it, else create it
         @crowd_datum = CrowdDatum.by_ids(params[:crowd_datum][:election_id], params[:crowd_datum][:district_id], params[:crowd_datum][:precinct_id])

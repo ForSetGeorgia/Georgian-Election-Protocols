@@ -290,17 +290,19 @@ class CrowdDatum < ActiveRecord::Base
     not_convert = ['district_id', 'district_name', 'precinct_id', 'major_district_id']
 
     pairs.each_pair do |key, val|
-      val = val.to_s.downcase.strip
-      if val.match(/[a-z]/)
-        val = val.gsub(/^[a-z]+/, '').gsub(/[a-z]+$/, '')
+      if !not_convert.include?(key)
+        val = val.to_s.downcase.strip
+        if val.match(/[a-z]/)
+          val = val.gsub(/^[a-z]+/, '').gsub(/[a-z]+$/, '')
+        end
+        if val == ''
+          val = '0'
+        # if the value starts with 0 but is in the not convert list, keep the 0
+        elsif val.start_with?('0') && val.length > 1
+          val = val.to_i.to_s
+        end
+        pairs[key] = val
       end
-      if val == ''
-        val = '0'
-      # if the value starts with 0 but is in the not convert list, keep the 0
-      elsif val.start_with?('0') && val.length > 1 && !not_convert.include?(key)
-        val = val.to_i.to_s
-      end
-      pairs[key] = val
     end
     return pairs
   end
