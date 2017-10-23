@@ -567,10 +567,10 @@ class DistrictPrecinct < ActiveRecord::Base
           if files.present?
             files.each do |f|
               begin
-                logger_info.info("Deleting: #{f}")
+                Rails.logger.info("Deleting: #{f}")
                 FileUtils.rm(f)
               rescue => e
-                logger_error.error("Failed to delete: #{f}")
+                Rails.logger.error("Failed to delete: #{f}")
               end
             end
           end
