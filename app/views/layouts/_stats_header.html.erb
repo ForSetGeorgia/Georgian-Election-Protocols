@@ -10,6 +10,7 @@
         </a>
 
         <div class="container-fluid nav-collapse" id="nav-collapse-stats">
+          <% if false %>
           <div class="nav stats">
             <% if @supplemental_document_user_stats.present? %>
               <h4><%= t('.header.supplemental_documents') %></h4>
@@ -67,6 +68,7 @@
               </ul>
             <% end %>
           </div>
+          <% end %>
 
           <% if @user_stats.present? %>
             <div class="nav stats pull-right">

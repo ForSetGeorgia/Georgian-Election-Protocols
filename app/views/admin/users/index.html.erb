@@ -79,10 +79,10 @@
           <%= @all_user_stats[index][:valid][:number] if index.present? %>
         </td>
         <td>
-          <%= @all_user_stats[index][:invalid][:number] if index.present? %>
+          <%= @all_user_stats[index][:extra][:number] if index.present? %>
         </td>
         <td>
-          <%= @all_user_stats[index][:extra][:number] if index.present? %>
+          <%= @all_user_stats[index][:invalid][:number] if index.present? %>
         </td>
         <td>
           <%= @all_user_stats[index][:pending][:percent] if index.present? %>
