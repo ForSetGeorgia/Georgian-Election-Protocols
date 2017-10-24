@@ -55,10 +55,8 @@ module DataAnalysis
     major_precinct: 'major precinct',
     major_tbilisi_district: 'major tbilisi district',
     major_tbilisi_precinct: 'major tbilisi precinct',
-    kutaisi_district: 'kutaisi district',
-    kutaisi_precinct: 'kutaisi precinct',
-    batumi_district: 'batumi district',
-    batumi_precinct: 'batumi precinct'
+    tbilisi_major_district: 'tbilisi major district',
+    tbilisi_major_precinct: 'tbilisi major precinct',
   }
 
   @@client = ActiveRecord::Base.connection
@@ -127,6 +125,18 @@ module DataAnalysis
 
     run_analysis_tables
     run_analysis_views
+
+    puts "> done"
+    puts "===================="
+  end
+
+  # create tables/views for precinct counts
+  def create_precinct_count_tables_and_views
+    puts "===================="
+    puts "creating precinct count tables and views for #{self.name}"
+    puts "===================="
+
+    run_precinct_count_table_views
 
     puts "> done"
     puts "===================="
@@ -387,6 +397,20 @@ module DataAnalysis
     # run the table
     puts " - raw table"
     run_table(parties, delete_only)
+
+    # run precinct counts
+    run_precinct_counts(delete_only)
+
+    puts "> done"
+    puts "===================="
+  end
+
+  ###################################################
+
+  def run_precinct_count_table_views(delete_only=false)
+    puts "===================="
+    puts "running precinct count table and views for #{self.name}; delete only = #{delete_only}"
+    puts "===================="
 
     # run precinct counts
     run_precinct_counts(delete_only)
@@ -886,7 +910,7 @@ module DataAnalysis
 
         sql << "select `raw`.`region` AS `region`,
                 999 AS `district_id`,
-                `raw`.`region` AS `district_name`,
+                'Tbilisi' AS `district_name`,
                 sum(`raw`.`num_possible_voters`) AS `possible voters`,
                 sum(`raw`.`num_votes`) AS `total ballots cast`,
                 sum(`raw`.`num_valid_votes`) AS `total valid ballots cast`,
@@ -1144,7 +1168,7 @@ module DataAnalysis
   # note - precincts and tbilisi precincts are same except for view name and the from clause
   def run_tbilisi_precincts(parties, delete_only=false)
     major_name = self.is_local_majoritarian == true ? 'major_' : ''
-    shape = @@shapes[:"#{major_name}tbilisi_precinct"]
+    shape = @@shapes[:"tbilisi_#{major_name}precinct"]
     view_name = "#{self.analysis_table_name} - #{shape}"
     @@client.execute("drop view if exists `#{@@analysis_db}`.`#{view_name}`")
     if !delete_only
@@ -1305,9 +1329,9 @@ module DataAnalysis
 
       sql << "select `raw`.`region` AS `region`,
               999 AS `district_id`,
-              `raw`.`district_name` AS `district_Name`,
-              `raw`.`major_district_id` AS `major_district_id`,
-              `raw`.`major_district_id` AS `major_district_name`,
+              'Tbilisi' AS `district_Name`,
+              999 AS `major_district_id`,
+              'Tbilisi' AS `major_district_name`,
               sum(`raw`.`num_possible_voters`) AS `possible voters`,
               sum(`raw`.`num_votes`) AS `total ballots cast`,
               sum(`raw`.`num_valid_votes`) AS `total valid ballots cast`,
@@ -1385,7 +1409,7 @@ module DataAnalysis
               left join `#{@@analysis_db}`.`#{self.analysis_table_name} - invalid ballots >5` `invalid_ballots_>5` on(((`raw`.`region` <=> `invalid_ballots_>5`.`region`) and (`raw`.`district_id` = `invalid_ballots_>5`.`district_id`) and (`raw`.`major_district_id` = `invalid_ballots_>5`.`major_district_id`) and (`raw`.`precinct_id` = `invalid_ballots_>5`.`precinct_id`)))))
               where `raw`.`is_annulled` = 0
               and (`raw`.`district_id` between 1 and 10)
-              group by `raw`.`region`, `raw`.`district_name`, `raw`.`district_id`, `raw`.`major_district_id`"
+              # group by `raw`.`region`, `raw`.`district_name`, `raw`.`district_id`, `raw`.`major_district_id`"
 
       @@client.execute(sql)
     end
@@ -1395,7 +1419,7 @@ module DataAnalysis
 
   # run major tbilisi district view
   def run_major_tbilisi_districts(parties, delete_only=false)
-    view_name = "#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}"
+    view_name = "#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}"
     @@client.execute("drop view if exists `#{@@analysis_db}`.`#{view_name}`")
     if !delete_only
       sql = "create view `#{@@analysis_db}`.`#{view_name}` as
@@ -1781,43 +1805,43 @@ module DataAnalysis
 
         # major tbilisi district
         if self.is_local_majoritarian
-          sql << "(select 'Majoritarian Tbilisi District' AS `#{@@common_headers[0]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`major_district_id` AS `#{@@common_headers[1]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`major_district_Name` AS `#{@@common_headers[2]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`total valid ballots cast` AS `#{@@common_headers[3]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`percent voters voting` AS `#{@@common_headers[4]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num invalid ballots from 0-1%` AS `#{@@common_headers[5]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num invalid ballots from 1-3%` AS `#{@@common_headers[6]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num invalid ballots from 3-5%` AS `#{@@common_headers[7]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num invalid ballots >5%` AS `#{@@common_headers[8]}`,
+          sql << "(select 'Tbilisi Majoritarian District' AS `#{@@common_headers[0]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`major_district_id` AS `#{@@common_headers[1]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`major_district_Name` AS `#{@@common_headers[2]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`total valid ballots cast` AS `#{@@common_headers[3]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`percent voters voting` AS `#{@@common_headers[4]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num invalid ballots from 0-1%` AS `#{@@common_headers[5]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num invalid ballots from 1-3%` AS `#{@@common_headers[6]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num invalid ballots from 3-5%` AS `#{@@common_headers[7]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num invalid ballots >5%` AS `#{@@common_headers[8]}`,
                   NULL AS `#{@@common_headers[9]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts more ballots than votes` AS `#{@@common_headers[10]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`percent precincts more ballots than votes` AS `#{@@common_headers[11]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`avg precinct difference more ballots than votes` AS `#{@@common_headers[12]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num precincts more ballots than votes` AS `#{@@common_headers[10]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`percent precincts more ballots than votes` AS `#{@@common_headers[11]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`avg precinct difference more ballots than votes` AS `#{@@common_headers[12]}`,
                   NULL AS `#{@@common_headers[13]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts more votes than ballots` AS `#{@@common_headers[14]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`percent precincts more votes than ballots` AS `#{@@common_headers[15]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`avg precinct difference more votes than ballots` AS `#{@@common_headers[16]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num precincts more votes than ballots` AS `#{@@common_headers[14]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`percent precincts more votes than ballots` AS `#{@@common_headers[15]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`avg precinct difference more votes than ballots` AS `#{@@common_headers[16]}`,
                   NULL AS `#{@@common_headers[17]}`,
-                  # `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts with amendment` AS `#{@@common_headers[18]}`,
-                  # `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`percent precincts with amendment` AS `#{@@common_headers[19]}`,
+                  # `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num precincts with amendment` AS `#{@@common_headers[18]}`,
+                  # `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`percent precincts with amendment` AS `#{@@common_headers[19]}`,
                   # NULL AS `#{@@common_headers[20]}`,
-                  # `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts with explanatory note` AS `#{@@common_headers[21]}`,
-                  # `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`percent precincts with explanatory note` AS `#{@@common_headers[22]}`,
+                  # `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num precincts with explanatory note` AS `#{@@common_headers[21]}`,
+                  # `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`percent precincts with explanatory note` AS `#{@@common_headers[22]}`,
                   # NULL AS `#{@@common_headers[23]}`,
                   NULL AS `#{@@common_headers[24]}`,
                   NULL AS `#{@@common_headers[25]}`,
                   NULL AS `#{@@common_headers[26]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `#{@@common_headers[27]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `#{@@common_headers[28]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `#{@@common_headers[29]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num precincts vpm > #{@@vpm_limit}` AS `#{@@common_headers[30]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num_precincts_reported_number` AS `#{@@common_headers[31]}`,
-                  `#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`.`num_precincts_reported_percent` AS `#{@@common_headers[32]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num precincts vpm 8-12 > #{@@vpm_limit}` AS `#{@@common_headers[27]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num precincts vpm 12-17 > #{@@vpm_limit}` AS `#{@@common_headers[28]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num precincts vpm 17-20 > #{@@vpm_limit}` AS `#{@@common_headers[29]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num precincts vpm > #{@@vpm_limit}` AS `#{@@common_headers[30]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num_precincts_reported_number` AS `#{@@common_headers[31]}`,
+                  `#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`.`num_precincts_reported_percent` AS `#{@@common_headers[32]}`,
           "
 
-          sql << create_csv_party_names(parties, @@shapes[:major_tbilisi_district])
-          sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{@@shapes[:major_tbilisi_district]}`)"
+          sql << create_csv_party_names(parties, @@shapes[:tbilisi_major_district])
+          sql << " from `#{@@analysis_db}`.`#{self.analysis_table_name} - #{@@shapes[:tbilisi_major_district]}`)"
 
           sql << " union "
 
@@ -1831,9 +1855,9 @@ module DataAnalysis
           shape_prefix = 'major_'
           name_prefix = 'Majoritarian '
         end
-        shape = @@shapes[:"#{shape_prefix}tbilisi_precinct"]
+        shape = @@shapes[:"tbilisi_#{shape_prefix}precinct"]
 
-        sql << "(select '#{name_prefix}Tbilisi Precinct' AS `#{@@common_headers[0]}`,
+        sql << "(select 'Tbilisi #{name_prefix}Precinct' AS `#{@@common_headers[0]}`,
                 `#{self.analysis_table_name} - #{shape}`.`precinct_id` AS `#{@@common_headers[1]}`,
                 `#{self.analysis_table_name} - #{shape}`.`precinct_name` AS `#{@@common_headers[2]}`,
                 `#{self.analysis_table_name} - #{shape}`.`total valid ballots cast` AS `#{@@common_headers[3]}`,
@@ -1890,7 +1914,7 @@ module DataAnalysis
           `district_id` varchar(10) NOT NULL,"
 
       if self.is_local_majoritarian
-        sql << "`major_district_id` INT(10) NOT NULL,"
+        sql << "`major_district_id` varchar(10) NOT NULL,"
       end
 
       sql << "`num_precincts` INT(11) NULL DEFAULT NULL,
