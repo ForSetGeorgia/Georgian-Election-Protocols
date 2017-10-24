@@ -139,4 +139,4 @@ GRANT select, insert, update, delete, create, alter, index, drop, create view, r
 
 # TODO
 * add scraper to get the data from CEC so it is possible to compare their party counts to ours
-* add ability to flag unusual supplementary documents (i.e., too tired, singing, etc)
+* be able to prioritize records needing validation so if small group of people entering their data gets validated
