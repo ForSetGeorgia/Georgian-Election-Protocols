@@ -194,6 +194,7 @@ ka:
       valid: სწორი
       invalid: ბათილი
       extra: დუბლიკატი
+      remaining: დარჩენილი
   layouts:
     application:
       admin: ადმინისტრატო

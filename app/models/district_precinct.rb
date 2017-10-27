@@ -86,6 +86,13 @@ class DistrictPrecinct < ActiveRecord::Base
     order('say_what_reported_at desc')
   end
 
+  def self.to_validate
+    where(is_validated: false)
+  end
+
+  def self.validated
+    where(is_validated: true)
+  end
 
   # only missing info, cant read, and docs not clear require clarification
   def self.needs_clarification

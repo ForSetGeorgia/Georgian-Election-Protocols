@@ -199,6 +199,7 @@ en:
       valid: Valid
       invalid: Invalid
       extra: Duplicate
+      remaining: Remaining
   layouts:
     application:
       admin: Admin

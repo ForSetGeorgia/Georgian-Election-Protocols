@@ -548,10 +548,12 @@ class CrowdDatum < ActiveRecord::Base
       sql << "sum(if(is_valid = 1, 1, 0)) as num_valid, sum(if(is_valid = 0, 1, 0)) as num_invalid, sum(if(is_extra = 1, 1, 0)) as num_extra "
       sql << "from crowd_data where user_id = :user_id and election_id in (:election_ids)"
 
-
       data = find_by_sql([sql, :user_id => user_id, election_ids: election_ids])
 
       if data.present?
+        total_remaining = DistrictPrecinct.where(election_id: election_ids).to_validate.count
+        total_precincts = DistrictPrecinct.where(election_id: election_ids).count
+
         data = data.first
         stats = Hash.new
         stats[:user_id] = user_id
@@ -568,6 +570,8 @@ class CrowdDatum < ActiveRecord::Base
         stats[:extra] = Hash.new
         stats[:extra][:number] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_number(data[:num_extra]) : I18n.t('app.common.na')
         stats[:extra][:percent] = data[:num_submitted].present? && data[:num_submitted] > 0 ? format_percent(100*data[:num_extra]/data[:num_submitted].to_f) : I18n.t('app.common.na')
+        stats[:remaining] = format_number(total_remaining)
+        stats[:total_precincts] = format_number(total_precincts)
       end
     end
     return stats

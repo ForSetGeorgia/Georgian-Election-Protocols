@@ -104,6 +104,10 @@
                     (<%= @user_stats[:extra][:percent] %>)
                   <% end %>
                 </li>
+                <li>
+                  <strong><%= t('app.user_stats.remaining') %>:</strong>
+                  <%= @user_stats[:remaining] %> / <%= @user_stats[:total_precincts] %>
+                </li>
               </ul>
             </div>
           <% end %>
