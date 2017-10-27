@@ -5,11 +5,13 @@ namespace :data do
 
     client = ActiveRecord::Base.connection
 
-    table_names = Election.where(['election_at <= ?', Time.now.to_date]).pluck(:analysis_table_name)
+    elections = Election.can_enter
 
-    if table_names.present?
-      table_names.each do |table_name|
-        puts table_name
+    if elections.present?
+      elections.each do |election|
+        table_name = election.analysis_table_name
+
+        puts "#{table_name} had #{election.completed_precinct_count} precincts"
 
         sql = "ALTER TABLE `protocol_analysis`.`#{table_name} - raw` ADD id INT PRIMARY KEY AUTO_INCREMENT;"
         client.execute(sql)
@@ -20,6 +22,8 @@ namespace :data do
 
         sql = "ALTER TABLE `protocol_analysis`.`#{table_name} - raw` drop column id;"
         client.execute(sql)
+
+        puts "#{table_name} now has #{election.completed_precinct_count} precincts"
 
       end
     end
