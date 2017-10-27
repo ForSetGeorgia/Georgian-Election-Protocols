@@ -358,6 +358,8 @@ class CrowdDatum < ActiveRecord::Base
     logger.info "=========== next available record"
     next_records = []
     next_record = nil
+    weights = [0.9, 0.9, 0.1]
+    next_record_weights = Hash.new
 
     # make sure the queue is clean
     CrowdQueue.clean_queue(user_id)
@@ -378,6 +380,7 @@ class CrowdDatum < ActiveRecord::Base
     remove_user_records(user_records, needs_match)
 
     if needs_match.present?
+      logger.info "=========== - found #{needs_match.length} records"
       # it is possible that next record may not have image, so check
       # if not have image after 5 attempts, stop
       (0..4).each do |try|
@@ -392,6 +395,7 @@ class CrowdDatum < ActiveRecord::Base
         )
         if next_item.image_path.present?
           next_records << next_item
+          next_record_weights[next_record_weights.keys.length] = weights[0]
           break
         end
       end
@@ -412,6 +416,7 @@ class CrowdDatum < ActiveRecord::Base
     remove_user_records(user_records, needs_match)
 
     if needs_match.present?
+      logger.info "=========== - found #{needs_match.length} records"
 
       # it is possible that next record may not have image, so check
       # if not have image after 5 attempts, stop
@@ -427,6 +432,7 @@ class CrowdDatum < ActiveRecord::Base
         )
         if next_item.image_path.present?
           next_records << next_item
+          next_record_weights[next_record_weights.keys.length] = weights[1]
           break
         end
       end
@@ -451,6 +457,7 @@ class CrowdDatum < ActiveRecord::Base
     remove_user_records(user_records, needs_processing)
 
     if needs_processing.present?
+      logger.info "=========== - found #{needs_processing.length} records"
       # it is possible that next record may not have image, so check
       # if not have image after 5 attempts, stop
       (0..4).each do |try|
@@ -466,15 +473,21 @@ class CrowdDatum < ActiveRecord::Base
         )
         if next_item.image_path.present?
           next_records << next_item
+          next_record_weights[next_record_weights.keys.length] = weights[2]
           break
         end
       end
     end
 
     # now pick random next record
-    logger.info "=========== next_records count = #{next_records.length}"
     if next_records.present?
-      next_record = next_records.sample
+      logger.info "=========== next_records count = #{next_records.length}"
+
+      # use weights to get random item
+      idx_next = weight_random_sample(next_record_weights)
+      logger.info "=========== random index = #{idx_next}"
+        # get the next item
+      next_record = next_records[idx_next]
       CrowdQueue.create(
         :user_id => user_id,
         :election_id => next_record.election_id,
@@ -624,6 +637,14 @@ class CrowdDatum < ActiveRecord::Base
 
 
   protected
+
+  # use weights to pick a random item in a hash
+  # format of hash should be: item to return (key), weight (value)
+  # taken from: https://gist.github.com/O-I/3e0654509dd8057b539a
+  def self.weight_random_sample(hash)
+    hash.max_by { |_, weight| rand ** (1.0 / weight) }.first
+  end
+
 
 
   def self.format_number(number)
