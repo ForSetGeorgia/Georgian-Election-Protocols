@@ -45,12 +45,16 @@ class SupplementalDocument < ActiveRecord::Base
     where(is_amendment: false, is_explanatory_note: false, is_annullment: false)
   end
 
+  def self.can_enter_elections
+    joins(district_precinct: :election).where(elections: {can_enter_data: true})
+  end
+
   def self.is_categorized
     where('is_amendment = 1 or is_explanatory_note = 1 or is_annullment = 1')
   end
 
   def self.next_to_categorize
-    id = not_categorized.pluck(:id).sample
+    id = not_categorized.can_enter_elections.pluck(:id).sample
     if id.present?
       return find(id)
     else
@@ -68,38 +72,38 @@ class SupplementalDocument < ActiveRecord::Base
 
   def self.user_stats(user_id)
     stats = Hash.new
-    stats[:total_completed] = is_categorized.count
+    stats[:total_completed] = is_categorized.can_enter_elections.count
     stats[:completed_by_user] = Hash.new
-    stats[:completed_by_user][:raw] = by_user(user_id).is_categorized.count
+    stats[:completed_by_user][:raw] = by_user(user_id).is_categorized.can_enter_elections.count
     stats[:completed_by_user][:number] = format_number(stats[:completed_by_user][:raw])
     stats[:completed_by_user][:percent] = stats[:total_completed] > 0 ? format_percent(100*stats[:completed_by_user][:raw]/stats[:total_completed].to_f) : I18n.t('app.common.na')
     stats[:completed_by_others] = Hash.new
-    stats[:completed_by_others][:raw] = not_by_user(user_id).is_categorized.count
+    stats[:completed_by_others][:raw] = not_by_user(user_id).is_categorized.can_enter_elections.count
     stats[:completed_by_others][:number] = format_number(stats[:completed_by_others][:raw])
     stats[:completed_by_others][:percent] = stats[:total_completed] > 0 ? format_percent(100*stats[:completed_by_others][:raw]/stats[:total_completed].to_f) : I18n.t('app.common.na')
     stats[:remaining] = Hash.new
-    stats[:remaining][:raw] = not_categorized.count
+    stats[:remaining][:raw] = not_categorized.can_enter_elections.count
     stats[:remaining][:number] = format_number(stats[:remaining][:raw])
     return stats
   end
 
   def self.document_stats
     stats = Hash.new
-    stats[:total] = count
+    stats[:total] = can_enter_elections.count
     stats[:amendment] = Hash.new
-    stats[:amendment][:raw] = where(is_amendment: true).count
+    stats[:amendment][:raw] = where(is_amendment: true).can_enter_elections.count
     stats[:amendment][:number] = format_number(stats[:amendment][:raw])
     stats[:amendment][:percent] = stats[:total] > 0 ? format_percent(100*stats[:amendment][:raw]/stats[:total].to_f) : I18n.t('app.common.na')
     stats[:annulled] = Hash.new
-    stats[:annulled][:raw] = where(is_annullment: true).count
+    stats[:annulled][:raw] = where(is_annullment: true).can_enter_elections.count
     stats[:annulled][:number] = format_number(stats[:annulled][:raw])
     stats[:annulled][:percent] = stats[:total] > 0 ? format_percent(100*stats[:annulled][:raw]/stats[:total].to_f) : I18n.t('app.common.na')
     stats[:explanatory_note] = Hash.new
-    stats[:explanatory_note][:raw] = where(is_explanatory_note: true).count
+    stats[:explanatory_note][:raw] = where(is_explanatory_note: true).can_enter_elections.count
     stats[:explanatory_note][:number] = format_number(stats[:explanatory_note][:raw])
     stats[:explanatory_note][:percent] = stats[:total] > 0 ? format_percent(100*stats[:explanatory_note][:raw]/stats[:total].to_f) : I18n.t('app.common.na')
     stats[:unknown] = Hash.new
-    stats[:unknown][:raw] = not_categorized.count
+    stats[:unknown][:raw] = not_categorized.can_enter_elections.count
     stats[:unknown][:number] = format_number(stats[:unknown][:raw])
     stats[:unknown][:percent] = stats[:total] > 0 ? format_percent(100*stats[:unknown][:raw]/stats[:total].to_f) : I18n.t('app.common.na')
     return stats

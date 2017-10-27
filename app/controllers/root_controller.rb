@@ -272,6 +272,13 @@ logger.debug ">>>>>>>>>>>>>>>> format = csv"
       supplemental_document = SupplementalDocument.find(params[:supplemental_document][:id])
       params[:supplemental_document].delete(:id) # do this so not get mass assignment error
       supplemental_document.update_attributes(params[:supplemental_document]) if supplemental_document.present?
+
+      # update the stats
+      # get user stats
+      @supplemental_document_user_stats = SupplementalDocument.user_stats(current_user.id)
+      # get document stats
+      @document_stats = SupplementalDocument.document_stats
+
     end
 
     # get the next doc
