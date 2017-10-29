@@ -52,13 +52,13 @@ def download_protocol_images(page, district_dir, district_id, precinct_id)
   doc = Nokogiri::HTML(html)
   images = doc.css("img")
   links = images.map { |i| i['src']}
+  amend_count = 1
 
   links.each_with_index do |value,index|
 
     img_uri = value.sub('../../','')
     img_url = "http://#{@url}/#{img_uri}"
     img_bname = "#{district_id}-#{precinct_id}"
-    amend_count = 1
 
     # DELETE EXISTING FILES BEFORE DOWNLOADING THEM
     #@logger_info.info("Deleting existing protocol and amendments")

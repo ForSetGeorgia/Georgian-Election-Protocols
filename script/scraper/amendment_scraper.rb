@@ -52,32 +52,33 @@ def download_protocol_images(page, district_dir, district_id, precinct_id)
   doc = Nokogiri::HTML(html)
   images = doc.css("img")
   links = images.map { |i| i['src']}
+  amend_count = 1
 
-  links.each_with_index do |value,index|
+  if links.length > 1
+    links.each_with_index do |value,index|
+      if index > 0
+        img_uri = value.sub('../../','')
+        img_url = "http://#{@url}/#{img_uri}"
+        img_bname = "#{district_id}-#{precinct_id}"
 
-    img_uri = value.sub('../../','')
-    img_url = "http://#{@url}/#{img_uri}"
-    img_bname = "#{district_id}-#{precinct_id}"
-    amend_count = 1
-
-    if index > 0
-      begin
-        unless File.exists?("#{district_dir}#{img_bname}_amendment_#{amend_count}.jpg")
-          @logger_info.info("Downloading amendment: #{img_bname}")
-          open("#{district_dir}#{img_bname}_amendment_#{amend_count}.jpg", 'wb') do |pfile|
-            puts "Downloading: #{district_dir}#{img_bname}_amendment_#{amend_count}.jpg"
-            pfile << open(img_url).read
+        begin
+          unless File.exists?("#{district_dir}#{img_bname}_amendment_#{amend_count}.jpg")
+            @logger_info.info("Downloading amendment: #{img_bname}")
+            open("#{district_dir}#{img_bname}_amendment_#{amend_count}.jpg", 'wb') do |pfile|
+              puts "Downloading: #{district_dir}#{img_bname}_amendment_#{amend_count}.jpg"
+              pfile << open(img_url).read
+            end
+            @logger_info.info("Downloaded amendment: #{img_bname}")
+            amend_count += 1
+            @amend_counter += 1
           end
-          @logger_info.info("Downloaded amendment: #{img_bname}")
-          amend_count += 1
-          @amend_counter += 1
+        rescue => e
+          @logger_error.error("Download failed: #{img_bname} | #{e}")
+          next
         end
-      rescue => e
-        @logger_error.error("Download failed: #{img_bname} | #{e}")
-        next
-      end
-    end # if index
-  end # links
+      end # if index
+    end # links
+  end
 
   sleep(0)
 end
