@@ -251,6 +251,11 @@ class CrowdDatum < ActiveRecord::Base
 
     path = nil if !exist
 
+    if path.present?
+      # add random querystring to url so browsers see it as a new image
+      path += "?#{SecureRandom.hex(8)}"
+    end
+
     return path
   end
 
