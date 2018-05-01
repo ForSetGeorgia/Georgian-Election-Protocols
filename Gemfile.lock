@@ -97,6 +97,7 @@ GEM
     ffi (1.9.18)
     formtastic (2.1.1)
       actionpack (~> 3.0)
+    get_process_mem (0.2.1)
     globalize3 (0.2.0)
       activemodel (>= 3.0.0)
       activerecord (>= 3.0.0)
@@ -226,6 +227,9 @@ GEM
     unicorn (5.3.1)
       kgio (~> 2.6)
       raindrops (~> 0.7)
+    unicorn-worker-killer (0.4.4)
+      get_process_mem (~> 0)
+      unicorn (>= 4, < 6)
     warden (1.1.1)
       rack (>= 1.0)
     whenever (0.9.7)
@@ -269,6 +273,7 @@ DEPENDENCIES
   twitter-bootstrap-rails (~> 2.2.8)
   uglifier (>= 1.0.3)
   unicorn (~> 5.3.1)
+  unicorn-worker-killer (~> 0.4.4)
   useragent!
   whenever (~> 0.9.7)
   will_paginate (~> 3.0.3)
@@ -277,4 +282,4 @@ RUBY VERSION
    ruby 2.3.4p301
 
 BUNDLED WITH
-   1.15.4
+   1.16.1
