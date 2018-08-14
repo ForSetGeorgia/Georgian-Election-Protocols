@@ -14,8 +14,18 @@ class RootController < ApplicationController
   def index
 
     if @all_elections.present?
-      params[:election] = @all_elections.first.analysis_table_name if params[:election].nil?
-      @current_election = @all_elections.select{|x| x.analysis_table_name == params[:election]}.first
+      @current_election = nil
+      if params[:election].nil?
+        params[:election] = @all_elections.first.analysis_table_name
+        @current_election = @all_elections.select{|x| x.analysis_table_name == params[:election]}.first
+      else
+        @current_election = @all_elections.select{|x| x.analysis_table_name == params[:election]}.first
+        # if param election is not found, use the first election
+        if @current_election.nil?
+          params[:election] = @all_elections.first.analysis_table_name
+          @current_election = @all_elections.select{|x| x.analysis_table_name == params[:election]}.first
+        end
+      end
 
       # get the events that are currently open for data entry
       @overall_stats = DistrictPrecinct.overall_stats(@current_election.id)
