@@ -7,7 +7,7 @@ gem "rails", "3.2.22.5"
 gem "mysql2", "~> 0.3.18" # this gem works better with utf-8
 
 gem "json"
-gem "jquery-rails", "3.1.2"
+gem "jquery-rails", "3.1.5"
 gem "devise", "~> 2.0.4" # user authentication
 gem "cancan", "~> 1.6.8" # user authorization
 gem "formtastic", "~> 2.1.1" # create forms easier
