@@ -30,7 +30,7 @@ gem "useragent", :git => "https://github.com/jilion/useragent.git" # browser det
 #gem "rails_autolink", "~> 1.0.9" # convert string to link if it is url
 #gem 'acts_as_commentable', '2.0.1' #comments
 #gem "paper_trail", "~> 2.6.3" # keep audit log of all transactions
-gem 'active_attr', '~> 0.9.0' # to create tabless models; using for contact form
+gem 'active_attr', '~> 0.15.4' # to create tabless models; using for contact form
 gem "fastimage" # get image size without downloading the image
 
 gem 'test-unit', '~> 3.0' # needed for rails console
